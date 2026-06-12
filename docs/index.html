@@ -953,10 +953,10 @@ async function load(){
         // Try loading from cloud
         const { data, error } =
         await window.mySupabase
-       // .from("user_data")
-        //.select("data")
-       // .eq("id",1)
-       // .single();
+        .from("user_data")
+        .select("data")
+        .eq("id",1)
+        .single();
 
         if(!error && data){
 
@@ -1006,10 +1006,10 @@ async function save(){
 
     // Save to Supabase
     const { error } = await window.mySupabase
-    //.from("user_data")
-    //.upsert({
-   //     id: 1,
-    //    data: D    });
+    .from("user_data")
+    .upsert({
+       id: 1,
+       data: D    });
 
     if(error){
         console.log(error);
@@ -1883,10 +1883,10 @@ console.log("Connected");
 async function testSave() {
 
 const { data, error } = await window.mySupabase
-//.from("user_data")
-//.upsert({
-//id: 1,
-//data: 
+.from("user_data")
+.upsert({
+id: 1,
+data: 
   {
 
 time: new Date().toISOString()
