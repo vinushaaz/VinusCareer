@@ -420,6 +420,7 @@ tr:hover td{background:#ffffff03}
 .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 .section-divider span{font-size:10px;color:var(--text4);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1766,6 +1767,20 @@ if(D.profile&&D.profile.name){document.getElementById('prof-name-sb').textConten
 // render all
 renderDaily();renderProjects();renderLearning();renderClients();renderSupport();renderDocs();renderAchievements();renderEvidence();renderStar();renderMood();renderGoals();renderNotes();renderPlan();
 renderDashboard();updateScore();
+</script>
+  <script>
+
+const SUPABASE_URL = "https://vimtnewcratpxwvclgnt.supabase.co/rest/v1/";
+
+const SUPABASE_KEY = "sb_publishable_AHAfdAj0ghU4rS1VuzK6ww_u15Vz8b_";
+
+const supabase = window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+console.log("Connected");
+
 </script>
 </body>
 </html>
