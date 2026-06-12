@@ -947,7 +947,28 @@ tr:hover td{background:#ffffff03}
 const DB='luminary_v1';
 let D={daily:[],projects:[],learning:[],clients:[],support:[],docs:[],achievements:[],evidence:[],star:[],plans:[],goals:[],notes:[],mood:[],profile:{name:'',role:'',dept:'',company:'',empid:'',manager:'',doj:'',email:'',links:''}};
 function load(){const s=localStorage.getItem(DB);if(s)try{const p=JSON.parse(s);Object.assign(D,p);Object.keys(D).forEach(k=>{if(!D[k]&&k!=='profile')D[k]=[]});}catch(e){}}
-function save(){localStorage.setItem(DB,JSON.stringify(D));updateAll()}
+async function save(){
+
+    // Save locally (backup)
+    localStorage.setItem(DB,JSON.stringify(D));
+
+    // Save to Supabase
+    const { error } = await window.mySupabase
+    .from("user_data")
+    .upsert({
+        id: 1,
+        data: D
+    });
+
+    if(error){
+        console.log(error);
+    }
+    else{
+        console.log("Cloud Saved ✅");
+    }
+
+    updateAll();
+}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
 function today(){return new Date().toISOString().split('T')[0]}
 function toast(m='✦ Saved'){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
@@ -1777,6 +1798,28 @@ SUPABASE_KEY
 );
 
 console.log("Connected");
+  async function testInsert() {
+
+const { data, error } = await window.mySupabase
+.from("daily_logs")
+.insert([
+{
+task: "Test Task",
+project: "Testing",
+hours: 2,
+date: "2026-06-12",
+category: "Testing",
+status: "Completed",
+impact: "Checking database connection"
+}
+]);
+
+console.log(data);
+console.log(error);
+
+}
+
+testInsert();
 </script>
 
 </body>
