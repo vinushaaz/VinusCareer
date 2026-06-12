@@ -946,8 +946,81 @@ tr:hover td{background:#ffffff03}
 // ═══════════════ DATA ═══════════════
 const DB='luminary_v1';
 let D={daily:[],projects:[],learning:[],clients:[],support:[],docs:[],achievements:[],evidence:[],star:[],plans:[],goals:[],notes:[],mood:[],profile:{name:'',role:'',dept:'',company:'',empid:'',manager:'',doj:'',email:'',links:''}};
-function load(){const s=localStorage.getItem(DB);if(s)try{const p=JSON.parse(s);Object.assign(D,p);Object.keys(D).forEach(k=>{if(!D[k]&&k!=='profile')D[k]=[]});}catch(e){}}
-function save(){localStorage.setItem(DB,JSON.stringify(D));updateAll()}
+async function load(){
+
+    try{
+
+        // Try loading from cloud
+        const { data, error } =
+        await window.mySupabase
+        .from("user_data")
+        .select("data")
+        .eq("id",1)
+        .single();
+
+        if(!error && data){
+
+            Object.assign(D,data.data);
+
+            console.log("☁️ Loaded from Cloud");
+
+        }else{
+
+            const s=localStorage.getItem(DB);
+
+            if(s){
+
+                const p=JSON.parse(s);
+
+                Object.assign(D,p);
+
+            }
+
+            console.log("💻 Loaded from Local");
+
+        }
+
+    }
+
+    catch(e){
+
+        const s=localStorage.getItem(DB);
+
+        if(s){
+
+            const p=JSON.parse(s);
+
+            Object.assign(D,p);
+
+        }
+
+        console.log("⚠️ Offline Mode");
+
+    }
+
+}
+async function save(){
+
+    // Save locally (backup)
+    localStorage.setItem(DB,JSON.stringify(D));
+
+    // Save to Supabase
+    const { error } = await window.mySupabase
+    .from("user_data")
+    .upsert({
+        id: 1,
+        data: D
+    });
+
+    if(error){
+        console.log(error);
+    }
+    else{
+        console.log("Cloud Saved ✅");
+    }
+
+    updateAll();
+}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
 function today(){return new Date().toISOString().split('T')[0]}
 function toast(m='✦ Saved'){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
@@ -1758,7 +1831,9 @@ function exportPDF(){
 }
 
 // ═══════════════ INIT ═══════════════
-load();
+load().then(()=>{
+    updateAll();
+});
 // set today's date on all date fields
 ['dl-date','cl-date','sp-date','ac-date','dc-date','ln-date','ev-date','wk-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today()});
 document.getElementById('page-sub').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -1767,20 +1842,38 @@ if(D.profile&&D.profile.name){document.getElementById('prof-name-sb').textConten
 // render all
 renderDaily();renderProjects();renderLearning();renderClients();renderSupport();renderDocs();renderAchievements();renderEvidence();renderStar();renderMood();renderGoals();renderNotes();renderPlan();
 renderDashboard();updateScore();
-</script>
-  <script>
-
-const SUPABASE_URL = "https://vimtnewcratpxwvclgnt.supabase.co/rest/v1/";
+    const SUPABASE_URL = "https://vimtnewcratpxwvclgnt.supabase.co";
 
 const SUPABASE_KEY = "sb_publishable_AHAfdAj0ghU4rS1VuzK6ww_u15Vz8b_";
 
-const supabase = window.supabase.createClient(
+window.mySupabase = window.supabase.createClient(
 SUPABASE_URL,
 SUPABASE_KEY
 );
 
 console.log("Connected");
+async function testSave() {
+
+const { data, error } = await window.mySupabase
+.from("user_data")
+.upsert({
+id: 1,
+data: {
+message: "Hello from Luminary 🌸",
+time: new Date().toISOString()
+}
+});
+
+if (error) {
+console.log("❌ Error:", error);
+} else {
+console.log("✅ Cloud Save Successful");
+}
+}
+
+testSave();
 
 </script>
+
 </body>
 </html>
