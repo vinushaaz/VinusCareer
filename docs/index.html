@@ -1774,7 +1774,10 @@ const SUPABASE_URL = "https://vimtnewcratpxwvclgnt.supabase.co/rest/v1/";
 
 const SUPABASE_KEY = "sb_publishable_AHAfdAj0ghU4rS1VuzK6ww_u15Vz8b_";
 
-
+window.mySupabase = window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
 
 console.log("Connected");
 
