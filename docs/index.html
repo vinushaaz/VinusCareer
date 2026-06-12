@@ -1798,28 +1798,27 @@ SUPABASE_KEY
 );
 
 console.log("Connected");
-  async function testInsert() {
+async function testSave() {
 
 const { data, error } = await window.mySupabase
-.from("daily_logs")
-.insert([
-{
-task: "Test Task",
-project: "Testing",
-hours: 2,
-date: "2026-06-12",
-category: "Testing",
-status: "Completed",
-impact: "Checking database connection"
+.from("user_data")
+.upsert({
+id: 1,
+data: {
+message: "Hello from Luminary 🌸",
+time: new Date().toISOString()
 }
-]);
+});
 
-console.log(data);
-console.log(error);
-
+if (error) {
+console.log("❌ Error:", error);
+} else {
+console.log("✅ Cloud Save Successful");
+}
 }
 
-testInsert();
+testSave();
+
 </script>
 
 </body>
