@@ -946,8 +946,59 @@ tr:hover td{background:#ffffff03}
 // ═══════════════ DATA ═══════════════
 const DB='luminary_v1';
 let D={daily:[],projects:[],learning:[],clients:[],support:[],docs:[],achievements:[],evidence:[],star:[],plans:[],goals:[],notes:[],mood:[],profile:{name:'',role:'',dept:'',company:'',empid:'',manager:'',doj:'',email:'',links:''}};
-function load(){const s=localStorage.getItem(DB);if(s)try{const p=JSON.parse(s);Object.assign(D,p);Object.keys(D).forEach(k=>{if(!D[k]&&k!=='profile')D[k]=[]});}catch(e){}}
-async function save(){
+async function load(){
+
+    try{
+
+        // Try loading from cloud
+        const { data, error } =
+        await window.mySupabase
+        .from("user_data")
+        .select("data")
+        .eq("id",1)
+        .single();
+
+        if(!error && data){
+
+            Object.assign(D,data.data);
+
+            console.log("☁️ Loaded from Cloud");
+
+        }else{
+
+            const s=localStorage.getItem(DB);
+
+            if(s){
+
+                const p=JSON.parse(s);
+
+                Object.assign(D,p);
+
+            }
+
+            console.log("💻 Loaded from Local");
+
+        }
+
+    }
+
+    catch(e){
+
+        const s=localStorage.getItem(DB);
+
+        if(s){
+
+            const p=JSON.parse(s);
+
+            Object.assign(D,p);
+
+        }
+
+        console.log("⚠️ Offline Mode");
+
+    }
+
+}
 
     // Save locally (backup)
     localStorage.setItem(DB,JSON.stringify(D));
@@ -1779,7 +1830,9 @@ function exportPDF(){
 }
 
 // ═══════════════ INIT ═══════════════
-load();
+load().then(()=>{
+    updateAll();
+});
 // set today's date on all date fields
 ['dl-date','cl-date','sp-date','ac-date','dc-date','ln-date','ev-date','wk-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today()});
 document.getElementById('page-sub').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
