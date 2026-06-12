@@ -1092,10 +1092,39 @@ function delBtn(arr,id,cb){return`<button style="background:var(--red-dim);color
 function del(arr,id,cb){const i=D[arr].findIndex(x=>x.id===id);if(i>=0)D[arr].splice(i,1);save();if(cb)eval(cb+'()');toast('🗑 Deleted')}
 
 // ═══════════════ DAILY ═══════════════
-function addDaily(){
+async function addDaily(){
   const r={id:uid(),date:document.getElementById('dl-date').value||today(),task:document.getElementById('dl-task').value,project:document.getElementById('dl-project').value,client:document.getElementById('dl-client').value,hours:document.getElementById('dl-hours').value,cat:document.getElementById('dl-cat').value,prio:document.getElementById('dl-prio').value,status:document.getElementById('dl-status').value,impact:document.getElementById('dl-impact').value,problem:document.getElementById('dl-problem').value,tech:document.getElementById('dl-tech').value,support:document.getElementById('dl-support').value,self:document.getElementById('dl-self').value};
   if(!r.task){toast('⚠️ Task title required');return}
-  D.daily.unshift(r);save();renderDaily();toast();
+  // Save to Supabase
+const { error } = await window.mySupabase
+.from("daily_logs")
+.insert({
+    date: r.date,
+    task: r.task,
+    project: r.project,
+    client: r.client,
+    hours: Number(r.hours),
+    category: r.cat,
+    priority: r.prio,
+    status: r.status,
+    business_impact: r.impact,
+    problem_solved: r.problem,
+    technologies: r.tech,
+    technical_support: r.support,
+    self_remarks: r.self
+});
+
+if(error){
+    console.error(error);
+    toast("❌ Cloud Save Failed");
+    return;
+}
+
+// Keep local UI updated
+D.daily.unshift(r);
+save();
+renderDaily();
+toast("✅ Saved");
 }
 function clearDaily(){['dl-task','dl-project','dl-client','dl-hours','dl-impact','dl-problem','dl-tech','dl-self'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})}
 function renderDaily(){
