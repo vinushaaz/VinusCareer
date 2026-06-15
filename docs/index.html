@@ -6,6 +6,7 @@
 <title>ElevaTrack — Track. Prove. Grow.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -406,6 +407,20 @@ tr:hover td{background:#ffffff03}
   .score-hero{flex-direction:column;text-align:center}
   .kanban-cols{grid-template-columns:1fr}
 }
+/* ── CLOUD SYNC STATUS ── */
+#sync-status{
+  display:flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:500;padding:4px 9px;
+  border-radius:20px;border:1px solid var(--border2);
+  color:var(--text3);transition:all .3s;white-space:nowrap;
+}
+#sync-status.syncing{color:var(--amber);border-color:var(--amber-dim)}
+#sync-status.synced{color:var(--green);border-color:var(--green-dim)}
+#sync-status.error{color:var(--red);border-color:var(--red-dim)}
+#sync-status.offline{color:var(--text3);border-color:var(--border)}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+#sync-status.syncing .sync-dot{animation:pulse-dot .8s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:.3}50%{opacity:1}}
 /* ── PRINT ── */
 @media print{nav,#topbar .topbar-right,.btn-group,.sb-item,.sb-logo{display:none!important}}
 /* ── MISC ── */
@@ -473,6 +488,9 @@ tr:hover td{background:#ffffff03}
     <button id="menu-btn" onclick="openSidebar()">☰</button>
     <div><div id="page-title">Dashboard</div><div id="page-sub"></div></div>
     <div class="topbar-right">
+      <div id="sync-status" class="offline" title="Cloud sync status">
+        <span class="sync-dot"></span><span id="sync-label">Offline</span>
+      </div>
       <div class="promo-ring" title="Promotion Readiness Score">
         <svg width="40" height="40" viewBox="0 0 40 40">
           <circle cx="20" cy="20" r="16" fill="none" stroke="#2d1a4a" stroke-width="3.5"/>
@@ -943,88 +961,124 @@ tr:hover td{background:#ffffff03}
 
 <div id="toast">✦ Saved</div>
 <script>
-// ═══════════════ DATA ═══════════════
-const DB='luminary_v1';
-let D={daily:[],projects:[],learning:[],clients:[],support:[],docs:[],achievements:[],evidence:[],star:[],plans:[],goals:[],notes:[],mood:[],profile:{name:'',role:'',dept:'',company:'',empid:'',manager:'',doj:'',email:'',links:''}};
-async function load(){
+// ═══════════════════════════════════════════════════════
+// ── STORAGE LAYER ── Supabase-first, localStorage fallback
+// ═══════════════════════════════════════════════════════
 
-    try{
+const SUPABASE_URL = "https://vimtnewcratpxwvclgnt.supabase.co";
+const SUPABASE_KEY = "sb_publishable_AHAfdAj0ghU4rS1VuzK6ww_u15Vz8b_";
+const DB_LOCAL_KEY  = 'elevatrack_v2';
+const DB_ROW_ID     = 1; // single-user row
 
-        // Try loading from cloud
-        const { data, error } =
-        await window.mySupabase
-        .from("user_data")
-        .select("data")
-        .eq("id",1)
-        .single();
+// Init Supabase client immediately (SDK already loaded above)
+const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        if(!error && data){
-
-            Object.assign(D,data.data);
-
-            console.log("☁️ Loaded from Cloud");
-
-        }else{
-
-            const s=localStorage.getItem(DB);
-
-            if(s){
-
-                const p=JSON.parse(s);
-
-                Object.assign(D,p);
-
-            }
-
-            console.log("💻 Loaded from Local");
-
-        }
-
-    }
-
-    catch(e){
-
-        const s=localStorage.getItem(DB);
-
-        if(s){
-
-            const p=JSON.parse(s);
-
-            Object.assign(D,p);
-
-        }
-
-        console.log("⚠️ Offline Mode");
-
-    }
-
+// ── Sync UI helpers ──
+function setSyncStatus(state, label) {
+  const el = document.getElementById('sync-status');
+  const lb = document.getElementById('sync-label');
+  if (!el) return;
+  el.className = state; // 'syncing' | 'synced' | 'error' | 'offline'
+  lb.textContent = label;
 }
-async function save(){
 
-    // Save locally (backup)
-    localStorage.setItem(DB,JSON.stringify(D));
+// ── Master data object ──
+let D = {
+  daily:[], projects:[], learning:[], clients:[], support:[],
+  docs:[], achievements:[], evidence:[], star:[], plans:[],
+  goals:[], notes:[], mood:[],
+  profile:{ name:'',role:'',dept:'',company:'',empid:'',manager:'',doj:'',email:'',links:'' }
+};
 
-    // Save to Supabase
-    const { error } = await window.mySupabase
-    .from("user_data")
-    .upsert({
-       id: 1,
-       data: D    });
+// ── LOAD: cloud first, localStorage fallback ──
+async function load() {
+  setSyncStatus('syncing','Loading...');
+  try {
+    const { data, error } = await _supa
+      .from('user_data')
+      .select('data')
+      .eq('id', DB_ROW_ID)
+      .single();
 
-    if(error){
-        console.log(error);
+    if (error) throw error;
+
+    if (data && data.data) {
+      // Merge cloud data — preserve structure for any missing keys
+      Object.keys(D).forEach(k => {
+        if (data.data[k] !== undefined) D[k] = data.data[k];
+      });
+      setSyncStatus('synced', '☁ Cloud');
+      console.log('☁️ Loaded from Supabase');
+    } else {
+      _loadLocal();
+      setSyncStatus('synced', '☁ Cloud (empty)');
     }
-    else{
-        console.log("Cloud Saved ✅");
-    }
-
-    updateAll();
+  } catch (err) {
+    console.warn('⚠️ Supabase load failed, using local:', err.message);
+    _loadLocal();
+    setSyncStatus('offline', '💻 Local');
+  }
 }
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
-function today(){return new Date().toISOString().split('T')[0]}
-function toast(m='✦ Saved'){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
-// ═══════════════ NAV ═══════════════
+function _loadLocal() {
+  try {
+    const raw = localStorage.getItem(DB_LOCAL_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      Object.keys(D).forEach(k => {
+        if (parsed[k] !== undefined) D[k] = parsed[k];
+      });
+      console.log('💻 Loaded from localStorage');
+    }
+  } catch (e) {
+    console.error('Local load failed:', e);
+  }
+}
+
+// ── SAVE: write to both cloud and localStorage ──
+let _saveTimer = null;
+async function save() {
+  // Always write locally as instant backup
+  localStorage.setItem(DB_LOCAL_KEY, JSON.stringify(D));
+
+  // Debounce cloud writes — avoid hammering Supabase on rapid edits
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(_cloudSave, 800);
+
+  // Re-render UI immediately (don't wait for cloud)
+  updateAll();
+}
+
+async function _cloudSave() {
+  setSyncStatus('syncing', 'Saving...');
+  try {
+    const { error } = await _supa
+      .from('user_data')
+      .upsert({ id: DB_ROW_ID, data: D, updated_at: new Date().toISOString() });
+
+    if (error) throw error;
+    setSyncStatus('synced', '☁ Saved');
+    console.log('☁️ Cloud save OK');
+  } catch (err) {
+    setSyncStatus('error', '⚠ Sync failed');
+    console.error('Cloud save failed:', err.message);
+    // Will retry on next save — data safe in localStorage
+  }
+}
+
+// ── Utility ──
+function uid()  { return Date.now().toString(36) + Math.random().toString(36).slice(2,5) }
+function today(){ return new Date().toISOString().split('T')[0] }
+function toast(m='✦ Saved') {
+  const t = document.getElementById('toast');
+  t.textContent = m;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ═══════════════════════════════════════════════════════
+// ── NAV ──
+// ═══════════════════════════════════════════════════════
 function nav(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
@@ -1088,42 +1142,16 @@ function prioBadge(p){const m={High:'br',Medium:'ba',Low:'bg',Critical:'br'};ret
 function statusBadge(s){const m={Completed:'bg','In Progress':'bb',Blocked:'br',Deferred:'bn',Resolved:'bg',Escalated:'br',Pending:'ba'};return`<span class="badge ${m[s]||'bn'}">${s||'—'}</span>`}
 function appliedBadge(a){return`<span class="badge ${a==='Yes'?'bg':a==='Planned'?'ba':'bn'}">${a}</span>`}
 function delBtn(arr,id,cb){return`<button style="background:var(--red-dim);color:var(--red);border:none;border-radius:5px;padding:3px 8px;font-size:11px;cursor:pointer" onclick="del('${arr}','${id}',${cb})">✕</button>`}
-function del(arr,id,cb){const i=D[arr].findIndex(x=>x.id===id);if(i>=0)D[arr].splice(i,1);save();if(cb)eval(cb+'()');toast('🗑 Deleted')}
+async function del(arr,id,cb){const i=D[arr].findIndex(x=>x.id===id);if(i>=0)D[arr].splice(i,1);await save();if(cb)eval(cb+'()');toast('🗑 Deleted')}
 
 // ═══════════════ DAILY ═══════════════
 async function addDaily(){
   const r={id:uid(),date:document.getElementById('dl-date').value||today(),task:document.getElementById('dl-task').value,project:document.getElementById('dl-project').value,client:document.getElementById('dl-client').value,hours:document.getElementById('dl-hours').value,cat:document.getElementById('dl-cat').value,prio:document.getElementById('dl-prio').value,status:document.getElementById('dl-status').value,impact:document.getElementById('dl-impact').value,problem:document.getElementById('dl-problem').value,tech:document.getElementById('dl-tech').value,support:document.getElementById('dl-support').value,self:document.getElementById('dl-self').value};
   if(!r.task){toast('⚠️ Task title required');return}
-  // Save to Supabase
-const { error } = await window.mySupabase
-.from("daily_logs")
-.insert({
-    date: r.date,
-    task: r.task,
-    project: r.project,
-    client: r.client,
-    hours: Number(r.hours),
-    category: r.cat,
-    priority: r.prio,
-    status: r.status,
-    business_impact: r.impact,
-    problem_solved: r.problem,
-    technologies: r.tech,
-    technical_support: r.support,
-    self_remarks: r.self
-});
-
-if(error){
-    console.error(error);
-    toast("❌ Cloud Save Failed");
-    return;
-}
-
-// Keep local UI updated
-D.daily.unshift(r);
-save();
-renderDaily();
-toast("✅ Saved");
+  D.daily.unshift(r);
+  await save();
+  renderDaily();
+  toast('✦ Entry saved');
 }
 function clearDaily(){['dl-task','dl-project','dl-client','dl-hours','dl-impact','dl-problem','dl-tech','dl-self'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})}
 function renderDaily(){
@@ -1144,10 +1172,10 @@ function renderDaily(){
 }
 
 // ═══════════════ PROJECTS ═══════════════
-function addProject(){
+async function addProject(){
   const r={id:uid(),name:document.getElementById('pj-name').value,client:document.getElementById('pj-client').value,role:document.getElementById('pj-role').value,start:document.getElementById('pj-start').value,end:document.getElementById('pj-end').value,status:document.getElementById('pj-status').value,prog:document.getElementById('pj-prog').value,tech:document.getElementById('pj-tech').value,contrib:document.getElementById('pj-contrib').value,outcome:document.getElementById('pj-outcome').value};
   if(!r.name){toast('⚠️ Project name required');return}
-  D.projects.unshift(r);save();renderProjects();toast();
+  D.projects.unshift(r);await save();renderProjects();toast();
 }
 function renderProjects(){
   const b=document.getElementById('proj-body');if(!b)return;
@@ -1166,10 +1194,10 @@ function renderProjects(){
 }
 
 // ═══════════════ LEARNING ═══════════════
-function addLearning(){
+async function addLearning(){
   const r={id:uid(),date:document.getElementById('ln-date').value||today(),topic:document.getElementById('ln-topic').value,type:document.getElementById('ln-type').value,source:document.getElementById('ln-source').value,cat:document.getElementById('ln-cat').value,hours:document.getElementById('ln-hours').value,applied:document.getElementById('ln-applied').value,cert:document.getElementById('ln-cert').value,notes:document.getElementById('ln-notes').value};
   if(!r.topic){toast('⚠️ Topic required');return}
-  D.learning.unshift(r);save();renderLearning();toast();
+  D.learning.unshift(r);await save();renderLearning();toast();
 }
 function renderLearning(){
   const b=document.getElementById('learn-body');if(!b)return;
@@ -1187,10 +1215,10 @@ function renderLearning(){
 }
 
 // ═══════════════ CLIENTS ═══════════════
-function addClient(){
+async function addClient(){
   const r={id:uid(),date:document.getElementById('cl-date').value||today(),client:document.getElementById('cl-client').value,org:document.getElementById('cl-org').value,dur:document.getElementById('cl-dur').value,purpose:document.getElementById('cl-purpose').value,resolution:document.getElementById('cl-resolution').value,followup:document.getElementById('cl-followup').value,rating:document.getElementById('cl-rating').value};
   if(!r.client){toast('⚠️ Client name required');return}
-  D.clients.unshift(r);save();renderClients();toast();
+  D.clients.unshift(r);await save();renderClients();toast();
 }
 function renderClients(){
   const b=document.getElementById('client-body');if(!b)return;
@@ -1209,10 +1237,10 @@ function renderClients(){
 }
 
 // ═══════════════ SUPPORT ═══════════════
-function addSupport(){
+async function addSupport(){
   const r={id:uid(),date:document.getElementById('sp-date').value||today(),issue:document.getElementById('sp-issue').value,prio:document.getElementById('sp-prio').value,status:document.getElementById('sp-status').value,cause:document.getElementById('sp-cause').value,solution:document.getElementById('sp-solution').value,time:document.getElementById('sp-time').value,sat:document.getElementById('sp-sat').value};
   if(!r.issue){toast('⚠️ Issue required');return}
-  D.support.unshift(r);save();renderSupport();toast();
+  D.support.unshift(r);await save();renderSupport();toast();
 }
 function renderSupport(){
   const b=document.getElementById('support-body');if(!b)return;
@@ -1231,10 +1259,10 @@ function renderSupport(){
 }
 
 // ═══════════════ DOCS ═══════════════
-function addDoc(){
+async function addDoc(){
   const r={id:uid(),date:document.getElementById('dc-date').value||today(),name:document.getElementById('dc-name').value,type:document.getElementById('dc-type').value,rev:document.getElementById('dc-rev').value,pages:document.getElementById('dc-pages').value,remarks:document.getElementById('dc-remarks').value};
   if(!r.name){toast('⚠️ Name required');return}
-  D.docs.unshift(r);save();renderDocs();toast();
+  D.docs.unshift(r);await save();renderDocs();toast();
 }
 function renderDocs(){
   const b=document.getElementById('docs-body');if(!b)return;
@@ -1251,10 +1279,10 @@ function renderDocs(){
 }
 
 // ═══════════════ ACHIEVEMENTS ═══════════════
-function addAchievement(){
+async function addAchievement(){
   const r={id:uid(),date:document.getElementById('ac-date').value||today(),achievement:document.getElementById('ac-achievement').value,type:document.getElementById('ac-type').value,impact:document.getElementById('ac-impact').value,revenue:document.getElementById('ac-revenue').value,proof:document.getElementById('ac-proof').value};
   if(!r.achievement){toast('⚠️ Achievement required');return}
-  D.achievements.unshift(r);save();renderAchievements();toast();
+  D.achievements.unshift(r);await save();renderAchievements();toast();
 }
 function renderAchievements(){
   const b=document.getElementById('ach-body');if(!b)return;
@@ -1328,10 +1356,10 @@ function renderEvidence(){
 }
 
 // ═══════════════ STAR ═══════════════
-function addStar(){
+async function addStar(){
   const r={id:uid(),s:document.getElementById('st-s').value,t:document.getElementById('st-t').value,a:document.getElementById('st-a').value,r:document.getElementById('st-r').value};
   if(!r.s){toast('⚠️ Situation required');return}
-  D.star.unshift(r);save();renderStar();toggleFS('star-fs');toast();
+  D.star.unshift(r);await save();renderStar();toggleFS('star-fs');toast();
 }
 function renderStar(){
   const b=document.getElementById('star-body');if(!b)return;
@@ -1348,10 +1376,10 @@ function renderStar(){
 // ═══════════════ PERSONAL ═══════════════
 // MOOD
 function selectMood(btn,val){document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');document.getElementById('mood-val').value=val}
-function addMood(){
+async function addMood(){
   const r={id:uid(),date:today(),mood:document.getElementById('mood-val').value,note:document.getElementById('mood-note').value};
   if(!r.mood){toast('⚠️ Select a mood');return}
-  D.mood.unshift(r);save();renderMood();toast('✨ Mood logged');
+  D.mood.unshift(r);await save();renderMood();toast('✨ Mood logged');
 }
 function renderMood(){
   const b=document.getElementById('mood-body');if(!b)return;
@@ -1364,12 +1392,12 @@ function renderMood(){
   </tr>`).join('');
 }
 // GOALS
-function addGoal(){
+async function addGoal(){
   const r={id:uid(),goal:document.getElementById('gl-goal').value,cat:document.getElementById('gl-cat').value,date:document.getElementById('gl-date').value,done:false};
   if(!r.goal){toast('⚠️ Goal required');return}
-  D.goals.unshift(r);save();renderGoals();toast('🎯 Goal added');
+  D.goals.unshift(r);await save();renderGoals();toast('🎯 Goal added');
 }
-function toggleGoal(id){const g=D.goals.find(x=>x.id===id);if(g)g.done=!g.done;save();renderGoals()}
+async function toggleGoal(id){const g=D.goals.find(x=>x.id===id);if(g){g.done=!g.done;await save();}renderGoals()}
 function renderGoals(){
   const a=document.getElementById('goals-active'),d=document.getElementById('goals-done');if(!a)return;
   const active=D.goals.filter(g=>!g.done),done=D.goals.filter(g=>g.done);
@@ -1381,9 +1409,9 @@ function renderGoals(){
   a.innerHTML=goalHTML(active);d.innerHTML=goalHTML(done);
 }
 // NOTES
-function addNote(){
+async function addNote(){
   const r={id:uid(),date:today(),title:document.getElementById('nt-title').value||'Untitled',content:document.getElementById('nt-content').value,tag:document.getElementById('nt-tag').value};
-  D.notes.unshift(r);save();renderNotes();document.getElementById('nt-title').value='';document.getElementById('nt-content').value='';toast('📝 Note saved');
+  D.notes.unshift(r);await save();renderNotes();document.getElementById('nt-title').value='';document.getElementById('nt-content').value='';toast('📝 Note saved');
 }
 function renderNotes(){
   const g=document.getElementById('notes-grid');if(!g)return;
@@ -1424,12 +1452,12 @@ function renderCal(){
   renderPlan();
 }
 function calClick(ds){document.getElementById('dl-date').value=ds;nav('quicklog',document.querySelectorAll('.sb-item')[2])}
-function addPlan(){
+async function addPlan(){
   const r={id:uid(),date:today(),task:document.getElementById('plan-task').value,prio:document.getElementById('plan-prio').value,done:false};
   if(!r.task)return;
-  D.plans.unshift(r);save();renderPlan();document.getElementById('plan-task').value='';
+  D.plans.unshift(r);await save();renderPlan();document.getElementById('plan-task').value='';
 }
-function togglePlan(id){const p=D.plans.find(x=>x.id===id);if(p)p.done=!p.done;save();renderPlan()}
+async function togglePlan(id){const p=D.plans.find(x=>x.id===id);if(p){p.done=!p.done;await save();}renderPlan()}
 function renderPlan(){
   const el=document.getElementById('plan-list');if(!el)return;
   const today_plans=D.plans.filter(p=>p.date===today());
@@ -1443,9 +1471,9 @@ function renderPlan(){
 }
 
 // ═══════════════ PROFILE ═══════════════
-function saveProfile(){
+async function saveProfile(){
   const pf={name:document.getElementById('pf-name').value,role:document.getElementById('pf-role').value,dept:document.getElementById('pf-dept').value,company:document.getElementById('pf-company').value,empid:document.getElementById('pf-empid').value,manager:document.getElementById('pf-manager').value,doj:document.getElementById('pf-doj').value,email:document.getElementById('pf-email').value,links:document.getElementById('pf-links').value};
-  D.profile=pf;save();
+  D.profile=pf;await save();
   document.getElementById('prof-name-sb').textContent=pf.name||'Your Name';
   document.getElementById('prof-role-sb').textContent=pf.role||'Engineer';
   toast('Profile saved');
@@ -1858,48 +1886,38 @@ function exportPDF(){
   toast('✦ PDF exported successfully');
 }
 
-// ═══════════════ INIT ═══════════════
-load().then(()=>{
-    updateAll();
-});
-// set today's date on all date fields
-['dl-date','cl-date','sp-date','ac-date','dc-date','ln-date','ev-date','wk-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today()});
-document.getElementById('page-sub').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-// load profile into sidebar
-if(D.profile&&D.profile.name){document.getElementById('prof-name-sb').textContent=D.profile.name;document.getElementById('prof-role-sb').textContent=D.profile.role||'Engineer'}
-// render all
-renderDaily();renderProjects();renderLearning();renderClients();renderSupport();renderDocs();renderAchievements();renderEvidence();renderStar();renderMood();renderGoals();renderNotes();renderPlan();
-renderDashboard();updateScore();
-    const SUPABASE_URL = "https://vimtnewcratpxwvclgnt.supabase.co";
+// ═══════════════════════════════════════════════════════
+// ── BOOT SEQUENCE ── Load data then render everything
+// ═══════════════════════════════════════════════════════
+async function boot() {
+  // Set today's date on all date fields
+  ['dl-date','cl-date','sp-date','ac-date','dc-date','ln-date','ev-date','wk-date'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = today();
+  });
+  document.getElementById('page-sub').textContent =
+    new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-const SUPABASE_KEY = "sb_publishable_AHAfdAj0ghU4rS1VuzK6ww_u15Vz8b_";
+  // Load data (Supabase → localStorage fallback)
+  await load();
 
-window.mySupabase = window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
+  // Update profile in sidebar
+  if (D.profile && D.profile.name) {
+    const pn = document.getElementById('prof-name-sb');
+    const pr = document.getElementById('prof-role-sb');
+    if (pn) pn.textContent = D.profile.name;
+    if (pr) pr.textContent = D.profile.role || 'Engineer';
+  }
 
-console.log("Connected");
-async function testSave() {
-
-const { data, error } = await window.mySupabase
-.from("user_data")
-.upsert({
-id: 1,
-data: 
-  {
-
-time: new Date().toISOString()
+  // Render all sections
+  renderDaily(); renderProjects(); renderLearning(); renderClients();
+  renderSupport(); renderDocs(); renderAchievements(); renderEvidence();
+  renderStar(); renderMood(); renderGoals(); renderNotes(); renderPlan();
+  renderDashboard(); updateScore();
 }
-});
 
-if (error) {
-console.log("❌ Error:", error);
-} else {
-console.log("✅ Cloud Save Successful");
-}
-}
-testSave();
+// Start the app
+boot();
 </script>
 
 </body>
