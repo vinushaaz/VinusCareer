@@ -998,7 +998,8 @@ async function load() {
       .from('user_data')
       .select('data')
       .eq('id', DB_ROW_ID)
-      .single();
+      .select("*")
+      .single()
 
     if (error) throw error;
 
