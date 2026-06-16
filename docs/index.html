@@ -1059,6 +1059,16 @@ const SUPABASE_KEY = 'sb_publishable_AHAfdAj0ghU4rS1VuzK6ww_u15Vz8b_';
 const LOCAL_MIGRATE_KEY = 'elevatrack_legacy_v1';  // old key to migrate from
 const LEGACY_KEYS = ['luminary_v1','elevatrack_v2','elevatrack_legacy_v1'];
 
+// ── TIMEOUT WRAPPER ── prevents any Supabase call from hanging forever
+function withTimeout(promise, ms = 8000, label = 'query') {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error(`Timeout: ${label} took longer than ${ms}ms`)), ms)
+    )
+  ]);
+}
+
 // ── SUPABASE CLIENT ──
 const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: true, autoRefreshToken: true }
@@ -1140,12 +1150,42 @@ async function handleLogin() {
   const password = document.getElementById('login-password').value;
   if (!email || !password) { showAuthError('Email and password are required.'); return; }
 
+  console.log('→ handleLogin() attempting sign-in for', email);
   setAuthBtnLoading('login-btn', true, 'Sign In →');
-  const { data, error } = await _supa.auth.signInWithPassword({ email, password });
-  setAuthBtnLoading('login-btn', false, 'Sign In →');
+  try {
+    const { data, error } = await withTimeout(
+      _supa.auth.signInWithPassword({ email, password }),
+      10000,
+      'signInWithPassword'
+    );
+    if (error) {
+      console.error('✗ signInWithPassword error:', error.message);
+      showAuthError(error.message);
+      return;
+    }
+    console.log('✓ signInWithPassword OK — waiting for onAuthStateChange to load data...');
+    // Button intentionally stays in "Please wait..." here — onAuthStateChange's
+    // finally block (in boot()) is responsible for resetting it once data loads
+    // and the dashboard is shown. This avoids a flash of the login form
+    // re-enabling for a split second before the dashboard appears.
 
-  if (error) { showAuthError(error.message); return; }
-  // onAuthStateChange will handle the rest
+    // ABSOLUTE SAFETY NET: if onAuthStateChange somehow never fires within 12s
+    // (should never happen, but "never get stuck" is a hard requirement),
+    // force-unlock the UI so the user isn't trapped with no feedback.
+    setTimeout(() => {
+      const authScreen = document.getElementById('auth-screen');
+      if (authScreen && !authScreen.classList.contains('hidden')) {
+        console.warn('⚠ Safety net triggered: onAuthStateChange did not complete in time');
+        setAuthBtnLoading('login-btn', false, 'Sign In →');
+        showAuthError('Sign-in is taking longer than expected. Please try again.');
+      }
+    }, 12000);
+  } catch (err) {
+    // Covers network failure / timeout on the auth call itself
+    console.error('✗ handleLogin() unexpected error:', err.message);
+    showAuthError('Sign-in failed: ' + err.message);
+    setAuthBtnLoading('login-btn', false, 'Sign In →');
+  }
 }
 
 async function handleSignup() {
@@ -1207,14 +1247,28 @@ function resetAppState() {
 
 // Generic: load all rows from a table for current user
 async function dbLoad(table) {
-  if (!currentUser) return [];
-  const { data, error } = await _supa
-    .from(table)
-    .select('*')
-    .eq('user_id', currentUser.id)
-    .order('created_at', { ascending: false });
-  if (error) { console.error(`dbLoad ${table}:`, error.message); return []; }
-  return data || [];
+  if (!currentUser) {
+    console.warn(`dbLoad(${table}): no currentUser, returning []`);
+    return [];
+  }
+  try {
+    console.log(`→ dbLoad(${table}) starting...`);
+    const { data, error } = await withTimeout(
+      _supa.from(table).select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }),
+      8000,
+      `dbLoad(${table})`
+    );
+    if (error) {
+      console.error(`✗ dbLoad(${table}) Supabase error:`, error.message, error);
+      return [];
+    }
+    console.log(`✓ dbLoad(${table}) got ${(data||[]).length} rows`);
+    return data || [];
+  } catch (err) {
+    // Covers timeouts and any thrown network errors — NEVER let this propagate
+    console.error(`✗ dbLoad(${table}) threw/timed out:`, err.message);
+    return [];
+  }
 }
 
 // Generic: insert a row
@@ -1307,33 +1361,65 @@ const D_TO_ROW = {
 // ══════════════════════════════════════════════════════════════════
 
 async function loadAllData() {
+  console.log('═══ loadAllData() starting ═══');
   setSyncStatus('syncing', 'Loading...');
+
+  const keys = Object.keys(TABLE_MAP);
+
+  // Promise.allSettled: ONE failed table can never block the rest from loading
+  const results = await Promise.allSettled(
+    keys.map(k => dbLoad(TABLE_MAP[k]))
+  );
+
+  keys.forEach((k, i) => {
+    const result = results[i];
+    if (result.status === 'fulfilled') {
+      try {
+        D[k] = (result.value || []).map(ROW_TO_D[k]);
+        console.log(`✓ D.${k} populated: ${D[k].length} items`);
+      } catch (mapErr) {
+        console.error(`✗ ROW_TO_D mapping failed for "${k}":`, mapErr.message);
+        D[k] = []; // empty table is a valid, safe state
+      }
+    } else {
+      console.error(`✗ Table "${k}" rejected:`, result.reason);
+      D[k] = []; // never block the dashboard — empty is fine
+    }
+  });
+
+  // Profile load/create is isolated — its failure must NEVER block the rest of the app
   try {
-    const keys = Object.keys(TABLE_MAP);
-    const results = await Promise.all(
-      keys.map(k => dbLoad(TABLE_MAP[k]))
-    );
-    keys.forEach((k, i) => {
-      D[k] = results[i].map(ROW_TO_D[k]);
-    });
-
-    // Load profile (separate table with upsert logic)
     await loadProfile_db();
-
-    setSyncStatus('synced', '☁ Synced');
-    console.log('✅ All data loaded from Supabase');
+    console.log('✓ Profile loaded/created');
   } catch (err) {
-    console.error('Load failed:', err);
-    setSyncStatus('error', '⚠ Load failed');
-    toast('Failed to load data', 'error');
+    console.error('✗ Profile load/create failed (non-fatal):', err.message);
+    // Fall back to a minimal profile so the UI still has something to render
+    D.profile = D.profile || { name:'', role:'', dept:'', company:'', empid:'', manager:'', doj:'', email: currentUser?.email || '', links:'' };
   }
+
+  setSyncStatus('synced', '☁ Synced');
+  console.log('═══ loadAllData() complete ═══');
 }
 
 async function loadProfile_db() {
-  const { data, error } = await _supa
-    .from('profiles')
-    .select('*')
-    .eq('user_id', currentUser.id);
+  console.log('→ loadProfile_db() starting...');
+  let data, error;
+  try {
+    const result = await withTimeout(
+      _supa.from('profiles').select('*').eq('user_id', currentUser.id),
+      8000,
+      'loadProfile_db select'
+    );
+    data = result.data; error = result.error;
+  } catch (err) {
+    console.error('✗ loadProfile_db select timed out/threw:', err.message);
+    // Treat as "no profile found" — fall through to creation path below
+    data = null; error = null;
+  }
+
+  if (error) {
+    console.error('✗ loadProfile_db select error:', error.message);
+  }
 
   if (!error && data && data.length > 0) {
     const p = data[0];
@@ -1348,13 +1434,24 @@ async function loadProfile_db() {
       email: p.email || currentUser.email || '',
       links: p.links || ''
     };
+    console.log('✓ Existing profile found and loaded');
   } else {
-    // First time user — create profile row
+    // First-time user (or query failed/timed out) — create a profile row.
+    // This must NEVER throw and block login — wrap in its own try/catch.
+    console.log('→ No profile found — creating one for first-time user');
     const pendingName = localStorage.getItem('pending_name') || currentUser.user_metadata?.full_name || '';
+    D.profile = D.profile || {};
     D.profile.email = currentUser.email || '';
     D.profile.name  = pendingName;
     if (pendingName) localStorage.removeItem('pending_name');
-    await saveProfile_db();
+    try {
+      await saveProfile_db();
+      console.log('✓ New profile row created');
+    } catch (err) {
+      // Non-fatal: dashboard can render with an in-memory-only profile;
+      // it will simply retry creating the row next time the user hits Save Profile.
+      console.error('✗ Profile creation failed (continuing anyway):', err.message);
+    }
   }
 }
 
@@ -1447,12 +1544,19 @@ async function saveProfile_db() {
     updated_at:     new Date().toISOString()
   };
 
-  // Use upsert with on_conflict on user_id
-  const { error } = await _supa
-    .from('profiles')
-    .upsert(payload, { onConflict: 'user_id' });
+  console.log('→ saveProfile_db() upserting...');
+  // Use upsert with on_conflict on user_id, with timeout protection
+  const { error } = await withTimeout(
+    _supa.from('profiles').upsert(payload, { onConflict: 'user_id' }),
+    8000,
+    'saveProfile_db upsert'
+  );
 
-  if (error) console.error('Profile save:', error.message);
+  if (error) {
+    console.error('✗ saveProfile_db upsert failed:', error.message);
+    throw error; // let the caller decide how to handle (loadProfile_db catches this safely)
+  }
+  console.log('✓ saveProfile_db upsert OK');
 }
 
 async function saveProfile() {
@@ -2299,6 +2403,7 @@ function renderAll() {
 // ══════════════════════════════════════════════════════════════════
 
 async function boot() {
+  console.log('═══ boot() starting ═══');
   // Set default dates
   ['dl-date','cl-date','sp-date','ac-date','dc-date','ln-date','ev-date'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = today();
@@ -2308,33 +2413,73 @@ async function boot() {
 
   // Watch auth state — this is the single source of truth
   _supa.auth.onAuthStateChange(async (event, session) => {
+    console.log(`★ onAuthStateChange fired: event="${event}"`, session ? `user=${session.user.email}` : '(no session)');
+
     if (event === 'SIGNED_IN' && session) {
       currentUser = session.user;
-      setSyncStatus('syncing', 'Loading...');
+      console.log('→ Handling SIGNED_IN for', currentUser.email);
 
-      // Load data from Supabase
-      await loadAllData();
+      // CRITICAL: try/finally guarantees showAppScreen() runs even if
+      // loadAllData(), migration, or renderAll() throws an unexpected error.
+      // The user must NEVER be stuck on the auth screen after a successful login.
+      try {
+        setSyncStatus('syncing', 'Loading...');
+        await loadAllData();
 
-      // Check if there's local data to migrate (first login only)
-      const hasLegacy = LEGACY_KEYS.some(k => localStorage.getItem(k));
-      if (hasLegacy) await migrateLocalData();
+        // Check if there's local data to migrate (first login only)
+        try {
+          const hasLegacy = LEGACY_KEYS.some(k => localStorage.getItem(k));
+          if (hasLegacy) {
+            console.log('→ Legacy local data found — migrating...');
+            await migrateLocalData();
+          }
+        } catch (migrateErr) {
+          // Migration failure must never block login — data stays safe in localStorage
+          console.error('✗ Migration failed (non-fatal):', migrateErr.message);
+        }
 
-      renderAll();
-      showAppScreen();
+        try {
+          renderAll();
+          console.log('✓ renderAll() complete');
+        } catch (renderErr) {
+          console.error('✗ renderAll() threw (continuing anyway):', renderErr.message);
+        }
+
+      } catch (err) {
+        // This should be unreachable now since loadAllData() never throws,
+        // but kept as a final safety net per the "never get stuck" requirement.
+        console.error('✗ Unexpected error during sign-in flow:', err.message);
+        setSyncStatus('error', '⚠ Load error');
+        toast('Some data failed to load — try refreshing', 'error');
+      } finally {
+        // ALWAYS reached — login success must always reveal the dashboard,
+        // and auth buttons must always reset out of "Please wait..." state.
+        showAppScreen();
+        setAuthBtnLoading('login-btn', false, 'Sign In →');
+        setAuthBtnLoading('signup-btn', false, 'Create Account →');
+        console.log('═══ SIGNED_IN handling complete — dashboard shown ═══');
+      }
 
     } else if (event === 'SIGNED_OUT') {
+      console.log('→ Handling SIGNED_OUT');
       currentUser = null;
       resetAppState();
       showAuthScreen();
+      setAuthBtnLoading('login-btn', false, 'Sign In →');
+      setAuthBtnLoading('signup-btn', false, 'Create Account →');
     }
   });
 
-  // Check for existing session on page load
+  // Check for existing session on page load (handles refresh / session persistence)
+  console.log('→ Checking for existing session...');
   const { data: { session } } = await _supa.auth.getSession();
   if (!session) {
+    console.log('→ No existing session — showing auth screen');
     showAuthScreen();
+  } else {
+    console.log('→ Existing session found — onAuthStateChange SIGNED_IN will fire');
   }
-  // If session exists, onAuthStateChange SIGNED_IN fires automatically
+  // If session exists, onAuthStateChange SIGNED_IN fires automatically and handles the rest
 }
 
 // ── LAUNCH ──
