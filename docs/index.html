@@ -6,7 +6,6 @@
 <title>ElevaTrack — Track. Prove. Grow.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -407,20 +406,6 @@ tr:hover td{background:#ffffff03}
   .score-hero{flex-direction:column;text-align:center}
   .kanban-cols{grid-template-columns:1fr}
 }
-/* ── CLOUD SYNC STATUS ── */
-#sync-status{
-  display:flex;align-items:center;gap:5px;
-  font-size:10px;font-weight:500;padding:4px 9px;
-  border-radius:20px;border:1px solid var(--border2);
-  color:var(--text3);transition:all .3s;white-space:nowrap;
-}
-#sync-status.syncing{color:var(--amber);border-color:var(--amber-dim)}
-#sync-status.synced{color:var(--green);border-color:var(--green-dim)}
-#sync-status.error{color:var(--red);border-color:var(--red-dim)}
-#sync-status.offline{color:var(--text3);border-color:var(--border)}
-.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-#sync-status.syncing .sync-dot{animation:pulse-dot .8s ease-in-out infinite}
-@keyframes pulse-dot{0%,100%{opacity:.3}50%{opacity:1}}
 /* ── PRINT ── */
 @media print{nav,#topbar .topbar-right,.btn-group,.sb-item,.sb-logo{display:none!important}}
 /* ── MISC ── */
@@ -434,15 +419,116 @@ tr:hover td{background:#ffffff03}
 }
 .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 .section-divider span{font-size:10px;color:var(--text4);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+
+/* ── AUTH SCREEN ── */
+#auth-screen{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+}
+#auth-screen.hidden{display:none}
+.auth-card{
+  background:var(--s1);border:1px solid var(--border2);border-radius:20px;
+  padding:40px 36px;width:100%;max-width:400px;
+  box-shadow:0 24px 80px #c084fc15;
+}
+.auth-logo{text-align:center;margin-bottom:28px}
+.auth-gem{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,var(--violet),var(--fuchsia));
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:26px;margin-bottom:10px;box-shadow:0 0 30px #c084fc40;
+}
+.auth-title{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;letter-spacing:-.02em}
+.auth-sub{font-size:11px;color:var(--text3);margin-top:4px;letter-spacing:.04em;text-transform:uppercase}
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;background:var(--s2);border-radius:8px;padding:3px}
+.auth-tab{
+  flex:1;padding:7px;text-align:center;font-size:12px;font-weight:600;
+  border-radius:6px;cursor:pointer;border:none;background:none;
+  color:var(--text3);transition:all .2s;
+}
+.auth-tab.active{background:var(--s1);color:var(--violet-l);box-shadow:0 1px 6px #00000030}
+.auth-form{display:none}.auth-form.active{display:block}
+.auth-field{margin-bottom:14px}
+.auth-field label{display:block;font-size:10.5px;font-weight:600;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px}
+.auth-field input{
+  width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:8px;
+  color:var(--text);font-size:13px;padding:10px 13px;outline:none;transition:border-color .15s;
+}
+.auth-field input:focus{border-color:var(--violet);box-shadow:0 0 0 3px #c084fc15}
+.auth-btn{
+  width:100%;padding:11px;border:none;border-radius:8px;font-size:13px;font-weight:600;
+  cursor:pointer;background:linear-gradient(135deg,var(--violet),var(--fuchsia));
+  color:#fff;margin-top:4px;transition:all .2s;box-shadow:0 0 20px #c084fc30;
+}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 4px 24px #c084fc50}
+.auth-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.auth-error{
+  background:var(--red-dim);border:1px solid #4a1a1a;color:var(--red);
+  border-radius:8px;padding:10px 13px;font-size:12px;margin-bottom:14px;display:none;
+}
+.auth-error.show{display:block}
+.auth-success{
+  background:var(--green-dim);border:1px solid #1a4a1a;color:var(--green);
+  border-radius:8px;padding:10px 13px;font-size:12px;margin-bottom:14px;display:none;
+}
+.auth-success.show{display:block}
+.auth-footer{text-align:center;margin-top:20px;font-size:11px;color:var(--text3)}
+/* ── SYNC STATUS ── */
+#sync-status{
+  display:flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:500;padding:4px 9px;
+  border-radius:20px;border:1px solid var(--border2);
+  color:var(--text3);transition:all .3s;white-space:nowrap;
+}
+#sync-status.syncing{color:var(--amber);border-color:var(--amber-dim)}
+#sync-status.synced{color:var(--green);border-color:var(--green-dim)}
+#sync-status.error{color:var(--red);border-color:var(--red-dim)}
+#sync-status.offline{color:var(--text3);border-color:var(--border)}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+#sync-status.syncing .sync-dot{animation:pulse-dot .8s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:.3}50%{opacity:1}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
+
+<!-- ═══════════════ AUTH SCREEN ═══════════════ -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-gem">✦</div>
+      <div class="auth-title">ElevaTrack</div>
+      <div class="auth-sub">Track. Prove. Grow.</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchAuthTab('signup')">Create Account</button>
+    </div>
+    <div id="auth-error" class="auth-error"></div>
+    <div id="auth-success" class="auth-success"></div>
+    <!-- LOGIN -->
+    <div id="auth-login" class="auth-form active">
+      <div class="auth-field"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="login-password" placeholder="Your password" autocomplete="current-password"></div>
+      <button class="auth-btn" id="login-btn" onclick="handleLogin()">Sign In →</button>
+    </div>
+    <!-- SIGNUP -->
+    <div id="auth-signup" class="auth-form">
+      <div class="auth-field"><label>Full Name</label><input type="text" id="signup-name" placeholder="Sai Vinushaa"></div>
+      <div class="auth-field"><label>Email</label><input type="email" id="signup-email" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="signup-password" placeholder="Min 6 characters" autocomplete="new-password"></div>
+      <div class="auth-field"><label>Confirm Password</label><input type="password" id="signup-confirm" placeholder="Repeat password"></div>
+      <button class="auth-btn" id="signup-btn" onclick="handleSignup()">Create Account →</button>
+    </div>
+    <div class="auth-footer">made by Vinu · ElevaTrack v2.0</div>
+  </div>
+</div>
+
 <div id="overlay" onclick="closeSidebar()"></div>
 
 <!-- ═══════════════ SIDEBAR ═══════════════ -->
-<nav id="sidebar">
+<nav id="sidebar" style="display:none">
   <div class="sb-logo">
     <div class="logo-row">
       <div class="logo-gem">✦</div>
@@ -475,7 +561,7 @@ tr:hover td{background:#ffffff03}
 
   <div class="sb-bottom">
     <div class="sb-profile" onclick="nav('profile',document.querySelector('.sb-item'))">
-      <div class="sb-avatar">V</div>
+      <div class="sb-avatar" id="sb-avatar-txt">V</div>
       <div><div class="sb-pname" id="prof-name-sb">Your Name</div><div class="sb-prole" id="prof-role-sb">Engineer</div></div>
     </div>
     <div style="text-align:center;font-size:9.5px;color:var(--text4);margin-top:8px;letter-spacing:.04em">made by Vinu</div>
@@ -483,13 +569,13 @@ tr:hover td{background:#ffffff03}
 </nav>
 
 <!-- ═══════════════ MAIN ═══════════════ -->
-<div id="main">
+<div id="main" style="display:none">
   <div id="topbar">
     <button id="menu-btn" onclick="openSidebar()">☰</button>
     <div><div id="page-title">Dashboard</div><div id="page-sub"></div></div>
     <div class="topbar-right">
       <div id="sync-status" class="offline" title="Cloud sync status">
-        <span class="sync-dot"></span><span id="sync-label">Offline</span>
+        <span class="sync-dot"></span><span id="sync-label">—</span>
       </div>
       <div class="promo-ring" title="Promotion Readiness Score">
         <svg width="40" height="40" viewBox="0 0 40 40">
@@ -502,6 +588,7 @@ tr:hover td{background:#ffffff03}
       </div>
       <button class="btn btn-ghost btn-sm" onclick="nav('reports',document.querySelectorAll('.sb-item')[12])">📊 Reports</button>
       <button class="btn btn-violet btn-sm" onclick="exportPDF()">✦ Export PDF</button>
+      <button class="btn btn-ghost btn-sm" onclick="handleLogout()" title="Sign out">⎋ Logout</button>
     </div>
   </div>
 
@@ -961,253 +1048,690 @@ tr:hover td{background:#ffffff03}
 
 <div id="toast">✦ Saved</div>
 <script>
-// ═══════════════════════════════════════════════════════
-// ── STORAGE LAYER ── Supabase-first, localStorage fallback
-// ═══════════════════════════════════════════════════════
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ElevaTrack v2.0 — Production Architecture                      ║
+// ║  Auth → Supabase → Normalized Tables → UI                       ║
+// ╚══════════════════════════════════════════════════════════════════╝
 
-const SUPABASE_URL = "https://vimtnewcratpxwvclgnt.supabase.co";
-const SUPABASE_KEY = "sb_publishable_AHAfdAj0ghU4rS1VuzK6ww_u15Vz8b_";
-const DB_LOCAL_KEY  = 'elevatrack_v2';
-const DB_ROW_ID     = 1; // single-user row
+// ── CONFIG ──
+const SUPABASE_URL = 'https://vimtnewcratpxwvclgnt.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_AHAfdAj0ghU4rS1VuzK6ww_u15Vz8b_';
+const LOCAL_MIGRATE_KEY = 'elevatrack_legacy_v1';  // old key to migrate from
+const LEGACY_KEYS = ['luminary_v1','elevatrack_v2','elevatrack_legacy_v1'];
 
-// Init Supabase client immediately (SDK already loaded above)
-const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// ── SUPABASE CLIENT ──
+const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true }
+});
 
-// ── Sync UI helpers ──
+// ── APP STATE ── normalized tables, no single blob
+let D = {
+  daily: [], projects: [], learning: [], clients: [],
+  support: [], docs: [], achievements: [], evidence: [],
+  star: [], plans: [], goals: [], notes: [], mood: [],
+  profile: { name:'', role:'', dept:'', company:'', empid:'', manager:'', doj:'', email:'', links:'' }
+};
+
+let currentUser = null;   // Supabase auth user object
+let _saveQueue  = {};     // per-table debounce timers
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 1: UTILITIES ──
+// ══════════════════════════════════════════════════════════════════
+
+function uid()  { return Date.now().toString(36) + Math.random().toString(36).slice(2,5) }
+function today(){ return new Date().toISOString().split('T')[0] }
+function esc(s) { return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+function toast(m = '✦ Saved', type = 'default') {
+  const t = document.getElementById('toast');
+  t.textContent = m;
+  t.style.background = type === 'error'
+    ? 'linear-gradient(135deg,#2a0d0d,#3d1010)'
+    : 'linear-gradient(135deg,#2d1a4a,#3b1555)';
+  t.style.color = type === 'error' ? 'var(--red)' : 'var(--violet-l)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
 function setSyncStatus(state, label) {
   const el = document.getElementById('sync-status');
   const lb = document.getElementById('sync-label');
-  if (!el) return;
-  el.className = state; // 'syncing' | 'synced' | 'error' | 'offline'
-  lb.textContent = label;
+  if (el) el.className = state;
+  if (lb) lb.textContent = label;
 }
 
-// ── Master data object ──
-let D = {
-  daily:[], projects:[], learning:[], clients:[], support:[],
-  docs:[], achievements:[], evidence:[], star:[], plans:[],
-  goals:[], notes:[], mood:[],
-  profile:{ name:'',role:'',dept:'',company:'',empid:'',manager:'',doj:'',email:'',links:'' }
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  if (el) { el.textContent = msg; el.classList.add('show'); }
+  setTimeout(() => el && el.classList.remove('show'), 5000);
+}
+
+function showAuthSuccess(msg) {
+  const el = document.getElementById('auth-success');
+  if (el) { el.textContent = msg; el.classList.add('show'); }
+  setTimeout(() => el && el.classList.remove('show'), 5000);
+}
+
+function setAuthBtnLoading(btnId, loading, label) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.textContent = loading ? 'Please wait...' : label;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 2: AUTH ──
+// ══════════════════════════════════════════════════════════════════
+
+function switchAuthTab(tab) {
+  ['login','signup'].forEach(t => {
+    document.getElementById('auth-'+t).classList.toggle('active', t===tab);
+  });
+  document.querySelectorAll('.auth-tab').forEach((btn,i) => {
+    btn.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='signup'));
+  });
+  document.getElementById('auth-error').classList.remove('show');
+  document.getElementById('auth-success').classList.remove('show');
+}
+
+async function handleLogin() {
+  const email    = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if (!email || !password) { showAuthError('Email and password are required.'); return; }
+
+  setAuthBtnLoading('login-btn', true, 'Sign In →');
+  const { data, error } = await _supa.auth.signInWithPassword({ email, password });
+  setAuthBtnLoading('login-btn', false, 'Sign In →');
+
+  if (error) { showAuthError(error.message); return; }
+  // onAuthStateChange will handle the rest
+}
+
+async function handleSignup() {
+  const name     = document.getElementById('signup-name').value.trim();
+  const email    = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const confirm  = document.getElementById('signup-confirm').value;
+
+  if (!name)                        { showAuthError('Full name is required.'); return; }
+  if (!email)                       { showAuthError('Email is required.'); return; }
+  if (password.length < 6)          { showAuthError('Password must be at least 6 characters.'); return; }
+  if (password !== confirm)         { showAuthError('Passwords do not match.'); return; }
+
+  setAuthBtnLoading('signup-btn', true, 'Create Account →');
+  const { data, error } = await _supa.auth.signUp({ email, password,
+    options: { data: { full_name: name } }
+  });
+  setAuthBtnLoading('signup-btn', false, 'Create Account →');
+
+  if (error) { showAuthError(error.message); return; }
+
+  // Store name for profile creation on first login
+  localStorage.setItem('pending_name', name);
+  showAuthSuccess('Account created! Check your email to confirm, then sign in.');
+}
+
+async function handleLogout() {
+  await _supa.auth.signOut();
+  currentUser = null;
+  resetAppState();
+  showAuthScreen();
+  toast('Signed out successfully');
+}
+
+function showAuthScreen() {
+  document.getElementById('auth-screen').classList.remove('hidden');
+  document.getElementById('sidebar').style.display = 'none';
+  document.getElementById('main').style.display = 'none';
+}
+
+function showAppScreen() {
+  document.getElementById('auth-screen').classList.add('hidden');
+  document.getElementById('sidebar').style.display = '';
+  document.getElementById('main').style.display = '';
+}
+
+function resetAppState() {
+  D = {
+    daily:[], projects:[], learning:[], clients:[],
+    support:[], docs:[], achievements:[], evidence:[],
+    star:[], plans:[], goals:[], notes:[], mood:[],
+    profile:{ name:'',role:'',dept:'',company:'',empid:'',manager:'',doj:'',email:'',links:'' }
+  };
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 3: DATABASE LAYER (normalized tables) ──
+// ══════════════════════════════════════════════════════════════════
+
+// Generic: load all rows from a table for current user
+async function dbLoad(table) {
+  if (!currentUser) return [];
+  const { data, error } = await _supa
+    .from(table)
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('created_at', { ascending: false });
+  if (error) { console.error(`dbLoad ${table}:`, error.message); return []; }
+  return data || [];
+}
+
+// Generic: insert a row
+async function dbInsert(table, row) {
+  if (!currentUser) return null;
+  const { data, error } = await _supa
+    .from(table)
+    .insert({ ...row, user_id: currentUser.id })
+    .select()
+    .single();
+  if (error) { console.error(`dbInsert ${table}:`, error.message); throw error; }
+  return data;
+}
+
+// Generic: update a row by id
+async function dbUpdate(table, id, updates) {
+  if (!currentUser) return;
+  const { error } = await _supa
+    .from(table)
+    .update(updates)
+    .eq('id', id)
+    .eq('user_id', currentUser.id);
+  if (error) { console.error(`dbUpdate ${table}:`, error.message); throw error; }
+}
+
+// Generic: delete a row by id
+async function dbDelete(table, id) {
+  if (!currentUser) return;
+  const { error } = await _supa
+    .from(table)
+    .delete()
+    .eq('id', id)
+    .eq('user_id', currentUser.id);
+  if (error) { console.error(`dbDelete ${table}:`, error.message); throw error; }
+}
+
+// Map: D key → Supabase table name
+const TABLE_MAP = {
+  daily:        'daily_logs',
+  projects:     'projects',
+  learning:     'learning',
+  clients:      'client_calls',
+  support:      'support_cases',
+  docs:         'documentation',
+  achievements: 'achievements',
+  evidence:     'evidence',
+  star:         'star_entries',
+  plans:        'plans',
+  goals:        'goals',
+  notes:        'notes',
+  mood:         'mood_logs',
 };
 
-// ── LOAD: cloud first, localStorage fallback ──
-async function load() {
-  setSyncStatus('syncing','Loading...');
+// Map: table row → local D object (handle any column name differences)
+const ROW_TO_D = {
+  daily:        r => ({ id:r.id, date:r.date, task:r.task, project:r.project||'', client:r.client||'', hours:r.hours||'', cat:r.category||'', prio:r.priority||'Medium', status:r.status||'Completed', impact:r.impact||'', problem:r.problem_solved||'', tech:r.technologies||'', support:r.technical_support||'No', self:r.self_remarks||'', created_at:r.created_at }),
+  projects:     r => ({ id:r.id, name:r.name, client:r.client||'', role:r.role||'', start:r.start_date||'', end:r.end_date||'', status:r.status||'In Progress', prog:r.progress||0, tech:r.technologies||'', contrib:r.contribution||'', outcome:r.outcome||'', created_at:r.created_at }),
+  learning:     r => ({ id:r.id, date:r.date, topic:r.topic, type:r.source_type||'Course', source:r.source||'', cat:r.category||'Firmware', hours:r.hours||'', applied:r.applied_at_work||'No', cert:r.certificate||'No', notes:r.notes||'', created_at:r.created_at }),
+  clients:      r => ({ id:r.id, date:r.date, client:r.client_name, org:r.organization||'', dur:r.duration_mins||'', purpose:r.purpose||'', resolution:r.resolution||'', followup:r.follow_up||'No', rating:r.communication_rating||'8', created_at:r.created_at }),
+  support:      r => ({ id:r.id, date:r.date, issue:r.issue, prio:r.priority||'Medium', status:r.status||'Resolved', cause:r.root_cause||'', solution:r.solution||'', time:r.time_taken||'', sat:r.csat||'8', created_at:r.created_at }),
+  docs:         r => ({ id:r.id, date:r.date, name:r.name, type:r.doc_type||'User Guide', rev:r.revision||'', pages:r.pages||'', remarks:r.remarks||'', created_at:r.created_at }),
+  achievements: r => ({ id:r.id, date:r.date, achievement:r.title, type:r.type||'Other', impact:r.impact||'', revenue:r.revenue_impact||'', proof:r.proof||'', created_at:r.created_at }),
+  evidence:     r => ({ id:r.id, title:r.title, cat:r.category||'Other', project:r.project||'', date:r.date||'', notes:r.notes||'', fileName:r.file_name||'', fileUrl:r.file_url||'', dataUrl:r.data_url||'', created_at:r.created_at }),
+  star:         r => ({ id:r.id, s:r.situation, t:r.task_desc, a:r.action_taken, r:r.result_impact, created_at:r.created_at }),
+  plans:        r => ({ id:r.id, date:r.date, task:r.task, prio:r.priority||'Medium', done:r.done||false, created_at:r.created_at }),
+  goals:        r => ({ id:r.id, goal:r.goal, cat:r.category||'Career', date:r.target_date||'', done:r.completed||false, created_at:r.created_at }),
+  notes:        r => ({ id:r.id, date:r.date||today(), title:r.title, content:r.content||'', tag:r.tag||'Work', created_at:r.created_at }),
+  mood:         r => ({ id:r.id, date:r.date, mood:r.mood, note:r.note||'', created_at:r.created_at }),
+};
+
+// Map: local D object → Supabase insert payload
+const D_TO_ROW = {
+  daily:        r => ({ date:r.date, task:r.task, project:r.project, client:r.client, hours:r.hours?Number(r.hours):null, category:r.cat, priority:r.prio, status:r.status, impact:r.impact, problem_solved:r.problem, technologies:r.tech, technical_support:r.support, self_remarks:r.self }),
+  projects:     r => ({ name:r.name, client:r.client, role:r.role, start_date:r.start||null, end_date:r.end||null, status:r.status, progress:r.prog?Number(r.prog):0, technologies:r.tech, contribution:r.contrib, outcome:r.outcome }),
+  learning:     r => ({ date:r.date, topic:r.topic, source_type:r.type, source:r.source, category:r.cat, hours:r.hours?Number(r.hours):null, applied_at_work:r.applied, certificate:r.cert, notes:r.notes }),
+  clients:      r => ({ date:r.date, client_name:r.client, organization:r.org, duration_mins:r.dur?Number(r.dur):null, purpose:r.purpose, resolution:r.resolution, follow_up:r.followup, communication_rating:r.rating?Number(r.rating):null }),
+  support:      r => ({ date:r.date, issue:r.issue, priority:r.prio, status:r.status, root_cause:r.cause, solution:r.solution, time_taken:r.time, csat:r.sat?Number(r.sat):null }),
+  docs:         r => ({ date:r.date, name:r.name, doc_type:r.type, revision:r.rev, pages:r.pages?Number(r.pages):null, remarks:r.remarks }),
+  achievements: r => ({ date:r.date, title:r.achievement, type:r.type, impact:r.impact, revenue_impact:r.revenue, proof:r.proof }),
+  evidence:     r => ({ title:r.title, category:r.cat, project:r.project, date:r.date, notes:r.notes, file_name:r.fileName, file_url:r.fileUrl||'', data_url:r.dataUrl||'' }),
+  star:         r => ({ situation:r.s, task_desc:r.t, action_taken:r.a, result_impact:r.r }),
+  plans:        r => ({ date:r.date, task:r.task, priority:r.prio, done:r.done }),
+  goals:        r => ({ goal:r.goal, category:r.cat, target_date:r.date||null, completed:r.done }),
+  notes:        r => ({ date:r.date||today(), title:r.title, content:r.content, tag:r.tag }),
+  mood:         r => ({ date:r.date, mood:r.mood, note:r.note }),
+};
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 4: LOAD ALL DATA ──
+// ══════════════════════════════════════════════════════════════════
+
+async function loadAllData() {
+  setSyncStatus('syncing', 'Loading...');
   try {
-    const { data, error } = await _supa
-      .from('user_data')
-      .select('data')
-      .eq('id', DB_ROW_ID)
-      .select("*")
-      .single()
+    const keys = Object.keys(TABLE_MAP);
+    const results = await Promise.all(
+      keys.map(k => dbLoad(TABLE_MAP[k]))
+    );
+    keys.forEach((k, i) => {
+      D[k] = results[i].map(ROW_TO_D[k]);
+    });
 
-    if (error) throw error;
+    // Load profile (separate table with upsert logic)
+    await loadProfile_db();
 
-    if (data && data.data) {
-      // Merge cloud data — preserve structure for any missing keys
-      Object.keys(D).forEach(k => {
-        if (data.data[k] !== undefined) D[k] = data.data[k];
-      });
-      setSyncStatus('synced', '☁ Cloud');
-      console.log('☁️ Loaded from Supabase');
-    } else {
-      _loadLocal();
-      setSyncStatus('synced', '☁ Cloud (empty)');
-    }
+    setSyncStatus('synced', '☁ Synced');
+    console.log('✅ All data loaded from Supabase');
   } catch (err) {
-    console.warn('⚠️ Supabase load failed, using local:', err.message);
-    _loadLocal();
-    setSyncStatus('offline', '💻 Local');
+    console.error('Load failed:', err);
+    setSyncStatus('error', '⚠ Load failed');
+    toast('Failed to load data', 'error');
   }
 }
 
-function _loadLocal() {
-  try {
-    const raw = localStorage.getItem(DB_LOCAL_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      Object.keys(D).forEach(k => {
-        if (parsed[k] !== undefined) D[k] = parsed[k];
-      });
-      console.log('💻 Loaded from localStorage');
-    }
-  } catch (e) {
-    console.error('Local load failed:', e);
+async function loadProfile_db() {
+  const { data, error } = await _supa
+    .from('profiles')
+    .select('*')
+    .eq('user_id', currentUser.id);
+
+  if (!error && data && data.length > 0) {
+    const p = data[0];
+    D.profile = {
+      name: p.name || currentUser.user_metadata?.full_name || '',
+      role: p.role || '',
+      dept: p.department || '',
+      company: p.company || '',
+      empid: p.employee_id || '',
+      manager: p.manager_name || '',
+      doj: p.date_of_joining || '',
+      email: p.email || currentUser.email || '',
+      links: p.links || ''
+    };
+  } else {
+    // First time user — create profile row
+    const pendingName = localStorage.getItem('pending_name') || currentUser.user_metadata?.full_name || '';
+    D.profile.email = currentUser.email || '';
+    D.profile.name  = pendingName;
+    if (pendingName) localStorage.removeItem('pending_name');
+    await saveProfile_db();
   }
 }
 
-// ── SAVE: write to both cloud and localStorage ──
-let _saveTimer = null;
-async function save() {
-  // Always write locally as instant backup
-  localStorage.setItem(DB_LOCAL_KEY, JSON.stringify(D));
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 5: SAVE (insert row, update local D) ──
+// ══════════════════════════════════════════════════════════════════
 
-  // Debounce cloud writes — avoid hammering Supabase on rapid edits
-  clearTimeout(_saveTimer);
-  _saveTimer = setTimeout(_cloudSave, 800);
-
-  // Re-render UI immediately (don't wait for cloud)
-  updateAll();
-}
-
-async function _cloudSave() {
+// Add a new item: insert to DB, prepend to local D array, re-render
+async function addItem(key, localObj, renderFn) {
+  if (!currentUser) { toast('Not signed in', 'error'); return; }
   setSyncStatus('syncing', 'Saving...');
   try {
-    const { error } = await _supa
-      .from('user_data')
-      .upsert({ id: DB_ROW_ID, data: D, updated_at: new Date().toISOString() });
-
-    if (error) throw error;
+    const payload = D_TO_ROW[key](localObj);
+    const saved   = await dbInsert(TABLE_MAP[key], payload);
+    // Use DB-assigned id (UUID)
+    localObj.id = saved.id;
+    D[key].unshift(localObj);
+    updateAll();
+    if (renderFn) renderFn();
     setSyncStatus('synced', '☁ Saved');
-    console.log('☁️ Cloud save OK');
+    toast('✦ Saved');
+  } catch (err) {
+    setSyncStatus('error', '⚠ Save failed');
+    toast('Save failed — check connection', 'error');
+  }
+}
+
+// Delete an item
+async function delItem(key, id, renderFn) {
+  if (!currentUser) return;
+  setSyncStatus('syncing', 'Deleting...');
+  try {
+    await dbDelete(TABLE_MAP[key], id);
+    const idx = D[key].findIndex(x => x.id === id);
+    if (idx >= 0) D[key].splice(idx, 1);
+    updateAll();
+    if (renderFn) renderFn();
+    setSyncStatus('synced', '☁ Saved');
+    toast('🗑 Deleted');
+  } catch (err) {
+    setSyncStatus('error', '⚠ Delete failed');
+    toast('Delete failed', 'error');
+  }
+}
+
+// Update a single field on an existing item
+async function updateItem(key, id, updates, renderFn) {
+  if (!currentUser) return;
+  try {
+    await dbUpdate(TABLE_MAP[key], id, updates);
+    const item = D[key].find(x => x.id === id);
+    if (item) Object.assign(item, updates);
+    if (renderFn) renderFn();
+    setSyncStatus('synced', '☁ Saved');
   } catch (err) {
     setSyncStatus('error', '⚠ Sync failed');
-    console.error('Cloud save failed:', err.message);
-    // Will retry on next save — data safe in localStorage
   }
 }
 
-// ── Utility ──
-function uid()  { return Date.now().toString(36) + Math.random().toString(36).slice(2,5) }
-function today(){ return new Date().toISOString().split('T')[0] }
-function toast(m='✦ Saved') {
-  const t = document.getElementById('toast');
-  t.textContent = m;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+// Legacy del() wrapper used by inline HTML onclick
+async function del(arr, id, cbName) {
+  const renderMap = {
+    daily:'renderDaily', projects:'renderProjects', learning:'renderLearning',
+    clients:'renderClients', support:'renderSupport', docs:'renderDocs',
+    achievements:'renderAchievements', evidence:'renderEvidence',
+    star:'renderStar', plans:'renderPlan', goals:'renderGoals',
+    notes:'renderNotes', mood:'renderMood'
+  };
+  const fn = window[renderMap[arr] || cbName];
+  await delItem(arr, id, fn);
 }
 
-// ═══════════════════════════════════════════════════════
-// ── NAV ──
-// ═══════════════════════════════════════════════════════
-function nav(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
-  const pg=document.getElementById('page-'+id);
-  if(pg)pg.classList.add('active');
-  if(el)el.classList.add('active');
-  const titles={dashboard:'Dashboard',quicklog:'Quick Log',evidence:'Evidence Vault',ai:'AI Writer',projects:'Projects',learning:'Learning',clients:'Client Calls',support:'Technical Support',docs:'Documentation',achievements:'Achievements',reports:'Reports & Export',planner:'Planner',goals:'Goals',notes:'Notes',mood:'Mood Tracker',profile:'My Profile'};
-  document.getElementById('page-title').textContent=titles[id]||id;
-  document.getElementById('page-sub').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  if(id==='dashboard')renderDashboard();
-  if(id==='reports')renderReports();
-  if(id==='planner')renderCal();
-  if(id==='goals')renderGoals();
-  if(id==='notes')renderNotes();
-  if(id==='mood')renderMood();
-  if(id==='evidence')renderEvidence();
-  if(id==='profile')loadProfile();
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 6: PROFILE SAVE ──
+// ══════════════════════════════════════════════════════════════════
+
+async function saveProfile_db() {
+  const pf = D.profile;
+  const payload = {
+    user_id:        currentUser.id,
+    name:           pf.name,
+    email:          pf.email || currentUser.email,
+    role:           pf.role,
+    department:     pf.dept,
+    company:        pf.company,
+    employee_id:    pf.empid,
+    manager_name:   pf.manager,
+    date_of_joining: pf.doj || null,
+    links:          pf.links,
+    updated_at:     new Date().toISOString()
+  };
+
+  // Use upsert with on_conflict on user_id
+  const { error } = await _supa
+    .from('profiles')
+    .upsert(payload, { onConflict: 'user_id' });
+
+  if (error) console.error('Profile save:', error.message);
+}
+
+async function saveProfile() {
+  D.profile = {
+    name:    document.getElementById('pf-name').value,
+    role:    document.getElementById('pf-role').value,
+    dept:    document.getElementById('pf-dept').value,
+    company: document.getElementById('pf-company').value,
+    empid:   document.getElementById('pf-empid').value,
+    manager: document.getElementById('pf-manager').value,
+    doj:     document.getElementById('pf-doj').value,
+    email:   document.getElementById('pf-email').value,
+    links:   document.getElementById('pf-links').value
+  };
+  setSyncStatus('syncing','Saving...');
+  await saveProfile_db();
+  setSyncStatus('synced','☁ Saved');
+  updateSidebarProfile();
+  toast('✦ Profile saved');
+}
+
+function loadProfile() {
+  const pf = D.profile || {};
+  ['name','role','dept','company','empid','manager','doj','email','links'].forEach(k => {
+    const el = document.getElementById('pf-'+k);
+    if (el) el.value = pf[k] || '';
+  });
+}
+
+function updateSidebarProfile() {
+  const pn = document.getElementById('prof-name-sb');
+  const pr = document.getElementById('prof-role-sb');
+  const av = document.getElementById('sb-avatar-txt');
+  if (pn) pn.textContent = D.profile.name || 'Your Name';
+  if (pr) pr.textContent = D.profile.role || 'Engineer';
+  if (av) av.textContent = (D.profile.name||'V')[0].toUpperCase();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 7: DATA MIGRATION (localStorage → Supabase) ──
+// ══════════════════════════════════════════════════════════════════
+
+async function migrateLocalData() {
+  let legacy = null;
+  for (const key of LEGACY_KEYS) {
+    const raw = localStorage.getItem(key);
+    if (raw) { try { legacy = JSON.parse(raw); break; } catch(e) {} }
+  }
+  if (!legacy) return;
+
+  console.log('🔄 Migrating local data to Supabase...');
+  toast('Migrating local data to cloud...');
+
+  const migrationMap = [
+    ['daily','daily'], ['projects','projects'], ['learning','learning'],
+    ['clients','clients'], ['support','support'], ['docs','docs'],
+    ['achievements','achievements'], ['evidence','evidence'],
+    ['star','star'], ['plans','plans'], ['goals','goals'],
+    ['notes','notes'], ['mood','mood']
+  ];
+
+  let migrated = 0;
+  for (const [localKey, dbKey] of migrationMap) {
+    const items = legacy[localKey] || [];
+    for (const item of items) {
+      try {
+        const payload = D_TO_ROW[dbKey](item);
+        await _supa.from(TABLE_MAP[dbKey]).insert({ ...payload, user_id: currentUser.id });
+        migrated++;
+      } catch(e) { /* skip duplicates */ }
+    }
+  }
+
+  // Migrate profile
+  if (legacy.profile && legacy.profile.name) {
+    D.profile = { ...D.profile, ...legacy.profile };
+    await saveProfile_db();
+  }
+
+  // Clear legacy keys after successful migration
+  LEGACY_KEYS.forEach(k => localStorage.removeItem(k));
+  console.log(`✅ Migrated ${migrated} items`);
+  toast(`✦ Migrated ${migrated} items to cloud`);
+
+  // Reload fresh from DB
+  await loadAllData();
+  renderAll();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 8: NAV & UI ──
+// ══════════════════════════════════════════════════════════════════
+
+function nav(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-'+id);
+  if (pg) pg.classList.add('active');
+  if (el) el.classList.add('active');
+  const titles = {
+    dashboard:'Dashboard', quicklog:'Quick Log', evidence:'Evidence Vault',
+    ai:'AI Writer', projects:'Projects', learning:'Learning',
+    clients:'Client Calls', support:'Technical Support', docs:'Documentation',
+    achievements:'Achievements', reports:'Reports & Export',
+    planner:'Planner', goals:'Goals', notes:'Notes',
+    mood:'Mood Tracker', profile:'My Profile'
+  };
+  document.getElementById('page-title').textContent = titles[id] || id;
+  document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
+    {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  if (id==='dashboard')   renderDashboard();
+  if (id==='reports')     renderReports();
+  if (id==='planner')     renderCal();
+  if (id==='goals')       renderGoals();
+  if (id==='notes')       renderNotes();
+  if (id==='mood')        renderMood();
+  if (id==='evidence')    renderEvidence();
+  if (id==='profile')     loadProfile();
   closeSidebar();
 }
-function toggleFS(id){const el=document.getElementById(id);if(el)el.classList.toggle('open')}
-function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show')}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show')}
 
-// ═══════════════ SCORE ═══════════════
-function calcScore(){
-  let s=0;
-  s+=Math.min(25,D.daily.length*2);
-  s+=Math.min(20,D.projects.length*5);
-  s+=Math.min(15,D.achievements.length*4);
-  s+=Math.min(15,D.learning.length*3);
-  s+=Math.min(10,D.support.length*2);
-  s+=Math.min(8,D.clients.length*2);
-  s+=Math.min(5,D.docs.length*2);
-  s+=Math.min(2,D.evidence.length);
-  return Math.min(100,Math.round(s));
+function toggleFS(id) { const el=document.getElementById(id); if(el) el.classList.toggle('open') }
+function openSidebar()  { document.getElementById('sidebar').classList.add('open');    document.getElementById('overlay').classList.add('show')  }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show') }
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 9: SCORE ──
+// ══════════════════════════════════════════════════════════════════
+
+function calcScore() {
+  let s = 0;
+  s += Math.min(25, D.daily.length * 2);
+  s += Math.min(20, D.projects.length * 5);
+  s += Math.min(15, D.achievements.length * 4);
+  s += Math.min(15, D.learning.length * 3);
+  s += Math.min(10, D.support.length * 2);
+  s += Math.min(8,  D.clients.length * 2);
+  s += Math.min(5,  D.docs.length * 2);
+  s += Math.min(2,  D.evidence.length);
+  return Math.min(100, Math.round(s));
 }
-function updateScore(){
-  const sc=calcScore();
-  const arc=235.6*0.75;
-  const offset=arc-(sc/100)*arc+58.9;
-  ['dash-arc','report-arc'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.strokeDashoffset=offset});
-  ['dash-score','report-score','promo-score'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=sc});
-  const promoArc=document.getElementById('promo-arc');
-  if(promoArc){const c=100.5;promoArc.style.strokeDashoffset=c-(sc/100)*c}
-  const desc=document.getElementById('score-desc');
-  if(desc){
-    if(sc>=80)desc.textContent='Outstanding! Your portfolio is strong. You have compelling evidence for a promotion discussion.';
-    else if(sc>=60)desc.textContent='Great progress! Add more achievements and client interactions to strengthen your case.';
-    else if(sc>=40)desc.textContent='Good start. Keep logging daily work and add key achievements to build your appraisal case.';
+
+function updateScore() {
+  const sc  = calcScore();
+  const arc = 235.6 * 0.75;
+  const off = arc - (sc/100)*arc + 58.9;
+  ['dash-arc','report-arc'].forEach(id => { const el=document.getElementById(id); if(el) el.style.strokeDashoffset=off });
+  ['dash-score','report-score','promo-score'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=sc });
+  const promoArc = document.getElementById('promo-arc');
+  if (promoArc) { const c=100.5; promoArc.style.strokeDashoffset = c-(sc/100)*c }
+  const desc = document.getElementById('score-desc');
+  if (desc) {
+    if (sc>=80) desc.textContent='Outstanding! Your portfolio is strong. You have compelling evidence for a promotion discussion.';
+    else if (sc>=60) desc.textContent='Great progress! Add more achievements and client interactions to strengthen your case.';
+    else if (sc>=40) desc.textContent='Good start. Keep logging daily work and add key achievements to build your appraisal case.';
     else desc.textContent='Start logging your daily work, achievements, and learning to build your appraisal portfolio.';
   }
-  const pills=document.getElementById('score-pills');
-  if(pills){
-    const data=[[D.daily.length,'tasks'],[D.projects.length,'projects'],[D.achievements.length,'wins'],[D.learning.length,'topics']];
-    pills.innerHTML=data.map(([v,l])=>`<div class="score-pill"><span style="font-weight:700;color:var(--violet-l)">${v}</span>${l}</div>`).join('');
+  const pills = document.getElementById('score-pills');
+  if (pills) {
+    pills.innerHTML = [[D.daily.length,'tasks'],[D.projects.length,'projects'],[D.achievements.length,'wins'],[D.learning.length,'topics']]
+      .map(([v,l]) => `<div class="score-pill"><span style="font-weight:700;color:var(--violet-l)">${v}</span>${l}</div>`).join('');
   }
 }
 
-// ═══════════════ BADGES ═══════════════
-function prioBadge(p){const m={High:'br',Medium:'ba',Low:'bg',Critical:'br'};return`<span class="badge ${m[p]||'bn'}">${p||'—'}</span>`}
-function statusBadge(s){const m={Completed:'bg','In Progress':'bb',Blocked:'br',Deferred:'bn',Resolved:'bg',Escalated:'br',Pending:'ba'};return`<span class="badge ${m[s]||'bn'}">${s||'—'}</span>`}
-function appliedBadge(a){return`<span class="badge ${a==='Yes'?'bg':a==='Planned'?'ba':'bn'}">${a}</span>`}
-function delBtn(arr,id,cb){return`<button style="background:var(--red-dim);color:var(--red);border:none;border-radius:5px;padding:3px 8px;font-size:11px;cursor:pointer" onclick="del('${arr}','${id}',${cb})">✕</button>`}
-async function del(arr,id,cb){const i=D[arr].findIndex(x=>x.id===id);if(i>=0)D[arr].splice(i,1);await save();if(cb)eval(cb+'()');toast('🗑 Deleted')}
-
-// ═══════════════ DAILY ═══════════════
-async function addDaily(){
-  const r={id:uid(),date:document.getElementById('dl-date').value||today(),task:document.getElementById('dl-task').value,project:document.getElementById('dl-project').value,client:document.getElementById('dl-client').value,hours:document.getElementById('dl-hours').value,cat:document.getElementById('dl-cat').value,prio:document.getElementById('dl-prio').value,status:document.getElementById('dl-status').value,impact:document.getElementById('dl-impact').value,problem:document.getElementById('dl-problem').value,tech:document.getElementById('dl-tech').value,support:document.getElementById('dl-support').value,self:document.getElementById('dl-self').value};
-  if(!r.task){toast('⚠️ Task title required');return}
-  D.daily.unshift(r);
-  await save();
-  renderDaily();
-  toast('✦ Entry saved');
+function updateAll() {
+  updateScore();
+  const badges = [['nb-daily',D.daily.length],['nb-projects',D.projects.length],['nb-learning',D.learning.length],
+    ['nb-clients',D.clients.length],['nb-support',D.support.length],['nb-docs',D.docs.length],
+    ['nb-ach',D.achievements.length],['nb-evidence',D.evidence.length]];
+  badges.forEach(([id,v]) => { const el=document.getElementById(id); if(el) el.textContent=v });
 }
-function clearDaily(){['dl-task','dl-project','dl-client','dl-hours','dl-impact','dl-problem','dl-tech','dl-self'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})}
-function renderDaily(){
-  const b=document.getElementById('daily-body');if(!b)return;
-  document.getElementById('daily-cnt').textContent=D.daily.length+' entries';
-  if(!D.daily.length){b.innerHTML=`<tr><td colspan="9" class="empty-td">No entries yet. Log your first task above!</td></tr>`;return}
-  b.innerHTML=D.daily.map(r=>`<tr>
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 10: BADGE HELPERS ──
+// ══════════════════════════════════════════════════════════════════
+
+function prioBadge(p)   { const m={High:'br',Medium:'ba',Low:'bg',Critical:'br'}; return`<span class="badge ${m[p]||'bn'}">${p||'—'}</span>` }
+function statusBadge(s) { const m={Completed:'bg','In Progress':'bb',Blocked:'br',Deferred:'bn',Resolved:'bg',Escalated:'br',Pending:'ba'}; return`<span class="badge ${m[s]||'bn'}">${s||'—'}</span>` }
+function appliedBadge(a){ return`<span class="badge ${a==='Yes'?'bg':a==='Planned'?'ba':'bn'}">${a}</span>` }
+function delBtn(arr,id,cb) { return`<button style="background:var(--red-dim);color:var(--red);border:none;border-radius:5px;padding:3px 8px;font-size:11px;cursor:pointer" onclick="del('${arr}','${id}','${cb}')">✕</button>` }
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 11: CRUD HANDLERS ──
+// ══════════════════════════════════════════════════════════════════
+
+// ── DAILY ──
+async function addDaily() {
+  const r = {
+    id:'', date:document.getElementById('dl-date').value||today(),
+    task:document.getElementById('dl-task').value,
+    project:document.getElementById('dl-project').value,
+    client:document.getElementById('dl-client').value,
+    hours:document.getElementById('dl-hours').value,
+    cat:document.getElementById('dl-cat').value,
+    prio:document.getElementById('dl-prio').value,
+    status:document.getElementById('dl-status').value,
+    impact:document.getElementById('dl-impact').value,
+    problem:document.getElementById('dl-problem').value,
+    tech:document.getElementById('dl-tech').value,
+    support:document.getElementById('dl-support').value,
+    self:document.getElementById('dl-self').value
+  };
+  if (!r.task) { toast('⚠️ Task title required', 'error'); return; }
+  await addItem('daily', r, renderDaily);
+}
+function clearDaily() {
+  ['dl-task','dl-project','dl-client','dl-hours','dl-impact','dl-problem','dl-tech','dl-self']
+    .forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+}
+function renderDaily() {
+  const b = document.getElementById('daily-body'); if (!b) return;
+  document.getElementById('daily-cnt').textContent = D.daily.length+' entries';
+  if (!D.daily.length) { b.innerHTML=`<tr><td colspan="9" class="empty-td">No entries yet. Log your first task above!</td></tr>`; return }
+  b.innerHTML = D.daily.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3);white-space:nowrap">${r.date}</td>
-    <td><strong style="font-size:12.5px">${r.task}</strong></td>
-    <td style="font-size:11px;color:var(--text2)">${r.project||'—'}</td>
-    <td><span class="badge bv">${r.cat}</span></td>
+    <td><strong style="font-size:12.5px">${esc(r.task)}</strong></td>
+    <td style="font-size:11px;color:var(--text2)">${esc(r.project)||'—'}</td>
+    <td><span class="badge bv">${esc(r.cat)}</span></td>
     <td style="font-variant-numeric:tabular-nums;text-align:center">${r.hours||'—'}</td>
     <td>${prioBadge(r.prio)}</td>
     <td>${statusBadge(r.status)}</td>
-    <td style="font-size:11px;color:var(--text2);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.impact||'—'}</td>
+    <td style="font-size:11px;color:var(--text2);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.impact)||'—'}</td>
     <td>${delBtn('daily',r.id,'renderDaily')}</td>
   </tr>`).join('');
 }
 
-// ═══════════════ PROJECTS ═══════════════
-async function addProject(){
-  const r={id:uid(),name:document.getElementById('pj-name').value,client:document.getElementById('pj-client').value,role:document.getElementById('pj-role').value,start:document.getElementById('pj-start').value,end:document.getElementById('pj-end').value,status:document.getElementById('pj-status').value,prog:document.getElementById('pj-prog').value,tech:document.getElementById('pj-tech').value,contrib:document.getElementById('pj-contrib').value,outcome:document.getElementById('pj-outcome').value};
-  if(!r.name){toast('⚠️ Project name required');return}
-  D.projects.unshift(r);await save();renderProjects();toast();
+// ── PROJECTS ──
+async function addProject() {
+  const r = {
+    id:'', name:document.getElementById('pj-name').value,
+    client:document.getElementById('pj-client').value, role:document.getElementById('pj-role').value,
+    start:document.getElementById('pj-start').value, end:document.getElementById('pj-end').value,
+    status:document.getElementById('pj-status').value, prog:document.getElementById('pj-prog').value,
+    tech:document.getElementById('pj-tech').value, contrib:document.getElementById('pj-contrib').value,
+    outcome:document.getElementById('pj-outcome').value
+  };
+  if (!r.name) { toast('⚠️ Project name required','error'); return; }
+  await addItem('projects', r, renderProjects);
 }
-function renderProjects(){
-  const b=document.getElementById('proj-body');if(!b)return;
-  if(!D.projects.length){b.innerHTML=`<tr><td colspan="9" class="empty-td">No projects yet.</td></tr>`;return}
-  b.innerHTML=D.projects.map(r=>`<tr>
-    <td><strong>${r.name}</strong></td>
-    <td style="font-size:11px">${r.client||'—'}</td>
-    <td style="font-size:11px">${r.role||'—'}</td>
+function renderProjects() {
+  const b = document.getElementById('proj-body'); if (!b) return;
+  if (!D.projects.length) { b.innerHTML=`<tr><td colspan="9" class="empty-td">No projects yet.</td></tr>`; return }
+  b.innerHTML = D.projects.map(r => `<tr>
+    <td><strong>${esc(r.name)}</strong></td>
+    <td style="font-size:11px">${esc(r.client)||'—'}</td>
+    <td style="font-size:11px">${esc(r.role)||'—'}</td>
     <td style="font-size:11px;white-space:nowrap">${r.start||'—'}</td>
     <td style="font-size:11px;white-space:nowrap">${r.end||'—'}</td>
     <td style="min-width:90px"><div class="pbar-wrap"><div class="pbar-fill" style="width:${r.prog||0}%"></div></div><span style="font-size:9.5px;color:var(--text3)">${r.prog||0}%</span></td>
     <td>${statusBadge(r.status)}</td>
-    <td style="font-size:11px;color:var(--green);max-width:160px">${r.outcome||'—'}</td>
+    <td style="font-size:11px;color:var(--green);max-width:160px">${esc(r.outcome)||'—'}</td>
     <td>${delBtn('projects',r.id,'renderProjects')}</td>
   </tr>`).join('');
 }
 
-// ═══════════════ LEARNING ═══════════════
-async function addLearning(){
-  const r={id:uid(),date:document.getElementById('ln-date').value||today(),topic:document.getElementById('ln-topic').value,type:document.getElementById('ln-type').value,source:document.getElementById('ln-source').value,cat:document.getElementById('ln-cat').value,hours:document.getElementById('ln-hours').value,applied:document.getElementById('ln-applied').value,cert:document.getElementById('ln-cert').value,notes:document.getElementById('ln-notes').value};
-  if(!r.topic){toast('⚠️ Topic required');return}
-  D.learning.unshift(r);await save();renderLearning();toast();
+// ── LEARNING ──
+async function addLearning() {
+  const r = {
+    id:'', date:document.getElementById('ln-date').value||today(),
+    topic:document.getElementById('ln-topic').value,
+    type:document.getElementById('ln-type').value,
+    source:document.getElementById('ln-source').value,
+    cat:document.getElementById('ln-cat').value,
+    hours:document.getElementById('ln-hours').value,
+    applied:document.getElementById('ln-applied').value,
+    cert:document.getElementById('ln-cert').value,
+    notes:document.getElementById('ln-notes').value
+  };
+  if (!r.topic) { toast('⚠️ Topic required','error'); return; }
+  await addItem('learning', r, renderLearning);
 }
-function renderLearning(){
-  const b=document.getElementById('learn-body');if(!b)return;
-  if(!D.learning.length){b.innerHTML=`<tr><td colspan="8" class="empty-td">No learning logged.</td></tr>`;return}
-  b.innerHTML=D.learning.map(r=>`<tr>
+function renderLearning() {
+  const b = document.getElementById('learn-body'); if (!b) return;
+  if (!D.learning.length) { b.innerHTML=`<tr><td colspan="8" class="empty-td">No learning logged.</td></tr>`; return }
+  b.innerHTML = D.learning.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong>${r.topic}</strong></td>
-    <td style="font-size:11px">${r.source||'—'}</td>
-    <td><span class="badge bp">${r.cat}</span></td>
+    <td><strong>${esc(r.topic)}</strong></td>
+    <td style="font-size:11px">${esc(r.source)||'—'}</td>
+    <td><span class="badge bp">${esc(r.cat)}</span></td>
     <td style="font-variant-numeric:tabular-nums;text-align:center">${r.hours||'—'}</td>
     <td>${appliedBadge(r.applied)}</td>
     <td><span class="badge ${r.cert==='Yes'?'bg':'bn'}">${r.cert}</span></td>
@@ -1215,281 +1739,354 @@ function renderLearning(){
   </tr>`).join('');
 }
 
-// ═══════════════ CLIENTS ═══════════════
-async function addClient(){
-  const r={id:uid(),date:document.getElementById('cl-date').value||today(),client:document.getElementById('cl-client').value,org:document.getElementById('cl-org').value,dur:document.getElementById('cl-dur').value,purpose:document.getElementById('cl-purpose').value,resolution:document.getElementById('cl-resolution').value,followup:document.getElementById('cl-followup').value,rating:document.getElementById('cl-rating').value};
-  if(!r.client){toast('⚠️ Client name required');return}
-  D.clients.unshift(r);await save();renderClients();toast();
+// ── CLIENT CALLS ──
+async function addClient() {
+  const r = {
+    id:'', date:document.getElementById('cl-date').value||today(),
+    client:document.getElementById('cl-client').value,
+    org:document.getElementById('cl-org').value,
+    dur:document.getElementById('cl-dur').value,
+    purpose:document.getElementById('cl-purpose').value,
+    resolution:document.getElementById('cl-resolution').value,
+    followup:document.getElementById('cl-followup').value,
+    rating:document.getElementById('cl-rating').value
+  };
+  if (!r.client) { toast('⚠️ Client name required','error'); return; }
+  await addItem('clients', r, renderClients);
 }
-function renderClients(){
-  const b=document.getElementById('client-body');if(!b)return;
-  if(!D.clients.length){b.innerHTML=`<tr><td colspan="9" class="empty-td">No client calls logged.</td></tr>`;return}
-  b.innerHTML=D.clients.map(r=>`<tr>
+function renderClients() {
+  const b = document.getElementById('client-body'); if (!b) return;
+  if (!D.clients.length) { b.innerHTML=`<tr><td colspan="9" class="empty-td">No client calls logged.</td></tr>`; return }
+  b.innerHTML = D.clients.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong>${r.client}</strong></td>
-    <td style="font-size:11px">${r.org||'—'}</td>
+    <td><strong>${esc(r.client)}</strong></td>
+    <td style="font-size:11px">${esc(r.org)||'—'}</td>
     <td style="font-size:11px">${r.dur?r.dur+' min':'—'}</td>
-    <td style="font-size:11px;max-width:120px">${r.purpose||'—'}</td>
-    <td style="font-size:11px;color:var(--green);max-width:150px">${r.resolution||'—'}</td>
+    <td style="font-size:11px;max-width:120px">${esc(r.purpose)||'—'}</td>
+    <td style="font-size:11px;color:var(--green);max-width:150px">${esc(r.resolution)||'—'}</td>
     <td><span class="badge ${r.followup==='Yes'?'ba':'bg'}">${r.followup}</span></td>
     <td style="font-variant-numeric:tabular-nums">${r.rating||'—'}/10</td>
     <td>${delBtn('clients',r.id,'renderClients')}</td>
   </tr>`).join('');
 }
 
-// ═══════════════ SUPPORT ═══════════════
-async function addSupport(){
-  const r={id:uid(),date:document.getElementById('sp-date').value||today(),issue:document.getElementById('sp-issue').value,prio:document.getElementById('sp-prio').value,status:document.getElementById('sp-status').value,cause:document.getElementById('sp-cause').value,solution:document.getElementById('sp-solution').value,time:document.getElementById('sp-time').value,sat:document.getElementById('sp-sat').value};
-  if(!r.issue){toast('⚠️ Issue required');return}
-  D.support.unshift(r);await save();renderSupport();toast();
+// ── SUPPORT ──
+async function addSupport() {
+  const r = {
+    id:'', date:document.getElementById('sp-date').value||today(),
+    issue:document.getElementById('sp-issue').value,
+    prio:document.getElementById('sp-prio').value,
+    status:document.getElementById('sp-status').value,
+    cause:document.getElementById('sp-cause').value,
+    solution:document.getElementById('sp-solution').value,
+    time:document.getElementById('sp-time').value,
+    sat:document.getElementById('sp-sat').value
+  };
+  if (!r.issue) { toast('⚠️ Issue required','error'); return; }
+  await addItem('support', r, renderSupport);
 }
-function renderSupport(){
-  const b=document.getElementById('support-body');if(!b)return;
-  if(!D.support.length){b.innerHTML=`<tr><td colspan="9" class="empty-td">No support cases.</td></tr>`;return}
-  b.innerHTML=D.support.map(r=>`<tr>
+function renderSupport() {
+  const b = document.getElementById('support-body'); if (!b) return;
+  if (!D.support.length) { b.innerHTML=`<tr><td colspan="9" class="empty-td">No support cases.</td></tr>`; return }
+  b.innerHTML = D.support.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong style="font-size:12px">${r.issue}</strong></td>
+    <td><strong style="font-size:12px">${esc(r.issue)}</strong></td>
     <td>${prioBadge(r.prio)}</td>
-    <td style="font-size:11px;color:var(--text2);max-width:120px">${r.cause||'—'}</td>
-    <td style="font-size:11px;color:var(--green);max-width:150px">${r.solution||'—'}</td>
-    <td style="font-size:11px">${r.time||'—'}</td>
+    <td style="font-size:11px;color:var(--text2);max-width:120px">${esc(r.cause)||'—'}</td>
+    <td style="font-size:11px;color:var(--green);max-width:150px">${esc(r.solution)||'—'}</td>
+    <td style="font-size:11px">${esc(r.time)||'—'}</td>
     <td style="font-variant-numeric:tabular-nums">${r.sat||'—'}/10</td>
     <td>${statusBadge(r.status)}</td>
     <td>${delBtn('support',r.id,'renderSupport')}</td>
   </tr>`).join('');
 }
 
-// ═══════════════ DOCS ═══════════════
-async function addDoc(){
-  const r={id:uid(),date:document.getElementById('dc-date').value||today(),name:document.getElementById('dc-name').value,type:document.getElementById('dc-type').value,rev:document.getElementById('dc-rev').value,pages:document.getElementById('dc-pages').value,remarks:document.getElementById('dc-remarks').value};
-  if(!r.name){toast('⚠️ Name required');return}
-  D.docs.unshift(r);await save();renderDocs();toast();
+// ── DOCS ──
+async function addDoc() {
+  const r = {
+    id:'', date:document.getElementById('dc-date').value||today(),
+    name:document.getElementById('dc-name').value,
+    type:document.getElementById('dc-type').value,
+    rev:document.getElementById('dc-rev').value,
+    pages:document.getElementById('dc-pages').value,
+    remarks:document.getElementById('dc-remarks').value
+  };
+  if (!r.name) { toast('⚠️ Name required','error'); return; }
+  await addItem('docs', r, renderDocs);
 }
-function renderDocs(){
-  const b=document.getElementById('docs-body');if(!b)return;
-  if(!D.docs.length){b.innerHTML=`<tr><td colspan="7" class="empty-td">No documents logged.</td></tr>`;return}
-  b.innerHTML=D.docs.map(r=>`<tr>
+function renderDocs() {
+  const b = document.getElementById('docs-body'); if (!b) return;
+  if (!D.docs.length) { b.innerHTML=`<tr><td colspan="7" class="empty-td">No documents logged.</td></tr>`; return }
+  b.innerHTML = D.docs.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong>${r.name}</strong></td>
-    <td><span class="badge bb">${r.type}</span></td>
-    <td style="font-size:11px">${r.rev||'—'}</td>
+    <td><strong>${esc(r.name)}</strong></td>
+    <td><span class="badge bb">${esc(r.type)}</span></td>
+    <td style="font-size:11px">${esc(r.rev)||'—'}</td>
     <td style="text-align:center">${r.pages||'—'}</td>
-    <td style="font-size:11px;color:var(--text2)">${r.remarks||'—'}</td>
+    <td style="font-size:11px;color:var(--text2)">${esc(r.remarks)||'—'}</td>
     <td>${delBtn('docs',r.id,'renderDocs')}</td>
   </tr>`).join('');
 }
 
-// ═══════════════ ACHIEVEMENTS ═══════════════
-async function addAchievement(){
-  const r={id:uid(),date:document.getElementById('ac-date').value||today(),achievement:document.getElementById('ac-achievement').value,type:document.getElementById('ac-type').value,impact:document.getElementById('ac-impact').value,revenue:document.getElementById('ac-revenue').value,proof:document.getElementById('ac-proof').value};
-  if(!r.achievement){toast('⚠️ Achievement required');return}
-  D.achievements.unshift(r);await save();renderAchievements();toast();
+// ── ACHIEVEMENTS ──
+async function addAchievement() {
+  const r = {
+    id:'', date:document.getElementById('ac-date').value||today(),
+    achievement:document.getElementById('ac-achievement').value,
+    type:document.getElementById('ac-type').value,
+    impact:document.getElementById('ac-impact').value,
+    revenue:document.getElementById('ac-revenue').value,
+    proof:document.getElementById('ac-proof').value
+  };
+  if (!r.achievement) { toast('⚠️ Achievement required','error'); return; }
+  await addItem('achievements', r, renderAchievements);
 }
-function renderAchievements(){
-  const b=document.getElementById('ach-body');if(!b)return;
-  if(!D.achievements.length){b.innerHTML=`<tr><td colspan="7" class="empty-td">No achievements logged.</td></tr>`;return}
-  b.innerHTML=D.achievements.map(r=>`<tr>
+function renderAchievements() {
+  const b = document.getElementById('ach-body'); if (!b) return;
+  if (!D.achievements.length) { b.innerHTML=`<tr><td colspan="7" class="empty-td">No achievements logged.</td></tr>`; return }
+  b.innerHTML = D.achievements.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong>${r.achievement}</strong></td>
-    <td><span class="badge ba">${r.type}</span></td>
-    <td style="font-size:11px;color:var(--green)">${r.impact||'—'}</td>
-    <td style="font-size:11px;color:var(--amber)">${r.revenue||'—'}</td>
-    <td style="font-size:11px;color:var(--text2)">${r.proof||'—'}</td>
+    <td><strong>${esc(r.achievement)}</strong></td>
+    <td><span class="badge ba">${esc(r.type)}</span></td>
+    <td style="font-size:11px;color:var(--green)">${esc(r.impact)||'—'}</td>
+    <td style="font-size:11px;color:var(--amber)">${esc(r.revenue)||'—'}</td>
+    <td style="font-size:11px;color:var(--text2)">${esc(r.proof)||'—'}</td>
     <td>${delBtn('achievements',r.id,'renderAchievements')}</td>
   </tr>`).join('');
 }
 
-// ═══════════════ EVIDENCE ═══════════════
-function previewFile(input){
-  const file=input.files[0];if(!file)return;
-  const prev=document.getElementById('ev-preview');
-  const img=document.getElementById('ev-img');
-  const fname=document.getElementById('ev-fname');
-  fname.textContent=file.name+' ('+Math.round(file.size/1024)+'KB)';
-  prev.style.display='block';
-  if(file.type.startsWith('image/')){const r=new FileReader();r.onload=e=>{img.src=e.target.result;img.style.display='block'};r.readAsDataURL(file);}
-  else{img.style.display='none';}
+// ── EVIDENCE ──
+function previewFile(input) {
+  const file = input.files[0]; if (!file) return;
+  const prev = document.getElementById('ev-preview');
+  const img  = document.getElementById('ev-img');
+  const fname= document.getElementById('ev-fname');
+  fname.textContent = file.name+' ('+Math.round(file.size/1024)+'KB)';
+  prev.style.display = 'block';
+  if (file.type.startsWith('image/')) {
+    const r = new FileReader();
+    r.onload = e => { img.src=e.target.result; img.style.display='block' };
+    r.readAsDataURL(file);
+  } else { img.style.display='none'; }
 }
-function addEvidence(){
-  const file=document.getElementById('ev-file').files[0];
-  const r={id:uid(),title:document.getElementById('ev-title').value,cat:document.getElementById('ev-cat').value,project:document.getElementById('ev-project').value,date:document.getElementById('ev-date').value||today(),notes:document.getElementById('ev-notes').value,fileName:file?file.name:'',fileType:file?file.type:'',fileSize:file?Math.round(file.size/1024):0};
-  if(!r.title){toast('⚠️ Title required');return}
-  if(file&&file.type.startsWith('image/')){
-    const reader=new FileReader();
-    reader.onload=e=>{r.dataUrl=e.target.result;D.evidence.unshift(r);save();renderEvidence();toast('📎 Evidence saved')};
-    reader.readAsDataURL(file);
-  } else {
-    D.evidence.unshift(r);save();renderEvidence();toast('📎 Evidence saved');
+async function addEvidence() {
+  const file = document.getElementById('ev-file').files[0];
+  const r = {
+    id:'', title:document.getElementById('ev-title').value,
+    cat:document.getElementById('ev-cat').value,
+    project:document.getElementById('ev-project').value,
+    date:document.getElementById('ev-date').value||today(),
+    notes:document.getElementById('ev-notes').value,
+    fileName:file?file.name:'', fileUrl:'', dataUrl:''
+  };
+  if (!r.title) { toast('⚠️ Title required','error'); return; }
+
+  if (file && file.type.startsWith('image/')) {
+    // Try upload to Supabase Storage, fallback to base64
+    try {
+      const path = `${currentUser.id}/${Date.now()}_${file.name}`;
+      const { data: uploadData, error: uploadErr } = await _supa.storage
+        .from('evidence-files')
+        .upload(path, file, { upsert: true });
+      if (!uploadErr) {
+        const { data: urlData } = _supa.storage.from('evidence-files').getPublicUrl(path);
+        r.fileUrl  = urlData.publicUrl;
+        r.dataUrl  = ''; // don't store base64 if we have URL
+      } else {
+        // Fallback to base64 (for small files)
+        r.dataUrl = await new Promise(res => {
+          const reader = new FileReader();
+          reader.onload = e => res(e.target.result);
+          reader.readAsDataURL(file);
+        });
+      }
+    } catch(e) {
+      r.dataUrl = await new Promise(res => {
+        const reader = new FileReader(); reader.onload = ev => res(ev.target.result); reader.readAsDataURL(file);
+      });
+    }
   }
+  await addItem('evidence', r, renderEvidence);
+  toast('📎 Evidence saved');
 }
-function getFileIcon(cat,type){
-  if(type&&type.startsWith('image/'))return'🖼';
-  if(cat==='Certificate')return'🏅';
-  if(cat==='Appreciation Email')return'💌';
-  if(cat==='Client Appreciation')return'⭐';
-  if(cat==='Presentation')return'📊';
-  if(cat==='Manual / Guide')return'📖';
-  if(cat==='PDF Document')return'📄';
-  return'📎';
+function getFileIcon(cat,type) {
+  if (type&&type.startsWith('image/')) return '🖼';
+  if (cat==='Certificate') return '🏅';
+  if (cat==='Appreciation Email') return '💌';
+  if (cat==='Client Appreciation') return '⭐';
+  if (cat==='Presentation') return '📊';
+  if (cat==='Manual / Guide') return '📖';
+  if (cat==='PDF Document') return '📄';
+  return '📎';
 }
-let evFilter='all';
-function filterEv(f,btn){
-  evFilter=f;
-  document.querySelectorAll('.ev-filter').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
+let evFilter = 'all';
+function filterEv(f,btn) {
+  evFilter = f;
+  document.querySelectorAll('.ev-filter').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
   renderEvidence();
 }
-function renderEvidence(){
-  const grid=document.getElementById('ev-grid');if(!grid)return;
-  document.getElementById('ev-cnt').textContent=D.evidence.length+' files';
-  const items=evFilter==='all'?D.evidence:D.evidence.filter(e=>e.cat===evFilter);
-  if(!items.length){grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--text3);font-size:12px">No evidence ${evFilter==='all'?'yet':'in this category'}.</div>`;return}
-  grid.innerHTML=items.map(e=>`
-    <div class="ev-card" title="${e.notes||e.title}">
+function renderEvidence() {
+  const grid = document.getElementById('ev-grid'); if (!grid) return;
+  document.getElementById('ev-cnt').textContent = D.evidence.length+' files';
+  const items = evFilter==='all' ? D.evidence : D.evidence.filter(e=>e.cat===evFilter);
+  if (!items.length) { grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--text3);font-size:12px">No evidence ${evFilter==='all'?'yet':'in this category'}.</div>`; return }
+  grid.innerHTML = items.map(e => `
+    <div class="ev-card" title="${esc(e.notes||e.title)}">
       <button class="ev-del" onclick="del('evidence','${e.id}','renderEvidence')">✕</button>
-      ${e.dataUrl?`<img src="${e.dataUrl}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:6px">`:`<div class="ev-icon">${getFileIcon(e.cat,e.fileType)}</div>`}
-      <div class="ev-name">${e.title}</div>
-      <div class="ev-meta">${e.cat}</div>
-      ${e.project?`<div class="ev-meta" style="color:var(--violet)">${e.project}</div>`:''}
+      ${(e.dataUrl||e.fileUrl)?`<img src="${e.dataUrl||e.fileUrl}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:6px">`:`<div class="ev-icon">${getFileIcon(e.cat,e.fileType)}</div>`}
+      <div class="ev-name">${esc(e.title)}</div>
+      <div class="ev-meta">${esc(e.cat)}</div>
+      ${e.project?`<div class="ev-meta" style="color:var(--violet)">${esc(e.project)}</div>`:''}
       <div class="ev-meta">${e.date}</div>
     </div>
   `).join('');
 }
 
-// ═══════════════ STAR ═══════════════
-async function addStar(){
-  const r={id:uid(),s:document.getElementById('st-s').value,t:document.getElementById('st-t').value,a:document.getElementById('st-a').value,r:document.getElementById('st-r').value};
-  if(!r.s){toast('⚠️ Situation required');return}
-  D.star.unshift(r);await save();renderStar();toggleFS('star-fs');toast();
+// ── STAR ──
+async function addStar() {
+  const r = {
+    id:'', s:document.getElementById('st-s').value,
+    t:document.getElementById('st-t').value,
+    a:document.getElementById('st-a').value,
+    r:document.getElementById('st-r').value
+  };
+  if (!r.s) { toast('⚠️ Situation required','error'); return; }
+  await addItem('star', r, renderStar);
+  toggleFS('star-fs');
 }
-function renderStar(){
-  const b=document.getElementById('star-body');if(!b)return;
-  if(!D.star.length){b.innerHTML=`<tr><td colspan="5" class="empty-td">Add key STAR contributions for your appraisal.</td></tr>`;return}
-  b.innerHTML=D.star.map(r=>`<tr class="star-card" style="background:transparent">
-    <td style="font-size:11.5px">${r.s}</td>
-    <td style="font-size:11.5px">${r.t}</td>
-    <td style="font-size:11.5px;color:var(--violet-l)">${r.a}</td>
-    <td style="font-size:11.5px;color:var(--green)">${r.r}</td>
+function renderStar() {
+  const b = document.getElementById('star-body'); if (!b) return;
+  if (!D.star.length) { b.innerHTML=`<tr><td colspan="5" class="empty-td">Add STAR contributions for your appraisal.</td></tr>`; return }
+  b.innerHTML = D.star.map(r => `<tr>
+    <td style="font-size:11.5px">${esc(r.s)}</td>
+    <td style="font-size:11.5px">${esc(r.t)}</td>
+    <td style="font-size:11.5px;color:var(--violet-l)">${esc(r.a)}</td>
+    <td style="font-size:11.5px;color:var(--green)">${esc(r.r)}</td>
     <td>${delBtn('star',r.id,'renderStar')}</td>
   </tr>`).join('');
 }
 
-// ═══════════════ PERSONAL ═══════════════
-// MOOD
-function selectMood(btn,val){document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');document.getElementById('mood-val').value=val}
-async function addMood(){
-  const r={id:uid(),date:today(),mood:document.getElementById('mood-val').value,note:document.getElementById('mood-note').value};
-  if(!r.mood){toast('⚠️ Select a mood');return}
-  D.mood.unshift(r);await save();renderMood();toast('✨ Mood logged');
+// ── MOOD ──
+function selectMood(btn,val) {
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('mood-val').value = val;
 }
-function renderMood(){
-  const b=document.getElementById('mood-body');if(!b)return;
-  if(!D.mood.length){b.innerHTML=`<tr><td colspan="4" class="empty-td">No mood entries.</td></tr>`;return}
-  b.innerHTML=D.mood.map(r=>`<tr>
+async function addMood() {
+  const r = { id:'', date:today(), mood:document.getElementById('mood-val').value, note:document.getElementById('mood-note').value };
+  if (!r.mood) { toast('⚠️ Select a mood','error'); return; }
+  await addItem('mood', r, renderMood);
+  toast('✨ Mood logged');
+}
+function renderMood() {
+  const b = document.getElementById('mood-body'); if (!b) return;
+  if (!D.mood.length) { b.innerHTML=`<tr><td colspan="4" class="empty-td">No mood entries.</td></tr>`; return }
+  b.innerHTML = D.mood.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3)">${r.date}</td>
     <td style="font-size:16px">${r.mood}</td>
-    <td style="font-size:11.5px;color:var(--text2)">${r.note||'—'}</td>
+    <td style="font-size:11.5px;color:var(--text2)">${esc(r.note)||'—'}</td>
     <td>${delBtn('mood',r.id,'renderMood')}</td>
   </tr>`).join('');
 }
-// GOALS
-async function addGoal(){
-  const r={id:uid(),goal:document.getElementById('gl-goal').value,cat:document.getElementById('gl-cat').value,date:document.getElementById('gl-date').value,done:false};
-  if(!r.goal){toast('⚠️ Goal required');return}
-  D.goals.unshift(r);await save();renderGoals();toast('🎯 Goal added');
+
+// ── GOALS ──
+async function addGoal() {
+  const r = { id:'', goal:document.getElementById('gl-goal').value, cat:document.getElementById('gl-cat').value, date:document.getElementById('gl-date').value, done:false };
+  if (!r.goal) { toast('⚠️ Goal required','error'); return; }
+  await addItem('goals', r, renderGoals);
+  toast('🎯 Goal added');
 }
-async function toggleGoal(id){const g=D.goals.find(x=>x.id===id);if(g){g.done=!g.done;await save();}renderGoals()}
-function renderGoals(){
-  const a=document.getElementById('goals-active'),d=document.getElementById('goals-done');if(!a)return;
-  const active=D.goals.filter(g=>!g.done),done=D.goals.filter(g=>g.done);
-  const goalHTML=(arr)=>arr.length?arr.map(g=>`<div class="goal-item">
+async function toggleGoal(id) {
+  const g = D.goals.find(x=>x.id===id); if (!g) return;
+  await updateItem('goals', id, { completed: !g.done }, renderGoals);
+  const item = D.goals.find(x=>x.id===id); if(item) item.done = !g.done;
+  renderGoals();
+}
+function renderGoals() {
+  const a=document.getElementById('goals-active'), d=document.getElementById('goals-done'); if(!a) return;
+  const active=D.goals.filter(g=>!g.done), done=D.goals.filter(g=>g.done);
+  const goalHTML = arr => arr.length ? arr.map(g=>`<div class="goal-item">
     <div class="goal-check ${g.done?'done':''}" onclick="toggleGoal('${g.id}')">${g.done?'✓':''}</div>
-    <div><div class="goal-text ${g.done?'done':''}">${g.goal}</div><div style="font-size:10px;color:var(--text3);margin-top:2px">${g.cat}${g.date?' · Due '+g.date:''}</div></div>
+    <div><div class="goal-text ${g.done?'done':''}">${esc(g.goal)}</div><div style="font-size:10px;color:var(--text3);margin-top:2px">${g.cat}${g.date?' · Due '+g.date:''}</div></div>
     ${delBtn('goals',g.id,'renderGoals')}
-  </div>`).join(''):`<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px">None yet</div>`;
-  a.innerHTML=goalHTML(active);d.innerHTML=goalHTML(done);
+  </div>`).join('') : `<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px">None yet</div>`;
+  a.innerHTML = goalHTML(active); d.innerHTML = goalHTML(done);
 }
-// NOTES
-async function addNote(){
-  const r={id:uid(),date:today(),title:document.getElementById('nt-title').value||'Untitled',content:document.getElementById('nt-content').value,tag:document.getElementById('nt-tag').value};
-  D.notes.unshift(r);await save();renderNotes();document.getElementById('nt-title').value='';document.getElementById('nt-content').value='';toast('📝 Note saved');
+
+// ── NOTES ──
+async function addNote() {
+  const r = { id:'', date:today(), title:document.getElementById('nt-title').value||'Untitled', content:document.getElementById('nt-content').value, tag:document.getElementById('nt-tag').value };
+  await addItem('notes', r, renderNotes);
+  document.getElementById('nt-title').value=''; document.getElementById('nt-content').value='';
+  toast('📝 Note saved');
 }
-function renderNotes(){
-  const g=document.getElementById('notes-grid');if(!g)return;
-  if(!D.notes.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--text3)">No notes yet.</div>`;return}
-  const tagColors={Work:'bv',Learning:'bp',Idea:'ba',Personal:'bg',Memory:'bb'};
-  g.innerHTML=D.notes.map(n=>`<div class="note-card">
+function renderNotes() {
+  const g = document.getElementById('notes-grid'); if (!g) return;
+  if (!D.notes.length) { g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--text3)">No notes yet.</div>`; return }
+  const tagColors = {Work:'bv',Learning:'bp',Idea:'ba',Personal:'bg',Memory:'bb'};
+  g.innerHTML = D.notes.map(n => `<div class="note-card">
     <button style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px" onclick="del('notes','${n.id}','renderNotes')">✕</button>
     <div style="font-size:10px;margin-bottom:6px"><span class="badge ${tagColors[n.tag]||'bn'}">${n.tag}</span></div>
-    <div class="note-title">${n.title}</div>
-    <div class="note-preview">${n.content}</div>
+    <div class="note-title">${esc(n.title)}</div>
+    <div class="note-preview">${esc(n.content)}</div>
     <div class="note-date">${n.date}</div>
   </div>`).join('');
 }
-// PLANNER / CALENDAR
-let calDate=new Date();
-function calPrev(){calDate.setMonth(calDate.getMonth()-1);renderCal()}
-function calNext(){calDate.setMonth(calDate.getMonth()+1);renderCal()}
-function renderCal(){
-  const el=document.getElementById('cal-grid');if(!el)return;
+
+// ── PLANNER ──
+let calDate = new Date();
+function calPrev() { calDate.setMonth(calDate.getMonth()-1); renderCal() }
+function calNext() { calDate.setMonth(calDate.getMonth()+1); renderCal() }
+function renderCal() {
+  const el=document.getElementById('cal-grid'); if(!el) return;
   const hd=document.getElementById('cal-headers');
-  const days=['Su','Mo','Tu','We','Th','Fr','Sa'];
-  hd.innerHTML=days.map(d=>`<div class="cal-header-day">${d}</div>`).join('');
-  const y=calDate.getFullYear(),m=calDate.getMonth();
+  hd.innerHTML=['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div class="cal-header-day">${d}</div>`).join('');
+  const y=calDate.getFullYear(), m=calDate.getMonth();
   document.getElementById('cal-month').textContent=new Date(y,m,1).toLocaleDateString('en',{month:'long',year:'numeric'});
-  const first=new Date(y,m,1).getDay();
-  const daysInMonth=new Date(y,m+1,0).getDate();
-  const todayStr=today();
-  const entryDates=new Set(D.daily.map(e=>e.date));
+  const first=new Date(y,m,1).getDay(), daysInMonth=new Date(y,m+1,0).getDate();
+  const todayStr=today(), entryDates=new Set(D.daily.map(e=>e.date));
   let html='';
-  for(let i=0;i<first;i++)html+=`<div class="cal-day empty"></div>`;
+  for(let i=0;i<first;i++) html+=`<div class="cal-day empty"></div>`;
   for(let d=1;d<=daysInMonth;d++){
     const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday=ds===todayStr;
-    const hasEntry=entryDates.has(ds);
-    html+=`<div class="cal-day ${isToday?'today':''} ${hasEntry?'has-entry':''}" onclick="calClick('${ds}')">${d}</div>`;
+    html+=`<div class="cal-day ${ds===todayStr?'today':''} ${entryDates.has(ds)?'has-entry':''}" onclick="calClick('${ds}')">${d}</div>`;
   }
-  el.innerHTML=html;
-  renderPlan();
+  el.innerHTML=html; renderPlan();
 }
-function calClick(ds){document.getElementById('dl-date').value=ds;nav('quicklog',document.querySelectorAll('.sb-item')[2])}
-async function addPlan(){
-  const r={id:uid(),date:today(),task:document.getElementById('plan-task').value,prio:document.getElementById('plan-prio').value,done:false};
-  if(!r.task)return;
-  D.plans.unshift(r);await save();renderPlan();document.getElementById('plan-task').value='';
+function calClick(ds) { document.getElementById('dl-date').value=ds; nav('quicklog',document.querySelectorAll('.sb-item')[2]) }
+async function addPlan() {
+  const r={id:'',date:today(),task:document.getElementById('plan-task').value,prio:document.getElementById('plan-prio').value,done:false};
+  if(!r.task) return;
+  await addItem('plans',r,renderPlan);
+  document.getElementById('plan-task').value='';
 }
-async function togglePlan(id){const p=D.plans.find(x=>x.id===id);if(p){p.done=!p.done;await save();}renderPlan()}
-function renderPlan(){
-  const el=document.getElementById('plan-list');if(!el)return;
+async function togglePlan(id) {
+  const p=D.plans.find(x=>x.id===id); if(!p) return;
+  await updateItem('plans',id,{done:!p.done},renderPlan);
+  p.done=!p.done; renderPlan();
+}
+function renderPlan() {
+  const el=document.getElementById('plan-list'); if(!el) return;
   const today_plans=D.plans.filter(p=>p.date===today());
   if(!today_plans.length){el.innerHTML=`<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px">No tasks for today.</div>`;return}
   el.innerHTML=today_plans.map(p=>`<div class="goal-item">
     <div class="goal-check ${p.done?'done':''}" onclick="togglePlan('${p.id}')">${p.done?'✓':''}</div>
-    <div class="goal-text ${p.done?'done':''}">${p.task}</div>
+    <div class="goal-text ${p.done?'done':''}">${esc(p.task)}</div>
     ${prioBadge(p.prio)}
     ${delBtn('plans',p.id,'renderPlan')}
   </div>`).join('');
 }
 
-// ═══════════════ PROFILE ═══════════════
-async function saveProfile(){
-  const pf={name:document.getElementById('pf-name').value,role:document.getElementById('pf-role').value,dept:document.getElementById('pf-dept').value,company:document.getElementById('pf-company').value,empid:document.getElementById('pf-empid').value,manager:document.getElementById('pf-manager').value,doj:document.getElementById('pf-doj').value,email:document.getElementById('pf-email').value,links:document.getElementById('pf-links').value};
-  D.profile=pf;await save();
-  document.getElementById('prof-name-sb').textContent=pf.name||'Your Name';
-  document.getElementById('prof-role-sb').textContent=pf.role||'Engineer';
-  toast('Profile saved');
-}
-function loadProfile(){
-  const pf=D.profile||{};
-  ['name','role','dept','company','empid','manager','doj','email','links'].forEach(k=>{const el=document.getElementById('pf-'+k);if(el)el.value=pf[k]||''});
-}
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 12: DASHBOARD & REPORTS ──
+// ══════════════════════════════════════════════════════════════════
 
-// ═══════════════ DASHBOARD ═══════════════
-function renderDashboard(){
-  const totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
-  const done=D.daily.filter(r=>r.status==='Completed').length;
-  const learnH=D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
-  const kpis=[
+function renderDashboard() {
+  const totalH = D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
+  const done   = D.daily.filter(r=>r.status==='Completed').length;
+  const learnH = D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
+  const kpis = [
     {i:'📋',l:'Tasks Logged',v:D.daily.length,cls:'kv'},
     {i:'✅',l:'Completed',v:done,cls:'kg'},
     {i:'⏱',l:'Hours Logged',v:totalH.toFixed(1),cls:'kb'},
@@ -1504,110 +2101,66 @@ function renderDashboard(){
     {i:'✦',l:'Promo Score',v:calcScore()+'/100',cls:'kv'},
   ];
   const grid=document.getElementById('dash-kpis');
-  if(grid)grid.innerHTML=kpis.map(k=>`<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
-  // recent
+  if(grid) grid.innerHTML=kpis.map(k=>`<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
   const rec=document.getElementById('dash-recent');
   if(rec){
-    const items=[...D.daily.map(r=>({date:r.date,text:r.task,sub:r.project||r.cat,icon:'📋',color:'var(--violet-l)'})),...D.achievements.map(r=>({date:r.date,text:r.achievement,sub:r.type,icon:'🏆',color:'var(--amber)'})),...D.learning.map(r=>({date:r.date,text:r.topic,sub:r.source,icon:'📚',color:'var(--pink)'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,7);
-    rec.innerHTML=items.length?items.map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border)"><span style="font-size:16px">${a.icon}</span><div style="flex:1"><div style="font-size:12.5px;font-weight:500">${a.text}</div><div style="font-size:10.5px;color:var(--text3);margin-top:1px">${a.sub||''} · ${a.date}</div></div></div>`).join(''):`<div class="empty-td">Log work to see recent activity here.</div>`;
+    const items=[...D.daily.map(r=>({date:r.date,text:r.task,sub:r.project||r.cat,icon:'📋'})),...D.achievements.map(r=>({date:r.date,text:r.achievement,sub:r.type,icon:'🏆'})),...D.learning.map(r=>({date:r.date,text:r.topic,sub:r.source,icon:'📚'}))]
+      .sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,7);
+    rec.innerHTML=items.length?items.map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border)"><span style="font-size:16px">${a.icon}</span><div style="flex:1"><div style="font-size:12.5px;font-weight:500">${esc(a.text)}</div><div style="font-size:10.5px;color:var(--text3);margin-top:1px">${esc(a.sub||'')} · ${a.date}</div></div></div>`).join(''):`<div class="empty-td">Log work to see activity here.</div>`;
   }
-  // recent ach
   const ach=document.getElementById('dash-ach');
   if(ach){
-    ach.innerHTML=D.achievements.slice(0,5).map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border)"><span style="font-size:16px">🏆</span><div style="flex:1"><div style="font-size:12.5px;font-weight:500">${a.achievement}</div><div style="font-size:10.5px;color:var(--text3);margin-top:1px">${a.type} · ${a.date}</div></div></div>`).join('')||`<div class="empty-td">Add achievements to show your wins.</div>`;
+    ach.innerHTML=D.achievements.slice(0,5).map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border)"><span style="font-size:16px">🏆</span><div style="flex:1"><div style="font-size:12.5px;font-weight:500">${esc(a.achievement)}</div><div style="font-size:10.5px;color:var(--text3);margin-top:1px">${a.type} · ${a.date}</div></div></div>`).join('')||`<div class="empty-td">Add achievements to show your wins.</div>`;
   }
-  // badges
-  ['daily','projects','learning','clients','support','docs'].forEach(k=>{const b=document.getElementById('nb-'+k);if(b)b.textContent=D[k].length});
-  document.getElementById('nb-ach').textContent=D.achievements.length;
-  document.getElementById('nb-evidence').textContent=D.evidence.length;
 }
-function renderReports(){
+function renderReports() {
   const totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const done=D.daily.filter(r=>r.status==='Completed').length;
   const learnH=D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
-  const el=document.getElementById('report-metrics');
-  if(!el)return;
+  const el=document.getElementById('report-metrics'); if(!el) return;
   const metrics=[['Total Tasks',D.daily.length],['Completed',done],['Completion Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%'],['Hours Logged',totalH.toFixed(1)],['Projects',D.projects.length],['Achievements',D.achievements.length],['Learning Hours',learnH.toFixed(1)],['Certs',D.learning.filter(r=>r.cert==='Yes').length],['Client Calls',D.clients.length],['Support Cases',D.support.length],['Documents',D.docs.length],['Evidence Files',D.evidence.length],['Promo Score',calcScore()+'/100']];
   el.innerHTML=metrics.map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--text2)">${l}</span><span style="font-weight:600;color:var(--text)">${v}</span></div>`).join('');
-  // update report arc
-  const sc=calcScore();
-  const arc=235.6*0.75;
-  const offset=arc-(sc/100)*arc+58.9;
-  const ra=document.getElementById('report-arc');if(ra)ra.style.strokeDashoffset=offset;
-  const rs=document.getElementById('report-score');if(rs)rs.textContent=sc;
-}
-function updateAll(){
-  updateScore();
-  const badges=[['nb-daily',D.daily.length],['nb-projects',D.projects.length],['nb-learning',D.learning.length],['nb-clients',D.clients.length],['nb-support',D.support.length],['nb-docs',D.docs.length],['nb-ach',D.achievements.length],['nb-evidence',D.evidence.length]];
-  badges.forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v});
+  const sc=calcScore(), arc=235.6*0.75, off=arc-(sc/100)*arc+58.9;
+  const ra=document.getElementById('report-arc'); if(ra) ra.style.strokeDashoffset=off;
+  const rs=document.getElementById('report-score'); if(rs) rs.textContent=sc;
 }
 
-// ═══════════════ AI WRITER ═══════════════
-function buildContext(){
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 13: AI PROMPT BUILDER ──
+// ══════════════════════════════════════════════════════════════════
+
+function buildContext() {
   const pf=D.profile||{};
   const totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const learnH=D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const techSet=new Set(D.projects.flatMap(p=>(p.tech||'').split(',').map(t=>t.trim()).filter(Boolean)));
   return `Employee: ${pf.name||'[Name]'}, Role: ${pf.role||'[Role]'}, Company: ${pf.company||'[Company]'}, Department: ${pf.dept||'[Dept]'}.
-Performance Data:
-- Tasks logged: ${D.daily.length} (${D.daily.filter(r=>r.status==='Completed').length} completed, ${totalH.toFixed(1)} hours)
-- Projects: ${D.projects.length} (${D.projects.filter(p=>p.status==='Completed').length} completed)
-- Achievements: ${D.achievements.length} (${D.achievements.map(a=>a.achievement).join('; ')})
-- Learning: ${D.learning.length} topics, ${learnH.toFixed(1)} hours, ${D.learning.filter(r=>r.cert==='Yes').length} certificates
-- Client calls: ${D.clients.length}
-- Support cases resolved: ${D.support.length}
-- Documents created: ${D.docs.length}
-- Technologies: ${[...techSet].join(', ')||'[see daily logs]'}
-- Key impacts: ${D.daily.filter(r=>r.impact).slice(0,5).map(r=>r.impact).join('; ')||'[various contributions]'}
-- Key projects: ${D.projects.slice(0,4).map(p=>p.name+(p.outcome?' ('+p.outcome+')':'')).join('; ')||'[see projects]'}
-- Promotion score: ${calcScore()}/100`;
+Data: Tasks=${D.daily.length} (${D.daily.filter(r=>r.status==='Completed').length} done, ${totalH.toFixed(1)}h), Projects=${D.projects.length}, Achievements=${D.achievements.length} (${D.achievements.map(a=>a.achievement).slice(0,3).join('; ')}), Learning=${D.learning.length} topics ${learnH.toFixed(1)}h ${D.learning.filter(r=>r.cert==='Yes').length} certs, Client calls=${D.clients.length}, Support=${D.support.length}, Docs=${D.docs.length}, Technologies: ${[...techSet].join(', ')||'various'}, Key impacts: ${D.daily.filter(r=>r.impact).slice(0,4).map(r=>r.impact).join('; ')||'—'}, Key projects: ${D.projects.slice(0,3).map(p=>p.name+(p.outcome?' ('+p.outcome+')':'')).join('; ')||'—'}, Score: ${calcScore()}/100`;
 }
-const aiLabels={summary:'Executive Appraisal Summary',star:'STAR Stories',resume:'Resume Bullet Points',promotion:'Promotion Justification',monthly:'Monthly Self-Evaluation',manager:'Manager-Ready Remarks'};
-const aiPrompts={
-  summary:'Write a concise, professional executive summary (3-4 paragraphs) for an annual appraisal report based on this data. Use confident, achievement-focused language suitable for a corporate HR document. Start with their most impactful contributions.',
-  star:'Generate 3-4 STAR (Situation, Task, Action, Result) stories based on the work data. Format each clearly labeled S/T/A/R. Make them specific and quantified where possible.',
-  resume:'Generate 6-8 strong resume bullet points using the PAR format (Problem-Action-Result). Each should start with an action verb and include quantified impact. Suitable for a senior engineer.',
-  promotion:'Write a compelling promotion justification letter (2-3 paragraphs) arguing why this employee deserves advancement. Be specific about contributions, leadership, and business impact.',
-  monthly:'Write a professional monthly self-evaluation (2-3 paragraphs) covering accomplishments, challenges overcome, skills developed, and goals for next period.',
-  manager:'Draft 4-5 professional manager remarks that a direct manager could review and sign off on. Include performance, attitude, technical ability, and recommendation.'
-};
-async function aiGenerate(type){
-  const box=document.getElementById('ai-output-box');
-  const out=document.getElementById('ai-output');
-  const lbl=document.getElementById('ai-type-label');
-  box.style.display='block';
-  lbl.textContent=aiLabels[type]+' — Prompt Ready';
-  const context=buildContext();
-  const prompt=`${aiPrompts[type]}\n\nContext:\n${context}\n\nWrite in a professional, confident tone. Be specific and impactful.`;
-  out.textContent=prompt;
-  window.scrollTo({top:0,behavior:'smooth'});
-  toast('✦ Prompt ready — copy & paste into Claude');
+const aiLabels={ summary:'Executive Appraisal Summary', star:'STAR Stories', resume:'Resume Bullets', promotion:'Promotion Justification', monthly:'Monthly Self-Evaluation', manager:'Manager Remarks Draft' };
+const aiPrompts={ summary:'Write a concise 3-paragraph executive appraisal summary from this data. Confident, achievement-focused, corporate HR style.', star:'Generate 3 STAR stories from this work data. Format: S: / T: / A: / R: for each.', resume:'Generate 7 strong PAR resume bullet points. Start with action verbs, include quantified impact.', promotion:'Write a compelling 2-paragraph promotion justification with specific evidence.', monthly:'Write a professional 2-paragraph monthly self-evaluation covering wins, challenges, growth.', manager:'Draft 4 manager remarks a direct manager could review and sign off on.' };
+async function aiGenerate(type) {
+  const box=document.getElementById('ai-output-box'), out=document.getElementById('ai-output'), lbl=document.getElementById('ai-type-label');
+  box.style.display='block'; lbl.textContent=aiLabels[type]+' — Prompt Ready';
+  out.textContent=`${aiPrompts[type]}\n\nContext:\n${buildContext()}\n\nTone: Professional, confident, specific.`;
+  toast('✦ Prompt ready — copy & paste into Claude.ai');
 }
-async function aiCustom(){
-  const custom=document.getElementById('ai-custom').value;
-  if(!custom){toast('⚠️ Enter a prompt');return}
-  const box=document.getElementById('ai-output-box');
-  const out=document.getElementById('ai-output');
-  const lbl=document.getElementById('ai-type-label');
-  box.style.display='block';
-  lbl.textContent='Custom Prompt — Ready';
-  const context=buildContext();
-  const prompt=`${custom}\n\nContext about this employee:\n${context}`;
-  out.textContent=prompt;
-  window.scrollTo({top:0,behavior:'smooth'});
-  toast('✦ Prompt ready — copy & paste into Claude');
+async function aiCustom() {
+  const custom=document.getElementById('ai-custom').value; if(!custom){toast('⚠️ Enter a prompt','error');return}
+  const box=document.getElementById('ai-output-box'), out=document.getElementById('ai-output'), lbl=document.getElementById('ai-type-label');
+  box.style.display='block'; lbl.textContent='Custom Prompt Ready';
+  out.textContent=`${custom}\n\nContext:\n${buildContext()}`;
+  toast('✦ Prompt ready — copy & paste into Claude.ai');
 }
-function copyAI(){const t=document.getElementById('ai-output').textContent;navigator.clipboard.writeText(t).then(()=>toast('📋 Copied — paste into Claude.ai'))}
+function copyAI(){ navigator.clipboard.writeText(document.getElementById('ai-output').textContent).then(()=>toast('📋 Copied — paste into Claude.ai')) }
 
-// ═══════════════ EXCEL EXPORT ═══════════════
-function exportExcel(){
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 14: EXCEL EXPORT ──
+// ══════════════════════════════════════════════════════════════════
+
+function exportExcel() {
   const wb=XLSX.utils.book_new();
-  function ws(name,arr,cols){
-    const rows=arr.map(r=>cols.map(c=>r[c]||''));
-    const sheet=XLSX.utils.aoa_to_sheet([cols,...rows]);
-    sheet['!cols']=cols.map(()=>({wch:22}));
-    XLSX.utils.book_append_sheet(wb,sheet,name);
-  }
+  function ws(name,arr,cols){ const rows=arr.map(r=>cols.map(c=>r[c]||'')); const sheet=XLSX.utils.aoa_to_sheet([cols,...rows]); sheet['!cols']=cols.map(()=>({wch:22})); XLSX.utils.book_append_sheet(wb,sheet,name) }
   ws('Daily Work',D.daily,['date','task','project','client','hours','cat','prio','status','impact','problem','tech']);
   ws('Projects',D.projects,['name','client','role','start','end','status','prog','tech','contrib','outcome']);
   ws('Learning',D.learning,['date','topic','type','source','cat','hours','applied','cert','notes']);
@@ -1616,308 +2169,175 @@ function exportExcel(){
   ws('Documentation',D.docs,['date','name','type','rev','pages','remarks']);
   ws('Achievements',D.achievements,['date','achievement','type','impact','revenue','proof']);
   ws('STAR',D.star,['s','t','a','r']);
-  const ev=XLSX.utils.aoa_to_sheet([['Title','Category','Project','Date','Notes'],,...D.evidence.map(e=>[e.title,e.cat,e.project,e.date,e.notes])]);
-  XLSX.utils.book_append_sheet(wb,ev,'Evidence Index');
   const totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
-  const sumSheet=XLSX.utils.aoa_to_sheet([['Metric','Value'],['Total Tasks',D.daily.length],['Completed',D.daily.filter(r=>r.status==='Completed').length],['Hours',totalH.toFixed(1)],['Projects',D.projects.length],['Achievements',D.achievements.length],['Learning Hours',D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0).toFixed(1)],['Certificates',D.learning.filter(r=>r.cert==='Yes').length],['Client Calls',D.clients.length],['Support Cases',D.support.length],['Documents',D.docs.length],['Evidence Files',D.evidence.length],['Promo Score',calcScore()+'/100']]);
+  const sumSheet=XLSX.utils.aoa_to_sheet([['Metric','Value'],['Total Tasks',D.daily.length],['Completed',D.daily.filter(r=>r.status==='Completed').length],['Hours',totalH.toFixed(1)],['Projects',D.projects.length],['Achievements',D.achievements.length],['Learning Hours',D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0).toFixed(1)],['Certs',D.learning.filter(r=>r.cert==='Yes').length],['Client Calls',D.clients.length],['Support',D.support.length],['Documents',D.docs.length],['Evidence',D.evidence.length],['Score',calcScore()+'/100']]);
   XLSX.utils.book_append_sheet(wb,sumSheet,'Summary Dashboard');
-  XLSX.writeFile(wb,`ElevaTrack_Appraisal_${new Date().toISOString().split('T')[0]}.xlsx`);
+  XLSX.writeFile(wb,`ElevaTrack_${new Date().toISOString().split('T')[0]}.xlsx`);
   toast('📊 Excel exported');
 }
 
-// ═══════════════ PDF EXPORT ═══════════════
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 15: PDF EXPORT (light theme) ──
+// ══════════════════════════════════════════════════════════════════
+
 function exportPDF(){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const PW=210,PH=297,ML=18,MR=18;
-  const CW=PW-ML-MR;
-  // Light theme palette
+  const PW=210,PH=297,ML=18,MR=18,CW=192;
   const VIO=[147,51,234],VIOL=[192,132,252],FUCH=[219,39,119],PINK=[236,72,153];
   const WHITE=[255,255,255],INK=[30,27,46],GRAY=[100,116,139],LGRAY=[226,232,240];
   const PANEL=[250,247,255],PANEL2=[245,238,255];
   const GREEN=[5,150,105],AMBER=[217,119,6],GREENBG=[236,253,245],AMBERBG=[255,251,235];
   const pf=D.profile||{};
-  const score=calcScore();
-  const totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
+  const score=calcScore(),totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const done=D.daily.filter(r=>r.status==='Completed').length;
-  const learnH=D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
-  const certs=D.learning.filter(r=>r.cert==='Yes').length;
+  const learnH=D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0),certs=D.learning.filter(r=>r.cert==='Yes').length;
   const dateStr=new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
   const year=new Date().getFullYear();
   let pageNum=0;
-
-  function newPage(){if(pageNum>0)doc.addPage();pageNum++;doc.setFillColor(...WHITE);doc.rect(0,0,PW,PH,'F');doc.setFillColor(...VIO);doc.rect(0,0,PW,2.5,'F');}
-  function footer(){
-    doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.line(ML,PH-12,PW-MR,PH-12);
-    doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');
-    doc.text('ElevaTrack — Track. Prove. Grow.  ·  Confidential',ML,PH-7);
-    doc.text(`Page ${pageNum}  ·  ${dateStr}`,PW-MR,PH-7,{align:'right'});
-  }
-  function secHead(txt,y){
-    doc.setFillColor(...PANEL2);
-    doc.roundedRect(ML,y,CW,7.5,1,1,'F');
-    doc.setFillColor(...VIO);doc.roundedRect(ML,y,3,7.5,1,1,'F');
-    doc.setFontSize(9);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');
-    doc.text(txt,ML+6,y+5);
-    return y+11;
-  }
-  function wrap(txt,x,y,w,lh=4.5){
-    doc.splitTextToSize(String(txt||'—'),w).forEach(l=>{doc.text(l,x,y);y+=lh});return y;
-  }
-  function chk(y,n=20){if(y+n>PH-16){footer();newPage();return 16;}return y;}
-
-  const tblStyles={fontSize:7.5,cellPadding:2.5,textColor:INK,lineColor:LGRAY,lineWidth:0.2,fillColor:WHITE};
-  const tblAlt={fillColor:PANEL};
-
-  // ── COVER ──
+  const tblS={fontSize:7.5,cellPadding:2.5,textColor:INK,lineColor:LGRAY,lineWidth:0.2,fillColor:WHITE};
+  const tblA={fillColor:PANEL};
+  function newPage(){if(pageNum>0)doc.addPage();pageNum++;doc.setFillColor(...WHITE);doc.rect(0,0,PW,PH,'F');doc.setFillColor(...VIO);doc.rect(0,0,PW,2.5,'F')}
+  function footer(){doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.line(ML,PH-12,PW-MR,PH-12);doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text('ElevaTrack — Track. Prove. Grow.  ·  Confidential  ·  made by Vinu',ML,PH-7);doc.text(`Page ${pageNum}  ·  ${dateStr}`,PW-MR,PH-7,{align:'right'})}
+  function secHead(txt,y){doc.setFillColor(...PANEL2);doc.roundedRect(ML,y,CW,7.5,1,1,'F');doc.setFillColor(...VIO);doc.roundedRect(ML,y,3,7.5,1,1,'F');doc.setFontSize(9);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text(txt,ML+6,y+5);return y+11}
+  function wrap(txt,x,y,w,lh=4.5){doc.splitTextToSize(String(txt||'—'),w).forEach(l=>{doc.text(l,x,y);y+=lh});return y}
+  function chk(y,n=20){if(y+n>PH-16){footer();newPage();return 16}return y}
+  // COVER
   newPage();
-  // header band
   doc.setFillColor(...PANEL2);doc.rect(0,0,PW,75,'F');
-  doc.setDrawColor(...VIOL,60);doc.setLineWidth(0.4);
-  doc.circle(PW-10,8,55,'S');doc.circle(PW-5,5,38,'S');
-
   doc.setFillColor(...VIO);doc.roundedRect(ML,18,12,12,2,2,'F');
-  doc.setFontSize(11);doc.setTextColor(...WHITE);doc.setFont('helvetica','bold');doc.text('L',ML+4,26.5);
+  doc.setFontSize(11);doc.setTextColor(...WHITE);doc.setFont('helvetica','bold');doc.text('E',ML+4,26.5);
   doc.setFontSize(22);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('ElevaTrack',ML+16,26);
-  doc.setFontSize(9);doc.setTextColor(...VIO);doc.setFont('helvetica','normal');doc.text('Track. Prove. Grow.',ML+16,31.5);
-  doc.setFontSize(7);doc.setTextColor(...GRAY);doc.text('made by Vinu',PW-MR,12,{align:'right'});
-
-  doc.setFontSize(30);doc.setTextColor(...INK);doc.setFont('helvetica','bold');
-  doc.text('Annual Appraisal',ML,52);doc.text('Report',ML,64);
-  doc.setFontSize(11);doc.setTextColor(...VIO);doc.setFont('helvetica','normal');doc.text(`${year}`,ML,71);
-
-  // score bubble
-  doc.setFillColor(...PANEL);doc.setDrawColor(...VIOL);doc.setLineWidth(0.6);
-  doc.roundedRect(PW-55,15,38,38,6,6,'FD');
-  doc.setFontSize(26);doc.setTextColor(...FUCH);doc.setFont('helvetica','bold');
-  doc.text(String(score),PW-36,37,{align:'center'});
-  doc.setFontSize(7.5);doc.setTextColor(...VIO);doc.setFont('helvetica','normal');
-  doc.text('/100',PW-36,43,{align:'center'});doc.text('PROMO SCORE',PW-36,48,{align:'center'});
-
-  // info card
+  doc.setFontSize(9);doc.setTextColor(...VIO);doc.setFont('helvetica','normal');doc.text('Track. Prove. Grow.  ·  made by Vinu',ML+16,31.5);
+  doc.setFontSize(30);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Annual Appraisal',ML,52);doc.text('Report',ML,64);
+  doc.setFontSize(11);doc.setTextColor(...VIO);doc.setFont('helvetica','normal');doc.text(String(year),ML,71);
+  doc.setFillColor(...PANEL);doc.setDrawColor(...VIOL);doc.setLineWidth(0.6);doc.roundedRect(PW-55,15,38,38,6,6,'FD');
+  doc.setFontSize(26);doc.setTextColor(...FUCH);doc.setFont('helvetica','bold');doc.text(String(score),PW-36,37,{align:'center'});
+  doc.setFontSize(7.5);doc.setTextColor(...VIO);doc.setFont('helvetica','normal');doc.text('/100',PW-36,43,{align:'center'});doc.text('PROMO SCORE',PW-36,48,{align:'center'});
   let y=88;
   doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,52,4,4,'FD');
   doc.setFillColor(...VIO);doc.roundedRect(ML,y,3,52,1,1,'F');
-  doc.setFontSize(16);doc.setTextColor(...INK);doc.setFont('helvetica','bold');
-  doc.text(pf.name||'[Your Name]',ML+10,y+14);
-  doc.setFontSize(10);doc.setTextColor(...VIO);doc.setFont('helvetica','normal');
-  doc.text(pf.role||'[Your Role]',ML+10,y+21);
+  doc.setFontSize(16);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text(pf.name||'[Your Name]',ML+10,y+14);
+  doc.setFontSize(10);doc.setTextColor(...VIO);doc.setFont('helvetica','normal');doc.text(pf.role||'[Role]',ML+10,y+21);
   doc.setFontSize(8.5);
-  const infoLines=[[pf.dept,'Department'],[pf.company,'Company'],[pf.empid,'Employee ID'],[pf.manager,'Manager']].filter(([v])=>v);
-  infoLines.forEach(([v,l],i)=>{const col=i%2;const row=Math.floor(i/2);doc.setTextColor(...GRAY);doc.text(`${l}: `,ML+10+col*82,y+31+row*8);doc.setTextColor(...INK);doc.text(v,ML+10+col*82+doc.getTextWidth(`${l}: `),y+31+row*8)});
+  [[pf.dept,'Department'],[pf.company,'Company'],[pf.empid,'ID'],[pf.manager,'Manager']].filter(([v])=>v).forEach(([v,l],i)=>{const col=i%2,row=Math.floor(i/2);doc.setTextColor(...GRAY);doc.text(`${l}: `,ML+10+col*82,y+31+row*8);doc.setTextColor(...INK);doc.text(v,ML+10+col*82+doc.getTextWidth(`${l}: `),y+31+row*8)});
   doc.setTextColor(...GRAY);doc.text(`Generated: ${dateStr}`,ML+10,y+46);
   y+=60;
-
-  // kpis
-  const ckpis=[[D.daily.length,'Tasks'],[totalH.toFixed(0),'Hours'],[D.projects.length,'Projects'],[D.achievements.length,'Wins']];
-  ckpis.forEach(([v,l],i)=>{
-    const x=ML+i*(CW/4)+2;
-    doc.setFillColor(...PANEL2);doc.roundedRect(x,y,CW/4-4,22,3,3,'F');
-    doc.setFontSize(18);doc.setTextColor(...FUCH);doc.setFont('helvetica','bold');doc.text(String(v),x+(CW/4-4)/2,y+13,{align:'center'});
-    doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(l,x+(CW/4-4)/2,y+19.5,{align:'center'});
-  });
+  [[D.daily.length,'Tasks'],[totalH.toFixed(0),'Hours'],[D.projects.length,'Projects'],[D.achievements.length,'Wins']].forEach(([v,l],i)=>{const x=ML+i*(CW/4)+2;doc.setFillColor(...PANEL2);doc.roundedRect(x,y,CW/4-4,22,3,3,'F');doc.setFontSize(18);doc.setTextColor(...FUCH);doc.setFont('helvetica','bold');doc.text(String(v),x+(CW/4-4)/2,y+13,{align:'center'});doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(l,x+(CW/4-4)/2,y+19.5,{align:'center'})});
   y+=30;
-
-  // summary para
   doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');
-  const coverSummary=`This report presents ${pf.name||'the employee'}'s professional contributions, technical achievements, client engagements, learning & development, and evidence collected during ${year}. Compiled automatically from daily logs.`;
-  y=wrap(coverSummary,ML+2,y,CW-4,5);
+  y=wrap(`This report presents ${pf.name||'this employee'}'s professional contributions, technical achievements, client engagements, learning & development, and evidence during ${year}.`,ML+2,y,CW-4,5);
   y+=8;
-
-  // confidential notice
-  doc.setFillColor(...PANEL2);doc.setDrawColor(...VIOL,50);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,16,2,2,'FD');
+  doc.setFillColor(...PANEL2);doc.setDrawColor(...VIOL,50);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,12,2,2,'FD');
   doc.setFontSize(7.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('CONFIDENTIAL',ML+4,y+7);
-  doc.setFont('helvetica','normal');doc.setTextColor(...GRAY);doc.text('Prepared for HR / Manager review only. Not for external distribution.',ML+30,y+7);
+  doc.setFont('helvetica','normal');doc.setTextColor(...GRAY);doc.text('Prepared for HR / Manager review only.',ML+30,y+7);
   footer();
-
-  // ── PAGE 2: KPI DASHBOARD ──
+  // Page 2 KPIs
   newPage();y=16;
-  doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');
-  doc.text('Performance Dashboard',ML,y);y+=9;
+  doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Performance Dashboard',ML,y);y+=9;
   y=secHead('KEY PERFORMANCE INDICATORS',y);
-  const krows=[[['Total Tasks',D.daily.length,VIO],['Completed',done,GREEN]],[['Hours Logged',totalH.toFixed(1),PINK],['Projects',D.projects.length,VIO]],[['Achievements',D.achievements.length,AMBER],['Certs Earned',certs,GREEN]],[['Client Calls',D.clients.length,PINK],['Support Cases',D.support.length,AMBER]],[['Documents',D.docs.length,VIO],['Evidence Files',D.evidence.length,GREEN]],[['Completion Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%',GREEN],['Promo Score',score+'/100',FUCH]]];
-  krows.forEach(([l,r])=>{
-    y=chk(y,13);const hw=CW/2-3;
-    [[l,ML],[r,ML+hw+6]].forEach(([[label,val,col],x])=>{
-      doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,11,2,2,'FD');
-      doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);
-      doc.setFontSize(11);doc.setTextColor(...col);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+8,{align:'right'});
-    });y+=14;
-  });
-  y+=4;
-  y=secHead('EXECUTIVE SUMMARY',y);
+  [[['Total Tasks',D.daily.length,VIO],['Completed',done,GREEN]],[['Hours',totalH.toFixed(1),PINK],['Projects',D.projects.length,VIO]],[['Achievements',D.achievements.length,AMBER],['Certs',certs,GREEN]],[['Client Calls',D.clients.length,PINK],['Support',D.support.length,AMBER]],[['Docs',D.docs.length,VIO],['Evidence',D.evidence.length,GREEN]],[['Completion',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%',GREEN],['Score',score+'/100',FUCH]]].forEach(([l,r])=>{y=chk(y,13);const hw=CW/2-3;[[l,ML],[r,ML+hw+6]].forEach(([[label,val,col],x])=>{doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,11,2,2,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);doc.setFontSize(11);doc.setTextColor(...col);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+8,{align:'right'})});y+=14});
+  y+=4;y=secHead('EXECUTIVE SUMMARY',y);
   doc.setFontSize(8.5);doc.setTextColor(...INK);doc.setFont('helvetica','normal');
-  const exec=`During ${year}, ${pf.name||'this employee'} demonstrated strong technical and professional contributions across ${D.projects.length} project(s), accumulating ${totalH.toFixed(1)} work hours across ${D.daily.length} logged tasks with a ${D.daily.length?Math.round(done/D.daily.length*100):0}% completion rate. Key achievements include ${D.achievements.length} formal recognition(s), ${learnH.toFixed(1)} learning hours covering ${D.learning.length} topic(s) with ${certs} certificate(s), ${D.clients.length} client interaction(s) managed professionally, and ${D.support.length} technical support case(s) resolved. Additionally, ${D.docs.length} document(s) were authored, and ${D.evidence.length} piece(s) of formal evidence were collected as part of this portfolio.`;
-  y=wrap(exec,ML,y,CW,5);
+  y=wrap(`During ${year}, ${pf.name||'this employee'} contributed across ${D.projects.length} project(s), logging ${totalH.toFixed(1)} hours across ${D.daily.length} tasks (${D.daily.length?Math.round(done/D.daily.length*100):0}% completed). ${D.achievements.length} achievement(s) recorded, ${learnH.toFixed(1)}h learning with ${certs} cert(s), ${D.clients.length} client call(s), ${D.support.length} support case(s), ${D.docs.length} document(s).`,ML,y,CW,5);
   footer();
-
-  // ── PAGE 3: PROJECTS ──
-  newPage();y=16;
-  doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Projects & Contributions',ML,y);y+=9;
-  y=secHead('PROJECT TRACKER',y);
-  if(D.projects.length){
-    D.projects.forEach(p=>{
-      y=chk(y,34);
-      doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,30,2,2,'FD');
-      doc.setFillColor(...VIO);doc.roundedRect(ML,y,3,30,1,1,'F');
-      doc.setFontSize(10.5);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text(p.name||'Unnamed',ML+6,y+7);
-      const sc2=p.status==='Completed'?GREEN:p.status==='In Progress'?VIO:AMBER;
-      const sc2bg=p.status==='Completed'?GREENBG:p.status==='In Progress'?PANEL2:AMBERBG;
-      doc.setFillColor(...sc2bg);doc.roundedRect(ML+CW-34,y+2,32,6,2,2,'F');
-      doc.setFontSize(7);doc.setTextColor(...sc2);doc.setFont('helvetica','bold');doc.text(p.status||'—',ML+CW-18,y+5.8,{align:'center'});
-      doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');
-      [`Role: ${p.role||'—'}`,`Client: ${p.client||'—'}`,`Period: ${p.start||'—'} → ${p.end||'—'}`,`Stack: ${p.tech||'—'}`].forEach((l,i)=>{const col=i%2;const row=Math.floor(i/2);doc.text(l,ML+6+col*80,y+12+row*5.5)});
-      if(p.outcome){
-        doc.setFillColor(...GREENBG);doc.roundedRect(ML+4,y+23,CW-8,5,1,1,'F');
-        doc.setFontSize(7);doc.setTextColor(...GREEN);doc.setFont('helvetica','bold');doc.text('OUTCOME: ',ML+6,y+26.5);
-        doc.setFont('helvetica','normal');doc.setTextColor(...INK);const outLines=doc.splitTextToSize(p.outcome,CW-30);doc.text(outLines[0],ML+25,y+26.5);
-      }
-      y+=34;
-    });
-  } else {doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No projects logged.',ML,y);y+=8;}
+  // Projects
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Projects',ML,y);y+=9;y=secHead('PROJECT TRACKER',y);
+  D.projects.length?D.projects.forEach(p=>{y=chk(y,34);doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,30,2,2,'FD');doc.setFillColor(...VIO);doc.roundedRect(ML,y,3,30,1,1,'F');doc.setFontSize(10.5);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text(p.name||'—',ML+6,y+7);const sc2=p.status==='Completed'?GREEN:p.status==='In Progress'?VIO:AMBER;doc.setFillColor(...(p.status==='Completed'?GREENBG:p.status==='In Progress'?PANEL2:AMBERBG));doc.roundedRect(ML+CW-34,y+2,32,6,2,2,'F');doc.setFontSize(7);doc.setTextColor(...sc2);doc.setFont('helvetica','bold');doc.text(p.status||'—',ML+CW-18,y+5.8,{align:'center'});doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');[`Role: ${p.role||'—'}`,`Client: ${p.client||'—'}`,`Period: ${p.start||'—'} → ${p.end||'—'}`,`Stack: ${p.tech||'—'}`].forEach((l,i)=>{doc.text(l,ML+6+Math.floor(i%2)*80,y+12+Math.floor(i/2)*5.5)});if(p.outcome){doc.setFillColor(...GREENBG);doc.roundedRect(ML+4,y+23,CW-8,5,1,1,'F');doc.setFontSize(7);doc.setTextColor(...GREEN);doc.setFont('helvetica','bold');doc.text('OUTCOME: ',ML+6,y+26.5);doc.setFont('helvetica','normal');doc.setTextColor(...INK);doc.text(doc.splitTextToSize(p.outcome,CW-30)[0],ML+25,y+26.5)}y+=34}):(doc.setFontSize(8.5),doc.setTextColor(...GRAY),doc.text('No projects.',ML,y),y+=8);
   footer();
-
-  // ── PAGE 4: ACHIEVEMENTS & LEARNING ──
-  newPage();y=16;
-  doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Achievements & Learning',ML,y);y+=9;
-  y=secHead('ACHIEVEMENTS & RECOGNITION',y);
-  if(D.achievements.length){
-    doc.autoTable({head:[['Date','Achievement','Type','Business Impact','Revenue']],body:D.achievements.map(a=>[a.date,a.achievement,a.type,a.impact||'—',a.revenue||'—']),startY:y,margin:{left:ML,right:MR},styles:tblStyles,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblAlt});
-    y=doc.lastAutoTable.finalY+8;
-  } else {doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No achievements logged.',ML,y);y+=8;}
-  y=chk(y,20);y=secHead('LEARNING & DEVELOPMENT',y);
-  const lboxes=[[learnH.toFixed(1),'Hours Invested',VIO],[D.learning.length,'Topics Covered',PINK],[certs,'Certificates',GREEN]];
-  lboxes.forEach(([v,l,c],i)=>{const x=ML+i*56;doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,50,18,3,3,'FD');doc.setFontSize(16);doc.setTextColor(...c);doc.setFont('helvetica','bold');doc.text(String(v),x+25,y+11,{align:'center'});doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(l,x+25,y+16,{align:'center'})});
-  y+=22;
-  if(D.learning.length){
-    doc.autoTable({head:[['Date','Topic','Source','Category','Hours','Applied','Cert']],body:D.learning.map(l=>[l.date,l.topic,l.source||'—',l.cat,l.hours||'—',l.applied,l.cert]),startY:y,margin:{left:ML,right:MR},styles:tblStyles,headStyles:{fillColor:PINK,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblAlt});
-    y=doc.lastAutoTable.finalY+8;
-  }
+  // Achievements + Learning
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Achievements & Learning',ML,y);y+=9;y=secHead('ACHIEVEMENTS',y);
+  if(D.achievements.length){doc.autoTable({head:[['Date','Achievement','Type','Impact','Revenue']],body:D.achievements.map(a=>[a.date,a.achievement,a.type,a.impact||'—',a.revenue||'—']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('None.',ML,y);y+=8}
+  y=chk(y,20);y=secHead('LEARNING',y);
+  [[learnH.toFixed(1),'Hours',VIO],[D.learning.length,'Topics',PINK],[certs,'Certs',GREEN]].forEach(([v,l,c],i)=>{const x=ML+i*56;doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,50,18,3,3,'FD');doc.setFontSize(16);doc.setTextColor(...c);doc.setFont('helvetica','bold');doc.text(String(v),x+25,y+11,{align:'center'});doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(l,x+25,y+16,{align:'center'})});y+=22;
+  if(D.learning.length){doc.autoTable({head:[['Date','Topic','Source','Cat','Hours','Applied','Cert']],body:D.learning.map(l=>[l.date,l.topic,l.source||'—',l.cat,l.hours||'—',l.applied,l.cert]),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:PINK,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}
   footer();
-
-  // ── PAGE 5: CLIENT & SUPPORT ──
-  newPage();y=16;
-  doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Client & Support Activity',ML,y);y+=9;
-  y=secHead('CLIENT INTERACTIONS',y);
-  if(D.clients.length){
-    doc.autoTable({head:[['Date','Client','Org','Duration','Purpose','Resolution','Rating']],body:D.clients.map(c=>[c.date,c.client,c.org||'—',c.dur?c.dur+' min':'—',c.purpose||'—',c.resolution||'—',(c.rating||'—')+'/10']),startY:y,margin:{left:ML,right:MR},styles:tblStyles,headStyles:{fillColor:VIOL,textColor:INK,fontStyle:'bold'},alternateRowStyles:tblAlt});
-    y=doc.lastAutoTable.finalY+8;
-  } else {doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No client calls logged.',ML,y);y+=8;}
-  y=chk(y,20);y=secHead('TECHNICAL SUPPORT CASES',y);
-  if(D.support.length){
-    doc.autoTable({head:[['Date','Issue','Priority','Solution','Time','CSAT','Status']],body:D.support.map(s=>[s.date,s.issue,s.prio||'—',s.solution||'—',s.time||'—',(s.sat||'—')+'/10',s.status]),startY:y,margin:{left:ML,right:MR},styles:tblStyles,headStyles:{fillColor:AMBER,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblAlt});
-    y=doc.lastAutoTable.finalY+8;
-  } else {doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No support cases logged.',ML,y);y+=8;}
+  // Clients / Support / Docs
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Client & Support',ML,y);y+=9;y=secHead('CLIENT INTERACTIONS',y);
+  if(D.clients.length){doc.autoTable({head:[['Date','Client','Org','Mins','Purpose','Resolution','Rating']],body:D.clients.map(c=>[c.date,c.client,c.org||'—',c.dur?c.dur+' min':'—',c.purpose||'—',c.resolution||'—',(c.rating||'—')+'/10']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:VIOL,textColor:INK,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('None.',ML,y);y+=8}
+  y=chk(y,20);y=secHead('SUPPORT CASES',y);
+  if(D.support.length){doc.autoTable({head:[['Date','Issue','Priority','Solution','Time','CSAT','Status']],body:D.support.map(s=>[s.date,s.issue,s.prio||'—',s.solution||'—',s.time||'—',(s.sat||'—')+'/10',s.status]),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:AMBER,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('None.',ML,y);y+=8}
   y=chk(y,20);y=secHead('DOCUMENTATION',y);
-  if(D.docs.length){
-    doc.autoTable({head:[['Date','Document Name','Type','Revision','Pages','Remarks']],body:D.docs.map(d=>[d.date,d.name,d.type,d.rev||'—',d.pages||'—',d.remarks||'—']),startY:y,margin:{left:ML,right:MR},styles:tblStyles,headStyles:{fillColor:[71,85,105],textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblAlt});
-    y=doc.lastAutoTable.finalY+8;
-  }
+  if(D.docs.length){doc.autoTable({head:[['Date','Name','Type','Rev','Pages','Remarks']],body:D.docs.map(d=>[d.date,d.name,d.type,d.rev||'—',d.pages||'—',d.remarks||'—']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:[71,85,105],textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}
   footer();
-
-  // ── PAGE 6: STAR & EVIDENCE ──
-  newPage();y=16;
-  doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('STAR Contributions & Evidence',ML,y);y+=9;
-  y=secHead('STAR FORMAT — KEY CONTRIBUTIONS',y);
-  if(D.star.length){
-    doc.autoTable({head:[['Situation','Task','Action Taken','Result / Impact']],body:D.star.map(s=>[s.s,s.t,s.a,s.r]),startY:y,margin:{left:ML,right:MR},styles:{...tblStyles,fillColor:GREENBG},headStyles:{fillColor:GREEN,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:{fillColor:[230,250,240]}});
-    y=doc.lastAutoTable.finalY+8;
-  } else {doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No STAR entries. Add key contributions on the Dashboard.',ML,y);y+=8;}
-  y=chk(y,20);y=secHead('EVIDENCE VAULT INDEX',y);
-  if(D.evidence.length){
-    doc.autoTable({head:[['Title','Category','Project','Date','Notes']],body:D.evidence.map(e=>[e.title,e.cat,e.project||'—',e.date,e.notes||'—']),startY:y,margin:{left:ML,right:MR},styles:tblStyles,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblAlt});
-    y=doc.lastAutoTable.finalY+8;
-  } else {doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No evidence logged. Upload files in Evidence Vault.',ML,y);y+=8;}
-  // images from evidence
-  const imgEvidence=D.evidence.filter(e=>e.dataUrl).slice(0,6);
-  if(imgEvidence.length){
-    y=chk(y,30);doc.setFontSize(8.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('Evidence Images',ML,y);y+=5;
-    imgEvidence.forEach((e,i)=>{
-      try{const col=i%3;const row=Math.floor(i/3);const x=ML+col*60;const ey=y+row*38;doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.rect(x,ey,56,30,'S');doc.addImage(e.dataUrl,'JPEG',x,ey,56,30);doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(e.title.slice(0,22),x,ey+33)}catch(err){}
-    });
-    y+=Math.ceil(imgEvidence.length/3)*38+6;
-  }
+  // STAR + Evidence
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('STAR & Evidence',ML,y);y+=9;y=secHead('STAR CONTRIBUTIONS',y);
+  if(D.star.length){doc.autoTable({head:[['Situation','Task','Action','Result']],body:D.star.map(s=>[s.s,s.t,s.a,s.r]),startY:y,margin:{left:ML,right:MR},styles:{...tblS,fillColor:GREENBG},headStyles:{fillColor:GREEN,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:{fillColor:[230,250,240]}});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No STAR entries.',ML,y);y+=8}
+  y=chk(y,20);y=secHead('EVIDENCE INDEX',y);
+  if(D.evidence.length){doc.autoTable({head:[['Title','Category','Project','Date','Notes']],body:D.evidence.map(e=>[e.title,e.cat,e.project||'—',e.date,e.notes||'—']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No evidence.',ML,y);y+=8}
+  const imgs=D.evidence.filter(e=>e.dataUrl||e.fileUrl).slice(0,6);
+  if(imgs.length){y=chk(y,30);doc.setFontSize(8.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('Evidence Images',ML,y);y+=5;imgs.forEach((e,i)=>{try{const col=i%3,row=Math.floor(i/3),x=ML+col*60,ey=y+row*38;doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.rect(x,ey,56,30,'S');doc.addImage(e.dataUrl||e.fileUrl,'JPEG',x,ey,56,30);doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text((e.title||'').slice(0,22),x,ey+33)}catch(err){}})}
   footer();
-
-  // ── PAGE 7: DAILY WORK SAMPLE ──
-  newPage();y=16;
-  doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Daily Work Log',ML,y);y+=9;
-  y=secHead(`RECENT WORK ENTRIES (Latest ${Math.min(D.daily.length,20)})`,y);
-  if(D.daily.length){
-    doc.autoTable({head:[['Date','Task','Project','Category','Hours','Priority','Status','Impact']],body:D.daily.slice(0,20).map(d=>[d.date,d.task,d.project||'—',d.cat,d.hours||'—',d.prio,d.status,d.impact||'—']),startY:y,margin:{left:ML,right:MR},styles:tblStyles,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblAlt,columnStyles:{0:{cellWidth:20},3:{cellWidth:22}}});
-    y=doc.lastAutoTable.finalY+8;
-  } else {doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No daily entries logged.',ML,y);y+=8;}
-  footer();
-
-  // ── PAGE 8: SIGN-OFF ──
-  newPage();y=16;
-  doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Performance Summary & Sign-off',ML,y);y+=9;
-  y=secHead('FINAL PERFORMANCE SUMMARY',y);
-  const sumMetrics=[['Promotion Readiness Score',score+'/100'],['Tasks Logged',D.daily.length],['Tasks Completed',done],['Completion Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%'],['Total Hours Logged',totalH.toFixed(1)],['Projects Delivered',D.projects.length],['Learning Hours',learnH.toFixed(1)],['Certificates Earned',certs],['Achievements',D.achievements.length],['Client Interactions',D.clients.length],['Support Cases Resolved',D.support.length],['Documents Authored',D.docs.length],['Evidence Files',D.evidence.length],['Ideas in STAR Format',D.star.length]];
-  for(let i=0;i<sumMetrics.length;i+=2){
-    y=chk(y,12);const hw=CW/2-3;
-    [[sumMetrics[i],ML],[sumMetrics[i+1],ML+hw+6]].filter(([m])=>m).forEach(([[label,val],x])=>{
-      doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,10,1.5,1.5,'FD');
-      doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);
-      const vc=label.includes('Score')?FUCH:label.includes('Completed')||label.includes('Rate')?GREEN:VIO;
-      doc.setFontSize(10);doc.setTextColor(...vc);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+7.5,{align:'right'});
-    });y+=13;
-  }
-  y+=6;
-  y=secHead('DECLARATION & SIGN-OFF',y);
+  // Sign-off
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Summary & Sign-off',ML,y);y+=9;y=secHead('PERFORMANCE SUMMARY',y);
+  [['Score',score+'/100'],['Tasks',D.daily.length],['Completed',done],['Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%'],['Hours',totalH.toFixed(1)],['Projects',D.projects.length],['Learning Hrs',learnH.toFixed(1)],['Certs',certs],['Achievements',D.achievements.length],['Client Calls',D.clients.length],['Support',D.support.length],['Docs',D.docs.length],['Evidence',D.evidence.length],['STAR Entries',D.star.length]].reduce((acc,m,i)=>{if(i%2===0)acc.push([m]);else acc[acc.length-1].push(m);return acc},[]).forEach(pair=>{y=chk(y,12);const hw=CW/2-3;pair.forEach(([label,val],col)=>{const x=ML+col*(hw+6);doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,10,1.5,1.5,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);const vc=label==='Score'?FUCH:['Completed','Rate'].includes(label)?GREEN:VIO;doc.setFontSize(10);doc.setTextColor(...vc);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+7.5,{align:'right'})});y+=13});
+  y+=6;y=secHead('DECLARATION & SIGN-OFF',y);
   doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');
-  y=wrap(`I hereby declare that all information in this appraisal report is accurate and complete. This report has been automatically compiled from my daily work logs and represents a true record of my professional contributions during ${year}.`,ML,y,CW,5);
-  y+=8;
-  const sigs=[['Employee',''],['Line Manager',''],['HR Representative','']];
-  sigs.forEach(([title],i)=>{
-    const sw=(CW-10)/3;const sx=ML+i*(sw+5);
-    doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.roundedRect(sx,y,sw,32,2,2,'FD');
-    doc.setFontSize(7.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text(title,sx+sw/2,y+6,{align:'center'});
-    doc.setDrawColor(...VIOL);doc.setLineWidth(0.4);doc.line(sx+6,y+22,sx+sw-6,y+22);
-    doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text('Signature',sx+sw/2,y+19,{align:'center'});doc.text('Date: ___________',sx+sw/2,y+28,{align:'center'});
-  });
-  y+=38;
-  // final stamp
+  y=wrap(`I declare all information in this report is accurate. Compiled automatically from daily work logs. Period: ${year}.`,ML,y,CW,5);y+=8;
+  [['Employee'],['Line Manager'],['HR Representative']].forEach(([title],i)=>{const sw=(CW-10)/3,sx=ML+i*(sw+5);doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.roundedRect(sx,y,sw,32,2,2,'FD');doc.setFontSize(7.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text(title,sx+sw/2,y+6,{align:'center'});doc.setDrawColor(...VIOL);doc.setLineWidth(0.4);doc.line(sx+6,y+22,sx+sw-6,y+22);doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text('Signature',sx+sw/2,y+19,{align:'center'});doc.text('Date: ___________',sx+sw/2,y+28,{align:'center'})});y+=38;
   doc.setFillColor(...PANEL2);doc.setDrawColor(...VIOL);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,12,3,3,'FD');
-  doc.setFontSize(9);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('✦ ElevaTrack — Track. Prove. Grow.',ML+CW/2,y+5.5,{align:'center'});
-  doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(`Generated ${dateStr}  ·  Score: ${score}/100  ·  Confidential`,ML+CW/2,y+9.5,{align:'center'});
+  doc.setFontSize(9);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('✦ ElevaTrack — Track. Prove. Grow.  ·  made by Vinu',ML+CW/2,y+5.5,{align:'center'});
+  doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(`${dateStr}  ·  Score: ${score}/100`,ML+CW/2,y+9.5,{align:'center'});
   footer();
-
-  doc.save(`ElevaTrack_Appraisal_${pf.name?pf.name.replace(/\s/g,'_')+'_':''}${year}.pdf`);
-  toast('✦ PDF exported successfully');
+  doc.save(`ElevaTrack_${pf.name?pf.name.replace(/\s/g,'_')+'_':''}${year}.pdf`);
+  toast('✦ PDF exported');
 }
 
-// ═══════════════════════════════════════════════════════
-// ── BOOT SEQUENCE ── Load data then render everything
-// ═══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 16: RENDER ALL ──
+// ══════════════════════════════════════════════════════════════════
+
+function renderAll() {
+  renderDaily(); renderProjects(); renderLearning(); renderClients();
+  renderSupport(); renderDocs(); renderAchievements(); renderEvidence();
+  renderStar(); renderMood(); renderGoals(); renderNotes(); renderPlan();
+  renderDashboard(); updateScore(); updateAll(); updateSidebarProfile();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 17: BOOT SEQUENCE ──
+// ══════════════════════════════════════════════════════════════════
+
 async function boot() {
-  // Set today's date on all date fields
-  ['dl-date','cl-date','sp-date','ac-date','dc-date','ln-date','ev-date','wk-date'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = today();
+  // Set default dates
+  ['dl-date','cl-date','sp-date','ac-date','dc-date','ln-date','ev-date'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = today();
   });
   document.getElementById('page-sub').textContent =
     new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-  // Load data (Supabase → localStorage fallback)
-  await load();
+  // Watch auth state — this is the single source of truth
+  _supa.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      currentUser = session.user;
+      setSyncStatus('syncing', 'Loading...');
 
-  // Update profile in sidebar
-  if (D.profile && D.profile.name) {
-    const pn = document.getElementById('prof-name-sb');
-    const pr = document.getElementById('prof-role-sb');
-    if (pn) pn.textContent = D.profile.name;
-    if (pr) pr.textContent = D.profile.role || 'Engineer';
+      // Load data from Supabase
+      await loadAllData();
+
+      // Check if there's local data to migrate (first login only)
+      const hasLegacy = LEGACY_KEYS.some(k => localStorage.getItem(k));
+      if (hasLegacy) await migrateLocalData();
+
+      renderAll();
+      showAppScreen();
+
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null;
+      resetAppState();
+      showAuthScreen();
+    }
+  });
+
+  // Check for existing session on page load
+  const { data: { session } } = await _supa.auth.getSession();
+  if (!session) {
+    showAuthScreen();
   }
-
-  // Render all sections
-  renderDaily(); renderProjects(); renderLearning(); renderClients();
-  renderSupport(); renderDocs(); renderAchievements(); renderEvidence();
-  renderStar(); renderMood(); renderGoals(); renderNotes(); renderPlan();
-  renderDashboard(); updateScore();
+  // If session exists, onAuthStateChange SIGNED_IN fires automatically
 }
 
-// Start the app
+// ── LAUNCH ──
 boot();
 </script>
 
