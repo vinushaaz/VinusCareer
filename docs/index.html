@@ -259,6 +259,8 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 }
 .ws-tab:hover{background:var(--powder-xl);color:var(--powder)}
 .ws-tab.active{background:linear-gradient(135deg,var(--powder-xl),#eef6fb);color:var(--powder);box-shadow:inset 0 0 0 1px #5b9bc430}
+.career-tabbar .ws-tab:hover{background:var(--peach-xl);color:var(--peach)}
+.career-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--peach-xl),#fdf1e8);color:var(--peach);box-shadow:inset 0 0 0 1px #e8926b40}
 /* ── CARDS ── */
 .card{
   background:var(--s1);border:1px solid var(--border);
@@ -542,6 +544,7 @@ tr:hover td{background:#8b5cf608}
   .kanban-board{grid-template-columns:1fr;overflow-x:visible}
   .idea-grid{grid-template-columns:1fr}
   .ws-tabbar{overflow-x:auto;flex-wrap:nowrap}
+  .career-tabbar{overflow-x:auto;flex-wrap:nowrap}
   #topbar{padding:0 12px;gap:8px}
   #page-title{font-size:14px}
   #page-sub{display:none}
@@ -979,6 +982,13 @@ tr:hover td{background:#8b5cf608}
   </div>
 </div>
 
+<!-- ═══ CAREER HUB TAB BAR (shown above any Career-group page) ═══ -->
+<div id="career-tabbar" class="ws-tabbar career-tabbar" style="display:none">
+  <button class="ws-tab" data-ws-tab="achievements" onclick="nav('achievements')">🏆 Achievements</button>
+  <button class="ws-tab" data-ws-tab="evidence" onclick="nav('evidence')">🗄 Evidence Vault</button>
+  <button class="ws-tab" data-ws-tab="ai" onclick="nav('ai')">✦ AI Writer</button>
+</div>
+
 <!-- ═══ EVIDENCE VAULT ═══ -->
 <div id="page-evidence" class="page">
   <div class="card mb16">
@@ -1335,7 +1345,16 @@ tr:hover td{background:#8b5cf608}
           <div class="ff"><label>Monthly Salary (₹)</label><input type="number" id="att-salary" value="20000"></div>
           <div class="ff"><label>Working Days / Month</label><input type="number" id="att-workdays" value="27"></div>
           <div class="ff"><label>Paid Leaves / Month</label><input type="number" id="att-paidleaves" value="1" min="0" max="30"></div>
+          <div class="ff"><label>Half-Day Factor</label><input type="number" id="att-halffactor" value="0.5" min="0" max="1" step="0.05"></div>
+          <div class="ff s2"><label>Leave Deduction Formula</label>
+            <select id="att-leavemode">
+              <option value="absent_only">Quota covers Absences only (Half-Days always deducted)</option>
+              <option value="combined">Quota covers Absences + Half-Days together</option>
+              <option value="none">No forgiveness (quota is informational only)</option>
+            </select>
+          </div>
         </div>
+        <div style="font-size:10.5px;color:var(--text4);margin-top:8px">These formula settings are saved per company — switch companies and each keeps its own rules.</div>
       </div>
     </div>
 
@@ -2245,7 +2264,7 @@ function switchPlannerTab(tab, el) {
 let attDate     = new Date();           // month currently displayed
 let attMode     = 'present';            // currently selected marking mode
 let attLogs     = {};                   // { 'YYYY-MM-DD': 'present'|'absent'|'half'|'holiday'|'paid' }
-let attSettings = { salary: 20000, workdays: 27, paidLeaves: 1 };
+let attSettings = { salary: 20000, workdays: 27, paidLeaves: 1, halfDayFactor: 0.5, leaveMode: 'absent_only' };
 let _attSaveTimer = null;
 
 const ATT_STATUS_COLORS = {
@@ -2285,7 +2304,9 @@ async function loadAttendanceData() {
       attSettings = {
         salary: settings[0].monthly_salary ?? 20000,
         workdays: settings[0].working_days ?? 27,
-        paidLeaves: settings[0].paid_leaves ?? 1
+        paidLeaves: settings[0].paid_leaves ?? 1,
+        halfDayFactor: settings[0].half_day_factor ?? 0.5,
+        leaveMode: settings[0].leave_mode ?? 'absent_only'
       };
     }
     console.log(`✓ Attendance loaded: ${Object.keys(attLogs).length} days logged`);
@@ -2298,16 +2319,22 @@ async function loadAttendanceData() {
   const sEl = document.getElementById('att-salary');
   const wEl = document.getElementById('att-workdays');
   const pEl = document.getElementById('att-paidleaves');
+  const hEl = document.getElementById('att-halffactor');
+  const lEl = document.getElementById('att-leavemode');
   if (sEl) sEl.value = attSettings.salary;
   if (wEl) wEl.value = attSettings.workdays;
   if (pEl) pEl.value = attSettings.paidLeaves;
+  if (hEl) hEl.value = attSettings.halfDayFactor;
+  if (lEl) lEl.value = attSettings.leaveMode;
 }
 
 // Debounced settings save — triggered on input change
 function queueAttendanceSettingsSave() {
-  attSettings.salary     = parseFloat(document.getElementById('att-salary').value) || 0;
-  attSettings.workdays   = parseInt(document.getElementById('att-workdays').value) || 0;
-  attSettings.paidLeaves = parseInt(document.getElementById('att-paidleaves').value) || 0;
+  attSettings.salary        = parseFloat(document.getElementById('att-salary').value) || 0;
+  attSettings.workdays      = parseInt(document.getElementById('att-workdays').value) || 0;
+  attSettings.paidLeaves    = parseInt(document.getElementById('att-paidleaves').value) || 0;
+  attSettings.halfDayFactor = parseFloat(document.getElementById('att-halffactor').value) || 0;
+  attSettings.leaveMode     = document.getElementById('att-leavemode').value || 'absent_only';
   clearTimeout(_attSaveTimer);
   _attSaveTimer = setTimeout(saveAttendanceSettings, 700);
   renderAttPayBreakdown(); // instant feedback even before save completes
@@ -2322,6 +2349,8 @@ async function saveAttendanceSettings() {
       monthly_salary: attSettings.salary,
       working_days: attSettings.workdays,
       paid_leaves: attSettings.paidLeaves,
+      half_day_factor: attSettings.halfDayFactor,
+      leave_mode: attSettings.leaveMode,
       updated_at: new Date().toISOString()
     };
     const { error } = await withTimeout(
@@ -2442,9 +2471,33 @@ function renderAttPayBreakdown() {
   if (!el) return;
   const c = getAttMonthCounts();
   const perDay = attSettings.workdays > 0 ? attSettings.salary / attSettings.workdays : 0;
+  const hf = attSettings.halfDayFactor ?? 0.5;
+  const mode = attSettings.leaveMode || 'absent_only';
+  const quota = attSettings.paidLeaves;
 
-  const unpaidAbsences = Math.max(0, c.absent - attSettings.paidLeaves);
-  const halfDayDeduction = c.half * (perDay / 2);
+  let unpaidAbsences, unpaidHalfUnits, modeNote;
+  if (mode === 'none') {
+    // Quota is informational only — every Absent/Half-Day is deducted in full.
+    unpaidAbsences = c.absent;
+    unpaidHalfUnits = c.half * hf;
+    modeNote = 'No forgiveness — quota is informational only';
+  } else if (mode === 'combined') {
+    // Quota forgives Absent + Half-Day units together (a Half-Day costs hf of a unit).
+    const totalUnits = c.absent + c.half * hf;
+    const unforgivenUnits = Math.max(0, totalUnits - quota);
+    // Split the unforgiven units back into absence-equivalent vs half-day-equivalent for display,
+    // preferring to show absences as forgiven first (order doesn't affect the total).
+    unpaidAbsences = Math.min(c.absent, unforgivenUnits);
+    unpaidHalfUnits = Math.max(0, unforgivenUnits - unpaidAbsences);
+    modeNote = 'Quota covers Absences + Half-Days together';
+  } else {
+    // 'absent_only' (default / original behaviour) — quota forgives full Absent days only.
+    unpaidAbsences = Math.max(0, c.absent - quota);
+    unpaidHalfUnits = c.half * hf;
+    modeNote = 'Quota covers Absences only — Half-Days always deducted';
+  }
+
+  const halfDayDeduction = unpaidHalfUnits * perDay;
   const absentDeduction  = unpaidAbsences * perDay;
   const totalDeduction   = halfDayDeduction + absentDeduction;
   const finalPay = Math.max(0, attSettings.salary - totalDeduction);
@@ -2453,16 +2506,16 @@ function renderAttPayBreakdown() {
     <div class="att-pay-row"><span class="lbl">Monthly Salary</span><span class="val">₹${attSettings.salary.toLocaleString('en-IN')}</span></div>
     <div class="att-pay-row"><span class="lbl">Per-Day Rate (Salary ÷ Working Days)</span><span class="val">₹${perDay.toFixed(0)}</span></div>
     <div class="att-pay-row"><span class="lbl">Days Present</span><span class="val" style="color:var(--green)">${c.present}</span></div>
-    <div class="att-pay-row"><span class="lbl">Paid Leaves Used (of ${attSettings.paidLeaves} allowed)</span><span class="val" style="color:var(--blue)">${c.paid}</span></div>
-    <div class="att-pay-row deduction"><span class="lbl">Half-Day Deduction (${c.half} × ₹${(perDay/2).toFixed(0)})</span><span class="val">−₹${halfDayDeduction.toFixed(0)}</span></div>
-    <div class="att-pay-row deduction"><span class="lbl">Unpaid Absence Deduction (${unpaidAbsences} × ₹${perDay.toFixed(0)})</span><span class="val">−₹${absentDeduction.toFixed(0)}</span></div>
+    <div class="att-pay-row"><span class="lbl">Paid Leave Quota (${modeNote})</span><span class="val" style="color:var(--blue)">${quota}</span></div>
+    <div class="att-pay-row deduction"><span class="lbl">Half-Day Deduction (${c.half} × ${hf} × ₹${perDay.toFixed(0)})</span><span class="val">−₹${halfDayDeduction.toFixed(0)}</span></div>
+    <div class="att-pay-row deduction"><span class="lbl">Unpaid Absence Deduction (${unpaidAbsences.toFixed(unpaidAbsences % 1 ? 1 : 0)} × ₹${perDay.toFixed(0)})</span><span class="val">−₹${absentDeduction.toFixed(0)}</span></div>
     <div class="att-pay-row total"><span class="lbl">Estimated Take-Home Pay</span><span class="val">₹${finalPay.toLocaleString('en-IN',{maximumFractionDigits:0})}</span></div>
   `;
 }
 
 // Wire up settings inputs to auto-save on change (event delegation, set up once at boot)
 function initAttendanceInputs() {
-  ['att-salary','att-workdays','att-paidleaves'].forEach(id => {
+  ['att-salary','att-workdays','att-paidleaves','att-halffactor','att-leavemode'].forEach(id => {
     const el = document.getElementById(id);
     if (el && !el._wired) {
       el.addEventListener('input', queueAttendanceSettingsSave);
@@ -2584,6 +2637,8 @@ function nav(id) {
     {weekday:'long',year:'numeric',month:'long',day:'numeric'});
   const wsBar = document.getElementById('ws-tabbar');
   if (wsBar) wsBar.style.display = (grp === 'workspace') ? 'flex' : 'none';
+  const careerBar = document.getElementById('career-tabbar');
+  if (careerBar) careerBar.style.display = (grp === 'career') ? 'flex' : 'none';
   document.querySelectorAll('.ws-tab').forEach(t => t.classList.toggle('active', t.dataset.wsTab === id));
   if (id==='dashboard')   renderDashboard();
   if (id==='reports')     renderReports();
@@ -3376,7 +3431,7 @@ function exportExcel() {
 function exportPDF(){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-  const PW=210,PH=297,ML=18,MR=18,CW=192;
+  const PW=210,PH=297,ML=18,MR=18,CW=PW-ML-MR;
   const VIO=[147,51,234],VIOL=[192,132,252],FUCH=[219,39,119],PINK=[236,72,153];
   const WHITE=[255,255,255],INK=[30,27,46],GRAY=[100,116,139],LGRAY=[226,232,240];
   const PANEL=[250,247,255],PANEL2=[245,238,255];
@@ -3459,7 +3514,7 @@ function exportPDF(){
   y=chk(y,20);y=secHead('EVIDENCE INDEX',y);
   if(D.evidence.length){doc.autoTable({head:[['Title','Category','Project','Date','Notes']],body:D.evidence.map(e=>[e.title,e.cat,e.project||'—',e.date,e.notes||'—']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No evidence.',ML,y);y+=8}
   const imgs=D.evidence.filter(e=>e.dataUrl||e.fileUrl).slice(0,6);
-  if(imgs.length){y=chk(y,30);doc.setFontSize(8.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('Evidence Images',ML,y);y+=5;imgs.forEach((e,i)=>{try{const col=i%3,row=Math.floor(i/3),x=ML+col*60,ey=y+row*38;doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.rect(x,ey,56,30,'S');doc.addImage(e.dataUrl||e.fileUrl,'JPEG',x,ey,56,30);doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text((e.title||'').slice(0,22),x,ey+33)}catch(err){}})}
+  if(imgs.length){y=chk(y,30);doc.setFontSize(8.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('Evidence Images',ML,y);y+=5;const colW=CW/3,imgW=colW-4;imgs.forEach((e,i)=>{try{const col=i%3,row=Math.floor(i/3),x=ML+col*colW,ey=y+row*38;doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.rect(x,ey,imgW,30,'S');doc.addImage(e.dataUrl||e.fileUrl,'JPEG',x,ey,imgW,30);doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text((e.title||'').slice(0,22),x,ey+33)}catch(err){}})}
   footer();
   // Sign-off
   newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Summary & Sign-off',ML,y);y+=9;y=secHead('PERFORMANCE SUMMARY',y);
