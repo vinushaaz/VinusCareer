@@ -261,6 +261,18 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .ws-tab.active{background:linear-gradient(135deg,var(--powder-xl),#eef6fb);color:var(--powder);box-shadow:inset 0 0 0 1px #5b9bc430}
 .career-tabbar .ws-tab:hover{background:var(--peach-xl);color:var(--peach)}
 .career-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--peach-xl),#fdf1e8);color:var(--peach);box-shadow:inset 0 0 0 1px #e8926b40}
+.utilities-tabbar .ws-tab:hover{background:var(--sage-xl);color:var(--sage)}
+.utilities-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--sage-xl),#eff5ec);color:var(--sage);box-shadow:inset 0 0 0 1px #6f9c6a40}
+/* ── SALARY CALCULATOR ── */
+.sal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.sal-list{padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-height:60px}
+.sal-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:9px;background:var(--s2);font-size:12px}
+.sal-row .sal-amt{font-weight:700;font-variant-numeric:tabular-nums}
+.sal-row .sal-del{border:none;background:none;color:var(--text4);cursor:pointer;font-size:12px;margin-left:8px}
+.sal-summary-row{display:flex;justify-content:space-between;padding:8px 4px;font-size:12.5px;border-bottom:1px dashed var(--border2)}
+.sal-summary-row:last-child{border-bottom:none}
+.sal-summary-row.total{font-weight:700;font-size:14px;color:var(--violet-l);border-top:2px solid var(--border2);margin-top:4px;padding-top:10px}
+.mt16{margin-top:16px}
 /* ── CARDS ── */
 .card{
   background:var(--s1);border:1px solid var(--border);
@@ -545,6 +557,8 @@ tr:hover td{background:#8b5cf608}
   .idea-grid{grid-template-columns:1fr}
   .ws-tabbar{overflow-x:auto;flex-wrap:nowrap}
   .career-tabbar{overflow-x:auto;flex-wrap:nowrap}
+  .utilities-tabbar{overflow-x:auto;flex-wrap:nowrap}
+  .sal-grid{grid-template-columns:1fr}
   #topbar{padding:0 12px;gap:8px}
   #page-title{font-size:14px}
   #page-sub{display:none}
@@ -823,6 +837,8 @@ tr:hover td{background:#8b5cf608}
       <span class="si">🧰</span>Utilities<span class="chev">▸</span>
     </button>
     <div class="sb-sublist" data-grp-list="utilities">
+      <button class="sb-item" data-nav="companies" onclick="nav('companies')"><span class="si">🏢</span>Companies</button>
+      <button class="sb-item" data-nav="salary" onclick="nav('salary')"><span class="si">💰</span>Salary Calculator</button>
       <button class="sb-item" data-nav="reports" onclick="nav('reports')"><span class="si">📊</span>Reports & Export</button>
       <button class="sb-item" data-nav="goals" onclick="nav('goals')"><span class="si">🎯</span>Goals</button>
       <button class="sb-item" data-nav="notes" onclick="nav('notes')"><span class="si">📝</span>Notes</button>
@@ -1256,6 +1272,70 @@ tr:hover td{background:#8b5cf608}
   <div class="card"><div class="card-hd"><div class="card-title">🏆 Achievements & Recognition</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Achievement</th><th>Type</th><th>Impact</th><th>Revenue Impact</th><th>Evidence</th><th></th></tr></thead><tbody id="ach-body"></tbody></table></div></div>
 </div>
 
+<!-- ═══ UTILITIES TAB BAR ═══ -->
+<div id="utilities-tabbar" class="ws-tabbar utilities-tabbar" style="display:none">
+  <button class="ws-tab" data-ws-tab="companies" onclick="nav('companies')">🏢 Companies</button>
+  <button class="ws-tab" data-ws-tab="salary" onclick="nav('salary')">💰 Salary Calculator</button>
+  <button class="ws-tab" data-ws-tab="reports" onclick="nav('reports')">📊 Reports & Export</button>
+  <button class="ws-tab" data-ws-tab="goals" onclick="nav('goals')">🎯 Goals</button>
+  <button class="ws-tab" data-ws-tab="notes" onclick="nav('notes')">📝 Notes</button>
+  <button class="ws-tab" data-ws-tab="mood" onclick="nav('mood')">✨ Mood</button>
+</div>
+
+<!-- ═══ COMPANY MANAGER ═══ -->
+<div id="page-companies" class="page">
+  <div class="card mb16">
+    <div class="card-hd"><div class="card-title">🏢 Companies</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('cmp-fs')">+ Add Company</button></div>
+    <div class="card-body">
+      <p style="font-size:11.5px;color:var(--text3);margin-bottom:14px;line-height:1.6">Changed jobs? Add your new company below — your work history from previous companies stays intact and you can switch back anytime to view it.</p>
+      <div id="cmp-fs" class="form-section mb16" style="background:var(--s2);border-radius:var(--r2);padding:16px">
+        <div class="fgrid">
+          <div class="ff"><label>Company Name *</label><input id="cmp-name" placeholder="e.g. Wiman Company"></div>
+          <div class="ff"><label>Job Title / Role</label><input id="cmp-role" placeholder="e.g. Embedded Systems Engineer"></div>
+          <div class="ff"><label>Department</label><input id="cmp-dept" placeholder="e.g. Firmware / IoT"></div>
+          <div class="ff"><label>Employee ID</label><input id="cmp-empid" placeholder="EMP-001"></div>
+          <div class="ff"><label>Manager Name</label><input id="cmp-manager" placeholder="Your manager's name"></div>
+          <div class="ff"><label>Date of Joining</label><input type="date" id="cmp-doj"></div>
+        </div>
+        <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet btn-sm" onclick="addCompany()">💾 Save & Switch to This Company</button></div>
+      </div>
+      <div id="company-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SALARY CALCULATOR ═══ -->
+<div id="page-salary" class="page">
+  <div class="card mb16">
+    <div class="card-hd"><div class="card-title">💰 Salary Calculator — <span id="sal-company-name" style="font-weight:400;color:var(--text3)">Active Company</span></div></div>
+    <div class="card-body">
+      <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Add unlimited earning and deduction line items. This is saved per company — switch companies and the structure switches with it. Attendance-based deductions from your Pay Settings are added automatically.</p>
+      <div class="fgrid">
+        <div class="ff s2"><label>Label</label><input id="sc-label" placeholder="e.g. Basic, HRA, PF, Bonus..."></div>
+        <div class="ff"><label>Kind</label><select id="sc-kind"><option value="earning">Earning</option><option value="deduction">Deduction</option></select></div>
+        <div class="ff"><label>Amount (₹)</label><input type="number" id="sc-amount" placeholder="0"></div>
+      </div>
+      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet btn-sm" onclick="addSalComp()">+ Add Line Item</button></div>
+    </div>
+  </div>
+
+  <div class="sal-grid">
+    <div class="card">
+      <div class="card-hd"><div class="card-title" style="color:var(--sage)">＋ Earnings</div></div>
+      <div id="sal-earnings-list" class="sal-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title" style="color:var(--peach)">－ Deductions</div></div>
+      <div id="sal-deductions-list" class="sal-list"></div>
+    </div>
+  </div>
+
+  <div class="card mt16">
+    <div class="card-hd"><div class="card-title">📐 Summary</div></div>
+    <div class="card-body" id="sal-summary"></div>
+  </div>
+</div>
+
 <!-- ═══ REPORTS ═══ -->
 <div id="page-reports" class="page">
   <div class="score-hero mb20">
@@ -1346,6 +1426,7 @@ tr:hover td{background:#8b5cf608}
           <div class="ff"><label>Working Days / Month</label><input type="number" id="att-workdays" value="27"></div>
           <div class="ff"><label>Paid Leaves / Month</label><input type="number" id="att-paidleaves" value="1" min="0" max="30"></div>
           <div class="ff"><label>Half-Day Factor</label><input type="number" id="att-halffactor" value="0.5" min="0" max="1" step="0.05"></div>
+          <div class="ff"><label>Working Hours / Day</label><input type="number" id="att-hoursperday" value="8" min="1" max="24" step="0.5"></div>
           <div class="ff s2"><label>Leave Deduction Formula</label>
             <select id="att-leavemode">
               <option value="absent_only">Quota covers Absences only (Half-Days always deducted)</option>
@@ -1477,25 +1558,6 @@ tr:hover td{background:#8b5cf608}
       <div class="btn-group" style="margin-top:14px"><button class="btn btn-violet" onclick="saveProfile()">💾 Save Profile</button></div>
     </div>
   </div>
-
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">🏢 Companies</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('cmp-fs')">+ Add Company</button></div>
-    <div class="card-body">
-      <p style="font-size:11.5px;color:var(--text3);margin-bottom:14px;line-height:1.6">Changed jobs? Add your new company below — your work history from previous companies stays intact and you can switch back anytime to view it.</p>
-      <div id="cmp-fs" class="form-section mb16" style="background:var(--s2);border-radius:var(--r2);padding:16px">
-        <div class="fgrid">
-          <div class="ff"><label>Company Name *</label><input id="cmp-name" placeholder="e.g. Wiman Company"></div>
-          <div class="ff"><label>Job Title / Role</label><input id="cmp-role" placeholder="e.g. Embedded Systems Engineer"></div>
-          <div class="ff"><label>Department</label><input id="cmp-dept" placeholder="e.g. Firmware / IoT"></div>
-          <div class="ff"><label>Employee ID</label><input id="cmp-empid" placeholder="EMP-001"></div>
-          <div class="ff"><label>Manager Name</label><input id="cmp-manager" placeholder="Your manager's name"></div>
-          <div class="ff"><label>Date of Joining</label><input type="date" id="cmp-doj"></div>
-        </div>
-        <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet btn-sm" onclick="addCompany()">💾 Save & Switch to This Company</button></div>
-      </div>
-      <div id="company-list" style="display:flex;flex-direction:column;gap:8px"></div>
-    </div>
-  </div>
 </div>
 
 
@@ -1535,7 +1597,7 @@ let D = {
   daily: [], projects: [], learning: [], clients: [],
   support: [], docs: [], achievements: [], evidence: [],
   star: [], plans: [], goals: [], notes: [], mood: [],
-  tasks: [], meetings: [], ideas: [],
+  tasks: [], meetings: [], ideas: [], salcomp: [],
   profile: { name:'', email:'', links:'' }
 };
 
@@ -1694,7 +1756,7 @@ function resetAppState() {
     daily:[], projects:[], learning:[], clients:[],
     support:[], docs:[], achievements:[], evidence:[],
     star:[], plans:[], goals:[], notes:[], mood:[],
-    tasks:[], meetings:[], ideas:[],
+    tasks:[], meetings:[], ideas:[], salcomp:[],
     profile:{ name:'',email:'',links:'' }
   };
 }
@@ -1792,11 +1854,12 @@ const TABLE_MAP = {
   tasks:        'tasks',
   meetings:     'meetings',
   ideas:        'ideas',
+  salcomp:      'salary_components',
 };
 
 // Tables whose records belong to a specific employer. Personal tables
 // (plans, goals, notes, mood) follow the user across every company.
-const COMPANY_SCOPED = new Set(['daily','projects','learning','clients','support','docs','achievements','evidence','star','tasks','meetings','ideas']);
+const COMPANY_SCOPED = new Set(['daily','projects','learning','clients','support','docs','achievements','evidence','star','tasks','meetings','ideas','salcomp']);
 
 // ── COMPANY STATE ──
 let companies = [];          // all companies this user has ever logged
@@ -1825,6 +1888,7 @@ const ROW_TO_D = {
   tasks:        r => ({ id:r.id, title:r.title, notes:r.notes||'', col:r.column_status||'inbox', prio:r.priority||'Medium', due:r.due_date||'', project:r.project||'', tags:r.tags||'', subtasks:r.subtasks||[], created_at:r.created_at }),
   meetings:     r => ({ id:r.id, date:r.date||'', attendees:r.attendees||'', agenda:r.agenda||'', discussion:r.discussion||'', action:r.action_items||'', followup:r.follow_up_date||'', status:r.status||'Open', created_at:r.created_at }),
   ideas:        r => ({ id:r.id, title:r.title, cat:r.category||'Software', desc:r.description||'', status:r.status||'New', created_at:r.created_at }),
+  salcomp:      r => ({ id:r.id, kind:r.kind||'earning', label:r.label, amount:r.amount||0, created_at:r.created_at }),
 };
 
 // Map: local D object → Supabase insert payload
@@ -1845,6 +1909,7 @@ const D_TO_ROW = {
   tasks:        r => ({ title:r.title, notes:r.notes, column_status:r.col, priority:r.prio, due_date:r.due||null, project:r.project, tags:r.tags, subtasks:r.subtasks||[] }),
   meetings:     r => ({ date:r.date||null, attendees:r.attendees, agenda:r.agenda, discussion:r.discussion, action_items:r.action, follow_up_date:r.followup||null, status:r.status }),
   ideas:        r => ({ title:r.title, category:r.cat, description:r.desc, status:r.status }),
+  salcomp:      r => ({ kind:r.kind, label:r.label, amount:r.amount }),
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -2020,7 +2085,7 @@ async function del(arr, id, cbName) {
     achievements:'renderAchievements', evidence:'renderEvidence',
     star:'renderStar', plans:'renderPlan', goals:'renderGoals',
     notes:'renderNotes', mood:'renderMood',
-    tasks:'renderTasks', meetings:'renderMeetings', ideas:'renderIdeas'
+    tasks:'renderTasks', meetings:'renderMeetings', ideas:'renderIdeas', salcomp:'renderSalary'
   };
   const fn = window[renderMap[arr] || cbName];
   await delItem(arr, id, fn);
@@ -2264,7 +2329,7 @@ function switchPlannerTab(tab, el) {
 let attDate     = new Date();           // month currently displayed
 let attMode     = 'present';            // currently selected marking mode
 let attLogs     = {};                   // { 'YYYY-MM-DD': 'present'|'absent'|'half'|'holiday'|'paid' }
-let attSettings = { salary: 20000, workdays: 27, paidLeaves: 1, halfDayFactor: 0.5, leaveMode: 'absent_only' };
+let attSettings = { salary: 20000, workdays: 27, paidLeaves: 1, halfDayFactor: 0.5, leaveMode: 'absent_only', hoursPerDay: 8 };
 let _attSaveTimer = null;
 
 const ATT_STATUS_COLORS = {
@@ -2306,7 +2371,8 @@ async function loadAttendanceData() {
         workdays: settings[0].working_days ?? 27,
         paidLeaves: settings[0].paid_leaves ?? 1,
         halfDayFactor: settings[0].half_day_factor ?? 0.5,
-        leaveMode: settings[0].leave_mode ?? 'absent_only'
+        leaveMode: settings[0].leave_mode ?? 'absent_only',
+        hoursPerDay: settings[0].hours_per_day ?? 8
       };
     }
     console.log(`✓ Attendance loaded: ${Object.keys(attLogs).length} days logged`);
@@ -2321,11 +2387,13 @@ async function loadAttendanceData() {
   const pEl = document.getElementById('att-paidleaves');
   const hEl = document.getElementById('att-halffactor');
   const lEl = document.getElementById('att-leavemode');
+  const hpdEl = document.getElementById('att-hoursperday');
   if (sEl) sEl.value = attSettings.salary;
   if (wEl) wEl.value = attSettings.workdays;
   if (pEl) pEl.value = attSettings.paidLeaves;
   if (hEl) hEl.value = attSettings.halfDayFactor;
   if (lEl) lEl.value = attSettings.leaveMode;
+  if (hpdEl) hpdEl.value = attSettings.hoursPerDay;
 }
 
 // Debounced settings save — triggered on input change
@@ -2335,6 +2403,7 @@ function queueAttendanceSettingsSave() {
   attSettings.paidLeaves    = parseInt(document.getElementById('att-paidleaves').value) || 0;
   attSettings.halfDayFactor = parseFloat(document.getElementById('att-halffactor').value) || 0;
   attSettings.leaveMode     = document.getElementById('att-leavemode').value || 'absent_only';
+  attSettings.hoursPerDay   = parseFloat(document.getElementById('att-hoursperday').value) || 8;
   clearTimeout(_attSaveTimer);
   _attSaveTimer = setTimeout(saveAttendanceSettings, 700);
   renderAttPayBreakdown(); // instant feedback even before save completes
@@ -2351,6 +2420,7 @@ async function saveAttendanceSettings() {
       paid_leaves: attSettings.paidLeaves,
       half_day_factor: attSettings.halfDayFactor,
       leave_mode: attSettings.leaveMode,
+      hours_per_day: attSettings.hoursPerDay,
       updated_at: new Date().toISOString()
     };
     const { error } = await withTimeout(
@@ -2466,9 +2536,8 @@ function renderAttMetrics() {
   el.innerHTML = kpis.map(k => `<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
 }
 
-function renderAttPayBreakdown() {
-  const el = document.getElementById('att-pay-rows');
-  if (!el) return;
+// Shared math — used by both the Attendance pay panel and the Salary Calculator
+function calcAttendanceDeduction() {
   const c = getAttMonthCounts();
   const perDay = attSettings.workdays > 0 ? attSettings.salary / attSettings.workdays : 0;
   const hf = attSettings.halfDayFactor ?? 0.5;
@@ -2500,6 +2569,13 @@ function renderAttPayBreakdown() {
   const halfDayDeduction = unpaidHalfUnits * perDay;
   const absentDeduction  = unpaidAbsences * perDay;
   const totalDeduction   = halfDayDeduction + absentDeduction;
+  return { c, perDay, hf, mode, modeNote, quota, unpaidAbsences, unpaidHalfUnits, halfDayDeduction, absentDeduction, totalDeduction };
+}
+
+function renderAttPayBreakdown() {
+  const el = document.getElementById('att-pay-rows');
+  if (!el) return;
+  const { c, perDay, modeNote, quota, unpaidAbsences, halfDayDeduction, absentDeduction, totalDeduction } = calcAttendanceDeduction();
   const finalPay = Math.max(0, attSettings.salary - totalDeduction);
 
   el.innerHTML = `
@@ -2515,7 +2591,7 @@ function renderAttPayBreakdown() {
 
 // Wire up settings inputs to auto-save on change (event delegation, set up once at boot)
 function initAttendanceInputs() {
-  ['att-salary','att-workdays','att-paidleaves','att-halffactor','att-leavemode'].forEach(id => {
+  ['att-salary','att-workdays','att-paidleaves','att-halffactor','att-leavemode','att-hoursperday'].forEach(id => {
     const el = document.getElementById(id);
     if (el && !el._wired) {
       el.addEventListener('input', queueAttendanceSettingsSave);
@@ -2611,7 +2687,8 @@ const NAV_GROUP = {
   support:'workspace', docs:'workspace', planner:'workspace',
   tasks:'workspace', meetings:'workspace', ideas:'workspace',
   achievements:'career', evidence:'career', ai:'career',
-  reports:'utilities', goals:'utilities', notes:'utilities', mood:'utilities'
+  reports:'utilities', goals:'utilities', notes:'utilities', mood:'utilities',
+  companies:'utilities', salary:'utilities'
 };
 
 function nav(id) {
@@ -2630,7 +2707,8 @@ function nav(id) {
     achievements:'Achievements', reports:'Reports & Export',
     planner:'Planner', goals:'Goals', notes:'Notes',
     mood:'Mood Tracker', profile:'My Profile',
-    tasks:'Task Manager', meetings:'Meeting Notes', ideas:'Idea Board'
+    tasks:'Task Manager', meetings:'Meeting Notes', ideas:'Idea Board',
+    companies:'Company Manager', salary:'Salary Calculator'
   };
   document.getElementById('page-title').textContent = titles[id] || id;
   document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
@@ -2639,6 +2717,8 @@ function nav(id) {
   if (wsBar) wsBar.style.display = (grp === 'workspace') ? 'flex' : 'none';
   const careerBar = document.getElementById('career-tabbar');
   if (careerBar) careerBar.style.display = (grp === 'career') ? 'flex' : 'none';
+  const utilBar = document.getElementById('utilities-tabbar');
+  if (utilBar) utilBar.style.display = (grp === 'utilities') ? 'flex' : 'none';
   document.querySelectorAll('.ws-tab').forEach(t => t.classList.toggle('active', t.dataset.wsTab === id));
   if (id==='dashboard')   renderDashboard();
   if (id==='reports')     renderReports();
@@ -2651,6 +2731,8 @@ function nav(id) {
   if (id==='tasks')       renderTasks();
   if (id==='meetings')    renderMeetings();
   if (id==='ideas')       renderIdeas();
+  if (id==='companies')   renderCompanyManager();
+  if (id==='salary')      renderSalary();
   closeSidebar();
 }
 
@@ -3074,6 +3156,51 @@ function renderIdeas() {
       ${delBtn('ideas', i.id, 'renderIdeas')}
     </div>
   </div>`).join('');
+}
+
+// ── SALARY CALCULATOR ──
+async function addSalComp() {
+  const label = document.getElementById('sc-label').value;
+  const kind = document.getElementById('sc-kind').value;
+  const amount = parseFloat(document.getElementById('sc-amount').value) || 0;
+  if (!label) { toast('⚠️ Label required', 'error'); return; }
+  await addItem('salcomp', { id:'', label, kind, amount }, renderSalary);
+  document.getElementById('sc-label').value = '';
+  document.getElementById('sc-amount').value = '';
+}
+function renderSalary() {
+  const eList = document.getElementById('sal-earnings-list');
+  const dList = document.getElementById('sal-deductions-list');
+  const nameEl = document.getElementById('sal-company-name');
+  if (!eList) return;
+  if (nameEl) nameEl.textContent = getActiveCompany()?.name || 'No company selected';
+
+  const earnings = D.salcomp.filter(s => s.kind === 'earning');
+  const deductions = D.salcomp.filter(s => s.kind === 'deduction');
+
+  const row = s => `<div class="sal-row"><span>${esc(s.label)}</span><span><span class="sal-amt">₹${(s.amount||0).toLocaleString('en-IN')}</span><button class="sal-del" onclick="del('salcomp','${s.id}')">✕</button></span></div>`;
+  eList.innerHTML = earnings.length ? earnings.map(row).join('') : `<div class="empty-td">No earning line items yet.</div>`;
+  dList.innerHTML = deductions.length ? deductions.map(row).join('') : `<div class="empty-td">No deduction line items yet.</div>`;
+
+  const grossEarnings = earnings.reduce((s,e) => s + (e.amount||0), 0);
+  const customDeductions = deductions.reduce((s,d) => s + (d.amount||0), 0);
+  const att = calcAttendanceDeduction();
+  const totalDeductions = customDeductions + att.totalDeduction;
+  const netSalary = Math.max(0, grossEarnings - totalDeductions);
+  const workdays = attSettings.workdays || 1;
+  const hoursPerDay = attSettings.hoursPerDay || 8;
+  const perDay = netSalary / workdays;
+  const perHour = perDay / hoursPerDay;
+
+  const summary = document.getElementById('sal-summary');
+  if (summary) summary.innerHTML = `
+    <div class="sal-summary-row"><span>Gross Earnings</span><span>₹${grossEarnings.toLocaleString('en-IN')}</span></div>
+    <div class="sal-summary-row"><span>Custom Deductions</span><span>−₹${customDeductions.toLocaleString('en-IN')}</span></div>
+    <div class="sal-summary-row"><span>Attendance Deduction (auto, from Pay Settings)</span><span>−₹${att.totalDeduction.toFixed(0)}</span></div>
+    <div class="sal-summary-row total"><span>Net / Take-Home Salary</span><span>₹${netSalary.toLocaleString('en-IN',{maximumFractionDigits:0})}</span></div>
+    <div class="sal-summary-row"><span>Salary per Day</span><span>₹${perDay.toFixed(0)}</span></div>
+    <div class="sal-summary-row"><span>Salary per Hour</span><span>₹${perHour.toFixed(2)}</span></div>
+  `;
 }
 
 // ── ACHIEVEMENTS ──
