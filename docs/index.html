@@ -37,10 +37,22 @@
   --red:#dc2626;
   --red-dim:#fee2e2;
   --blue:#2563eb;
-  --r:10px;--r2:14px;--r3:20px;
+  --peach:#e8926b; --peach-dim:#fce8dc; --peach-xl:#fdf1e8;
+  --powder:#5b9bc4; --powder-dim:#dcedf7; --powder-xl:#eef6fb;
+  --sage:#6f9c6a; --sage-dim:#e2ecdd; --sage-xl:#eff5ec;
+  --shadow-soft:0 1px 2px #28203a08, 0 10px 28px -14px #28203a22;
+  --shadow-lift:0 4px 10px #28203a0a, 0 18px 40px -16px #28203a2c;
+  --r:10px;--r2:14px;--r3:20px;--r4:26px;
 }
 html{font-size:14px;scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow:hidden}
+body{
+  font-family:'Inter',sans-serif;
+  background:
+    radial-gradient(1100px 560px at 100% -10%, #f3e8ff55, transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, #dcedf755, transparent 55%),
+    var(--bg);
+  color:var(--text);min-height:100vh;display:flex;overflow:hidden;
+}
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 input,select,textarea,button{font-family:'Inter',sans-serif}
@@ -49,6 +61,7 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
   width:230px;min-width:230px;
   background:var(--s1);
   border-right:1px solid var(--border);
+  box-shadow:1px 0 0 #ffffff, 4px 0 24px -8px #28203a10;
   height:100vh;display:flex;flex-direction:column;
   position:fixed;left:0;top:0;z-index:200;
   transition:transform .3s cubic-bezier(.4,0,.2,1);
@@ -71,9 +84,33 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
   font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--text4);font-weight:600;
 }
+/* ── NOTEBOOK TABS (4 sections) ── */
+.sb-nav{padding:10px 10px 6px;display:flex;flex-direction:column;gap:5px}
+.sb-group{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:12px;cursor:pointer;
+  font-size:13px;font-weight:600;color:var(--text2);
+  border:1px solid transparent;background:none;width:100%;text-align:left;
+  transition:all .18s;position:relative;
+}
+.sb-group .si{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sb-group .chev{margin-left:auto;font-size:10px;color:var(--text4);transition:transform .2s}
+.sb-group:hover{background:var(--s2);color:var(--text)}
+.sb-group.open .chev{transform:rotate(90deg)}
+.sb-group[data-tint="violet"].open{background:var(--violet-xl);color:var(--violet-l);border-color:var(--border3)}
+.sb-group[data-tint="powder"].open{background:var(--powder-xl);color:var(--powder);border-color:#5b9bc430}
+.sb-group[data-tint="peach"].open{background:var(--peach-xl);color:var(--peach);border-color:#e8926b30}
+.sb-group[data-tint="sage"].open{background:var(--sage-xl);color:var(--sage);border-color:#6f9c6a30}
+.sb-sublist{
+  max-height:0;overflow:hidden;
+  transition:max-height .25s ease;
+  display:flex;flex-direction:column;gap:1px;
+  padding-left:4px;
+}
+.sb-sublist.open{max-height:400px}
 .sb-item{
   display:flex;align-items:center;gap:9px;
-  padding:9px 12px;margin:1px 6px;border-radius:8px;
+  padding:8px 12px 8px 30px;margin:1px 6px;border-radius:9px;
   cursor:pointer;font-size:12.5px;color:var(--text2);
   transition:all .15s;border:none;background:none;
   width:calc(100% - 12px);text-align:left;
@@ -85,7 +122,7 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
   color:var(--violet-l);
   box-shadow:inset 0 0 0 1px var(--border3);
 }
-.sb-item .si{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sb-item .si{font-size:14px;width:18px;text-align:center;flex-shrink:0}
 .sb-badge{
   margin-left:auto;background:var(--pink-dim);color:var(--pink);
   font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center;
@@ -110,7 +147,8 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 /* ── TOPBAR ── */
 #topbar{
   position:sticky;top:0;z-index:100;
-  background:var(--s1);border-bottom:1px solid var(--border);
+  background:#faf7f2cc;border-bottom:1px solid var(--border);
+  box-shadow:0 6px 20px -14px #28203a30;
   padding:0 24px;height:52px;
   display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px);
 }
@@ -129,7 +167,7 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .btn{
   display:inline-flex;align-items:center;gap:6px;
   padding:7px 14px;font-size:12px;font-weight:500;
-  border-radius:8px;border:none;cursor:pointer;
+  border-radius:10px;border:none;cursor:pointer;
   transition:all .15s;white-space:nowrap;
 }
 .btn-violet{background:linear-gradient(135deg,var(--violet),var(--fuchsia));color:#fff;box-shadow:0 0 12px #8b5cf630}
@@ -143,11 +181,92 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 #content{padding:24px;flex:1}
 .page{display:none}.page.active{display:block;animation:fadeUp .2s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* ── RICH TEXT EDITOR (Work Journal) ── */
+.rt-toolbar{
+  display:flex;align-items:center;gap:4px;flex-wrap:wrap;
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:10px 10px 0 0;padding:6px 8px;
+}
+.rt-toolbar button{
+  border:none;background:none;cursor:pointer;
+  padding:5px 8px;border-radius:6px;font-size:12px;color:var(--text2);
+  transition:all .12s;
+}
+.rt-toolbar button:hover{background:var(--s1);color:var(--violet-l)}
+.rt-sep{width:1px;height:16px;background:var(--border2);margin:0 4px}
+.rt-editor{
+  min-height:90px;max-height:260px;overflow-y:auto;
+  border:1px solid var(--border);border-top:none;
+  border-radius:0 0 10px 10px;padding:10px 12px;
+  font-size:12.5px;color:var(--text);background:var(--s1);
+  line-height:1.55;
+}
+.rt-editor:empty::before{content:attr(data-placeholder);color:var(--text4)}
+.rt-editor pre{background:var(--s2);border-radius:6px;padding:8px 10px;font-family:monospace;font-size:11.5px;overflow-x:auto;margin:6px 0}
+.rt-editor ul{padding-left:20px}
+.rt-editor a{color:var(--violet-l)}
+.rt-checklist{list-style:none;padding-left:0}
+.rt-checklist li{display:flex;gap:6px;align-items:flex-start;margin:2px 0}
+/* ── JOURNAL VIEW MODAL ── */
+.jv-overlay{position:fixed;inset:0;background:#28203a30;backdrop-filter:blur(2px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.jv-overlay.show{display:flex}
+.jv-modal{background:var(--s1);border-radius:var(--r3);max-width:560px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:var(--shadow-lift);padding:22px}
+.jv-modal-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.jv-modal-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px}
+.jv-modal-close{border:none;background:var(--s2);border-radius:8px;width:28px;height:28px;cursor:pointer;font-size:13px;color:var(--text3)}
+/* ── KANBAN (Task Manager) ── */
+.kanban-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.kanban-toolbar input{padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px;background:var(--s1);width:220px}
+.kanban-board{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:12px;overflow-x:auto}
+.kanban-col{background:var(--s2);border-radius:var(--r2);padding:10px;min-height:120px;display:flex;flex-direction:column;gap:8px}
+.kanban-col-hd{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);display:flex;justify-content:space-between;align-items:center;padding:2px 4px 6px}
+.task-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  padding:10px 12px;box-shadow:var(--shadow-soft);cursor:default;
+}
+.task-card-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:6px}
+.task-card-meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:6px}
+.task-card-move{display:flex;gap:4px;flex-wrap:wrap}
+.task-card-move button{
+  font-size:10px;border:1px solid var(--border2);background:none;border-radius:6px;
+  padding:2px 6px;cursor:pointer;color:var(--text3);
+}
+.task-card-move button:hover{color:var(--powder);border-color:#5b9bc450}
+/* ── IDEA BOARD ── */
+.idea-toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.idea-toolbar .btn.active{background:var(--peach-xl);color:var(--peach);border-color:#e8926b40}
+.idea-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.idea-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);
+  padding:14px;box-shadow:var(--shadow-soft);transition:box-shadow .2s;
+}
+.idea-card:hover{box-shadow:var(--shadow-lift)}
+.idea-card-title{font-size:13px;font-weight:700;margin-bottom:6px}
+.idea-card-desc{font-size:11.5px;color:var(--text2);margin-bottom:10px;line-height:1.5}
+.idea-card-foot{display:flex;justify-content:space-between;align-items:center;gap:6px}
+/* ── WORKSPACE TAB BAR ── */
+.ws-tabbar{
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-bottom:18px;padding:6px;
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:var(--r3);box-shadow:var(--shadow-soft);
+}
+.ws-tab{
+  border:none;background:none;cursor:pointer;
+  padding:8px 14px;border-radius:14px;
+  font-size:12px;font-weight:600;color:var(--text2);
+  transition:all .15s;white-space:nowrap;
+}
+.ws-tab:hover{background:var(--powder-xl);color:var(--powder)}
+.ws-tab.active{background:linear-gradient(135deg,var(--powder-xl),#eef6fb);color:var(--powder);box-shadow:inset 0 0 0 1px #5b9bc430}
 /* ── CARDS ── */
 .card{
   background:var(--s1);border:1px solid var(--border);
   border-radius:var(--r2);overflow:hidden;
+  box-shadow:var(--shadow-soft);
+  transition:box-shadow .2s ease;
 }
+.card:hover{box-shadow:var(--shadow-lift)}
 .card-hd{
   padding:14px 18px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -420,6 +539,9 @@ tr:hover td{background:#8b5cf608}
   .score-hero{flex-direction:column;text-align:center;padding:18px}
   .score-info p{max-width:none}
   .kanban-cols{grid-template-columns:1fr}
+  .kanban-board{grid-template-columns:1fr;overflow-x:visible}
+  .idea-grid{grid-template-columns:1fr}
+  .ws-tabbar{overflow-x:auto;flex-wrap:nowrap}
   #topbar{padding:0 12px;gap:8px}
   #page-title{font-size:14px}
   #page-sub{display:none}
@@ -645,6 +767,17 @@ tr:hover td{background:#8b5cf608}
 
 <div id="overlay" onclick="closeSidebar()"></div>
 
+<!-- ═══ JOURNAL NOTE VIEW MODAL ═══ -->
+<div id="jv-overlay" class="jv-overlay" onclick="if(event.target===this) closeJournalView()">
+  <div class="jv-modal">
+    <div class="jv-modal-hd">
+      <div><div class="jv-modal-title" id="jv-title"></div><div style="font-size:11px;color:var(--text3)" id="jv-date"></div></div>
+      <button class="jv-modal-close" onclick="closeJournalView()">✕</button>
+    </div>
+    <div id="jv-body"></div>
+  </div>
+</div>
+
 <!-- ═══════════════ SIDEBAR ═══════════════ -->
 <nav id="sidebar" style="display:none">
   <div class="sb-logo">
@@ -654,31 +787,49 @@ tr:hover td{background:#8b5cf608}
     </div>
   </div>
 
-  <div class="sb-section">Core</div>
-  <button class="sb-item active" onclick="nav('dashboard',this)"><span class="si">◈</span>Dashboard</button>
-  <button class="sb-item" onclick="nav('quicklog',this)"><span class="si">⚡</span>Quick Log<span class="sb-badge" id="nb-daily">0</span></button>
-  <button class="sb-item" onclick="nav('evidence',this)"><span class="si">🗄</span>Evidence Vault<span class="sb-badge" id="nb-evidence">0</span></button>
-  <button class="sb-item" onclick="nav('ai',this)"><span class="si">✦</span>AI Writer</button>
+  <div class="sb-nav">
 
-  <div class="sb-section">Work</div>
-  <button class="sb-item" onclick="nav('projects',this)"><span class="si">🚀</span>Projects<span class="sb-badge" id="nb-projects">0</span></button>
-  <button class="sb-item" onclick="nav('learning',this)"><span class="si">📚</span>Learning<span class="sb-badge" id="nb-learning">0</span></button>
-  <button class="sb-item" onclick="nav('clients',this)"><span class="si">📞</span>Client Calls<span class="sb-badge" id="nb-clients">0</span></button>
-  <button class="sb-item" onclick="nav('support',this)"><span class="si">🔧</span>Support<span class="sb-badge" id="nb-support">0</span></button>
-  <button class="sb-item" onclick="nav('docs',this)"><span class="si">📄</span>Docs<span class="sb-badge" id="nb-docs">0</span></button>
-  <button class="sb-item" onclick="nav('achievements',this)"><span class="si">🏆</span>Achievements<span class="sb-badge" id="nb-ach">0</span></button>
+    <button class="sb-item active" data-nav="dashboard" onclick="nav('dashboard')" style="padding-left:12px;font-weight:600;font-size:13px"><span class="si">◈</span>Dashboard</button>
 
-  <div class="sb-section">Reports</div>
-  <button class="sb-item" onclick="nav('reports',this)"><span class="si">📊</span>Reports & Export</button>
+    <button class="sb-group" data-tint="powder" data-grp="workspace" onclick="toggleGroup('workspace')">
+      <span class="si">🧭</span>Workspace<span class="chev">▸</span>
+    </button>
+    <div class="sb-sublist" data-grp-list="workspace">
+      <button class="sb-item" data-nav="quicklog" onclick="nav('quicklog')"><span class="si">⚡</span>Work Journal<span class="sb-badge" id="nb-daily">0</span></button>
+      <button class="sb-item" data-nav="projects" onclick="nav('projects')"><span class="si">🚀</span>Projects<span class="sb-badge" id="nb-projects">0</span></button>
+      <button class="sb-item" data-nav="tasks" onclick="nav('tasks')"><span class="si">🗂</span>Task Manager<span class="sb-badge" id="nb-tasks">0</span></button>
+      <button class="sb-item" data-nav="meetings" onclick="nav('meetings')"><span class="si">🗓</span>Meeting Notes<span class="sb-badge" id="nb-meetings">0</span></button>
+      <button class="sb-item" data-nav="ideas" onclick="nav('ideas')"><span class="si">💡</span>Idea Board<span class="sb-badge" id="nb-ideas">0</span></button>
+      <button class="sb-item" data-nav="learning" onclick="nav('learning')"><span class="si">📚</span>Learning<span class="sb-badge" id="nb-learning">0</span></button>
+      <button class="sb-item" data-nav="clients" onclick="nav('clients')"><span class="si">📞</span>Client Calls<span class="sb-badge" id="nb-clients">0</span></button>
+      <button class="sb-item" data-nav="support" onclick="nav('support')"><span class="si">🔧</span>Support<span class="sb-badge" id="nb-support">0</span></button>
+      <button class="sb-item" data-nav="docs" onclick="nav('docs')"><span class="si">📄</span>Docs<span class="sb-badge" id="nb-docs">0</span></button>
+      <button class="sb-item" data-nav="planner" onclick="nav('planner')"><span class="si">🌸</span>Planner</button>
+    </div>
 
-  <div class="sb-section">Personal</div>
-  <button class="sb-item" onclick="nav('planner',this)"><span class="si">🌸</span>Planner</button>
-  <button class="sb-item" onclick="nav('goals',this)"><span class="si">🎯</span>Goals</button>
-  <button class="sb-item" onclick="nav('notes',this)"><span class="si">📝</span>Notes</button>
-  <button class="sb-item" onclick="nav('mood',this)"><span class="si">✨</span>Mood</button>
+    <button class="sb-group" data-tint="peach" data-grp="career" onclick="toggleGroup('career')">
+      <span class="si">🏆</span>Career Hub<span class="chev">▸</span>
+    </button>
+    <div class="sb-sublist" data-grp-list="career">
+      <button class="sb-item" data-nav="achievements" onclick="nav('achievements')"><span class="si">🏆</span>Achievements<span class="sb-badge" id="nb-ach">0</span></button>
+      <button class="sb-item" data-nav="evidence" onclick="nav('evidence')"><span class="si">🗄</span>Evidence Vault<span class="sb-badge" id="nb-evidence">0</span></button>
+      <button class="sb-item" data-nav="ai" onclick="nav('ai')"><span class="si">✦</span>AI Writer</button>
+    </div>
+
+    <button class="sb-group" data-tint="sage" data-grp="utilities" onclick="toggleGroup('utilities')">
+      <span class="si">🧰</span>Utilities<span class="chev">▸</span>
+    </button>
+    <div class="sb-sublist" data-grp-list="utilities">
+      <button class="sb-item" data-nav="reports" onclick="nav('reports')"><span class="si">📊</span>Reports & Export</button>
+      <button class="sb-item" data-nav="goals" onclick="nav('goals')"><span class="si">🎯</span>Goals</button>
+      <button class="sb-item" data-nav="notes" onclick="nav('notes')"><span class="si">📝</span>Notes</button>
+      <button class="sb-item" data-nav="mood" onclick="nav('mood')"><span class="si">✨</span>Mood</button>
+    </div>
+
+  </div>
 
   <div class="sb-bottom">
-    <div class="sb-profile" onclick="nav('profile',document.querySelector('.sb-item'))">
+    <div class="sb-profile" onclick="nav('profile')">
       <div class="sb-avatar" id="sb-avatar-txt">V</div>
       <div><div class="sb-pname" id="prof-name-sb">Your Name</div><div class="sb-prole" id="prof-role-sb">Engineer</div></div>
     </div>
@@ -704,7 +855,7 @@ tr:hover td{background:#8b5cf608}
         </svg>
         <div class="pv" id="promo-score">0</div>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="nav('reports',document.querySelectorAll('.sb-item')[12])">📊 <span class="btn-label">Reports</span></button>
+      <button class="btn btn-ghost btn-sm" onclick="nav('reports')">📊 <span class="btn-label">Reports</span></button>
       <button class="btn btn-violet btn-sm" onclick="exportPDF()">✦ <span class="btn-label">Export PDF</span></button>
       <button class="btn btn-ghost btn-sm" onclick="handleLogout()" title="Sign out">⎋ <span class="btn-label">Logout</span></button>
     </div>
@@ -736,11 +887,11 @@ tr:hover td{background:#8b5cf608}
   <div class="gauto mb20" id="dash-kpis"></div>
   <div class="g2 mb16">
     <div class="card">
-      <div class="card-hd"><div class="card-title">📋 Recent Work</div><button class="btn btn-ghost btn-sm" onclick="nav('quicklog',document.querySelectorAll('.sb-item')[2])">+ Log</button></div>
+      <div class="card-hd"><div class="card-title">📋 Recent Work</div><button class="btn btn-ghost btn-sm" onclick="nav('quicklog')">+ Log</button></div>
       <div id="dash-recent" style="padding:0"></div>
     </div>
     <div class="card">
-      <div class="card-hd"><div class="card-title">🏆 Recent Achievements</div><button class="btn btn-ghost btn-sm" onclick="nav('achievements',document.querySelectorAll('.sb-item')[11])">+ Add</button></div>
+      <div class="card-hd"><div class="card-title">🏆 Recent Achievements</div><button class="btn btn-ghost btn-sm" onclick="nav('achievements')">+ Add</button></div>
       <div id="dash-ach" style="padding:0"></div>
     </div>
   </div>
@@ -759,6 +910,20 @@ tr:hover td{background:#8b5cf608}
       <div class="tbl-wrap"><table><thead><tr><th>Situation</th><th>Task</th><th>Action</th><th>Result</th><th></th></tr></thead><tbody id="star-body"></tbody></table></div>
     </div>
   </div>
+</div>
+
+<!-- ═══ WORKSPACE TAB BAR (shown above any Workspace-group page) ═══ -->
+<div id="ws-tabbar" class="ws-tabbar" style="display:none">
+  <button class="ws-tab" data-ws-tab="quicklog" onclick="nav('quicklog')">⚡ Work Journal</button>
+  <button class="ws-tab" data-ws-tab="projects" onclick="nav('projects')">🚀 Projects</button>
+  <button class="ws-tab" data-ws-tab="tasks" onclick="nav('tasks')">🗂 Tasks</button>
+  <button class="ws-tab" data-ws-tab="meetings" onclick="nav('meetings')">🗓 Meetings</button>
+  <button class="ws-tab" data-ws-tab="ideas" onclick="nav('ideas')">💡 Ideas</button>
+  <button class="ws-tab" data-ws-tab="learning" onclick="nav('learning')">📚 Learning</button>
+  <button class="ws-tab" data-ws-tab="clients" onclick="nav('clients')">📞 Clients</button>
+  <button class="ws-tab" data-ws-tab="support" onclick="nav('support')">🔧 Support</button>
+  <button class="ws-tab" data-ws-tab="docs" onclick="nav('docs')">📄 Docs</button>
+  <button class="ws-tab" data-ws-tab="planner" onclick="nav('planner')">🌸 Planner</button>
 </div>
 
 <!-- ═══ QUICK LOG ═══ -->
@@ -787,6 +952,21 @@ tr:hover td{background:#8b5cf608}
       <div class="ff"><label>Technologies Used</label><input id="dl-tech" placeholder="ESP32, FreeRTOS, UART..."></div>
       <div class="ff"><label>Technical Support?</label><select id="dl-support"><option>No</option><option>Yes</option></select></div>
       <div class="ff full"><label>Self Remarks</label><textarea id="dl-self" placeholder="Your reflection — what went well, what was hard?" style="min-height:60px"></textarea></div>
+      <div class="ff full">
+        <label>Journal Notes <span style="font-weight:400;color:var(--text4)">— rich text, autosaved with this entry</span></label>
+        <div class="rt-toolbar">
+          <button type="button" onclick="rtCmd('bold')"><b>B</b></button>
+          <button type="button" onclick="rtCmd('italic')"><i>I</i></button>
+          <button type="button" onclick="rtCmd('underline')"><u>U</u></button>
+          <button type="button" onclick="rtCmd('hiliteColor','#fef3c7')" title="Highlight">🖍</button>
+          <span class="rt-sep"></span>
+          <button type="button" onclick="rtCmd('insertUnorderedList')" title="Bullet list">• List</button>
+          <button type="button" onclick="rtInsertChecklist()" title="Checklist">☑ Check</button>
+          <button type="button" onclick="rtInsertCodeBlock()" title="Code block">&lt;/&gt;</button>
+          <button type="button" onclick="rtInsertLink()" title="Link">🔗</button>
+        </div>
+        <div id="dl-rich" class="rt-editor" contenteditable="true" data-placeholder="What did you work on today? Problems faced, solutions found, ideas..."></div>
+      </div>
     </div>
     <div class="btn-group" style="margin-top:14px">
       <button class="btn btn-violet" onclick="addDaily()">💾 Save Entry</button>
@@ -979,6 +1159,72 @@ tr:hover td{background:#8b5cf608}
     </div>
   </div>
   <div class="card"><div class="card-hd"><div class="card-title">📄 Documentation Created</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Document</th><th>Type</th><th>Revision</th><th>Pages</th><th>Remarks</th><th></th></tr></thead><tbody id="docs-body"></tbody></table></div></div>
+</div>
+
+<!-- ═══ TASK MANAGER (KANBAN) ═══ -->
+<div id="page-tasks" class="page">
+  <div class="card mb16">
+    <div class="card-hd"><div class="card-title">+ Add Task</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('task-fs')">▾ Toggle</button></div>
+    <div class="card-body form-section open" id="task-fs">
+      <div class="fgrid">
+        <div class="ff s2"><label>Title *</label><input id="tk-title" placeholder="What needs doing"></div>
+        <div class="ff"><label>Priority</label><select id="tk-prio"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></div>
+        <div class="ff"><label>Due Date</label><input type="date" id="tk-due"></div>
+        <div class="ff"><label>Project</label><input id="tk-project" placeholder="Link to a project (optional)"></div>
+        <div class="ff"><label>Tags</label><input id="tk-tags" placeholder="firmware, urgent..."></div>
+        <div class="ff full"><label>Notes</label><input id="tk-notes" placeholder="Any extra detail"></div>
+      </div>
+      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addTask()">💾 Add to Inbox</button></div>
+    </div>
+  </div>
+  <div class="kanban-toolbar">
+    <input id="tk-search" placeholder="🔍 Search tasks..." oninput="renderTasks()">
+    <span id="tasks-cnt" style="font-size:11px;color:var(--text3);margin-left:auto"></span>
+  </div>
+  <div class="kanban-board" id="kanban-board"></div>
+</div>
+
+<!-- ═══ MEETING NOTES ═══ -->
+<div id="page-meetings" class="page">
+  <div class="card mb16">
+    <div class="card-hd"><div class="card-title">+ Add Meeting</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('meet-fs')">▾ Toggle</button></div>
+    <div class="card-body form-section open" id="meet-fs">
+      <div class="fgrid">
+        <div class="ff"><label>Date</label><input type="date" id="mt-date"></div>
+        <div class="ff s2"><label>Attendees</label><input id="mt-attendees" placeholder="Names, roles"></div>
+        <div class="ff"><label>Follow-up Date</label><input type="date" id="mt-followup"></div>
+        <div class="ff full"><label>Agenda</label><input id="mt-agenda" placeholder="What this meeting is about"></div>
+        <div class="ff full"><label>Discussion Summary</label><input id="mt-discussion" placeholder="Key points discussed"></div>
+        <div class="ff full"><label>Action Items</label><input id="mt-action" placeholder="Who does what, by when"></div>
+        <div class="ff"><label>Status</label><select id="mt-status"><option>Open</option><option>Closed</option></select></div>
+      </div>
+      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addMeeting()">💾 Save</button></div>
+    </div>
+  </div>
+  <div class="card"><div class="card-hd"><div class="card-title">🗓 Meeting Log</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Attendees</th><th>Agenda</th><th>Action Items</th><th>Follow-up</th><th>Status</th><th></th></tr></thead><tbody id="meetings-body"></tbody></table></div></div>
+</div>
+
+<!-- ═══ IDEA BOARD ═══ -->
+<div id="page-ideas" class="page">
+  <div class="card mb16">
+    <div class="card-hd"><div class="card-title">+ Add Idea</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('idea-fs')">▾ Toggle</button></div>
+    <div class="card-body form-section open" id="idea-fs">
+      <div class="fgrid">
+        <div class="ff s2"><label>Title *</label><input id="id-title" placeholder="The idea, in one line"></div>
+        <div class="ff"><label>Category</label><select id="id-cat"><option>Automation</option><option>Firmware</option><option>Hardware</option><option>UI</option><option selected>Software</option><option>Business</option><option>Improvement</option><option>Feature Requests</option></select></div>
+        <div class="ff full"><label>Description</label><input id="id-desc" placeholder="What it is, why it matters"></div>
+      </div>
+      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addIdea()">💾 Save Idea</button></div>
+    </div>
+  </div>
+  <div class="idea-toolbar">
+    <button class="btn btn-ghost btn-sm active" data-idea-filter="all" onclick="filterIdeas('all',this)">All</button>
+    <button class="btn btn-ghost btn-sm" data-idea-filter="New" onclick="filterIdeas('New',this)">New</button>
+    <button class="btn btn-ghost btn-sm" data-idea-filter="Considering" onclick="filterIdeas('Considering',this)">Considering</button>
+    <button class="btn btn-ghost btn-sm" data-idea-filter="Planned" onclick="filterIdeas('Planned',this)">Planned</button>
+    <button class="btn btn-ghost btn-sm" data-idea-filter="Archived" onclick="filterIdeas('Archived',this)">Archived</button>
+  </div>
+  <div class="idea-grid" id="idea-grid"></div>
 </div>
 
 <!-- ═══ ACHIEVEMENTS ═══ -->
@@ -1270,6 +1516,7 @@ let D = {
   daily: [], projects: [], learning: [], clients: [],
   support: [], docs: [], achievements: [], evidence: [],
   star: [], plans: [], goals: [], notes: [], mood: [],
+  tasks: [], meetings: [], ideas: [],
   profile: { name:'', email:'', links:'' }
 };
 
@@ -1428,6 +1675,7 @@ function resetAppState() {
     daily:[], projects:[], learning:[], clients:[],
     support:[], docs:[], achievements:[], evidence:[],
     star:[], plans:[], goals:[], notes:[], mood:[],
+    tasks:[], meetings:[], ideas:[],
     profile:{ name:'',email:'',links:'' }
   };
 }
@@ -1522,11 +1770,14 @@ const TABLE_MAP = {
   goals:        'goals',
   notes:        'notes',
   mood:         'mood_logs',
+  tasks:        'tasks',
+  meetings:     'meetings',
+  ideas:        'ideas',
 };
 
 // Tables whose records belong to a specific employer. Personal tables
 // (plans, goals, notes, mood) follow the user across every company.
-const COMPANY_SCOPED = new Set(['daily','projects','learning','clients','support','docs','achievements','evidence','star']);
+const COMPANY_SCOPED = new Set(['daily','projects','learning','clients','support','docs','achievements','evidence','star','tasks','meetings','ideas']);
 
 // ── COMPANY STATE ──
 let companies = [];          // all companies this user has ever logged
@@ -1539,7 +1790,7 @@ function getActiveCompany() {
 
 // Map: table row → local D object (handle any column name differences)
 const ROW_TO_D = {
-  daily:        r => ({ id:r.id, date:r.date, task:r.task, project:r.project||'', client:r.client||'', hours:r.hours||'', cat:r.category||'', prio:r.priority||'Medium', status:r.status||'Completed', impact:r.impact||'', problem:r.problem_solved||'', tech:r.technologies||'', support:r.technical_support||'No', self:r.self_remarks||'', created_at:r.created_at }),
+  daily:        r => ({ id:r.id, date:r.date, task:r.task, project:r.project||'', client:r.client||'', hours:r.hours||'', cat:r.category||'', prio:r.priority||'Medium', status:r.status||'Completed', impact:r.impact||'', problem:r.problem_solved||'', tech:r.technologies||'', support:r.technical_support||'No', self:r.self_remarks||'', richNotes:r.rich_notes||'', created_at:r.created_at }),
   projects:     r => ({ id:r.id, name:r.name, client:r.client||'', role:r.role||'', start:r.start_date||'', end:r.end_date||'', status:r.status||'In Progress', prog:r.progress||0, tech:r.technologies||'', contrib:r.contribution||'', outcome:r.outcome||'', created_at:r.created_at }),
   learning:     r => ({ id:r.id, date:r.date, topic:r.topic, type:r.source_type||'Course', source:r.source||'', cat:r.category||'Firmware', hours:r.hours||'', applied:r.applied_at_work||'No', cert:r.certificate||'No', notes:r.notes||'', created_at:r.created_at }),
   clients:      r => ({ id:r.id, date:r.date, client:r.client_name, org:r.organization||'', dur:r.duration_mins||'', purpose:r.purpose||'', resolution:r.resolution||'', followup:r.follow_up||'No', rating:r.communication_rating||'8', created_at:r.created_at }),
@@ -1552,11 +1803,14 @@ const ROW_TO_D = {
   goals:        r => ({ id:r.id, goal:r.goal, cat:r.category||'Career', date:r.target_date||'', done:r.completed||false, created_at:r.created_at }),
   notes:        r => ({ id:r.id, date:r.date||today(), title:r.title, content:r.content||'', tag:r.tag||'Work', created_at:r.created_at }),
   mood:         r => ({ id:r.id, date:r.date, mood:r.mood, note:r.note||'', created_at:r.created_at }),
+  tasks:        r => ({ id:r.id, title:r.title, notes:r.notes||'', col:r.column_status||'inbox', prio:r.priority||'Medium', due:r.due_date||'', project:r.project||'', tags:r.tags||'', subtasks:r.subtasks||[], created_at:r.created_at }),
+  meetings:     r => ({ id:r.id, date:r.date||'', attendees:r.attendees||'', agenda:r.agenda||'', discussion:r.discussion||'', action:r.action_items||'', followup:r.follow_up_date||'', status:r.status||'Open', created_at:r.created_at }),
+  ideas:        r => ({ id:r.id, title:r.title, cat:r.category||'Software', desc:r.description||'', status:r.status||'New', created_at:r.created_at }),
 };
 
 // Map: local D object → Supabase insert payload
 const D_TO_ROW = {
-  daily:        r => ({ date:r.date, task:r.task, project:r.project, client:r.client, hours:r.hours?Number(r.hours):null, category:r.cat, priority:r.prio, status:r.status, impact:r.impact, problem_solved:r.problem, technologies:r.tech, technical_support:r.support, self_remarks:r.self }),
+  daily:        r => ({ date:r.date, task:r.task, project:r.project, client:r.client, hours:r.hours?Number(r.hours):null, category:r.cat, priority:r.prio, status:r.status, impact:r.impact, problem_solved:r.problem, technologies:r.tech, technical_support:r.support, self_remarks:r.self, rich_notes:r.richNotes||'' }),
   projects:     r => ({ name:r.name, client:r.client, role:r.role, start_date:r.start||null, end_date:r.end||null, status:r.status, progress:r.prog?Number(r.prog):0, technologies:r.tech, contribution:r.contrib, outcome:r.outcome }),
   learning:     r => ({ date:r.date, topic:r.topic, source_type:r.type, source:r.source, category:r.cat, hours:r.hours?Number(r.hours):null, applied_at_work:r.applied, certificate:r.cert, notes:r.notes }),
   clients:      r => ({ date:r.date, client_name:r.client, organization:r.org, duration_mins:r.dur?Number(r.dur):null, purpose:r.purpose, resolution:r.resolution, follow_up:r.followup, communication_rating:r.rating?Number(r.rating):null }),
@@ -1569,6 +1823,9 @@ const D_TO_ROW = {
   goals:        r => ({ goal:r.goal, category:r.cat, target_date:r.date||null, completed:r.done }),
   notes:        r => ({ date:r.date||today(), title:r.title, content:r.content, tag:r.tag }),
   mood:         r => ({ date:r.date, mood:r.mood, note:r.note }),
+  tasks:        r => ({ title:r.title, notes:r.notes, column_status:r.col, priority:r.prio, due_date:r.due||null, project:r.project, tags:r.tags, subtasks:r.subtasks||[] }),
+  meetings:     r => ({ date:r.date||null, attendees:r.attendees, agenda:r.agenda, discussion:r.discussion, action_items:r.action, follow_up_date:r.followup||null, status:r.status }),
+  ideas:        r => ({ title:r.title, category:r.cat, description:r.desc, status:r.status }),
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -1743,7 +2000,8 @@ async function del(arr, id, cbName) {
     clients:'renderClients', support:'renderSupport', docs:'renderDocs',
     achievements:'renderAchievements', evidence:'renderEvidence',
     star:'renderStar', plans:'renderPlan', goals:'renderGoals',
-    notes:'renderNotes', mood:'renderMood'
+    notes:'renderNotes', mood:'renderMood',
+    tasks:'renderTasks', meetings:'renderMeetings', ideas:'renderIdeas'
   };
   const fn = window[renderMap[arr] || cbName];
   await delItem(arr, id, fn);
@@ -2294,23 +2552,39 @@ async function migrateLocalData() {
 // ── SECTION 8: NAV & UI ──
 // ══════════════════════════════════════════════════════════════════
 
-function nav(id, el) {
+// Which notebook-tab group each page id lives under (used to auto-expand the right group)
+const NAV_GROUP = {
+  quicklog:'workspace', projects:'workspace', learning:'workspace', clients:'workspace',
+  support:'workspace', docs:'workspace', planner:'workspace',
+  tasks:'workspace', meetings:'workspace', ideas:'workspace',
+  achievements:'career', evidence:'career', ai:'career',
+  reports:'utilities', goals:'utilities', notes:'utilities', mood:'utilities'
+};
+
+function nav(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(n => n.classList.remove('active'));
   const pg = document.getElementById('page-'+id);
   if (pg) pg.classList.add('active');
+  const el = document.querySelector('.sb-item[data-nav="'+id+'"]');
   if (el) el.classList.add('active');
+  const grp = NAV_GROUP[id];
+  if (grp) openGroup(grp); else closeAllGroups();
   const titles = {
-    dashboard:'Dashboard', quicklog:'Quick Log', evidence:'Evidence Vault',
+    dashboard:'Dashboard', quicklog:'Work Journal', evidence:'Evidence Vault',
     ai:'AI Writer', projects:'Projects', learning:'Learning',
     clients:'Client Calls', support:'Technical Support', docs:'Documentation',
     achievements:'Achievements', reports:'Reports & Export',
     planner:'Planner', goals:'Goals', notes:'Notes',
-    mood:'Mood Tracker', profile:'My Profile'
+    mood:'Mood Tracker', profile:'My Profile',
+    tasks:'Task Manager', meetings:'Meeting Notes', ideas:'Idea Board'
   };
   document.getElementById('page-title').textContent = titles[id] || id;
   document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
     {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const wsBar = document.getElementById('ws-tabbar');
+  if (wsBar) wsBar.style.display = (grp === 'workspace') ? 'flex' : 'none';
+  document.querySelectorAll('.ws-tab').forEach(t => t.classList.toggle('active', t.dataset.wsTab === id));
   if (id==='dashboard')   renderDashboard();
   if (id==='reports')     renderReports();
   if (id==='planner')     renderCal();
@@ -2319,7 +2593,29 @@ function nav(id, el) {
   if (id==='mood')        renderMood();
   if (id==='evidence')    renderEvidence();
   if (id==='profile')     loadProfile();
+  if (id==='tasks')       renderTasks();
+  if (id==='meetings')    renderMeetings();
+  if (id==='ideas')       renderIdeas();
   closeSidebar();
+}
+
+// ── Sidebar notebook-tab accordion ──
+function closeAllGroups() {
+  document.querySelectorAll('.sb-group').forEach(g => g.classList.remove('open'));
+  document.querySelectorAll('.sb-sublist').forEach(l => l.classList.remove('open'));
+}
+function openGroup(grp) {
+  closeAllGroups();
+  const btn = document.querySelector('.sb-group[data-grp="'+grp+'"]');
+  const list = document.querySelector('.sb-sublist[data-grp-list="'+grp+'"]');
+  if (btn) btn.classList.add('open');
+  if (list) list.classList.add('open');
+}
+function toggleGroup(grp) {
+  const list = document.querySelector('.sb-sublist[data-grp-list="'+grp+'"]');
+  const wasOpen = list && list.classList.contains('open');
+  closeAllGroups();
+  if (!wasOpen) openGroup(grp);
 }
 
 function toggleFS(id) { const el=document.getElementById(id); if(el) el.classList.toggle('open') }
@@ -2369,7 +2665,8 @@ function updateAll() {
   updateScore();
   const badges = [['nb-daily',D.daily.length],['nb-projects',D.projects.length],['nb-learning',D.learning.length],
     ['nb-clients',D.clients.length],['nb-support',D.support.length],['nb-docs',D.docs.length],
-    ['nb-ach',D.achievements.length],['nb-evidence',D.evidence.length]];
+    ['nb-ach',D.achievements.length],['nb-evidence',D.evidence.length],
+    ['nb-tasks',D.tasks.length],['nb-meetings',D.meetings.length],['nb-ideas',D.ideas.length]];
   badges.forEach(([id,v]) => { const el=document.getElementById(id); if(el) el.textContent=v });
 }
 
@@ -2401,14 +2698,17 @@ async function addDaily() {
     problem:document.getElementById('dl-problem').value,
     tech:document.getElementById('dl-tech').value,
     support:document.getElementById('dl-support').value,
-    self:document.getElementById('dl-self').value
+    self:document.getElementById('dl-self').value,
+    richNotes:document.getElementById('dl-rich').innerHTML
   };
   if (!r.task) { toast('⚠️ Task title required', 'error'); return; }
   await addItem('daily', r, renderDaily);
+  clearDaily();
 }
 function clearDaily() {
   ['dl-task','dl-project','dl-client','dl-hours','dl-impact','dl-problem','dl-tech','dl-self']
     .forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+  const rich = document.getElementById('dl-rich'); if (rich) rich.innerHTML = '';
 }
 function renderDaily() {
   const b = document.getElementById('daily-body'); if (!b) return;
@@ -2416,7 +2716,7 @@ function renderDaily() {
   if (!D.daily.length) { b.innerHTML=`<tr><td colspan="9" class="empty-td">No entries yet. Log your first task above!</td></tr>`; return }
   b.innerHTML = D.daily.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3);white-space:nowrap">${r.date}</td>
-    <td><strong style="font-size:12.5px">${esc(r.task)}</strong></td>
+    <td><strong style="font-size:12.5px">${esc(r.task)}</strong>${r.richNotes ? ` <button onclick='openJournalView(${JSON.stringify(r.id)})' title="View journal notes" style="border:none;background:none;cursor:pointer;color:var(--violet-l);font-size:11px">📝</button>` : ''}</td>
     <td style="font-size:11px;color:var(--text2)">${esc(r.project)||'—'}</td>
     <td><span class="badge bv">${esc(r.cat)}</span></td>
     <td style="font-variant-numeric:tabular-nums;text-align:center">${r.hours||'—'}</td>
@@ -2426,6 +2726,33 @@ function renderDaily() {
     <td>${delBtn('daily',r.id,'renderDaily')}</td>
   </tr>`).join('');
 }
+
+// ── RICH TEXT EDITOR (Work Journal) ──
+function rtCmd(cmd, val) {
+  document.getElementById('dl-rich').focus();
+  document.execCommand(cmd, false, val || null);
+}
+function rtInsertChecklist() {
+  const rich = document.getElementById('dl-rich'); rich.focus();
+  document.execCommand('insertHTML', false, '<ul class="rt-checklist"><li><input type="checkbox"> <span>Item</span></li></ul><br>');
+}
+function rtInsertCodeBlock() {
+  const rich = document.getElementById('dl-rich'); rich.focus();
+  document.execCommand('insertHTML', false, '<pre>code</pre><br>');
+}
+function rtInsertLink() {
+  const url = prompt('Link URL:'); if (!url) return;
+  document.getElementById('dl-rich').focus();
+  document.execCommand('createLink', false, url);
+}
+function openJournalView(id) {
+  const r = D.daily.find(x => x.id === id); if (!r) return;
+  document.getElementById('jv-title').textContent = r.task || 'Journal Note';
+  document.getElementById('jv-date').textContent = r.date || '';
+  document.getElementById('jv-body').innerHTML = r.richNotes || '<span style="color:var(--text4)">No notes.</span>';
+  document.getElementById('jv-overlay').classList.add('show');
+}
+function closeJournalView() { document.getElementById('jv-overlay').classList.remove('show'); }
 
 // ── PROJECTS ──
 async function addProject() {
@@ -2574,6 +2901,124 @@ function renderDocs() {
     <td style="font-size:11px;color:var(--text2)">${esc(r.remarks)||'—'}</td>
     <td>${delBtn('docs',r.id,'renderDocs')}</td>
   </tr>`).join('');
+}
+
+// ── TASK MANAGER (KANBAN) ──
+const TASK_COLUMNS = [
+  { key:'inbox',       label:'Inbox' },
+  { key:'today',       label:'Today' },
+  { key:'in_progress', label:'In Progress' },
+  { key:'waiting',     label:'Waiting' },
+  { key:'completed',   label:'Completed' },
+];
+async function addTask() {
+  const r = {
+    id:'', title:document.getElementById('tk-title').value,
+    prio:document.getElementById('tk-prio').value,
+    due:document.getElementById('tk-due').value,
+    project:document.getElementById('tk-project').value,
+    tags:document.getElementById('tk-tags').value,
+    notes:document.getElementById('tk-notes').value,
+    col:'inbox', subtasks:[]
+  };
+  if (!r.title) { toast('⚠️ Task title required','error'); return; }
+  await addItem('tasks', r, renderTasks);
+  ['tk-title','tk-due','tk-project','tk-tags','tk-notes'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+}
+async function moveTask(id, toCol) {
+  await updateItem('tasks', id, { column_status: toCol }, renderTasks);
+}
+function renderTasks() {
+  const board = document.getElementById('kanban-board'); if (!board) return;
+  const q = (document.getElementById('tk-search')?.value || '').toLowerCase();
+  const list = D.tasks.filter(t => !q || (t.title+t.tags+t.project).toLowerCase().includes(q));
+  document.getElementById('tasks-cnt').textContent = D.tasks.length + ' tasks';
+  board.innerHTML = TASK_COLUMNS.map(col => {
+    const items = list.filter(t => (t.col||'inbox') === col.key);
+    return `<div class="kanban-col">
+      <div class="kanban-col-hd"><span>${col.label}</span><span>${items.length}</span></div>
+      ${items.map(t => {
+        const others = TASK_COLUMNS.filter(c => c.key !== col.key);
+        return `<div class="task-card">
+          <div class="task-card-title">${esc(t.title)}</div>
+          <div class="task-card-meta">${prioBadge(t.prio)}${t.due ? `<span class="badge bn" style="font-size:9.5px">📅 ${t.due}</span>` : ''}${t.project ? `<span class="badge bv" style="font-size:9.5px">${esc(t.project)}</span>` : ''}</div>
+          <div class="task-card-move">
+            ${others.map(o => `<button onclick="moveTask('${t.id}','${o.key}')" title="Move to ${o.label}">→ ${o.label}</button>`).join('')}
+            ${delBtn('tasks', t.id, 'renderTasks')}
+          </div>
+        </div>`;
+      }).join('') || `<div style="font-size:11px;color:var(--text4);text-align:center;padding:10px 4px">Empty</div>`}
+    </div>`;
+  }).join('');
+}
+
+// ── MEETING NOTES ──
+async function addMeeting() {
+  const r = {
+    id:'', date:document.getElementById('mt-date').value||today(),
+    attendees:document.getElementById('mt-attendees').value,
+    agenda:document.getElementById('mt-agenda').value,
+    discussion:document.getElementById('mt-discussion').value,
+    action:document.getElementById('mt-action').value,
+    followup:document.getElementById('mt-followup').value,
+    status:document.getElementById('mt-status').value
+  };
+  if (!r.agenda) { toast('⚠️ Agenda required','error'); return; }
+  await addItem('meetings', r, renderMeetings);
+  ['mt-attendees','mt-agenda','mt-discussion','mt-action','mt-followup'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+}
+function renderMeetings() {
+  const b = document.getElementById('meetings-body'); if (!b) return;
+  if (!D.meetings.length) { b.innerHTML=`<tr><td colspan="7" class="empty-td">No meetings logged yet.</td></tr>`; return }
+  b.innerHTML = D.meetings.map(r => `<tr>
+    <td style="font-size:11px;color:var(--text3);white-space:nowrap">${r.date||'—'}</td>
+    <td style="font-size:11px">${esc(r.attendees)||'—'}</td>
+    <td style="font-size:12px"><strong>${esc(r.agenda)}</strong></td>
+    <td style="font-size:11px;color:var(--text2);max-width:200px">${esc(r.action)||'—'}</td>
+    <td style="font-size:11px;white-space:nowrap">${r.followup||'—'}</td>
+    <td>${statusBadge(r.status)}</td>
+    <td>${delBtn('meetings',r.id,'renderMeetings')}</td>
+  </tr>`).join('');
+}
+
+// ── IDEA BOARD ──
+let ideaFilter = 'all';
+async function addIdea() {
+  const r = {
+    id:'', title:document.getElementById('id-title').value,
+    cat:document.getElementById('id-cat').value,
+    desc:document.getElementById('id-desc').value,
+    status:'New'
+  };
+  if (!r.title) { toast('⚠️ Idea title required','error'); return; }
+  await addItem('ideas', r, renderIdeas);
+  ['id-title','id-desc'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+}
+function filterIdeas(f, btn) {
+  ideaFilter = f;
+  document.querySelectorAll('[data-idea-filter]').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderIdeas();
+}
+async function setIdeaStatus(id, status) {
+  await updateItem('ideas', id, { status }, renderIdeas);
+}
+function renderIdeas() {
+  const grid = document.getElementById('idea-grid'); if (!grid) return;
+  const list = D.ideas.filter(i => ideaFilter === 'all' || i.status === ideaFilter);
+  if (!list.length) { grid.innerHTML = `<div class="empty-td" style="grid-column:1/-1">No ideas here yet.</div>`; return }
+  const statusOpts = ['New','Considering','Planned','Archived'];
+  grid.innerHTML = list.map(i => `<div class="idea-card">
+    <div class="idea-card-title">${esc(i.title)}</div>
+    <div class="idea-card-desc">${esc(i.desc)||'—'}</div>
+    <div class="idea-card-foot">
+      <span class="badge bv" style="font-size:9.5px">${esc(i.cat)}</span>
+      <select onchange="setIdeaStatus('${i.id}', this.value)" style="font-size:10.5px;padding:3px 6px;border-radius:6px;border:1px solid var(--border2)">
+        ${statusOpts.map(s => `<option ${s===i.status?'selected':''}>${s}</option>`).join('')}
+      </select>
+      ${delBtn('ideas', i.id, 'renderIdeas')}
+    </div>
+  </div>`).join('');
 }
 
 // ── ACHIEVEMENTS ──
@@ -2802,7 +3247,7 @@ function renderCal() {
   }
   el.innerHTML=html; renderPlan();
 }
-function calClick(ds) { document.getElementById('dl-date').value=ds; nav('quicklog',document.querySelectorAll('.sb-item')[2]) }
+function calClick(ds) { document.getElementById('dl-date').value=ds; nav('quicklog') }
 async function addPlan() {
   const r={id:'',date:today(),task:document.getElementById('plan-task').value,prio:document.getElementById('plan-prio').value,done:false};
   if(!r.task) return;
