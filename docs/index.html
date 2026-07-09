@@ -263,6 +263,17 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .career-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--peach-xl),#fdf1e8);color:var(--peach);box-shadow:inset 0 0 0 1px #e8926b40}
 .utilities-tabbar .ws-tab:hover{background:var(--sage-xl);color:var(--sage)}
 .utilities-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--sage-xl),#eff5ec);color:var(--sage);box-shadow:inset 0 0 0 1px #6f9c6a40}
+/* ── CLIENT SUPPORT MERGED TIMELINE ── */
+.cs-filters{display:flex;flex-wrap:wrap;gap:8px}
+.cs-filters input{flex:1;min-width:200px;padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px}
+.cs-filters select{padding:7px 10px;border-radius:10px;border:1px solid var(--border2);font-size:12px;background:var(--s1)}
+.cs-item{display:flex;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border)}
+.cs-item:last-child{border-bottom:none}
+.cs-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.cs-body{flex:1;min-width:0}
+.cs-title{font-size:12.5px;font-weight:600}
+.cs-meta{font-size:10.5px;color:var(--text3);margin-top:3px}
+.cs-desc{font-size:11.5px;color:var(--text2);margin-top:4px;line-height:1.5}
 /* ── TECHNOLOGY TRACKING ── */
 .tech-row{display:flex;align-items:center;gap:12px;padding:9px 4px;border-bottom:1px solid var(--border)}
 .tech-row:last-child{border-bottom:none}
@@ -551,12 +562,13 @@ tr:hover td{background:#8b5cf608}
   align-items:center;justify-content:center;
   border-radius:8px;font-size:12px;cursor:pointer;
   transition:all .15s;border:1px solid transparent;
-  background:var(--s2);
+  background:var(--s2);position:relative;
 }
 .cal-day:hover{border-color:var(--border3);background:var(--s3)}
 .cal-day.today{background:linear-gradient(135deg,#f3e8ff,#fae8ff);border-color:var(--border3);color:var(--violet-l);font-weight:700}
 .cal-day.has-entry::after{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--violet);margin-top:2px}
 .cal-day.empty{background:transparent;cursor:default}
+.att-late-dot{position:absolute;top:1px;right:2px;font-size:8px;line-height:1}
 .cal-header-day{font-size:10px;text-align:center;color:var(--text3);font-weight:600;padding-bottom:6px}
 /* ── NOTES / SCRAPBOOK ── */
 .note-card{
@@ -889,6 +901,7 @@ tr:hover td{background:#8b5cf608}
       <button class="sb-item" data-nav="meetings" onclick="nav('meetings')"><span class="si">🗓</span>Meeting Notes<span class="sb-badge" id="nb-meetings">0</span></button>
       <button class="sb-item" data-nav="ideas" onclick="nav('ideas')"><span class="si">💡</span>Idea Board<span class="sb-badge" id="nb-ideas">0</span></button>
       <button class="sb-item" data-nav="learning" onclick="nav('learning')"><span class="si">📚</span>Learning<span class="sb-badge" id="nb-learning">0</span></button>
+      <button class="sb-item" data-nav="clientsupport" onclick="nav('clientsupport')"><span class="si">🤝</span>Client Support</button>
       <button class="sb-item" data-nav="clients" onclick="nav('clients')"><span class="si">📞</span>Client Calls<span class="sb-badge" id="nb-clients">0</span></button>
       <button class="sb-item" data-nav="support" onclick="nav('support')"><span class="si">🔧</span>Support<span class="sb-badge" id="nb-support">0</span></button>
       <button class="sb-item" data-nav="docs" onclick="nav('docs')"><span class="si">📄</span>Docs<span class="sb-badge" id="nb-docs">0</span></button>
@@ -1057,6 +1070,7 @@ tr:hover td{background:#8b5cf608}
   <button class="ws-tab" data-ws-tab="meetings" onclick="nav('meetings')">🗓 Meetings</button>
   <button class="ws-tab" data-ws-tab="ideas" onclick="nav('ideas')">💡 Ideas</button>
   <button class="ws-tab" data-ws-tab="learning" onclick="nav('learning')">📚 Learning</button>
+  <button class="ws-tab" data-ws-tab="clientsupport" onclick="nav('clientsupport')">🤝 Client Support</button>
   <button class="ws-tab" data-ws-tab="clients" onclick="nav('clients')">📞 Clients</button>
   <button class="ws-tab" data-ws-tab="support" onclick="nav('support')">🔧 Support</button>
   <button class="ws-tab" data-ws-tab="docs" onclick="nav('docs')">📄 Docs</button>
@@ -1258,6 +1272,35 @@ tr:hover td{background:#8b5cf608}
     </div>
   </div>
   <div class="card"><div class="card-hd"><div class="card-title">📚 Learning Log</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Topic</th><th>Source</th><th>Category</th><th>Hrs</th><th>Applied?</th><th>Cert</th><th></th></tr></thead><tbody id="learn-body"></tbody></table></div></div>
+</div>
+
+<!-- ═══ CLIENT SUPPORT (merged timeline) ═══ -->
+<div id="page-clientsupport" class="page">
+  <div class="card mb16">
+    <div class="card-body">
+      <p style="font-size:11.5px;color:var(--text3);line-height:1.6;margin-bottom:12px">One searchable timeline across your Client Calls and Technical Support logs. To add or edit a specific record, use the Clients or Support tabs — this view is for browsing everything together.</p>
+      <div class="cs-filters">
+        <input id="cs-search" placeholder="🔍 Search client, issue, resolution..." oninput="renderClientSupport()">
+        <select id="cs-type-filter" onchange="renderClientSupport()">
+          <option value="all">All Types</option>
+          <option value="client">📞 Client Calls</option>
+          <option value="support">🔧 Support Cases</option>
+        </select>
+        <select id="cs-status-filter" onchange="renderClientSupport()">
+          <option value="all">All Status/Priority</option>
+          <option value="Resolved">Resolved</option>
+          <option value="Open">Open</option>
+          <option value="High">High Priority</option>
+          <option value="Critical">Critical</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="gauto mb16" id="cs-summary-kpis"></div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">🤝 Combined Timeline</div><span style="font-size:11px;color:var(--text3)" id="cs-cnt"></span></div>
+    <div class="card-body" id="cs-timeline" style="padding:0"></div>
+  </div>
 </div>
 
 <!-- ═══ CLIENT CALLS ═══ -->
@@ -2681,7 +2724,8 @@ function renderAttendance() {
     for (let d = 1; d <= daysInMonth; d++) {
       const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const dow = new Date(y, m, d).getDay();
-      const status = attLogs[ds]?.status;
+      const entry = attLogs[ds];
+      const status = entry?.status;
       const isFuture = ds > todayStr;
       const isSunday = dow === 0;
       let cls = 'cal-day';
@@ -2689,7 +2733,10 @@ function renderAttendance() {
       if (status) cls += ' ' + ATT_STATUS_CLASS[status];
       if (isFuture) cls += ' att-future';
       const clickable = !isFuture;
-      html += `<div class="${cls}" ${clickable ? `onclick="toggleAttendanceDay('${ds}')"` : ''}>${d}</div>`;
+      const shiftMins = timeToMinutes(attSettings.shiftStart) ?? 540;
+      const isLate = entry?.login && timeToMinutes(entry.login) > shiftMins + (attSettings.graceMinutes ?? 15);
+      const lateFlag = isLate ? `<span class="att-late-dot" title="Late arrival — logged in at ${entry.login}">⏰</span>` : '';
+      html += `<div class="${cls}" ${clickable ? `onclick="toggleAttendanceDay('${ds}')"` : ''}>${d}${lateFlag}</div>`;
     }
     grid.innerHTML = html;
   }
@@ -2962,7 +3009,7 @@ async function migrateLocalData() {
 // Which notebook-tab group each page id lives under (used to auto-expand the right group)
 const NAV_GROUP = {
   quicklog:'workspace', projects:'workspace', learning:'workspace', clients:'workspace',
-  support:'workspace', docs:'workspace', planner:'workspace',
+  support:'workspace', docs:'workspace', planner:'workspace', clientsupport:'workspace',
   tasks:'workspace', meetings:'workspace', ideas:'workspace',
   achievements:'career', evidence:'career', ai:'career', technologies:'career',
   reports:'utilities', goals:'utilities', notes:'utilities', mood:'utilities',
@@ -2986,7 +3033,7 @@ function nav(id) {
     planner:'Planner', goals:'Goals', notes:'Notes',
     mood:'Mood Tracker', profile:'My Profile',
     tasks:'Task Manager', meetings:'Meeting Notes', ideas:'Idea Board',
-    companies:'Company Manager', salary:'Salary Calculator', stickies:'Sticky Notes', technologies:'Technologies'
+    companies:'Company Manager', salary:'Salary Calculator', stickies:'Sticky Notes', technologies:'Technologies', clientsupport:'Client Support'
   };
   document.getElementById('page-title').textContent = titles[id] || id;
   document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
@@ -3013,6 +3060,7 @@ function nav(id) {
   if (id==='salary')      renderSalary();
   if (id==='stickies')    renderStickies();
   if (id==='technologies') renderTechnologies();
+  if (id==='clientsupport') renderClientSupport();
   closeSidebar();
 }
 
@@ -3292,6 +3340,60 @@ function renderSupport() {
     <td>${statusBadge(r.status)}</td>
     <td>${delBtn('support',r.id,'renderSupport')}</td>
   </tr>`).join('');
+}
+
+// ── CLIENT SUPPORT (merged view over Clients + Support, Phase 6C) ──
+function renderClientSupport() {
+  const el = document.getElementById('cs-timeline'); if (!el) return;
+  const q = (document.getElementById('cs-search')?.value || '').toLowerCase();
+  const typeFilter = document.getElementById('cs-type-filter')?.value || 'all';
+  const statusFilter = document.getElementById('cs-status-filter')?.value || 'all';
+
+  const clientItems = D.clients.map(r => ({
+    kind:'client', id:r.id, date:r.date, title:r.client, sub:r.org,
+    desc:r.purpose, resolution:r.resolution, badge:r.rating?`${r.rating}/10`:null,
+    statusOrPrio: null
+  }));
+  const supportItems = D.support.map(r => ({
+    kind:'support', id:r.id, date:r.date, title:r.issue, sub:r.cause,
+    desc:r.solution, resolution:null, badge:r.sat?`${r.sat}/10`:null,
+    statusOrPrio: r.status, prio: r.prio
+  }));
+
+  let combined = [...clientItems, ...supportItems];
+  if (typeFilter !== 'all') combined = combined.filter(i => i.kind === typeFilter);
+  if (statusFilter !== 'all') combined = combined.filter(i => i.statusOrPrio === statusFilter || i.prio === statusFilter);
+  if (q) combined = combined.filter(i => `${i.title} ${i.sub||''} ${i.desc||''} ${i.resolution||''}`.toLowerCase().includes(q));
+  combined.sort((a,b) => (b.date||'').localeCompare(a.date||''));
+
+  const cntEl = document.getElementById('cs-cnt');
+  if (cntEl) cntEl.textContent = `${combined.length} of ${clientItems.length + supportItems.length}`;
+
+  const kpiEl = document.getElementById('cs-summary-kpis');
+  if (kpiEl) {
+    const avgRating = D.clients.length ? (D.clients.reduce((s,r)=>s+(Number(r.rating)||0),0)/D.clients.length).toFixed(1) : '—';
+    const openCases = D.support.filter(r => r.status === 'Open').length;
+    kpiEl.innerHTML = [
+      { i:'📞', l:'Client Calls', v:D.clients.length, cls:'kb' },
+      { i:'🔧', l:'Support Cases', v:D.support.length, cls:'kv' },
+      { i:'🚨', l:'Open Cases', v:openCases, cls:'kr' },
+      { i:'⭐', l:'Avg Client Rating', v:avgRating!=='—'?avgRating+'/10':'—', cls:'kg' },
+    ].map(k => `<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
+  }
+
+  if (!combined.length) { el.innerHTML = `<div class="empty-td">Nothing matches — try clearing filters.</div>`; return; }
+  el.innerHTML = combined.map(i => `
+    <div class="cs-item">
+      <div class="cs-icon">${i.kind==='client' ? '📞' : '🔧'}</div>
+      <div class="cs-body">
+        <div class="cs-title">${esc(i.title)} ${i.prio ? prioBadge(i.prio) : ''} ${i.statusOrPrio ? statusBadge(i.statusOrPrio) : ''}</div>
+        <div class="cs-meta">${i.kind==='client'?'Client Call':'Support Case'} · ${i.date}${i.sub?` · ${esc(i.sub)}`:''}${i.badge?` · Rating ${i.badge}`:''}</div>
+        ${i.desc ? `<div class="cs-desc">${esc(i.desc)}</div>` : ''}
+        ${i.resolution ? `<div class="cs-desc" style="color:var(--green)">✓ ${esc(i.resolution)}</div>` : ''}
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="nav('${i.kind==='client'?'clients':'support'}')" style="align-self:flex-start;flex-shrink:0">Edit →</button>
+    </div>
+  `).join('');
 }
 
 // ── DOCS ──
