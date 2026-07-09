@@ -263,6 +263,22 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .career-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--peach-xl),#fdf1e8);color:var(--peach);box-shadow:inset 0 0 0 1px #e8926b40}
 .utilities-tabbar .ws-tab:hover{background:var(--sage-xl);color:var(--sage)}
 .utilities-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--sage-xl),#eff5ec);color:var(--sage);box-shadow:inset 0 0 0 1px #6f9c6a40}
+/* ── TECHNOLOGY TRACKING ── */
+.tech-row{display:flex;align-items:center;gap:12px;padding:9px 4px;border-bottom:1px solid var(--border)}
+.tech-row:last-child{border-bottom:none}
+.tech-name{width:140px;flex-shrink:0;font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tech-bar-track{flex:1;height:10px;background:var(--s2);border-radius:6px;overflow:hidden}
+.tech-bar-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--powder));border-radius:6px}
+.tech-count{width:110px;flex-shrink:0;font-size:11px;color:var(--text3);text-align:right}
+/* ── ATTENDANCE ANALYTICS ── */
+.att-time-capture{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:14px;padding:10px 14px;background:var(--s2);border-radius:10px;font-size:11.5px;color:var(--text2)}
+.att-time-capture label{display:flex;align-items:center;gap:6px}
+.att-time-capture input[type="time"]{padding:4px 8px;border-radius:7px;border:1px solid var(--border2);font-size:11.5px}
+.att-insights{display:flex;flex-direction:column;gap:6px}
+.att-insight{font-size:12px;color:var(--text2);background:var(--s2);padding:8px 12px;border-radius:9px;line-height:1.5}
+.att-insight strong{color:var(--violet-l)}
+.att-heatmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(30px,1fr));gap:4px}
+.att-heat-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9.5px;color:var(--text3);cursor:default}
 /* ── DASHBOARD WIDGET SYSTEM ── */
 .dash-toolbar{display:flex;justify-content:flex-end;margin-bottom:12px}
 .widget-manager{
@@ -885,6 +901,7 @@ tr:hover td{background:#8b5cf608}
     <div class="sb-sublist" data-grp-list="career">
       <button class="sb-item" data-nav="achievements" onclick="nav('achievements')"><span class="si">🏆</span>Achievements<span class="sb-badge" id="nb-ach">0</span></button>
       <button class="sb-item" data-nav="evidence" onclick="nav('evidence')"><span class="si">🗄</span>Evidence Vault<span class="sb-badge" id="nb-evidence">0</span></button>
+      <button class="sb-item" data-nav="technologies" onclick="nav('technologies')"><span class="si">🔧</span>Technologies</button>
       <button class="sb-item" data-nav="ai" onclick="nav('ai')"><span class="si">✦</span>AI Writer</button>
     </div>
 
@@ -1103,6 +1120,7 @@ tr:hover td{background:#8b5cf608}
 <div id="career-tabbar" class="ws-tabbar career-tabbar" style="display:none">
   <button class="ws-tab" data-ws-tab="achievements" onclick="nav('achievements')">🏆 Achievements</button>
   <button class="ws-tab" data-ws-tab="evidence" onclick="nav('evidence')">🗄 Evidence Vault</button>
+  <button class="ws-tab" data-ws-tab="technologies" onclick="nav('technologies')">🔧 Technologies</button>
   <button class="ws-tab" data-ws-tab="ai" onclick="nav('ai')">✦ AI Writer</button>
 </div>
 
@@ -1146,6 +1164,21 @@ tr:hover td{background:#8b5cf608}
       </div>
       <div id="ev-grid" class="ev-grid"></div>
     </div>
+  </div>
+</div>
+
+<!-- ═══ TECHNOLOGIES ═══ -->
+<div id="page-technologies" class="page">
+  <div class="card mb16">
+    <div class="card-body">
+      <p style="font-size:11.5px;color:var(--text3);line-height:1.6">Automatically pulled from the Technologies field on your Projects and Work Journal entries — no manual tagging needed. This is your skills footprint at a glance.</p>
+      <input id="tech-search" placeholder="🔍 Filter technologies..." oninput="renderTechnologies()" style="margin-top:10px;width:100%;max-width:280px;padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px">
+    </div>
+  </div>
+  <div class="gauto mb16" id="tech-summary-kpis"></div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">🔧 Most Used Technologies</div></div>
+    <div class="card-body" id="tech-list"></div>
   </div>
 </div>
 
@@ -1547,6 +1580,8 @@ tr:hover td{background:#8b5cf608}
           <div class="ff"><label>Paid Leaves / Month</label><input type="number" id="att-paidleaves" value="1" min="0" max="30"></div>
           <div class="ff"><label>Half-Day Factor</label><input type="number" id="att-halffactor" value="0.5" min="0" max="1" step="0.05"></div>
           <div class="ff"><label>Working Hours / Day</label><input type="number" id="att-hoursperday" value="8" min="1" max="24" step="0.5"></div>
+          <div class="ff"><label>Shift Start Time</label><input type="time" id="att-shiftstart" value="09:00"></div>
+          <div class="ff"><label>Grace Time (minutes)</label><input type="number" id="att-gracemins" value="15" min="0" max="120"></div>
           <div class="ff s2"><label>Leave Deduction Formula</label>
             <select id="att-leavemode">
               <option value="absent_only">Quota covers Absences only (Half-Days always deducted)</option>
@@ -1577,8 +1612,23 @@ tr:hover td{background:#8b5cf608}
         </div>
       </div>
       <div class="card-body">
+        <div class="att-time-capture">
+          <label>Login time for next click <input type="time" id="att-login-input"></label>
+          <label>Logout time for next click <input type="time" id="att-logout-input"></label>
+          <span style="font-size:10.5px;color:var(--text4)">Only applied when marking Present / Half-Day — optional</span>
+        </div>
         <div class="cal-grid mb12" id="att-cal-headers"></div>
         <div class="cal-grid" id="att-cal-grid"></div>
+      </div>
+    </div>
+
+    <div class="card mb16">
+      <div class="card-hd"><div class="card-title">📈 Attendance Analytics</div></div>
+      <div class="card-body">
+        <div class="gauto mb16" id="att-analytics-kpis"></div>
+        <div id="att-analytics-insights" class="att-insights"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--text3);margin:14px 0 8px">Hours Worked Heatmap</div>
+        <div class="att-heatmap" id="att-heatmap"></div>
       </div>
     </div>
 
@@ -2451,8 +2501,8 @@ function switchPlannerTab(tab, el) {
 // ── ATTENDANCE STATE ──
 let attDate     = new Date();           // month currently displayed
 let attMode     = 'present';            // currently selected marking mode
-let attLogs     = {};                   // { 'YYYY-MM-DD': 'present'|'absent'|'half'|'holiday'|'paid' }
-let attSettings = { salary: 20000, workdays: 27, paidLeaves: 1, halfDayFactor: 0.5, leaveMode: 'absent_only', hoursPerDay: 8 };
+let attLogs     = {};                   // { 'YYYY-MM-DD': { status:'present'|'absent'|'half'|'holiday'|'paid', login:'HH:MM'|null, logout:'HH:MM'|null } }
+let attSettings = { salary: 20000, workdays: 27, paidLeaves: 1, halfDayFactor: 0.5, leaveMode: 'absent_only', hoursPerDay: 8, shiftStart: '09:00', graceMinutes: 15 };
 let _attSaveTimer = null;
 
 const ATT_STATUS_COLORS = {
@@ -2483,7 +2533,7 @@ async function loadAttendanceData() {
     if (logErr) throw logErr;
 
     attLogs = {};
-    (logs || []).forEach(l => { attLogs[l.date] = l.status; });
+    (logs || []).forEach(l => { attLogs[l.date] = { status: l.status, login: l.login_time || null, logout: l.logout_time || null }; });
 
     let setQuery = _supa.from('attendance_settings').select('*').eq('user_id', currentUser.id);
     setQuery = activeCompanyId ? setQuery.eq('company_id', activeCompanyId) : setQuery.is('company_id', null);
@@ -2495,7 +2545,9 @@ async function loadAttendanceData() {
         paidLeaves: settings[0].paid_leaves ?? 1,
         halfDayFactor: settings[0].half_day_factor ?? 0.5,
         leaveMode: settings[0].leave_mode ?? 'absent_only',
-        hoursPerDay: settings[0].hours_per_day ?? 8
+        hoursPerDay: settings[0].hours_per_day ?? 8,
+        shiftStart: (settings[0].shift_start || '09:00:00').slice(0,5),
+        graceMinutes: settings[0].grace_minutes ?? 15
       };
     }
     console.log(`✓ Attendance loaded: ${Object.keys(attLogs).length} days logged`);
@@ -2511,12 +2563,16 @@ async function loadAttendanceData() {
   const hEl = document.getElementById('att-halffactor');
   const lEl = document.getElementById('att-leavemode');
   const hpdEl = document.getElementById('att-hoursperday');
+  const ssEl = document.getElementById('att-shiftstart');
+  const gmEl = document.getElementById('att-gracemins');
   if (sEl) sEl.value = attSettings.salary;
   if (wEl) wEl.value = attSettings.workdays;
   if (pEl) pEl.value = attSettings.paidLeaves;
   if (hEl) hEl.value = attSettings.halfDayFactor;
   if (lEl) lEl.value = attSettings.leaveMode;
   if (hpdEl) hpdEl.value = attSettings.hoursPerDay;
+  if (ssEl) ssEl.value = attSettings.shiftStart;
+  if (gmEl) gmEl.value = attSettings.graceMinutes;
 }
 
 // Debounced settings save — triggered on input change
@@ -2527,6 +2583,8 @@ function queueAttendanceSettingsSave() {
   attSettings.halfDayFactor = parseFloat(document.getElementById('att-halffactor').value) || 0;
   attSettings.leaveMode     = document.getElementById('att-leavemode').value || 'absent_only';
   attSettings.hoursPerDay   = parseFloat(document.getElementById('att-hoursperday').value) || 8;
+  attSettings.shiftStart    = document.getElementById('att-shiftstart').value || '09:00';
+  attSettings.graceMinutes  = parseInt(document.getElementById('att-gracemins').value) || 0;
   clearTimeout(_attSaveTimer);
   _attSaveTimer = setTimeout(saveAttendanceSettings, 700);
   renderAttPayBreakdown(); // instant feedback even before save completes
@@ -2544,6 +2602,8 @@ async function saveAttendanceSettings() {
       half_day_factor: attSettings.halfDayFactor,
       leave_mode: attSettings.leaveMode,
       hours_per_day: attSettings.hoursPerDay,
+      shift_start: attSettings.shiftStart,
+      grace_minutes: attSettings.graceMinutes,
       updated_at: new Date().toISOString()
     };
     const { error } = await withTimeout(
@@ -2561,7 +2621,7 @@ async function saveAttendanceSettings() {
 // Click a calendar day → mark/unmark it with the currently selected status
 async function toggleAttendanceDay(dateStr) {
   if (!currentUser) { toast('Not signed in', 'error'); return; }
-  const current = attLogs[dateStr];
+  const current = attLogs[dateStr]?.status;
 
   if (current === attMode) {
     // Clicking the same status again clears it
@@ -2579,12 +2639,15 @@ async function toggleAttendanceDay(dateStr) {
     return;
   }
 
-  attLogs[dateStr] = attMode;
+  // Only Present/Half-Day carry meaningful login/logout times
+  const loginVal = (attMode === 'present' || attMode === 'half') ? (document.getElementById('att-login-input')?.value || null) : null;
+  const logoutVal = (attMode === 'present' || attMode === 'half') ? (document.getElementById('att-logout-input')?.value || null) : null;
+  attLogs[dateStr] = { status: attMode, login: loginVal, logout: logoutVal };
   renderAttendance();
   try {
     const payload = {
       user_id: currentUser.id, company_id: activeCompanyId || null,
-      date: dateStr, status: attMode
+      date: dateStr, status: attMode, login_time: loginVal, logout_time: logoutVal
     };
     const { error } = await withTimeout(
       _supa.from('attendance_logs').upsert(payload, { onConflict: 'user_id,date,company_id' }),
@@ -2618,7 +2681,7 @@ function renderAttendance() {
     for (let d = 1; d <= daysInMonth; d++) {
       const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const dow = new Date(y, m, d).getDay();
-      const status = attLogs[ds];
+      const status = attLogs[ds]?.status;
       const isFuture = ds > todayStr;
       const isSunday = dow === 0;
       let cls = 'cal-day';
@@ -2633,13 +2696,15 @@ function renderAttendance() {
 
   renderAttMetrics();
   renderAttPayBreakdown();
+  renderAttAnalytics();
 }
 
 function getAttMonthCounts() {
   const y = attDate.getFullYear(), m = attDate.getMonth();
   const prefix = `${y}-${String(m+1).padStart(2,'0')}-`;
   const counts = { present:0, absent:0, half:0, holiday:0, paid:0 };
-  Object.entries(attLogs).forEach(([date, status]) => {
+  Object.entries(attLogs).forEach(([date, entry]) => {
+    const status = entry?.status;
     if (date.startsWith(prefix) && counts[status] !== undefined) counts[status]++;
   });
   return counts;
@@ -2657,6 +2722,96 @@ function renderAttMetrics() {
     { i:'💙', l:'Paid Leaves', v:c.paid, cls:'kb' },
   ];
   el.innerHTML = kpis.map(k => `<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
+}
+
+// ── ATTENDANCE ANALYTICS (Phase 6A) ──
+function timeToMinutes(t) { if (!t) return null; const [h,m] = t.split(':').map(Number); return h*60+m; }
+function minutesToTime(mins) { mins = ((mins%1440)+1440)%1440; const h=Math.floor(mins/60), m=Math.round(mins%60); return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`; }
+function monthPrefix(y,m) { return `${y}-${String(m+1).padStart(2,'0')}-`; }
+
+function renderAttAnalytics() {
+  const kpiEl = document.getElementById('att-analytics-kpis');
+  const insightsEl = document.getElementById('att-analytics-insights');
+  const heatEl = document.getElementById('att-heatmap');
+  if (!kpiEl) return;
+
+  const y = attDate.getFullYear(), m = attDate.getMonth();
+  const prefix = monthPrefix(y, m);
+  const shiftMins = timeToMinutes(attSettings.shiftStart) ?? 540;
+  const grace = attSettings.graceMinutes ?? 15;
+
+  const monthEntries = Object.entries(attLogs).filter(([d]) => d.startsWith(prefix)).map(([d,e]) => ({ date:d, ...e }));
+  const timed = monthEntries.filter(e => e.login && e.logout);
+
+  const loginMinsArr = timed.map(e => timeToMinutes(e.login));
+  const logoutMinsArr = timed.map(e => timeToMinutes(e.logout));
+  const hoursArr = timed.map(e => {
+    let diff = timeToMinutes(e.logout) - timeToMinutes(e.login);
+    if (diff < 0) diff += 1440; // crossed midnight, unlikely but safe
+    return { date:e.date, hours: diff/60 };
+  });
+
+  const avgLogin = loginMinsArr.length ? minutesToTime(loginMinsArr.reduce((a,b)=>a+b,0)/loginMinsArr.length) : '—';
+  const avgLogout = logoutMinsArr.length ? minutesToTime(logoutMinsArr.reduce((a,b)=>a+b,0)/logoutMinsArr.length) : '—';
+  const avgHours = hoursArr.length ? (hoursArr.reduce((a,b)=>a+b.hours,0)/hoursArr.length) : 0;
+  const earliestLogin = loginMinsArr.length ? minutesToTime(Math.min(...loginMinsArr)) : '—';
+  const latestLogout = logoutMinsArr.length ? minutesToTime(Math.max(...logoutMinsArr)) : '—';
+  const longest = hoursArr.length ? hoursArr.reduce((a,b)=>b.hours>a.hours?b:a) : null;
+  const shortest = hoursArr.length ? hoursArr.reduce((a,b)=>b.hours<a.hours?b:a) : null;
+  const lateCount = timed.filter(e => timeToMinutes(e.login) > shiftMins + grace).length;
+
+  const c = getAttMonthCounts();
+  const markedDays = c.present + c.absent + c.half;
+  const attPct = markedDays ? Math.round(((c.present + c.half*0.5) / markedDays) * 100) : 0;
+
+  kpiEl.innerHTML = [
+    { i:'🕐', l:'Avg Login', v:avgLogin, cls:'kb' },
+    { i:'🕕', l:'Avg Logout', v:avgLogout, cls:'kv' },
+    { i:'⏱', l:'Avg Hours/Day', v:avgHours?avgHours.toFixed(1)+'h':'—', cls:'kg' },
+    { i:'⏰', l:'Late Arrivals', v:lateCount, cls:'kr' },
+    { i:'📊', l:'Attendance %', v:attPct+'%', cls:'ka' },
+  ].map(k => `<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
+
+  // Compare late arrivals vs previous month for a trend insight
+  const prevDate = new Date(y, m-1, 1);
+  const prevPrefix = monthPrefix(prevDate.getFullYear(), prevDate.getMonth());
+  const prevTimed = Object.entries(attLogs).filter(([d]) => d.startsWith(prevPrefix)).map(([d,e])=>e).filter(e=>e.login);
+  const prevLate = prevTimed.filter(e => timeToMinutes(e.login) > shiftMins + grace).length;
+
+  const insights = [];
+  if (avgHours) insights.push(`You averaged <strong>${avgHours.toFixed(1)}h</strong> per day this month.`);
+  if (longest) insights.push(`Longest working day: <strong>${longest.hours.toFixed(1)}h</strong> on ${longest.date}.`);
+  if (shortest && shortest.date !== longest?.date) insights.push(`Shortest working day: <strong>${shortest.hours.toFixed(1)}h</strong> on ${shortest.date}.`);
+  if (prevTimed.length) {
+    if (lateCount < prevLate) insights.push(`Late arrivals are down from <strong>${prevLate}</strong> to <strong>${lateCount}</strong> vs last month. 🎉`);
+    else if (lateCount > prevLate) insights.push(`Late arrivals rose from <strong>${prevLate}</strong> to <strong>${lateCount}</strong> vs last month.`);
+  } else if (lateCount) {
+    insights.push(`<strong>${lateCount}</strong> late arrival${lateCount>1?'s':''} this month (past ${attSettings.shiftStart} + ${grace}min grace).`);
+  }
+  insights.push(`Attendance is <strong>${attPct}%</strong> this month (${c.present} present, ${c.half} half-day, ${c.absent} absent).`);
+  insightsEl.innerHTML = insights.map(t => `<div class="att-insight">💡 ${t}</div>`).join('');
+
+  // Hours-worked heatmap for the month
+  if (heatEl) {
+    const daysInMonth = new Date(y, m+1, 0).getDate();
+    const maxH = Math.max(attSettings.hoursPerDay * 1.3, ...hoursArr.map(h=>h.hours), 1);
+    let html = '';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const entry = attLogs[ds];
+      let hrs = 0, title = `${ds}: no data`;
+      if (entry?.login && entry?.logout) {
+        hrs = hoursArr.find(h=>h.date===ds)?.hours || 0;
+        title = `${ds}: ${hrs.toFixed(1)}h (${entry.login}–${entry.logout})`;
+      } else if (entry?.status === 'present') { hrs = attSettings.hoursPerDay; title = `${ds}: Present (est. ${hrs}h)`; }
+      else if (entry?.status === 'half') { hrs = attSettings.hoursPerDay/2; title = `${ds}: Half-Day (est. ${hrs}h)`; }
+      else if (entry?.status) { title = `${ds}: ${entry.status}`; }
+      const intensity = hrs ? Math.min(1, hrs / maxH) : 0;
+      const bg = hrs ? `background:rgba(139,92,246,${(0.15+intensity*0.75).toFixed(2)})` : `background:var(--s2)`;
+      html += `<div class="att-heat-cell" style="${bg}" title="${title}">${d}</div>`;
+    }
+    heatEl.innerHTML = html;
+  }
 }
 
 // Shared math — used by both the Attendance pay panel and the Salary Calculator
@@ -2714,7 +2869,7 @@ function renderAttPayBreakdown() {
 
 // Wire up settings inputs to auto-save on change (event delegation, set up once at boot)
 function initAttendanceInputs() {
-  ['att-salary','att-workdays','att-paidleaves','att-halffactor','att-leavemode','att-hoursperday'].forEach(id => {
+  ['att-salary','att-workdays','att-paidleaves','att-halffactor','att-leavemode','att-hoursperday','att-shiftstart','att-gracemins'].forEach(id => {
     const el = document.getElementById(id);
     if (el && !el._wired) {
       el.addEventListener('input', queueAttendanceSettingsSave);
@@ -2809,7 +2964,7 @@ const NAV_GROUP = {
   quicklog:'workspace', projects:'workspace', learning:'workspace', clients:'workspace',
   support:'workspace', docs:'workspace', planner:'workspace',
   tasks:'workspace', meetings:'workspace', ideas:'workspace',
-  achievements:'career', evidence:'career', ai:'career',
+  achievements:'career', evidence:'career', ai:'career', technologies:'career',
   reports:'utilities', goals:'utilities', notes:'utilities', mood:'utilities',
   companies:'utilities', salary:'utilities', stickies:'utilities'
 };
@@ -2831,7 +2986,7 @@ function nav(id) {
     planner:'Planner', goals:'Goals', notes:'Notes',
     mood:'Mood Tracker', profile:'My Profile',
     tasks:'Task Manager', meetings:'Meeting Notes', ideas:'Idea Board',
-    companies:'Company Manager', salary:'Salary Calculator', stickies:'Sticky Notes'
+    companies:'Company Manager', salary:'Salary Calculator', stickies:'Sticky Notes', technologies:'Technologies'
   };
   document.getElementById('page-title').textContent = titles[id] || id;
   document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
@@ -2857,6 +3012,7 @@ function nav(id) {
   if (id==='companies')   renderCompanyManager();
   if (id==='salary')      renderSalary();
   if (id==='stickies')    renderStickies();
+  if (id==='technologies') renderTechnologies();
   closeSidebar();
 }
 
@@ -3556,6 +3712,52 @@ function renderEvidence() {
       <div class="ev-meta">${esc(e.cat)}</div>
       ${e.project?`<div class="ev-meta" style="color:var(--violet)">${esc(e.project)}</div>`:''}
       <div class="ev-meta">${e.date}</div>
+    </div>
+  `).join('');
+}
+
+// ── TECHNOLOGY TRACKING (Phase 6B) ──
+function renderTechnologies() {
+  const listEl = document.getElementById('tech-list');
+  const kpiEl = document.getElementById('tech-summary-kpis');
+  if (!listEl) return;
+
+  const techMap = {}; // normalized-lower -> { name, count, projects:Set, lastUsed }
+  const touch = (raw, projectName, date) => {
+    const name = raw.trim(); if (!name) return;
+    const key = name.toLowerCase();
+    if (!techMap[key]) techMap[key] = { name, count:0, projects:new Set(), lastUsed:null };
+    techMap[key].count++;
+    if (projectName) techMap[key].projects.add(projectName);
+    if (date && (!techMap[key].lastUsed || date > techMap[key].lastUsed)) techMap[key].lastUsed = date;
+  };
+
+  D.projects.forEach(p => (p.tech||'').split(',').forEach(t => touch(t, p.name, p.end || p.start)));
+  D.daily.forEach(r => (r.tech||'').split(',').forEach(t => touch(t, r.project, r.date)));
+
+  const q = (document.getElementById('tech-search')?.value || '').toLowerCase();
+  let list = Object.values(techMap).filter(t => !q || t.name.toLowerCase().includes(q));
+  list.sort((a,b) => b.count - a.count);
+
+  const totalTechs = Object.keys(techMap).length;
+  const totalUsages = Object.values(techMap).reduce((s,t)=>s+t.count,0);
+  const topTech = list[0]?.name || '—';
+  const recentTech = Object.values(techMap).filter(t=>t.lastUsed).sort((a,b)=>(b.lastUsed||'').localeCompare(a.lastUsed||''))[0]?.name || '—';
+
+  if (kpiEl) kpiEl.innerHTML = [
+    { i:'🔧', l:'Technologies Used', v:totalTechs, cls:'kv' },
+    { i:'📈', l:'Total Usages', v:totalUsages, cls:'kg' },
+    { i:'⭐', l:'Most Used', v:topTech, cls:'ka' },
+    { i:'🕐', l:'Most Recent', v:recentTech, cls:'kb' },
+  ].map(k => `<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val" style="font-size:${k.v.length>10?'13px':'20px'}">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
+
+  if (!list.length) { listEl.innerHTML = `<div class="empty-td">No technologies logged yet — add them to your Projects or Work Journal entries.</div>`; return; }
+  const maxCount = list[0].count || 1;
+  listEl.innerHTML = list.map(t => `
+    <div class="tech-row" title="${t.projects.size ? 'Projects: '+[...t.projects].join(', ') : ''}">
+      <div class="tech-name">${esc(t.name)}</div>
+      <div class="tech-bar-track"><div class="tech-bar-fill" style="width:${Math.round((t.count/maxCount)*100)}%"></div></div>
+      <div class="tech-count">${t.count} use${t.count>1?'s':''}${t.projects.size?` · ${t.projects.size} project${t.projects.size>1?'s':''}`:''}</div>
     </div>
   `).join('');
 }
