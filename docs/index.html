@@ -587,6 +587,8 @@ tr:hover td{background:#8b5cf608}
 .cal-day.has-entry::after{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--violet);margin-top:2px}
 .cal-day.empty{background:transparent;cursor:default}
 .att-late-dot{position:absolute;top:1px;right:2px;font-size:8px;line-height:1}
+.att-view-dot{position:absolute;bottom:1px;right:2px;font-size:8px;line-height:1;cursor:pointer;opacity:.55}
+.att-view-dot:hover{opacity:1}
 .cal-header-day{font-size:10px;text-align:center;color:var(--text3);font-weight:600;padding-bottom:6px}
 /* ── NOTES / SCRAPBOOK ── */
 .note-card{
@@ -893,6 +895,17 @@ tr:hover td{background:#8b5cf608}
       <button class="jv-modal-close" onclick="closeJournalView()">✕</button>
     </div>
     <div id="jv-body"></div>
+  </div>
+</div>
+
+<!-- ═══ ATTENDANCE DAY DRAWER ═══ -->
+<div id="day-drawer-overlay" class="jv-overlay" onclick="if(event.target===this) closeDayDrawer()">
+  <div class="jv-modal">
+    <div class="jv-modal-hd">
+      <div><div class="jv-modal-title" id="dd-date"></div><div style="font-size:11px;color:var(--text3)" id="dd-status"></div></div>
+      <button class="jv-modal-close" onclick="closeDayDrawer()">✕</button>
+    </div>
+    <div id="dd-body"></div>
   </div>
 </div>
 
@@ -1656,7 +1669,13 @@ tr:hover td{background:#8b5cf608}
           <div class="ff"><label>Half-Day Factor</label><input type="number" id="att-halffactor" value="0.5" min="0" max="1" step="0.05"></div>
           <div class="ff"><label>Working Hours / Day</label><input type="number" id="att-hoursperday" value="8" min="1" max="24" step="0.5"></div>
           <div class="ff"><label>Shift Start Time</label><input type="time" id="att-shiftstart" value="09:00"></div>
+          <div class="ff"><label>Shift End Time</label><input type="time" id="att-shiftend" value="18:00"></div>
           <div class="ff"><label>Grace Time (minutes)</label><input type="number" id="att-gracemins" value="15" min="0" max="120"></div>
+          <div class="ff"><label>Lunch Break (minutes)</label><input type="number" id="att-lunchbreak" value="30" min="0" max="180"></div>
+          <div class="ff"><label>OT Multiplier</label><input type="number" id="att-otmult" value="1.5" min="1" max="5" step="0.1"></div>
+          <div class="ff"><label>Late Deduction (₹)</label><input type="number" id="att-latededamt" value="20" min="0"></div>
+          <div class="ff"><label>...per how many minutes late</label><input type="number" id="att-latededperiod" value="15" min="1"></div>
+          <div class="ff"><label>Half-Day Threshold (hours)</label><input type="number" id="att-halfdayhours" value="4" min="0" max="12" step="0.5"></div>
           <div class="ff s2"><label>Leave Deduction Formula</label>
             <select id="att-leavemode">
               <option value="absent_only">Quota covers Absences only (Half-Days always deducted)</option>
@@ -1665,7 +1684,7 @@ tr:hover td{background:#8b5cf608}
             </select>
           </div>
         </div>
-        <div style="font-size:10.5px;color:var(--text4);margin-top:8px">These formula settings are saved per company — switch companies and each keeps its own rules.</div>
+        <div style="font-size:10.5px;color:var(--text4);margin-top:8px">These formula settings are saved per company — switch companies and each keeps its own rules. Minute-precision pay (below) only applies to days where you've logged a login and logout time.</div>
       </div>
     </div>
 
@@ -2621,7 +2640,7 @@ function switchPlannerTab(tab, el) {
 let attDate     = new Date();           // month currently displayed
 let attMode     = 'present';            // currently selected marking mode
 let attLogs     = {};                   // { 'YYYY-MM-DD': { status:'present'|'absent'|'half'|'holiday'|'paid', login:'HH:MM'|null, logout:'HH:MM'|null } }
-let attSettings = { salary: 20000, workdays: 27, paidLeaves: 1, halfDayFactor: 0.5, leaveMode: 'absent_only', hoursPerDay: 8, shiftStart: '09:00', graceMinutes: 15 };
+let attSettings = { salary: 20000, workdays: 27, paidLeaves: 1, halfDayFactor: 0.5, leaveMode: 'absent_only', hoursPerDay: 8, shiftStart: '09:00', graceMinutes: 15, shiftEnd: '18:00', otMultiplier: 1.5, lateDeductionAmount: 20, lateDeductionPeriodMins: 15, lunchBreakMins: 30, halfDayHours: 4 };
 let _attSaveTimer = null;
 
 const ATT_STATUS_COLORS = {
@@ -2652,7 +2671,7 @@ async function loadAttendanceData() {
     if (logErr) throw logErr;
 
     attLogs = {};
-    (logs || []).forEach(l => { attLogs[l.date] = { status: l.status, login: l.login_time || null, logout: l.logout_time || null }; });
+    (logs || []).forEach(l => { attLogs[l.date] = { status: l.status, login: l.login_time || null, logout: l.logout_time || null, notes: l.notes || '' }; });
 
     let setQuery = _supa.from('attendance_settings').select('*').eq('user_id', currentUser.id);
     setQuery = activeCompanyId ? setQuery.eq('company_id', activeCompanyId) : setQuery.is('company_id', null);
@@ -2666,7 +2685,13 @@ async function loadAttendanceData() {
         leaveMode: settings[0].leave_mode ?? 'absent_only',
         hoursPerDay: settings[0].hours_per_day ?? 8,
         shiftStart: (settings[0].shift_start || '09:00:00').slice(0,5),
-        graceMinutes: settings[0].grace_minutes ?? 15
+        graceMinutes: settings[0].grace_minutes ?? 15,
+        shiftEnd: (settings[0].shift_end || '18:00:00').slice(0,5),
+        otMultiplier: settings[0].ot_multiplier ?? 1.5,
+        lateDeductionAmount: settings[0].late_deduction_amount ?? 20,
+        lateDeductionPeriodMins: settings[0].late_deduction_period_mins ?? 15,
+        lunchBreakMins: settings[0].lunch_break_mins ?? 30,
+        halfDayHours: settings[0].half_day_hours ?? 4
       };
     }
     console.log(`✓ Attendance loaded: ${Object.keys(attLogs).length} days logged`);
@@ -2684,6 +2709,12 @@ async function loadAttendanceData() {
   const hpdEl = document.getElementById('att-hoursperday');
   const ssEl = document.getElementById('att-shiftstart');
   const gmEl = document.getElementById('att-gracemins');
+  const seEl = document.getElementById('att-shiftend');
+  const otEl = document.getElementById('att-otmult');
+  const ldaEl = document.getElementById('att-latededamt');
+  const ldpEl = document.getElementById('att-latededperiod');
+  const lbEl = document.getElementById('att-lunchbreak');
+  const hdhEl = document.getElementById('att-halfdayhours');
   if (sEl) sEl.value = attSettings.salary;
   if (wEl) wEl.value = attSettings.workdays;
   if (pEl) pEl.value = attSettings.paidLeaves;
@@ -2692,6 +2723,12 @@ async function loadAttendanceData() {
   if (hpdEl) hpdEl.value = attSettings.hoursPerDay;
   if (ssEl) ssEl.value = attSettings.shiftStart;
   if (gmEl) gmEl.value = attSettings.graceMinutes;
+  if (seEl) seEl.value = attSettings.shiftEnd;
+  if (otEl) otEl.value = attSettings.otMultiplier;
+  if (ldaEl) ldaEl.value = attSettings.lateDeductionAmount;
+  if (ldpEl) ldpEl.value = attSettings.lateDeductionPeriodMins;
+  if (lbEl) lbEl.value = attSettings.lunchBreakMins;
+  if (hdhEl) hdhEl.value = attSettings.halfDayHours;
 }
 
 // Debounced settings save — triggered on input change
@@ -2704,6 +2741,12 @@ function queueAttendanceSettingsSave() {
   attSettings.hoursPerDay   = parseFloat(document.getElementById('att-hoursperday').value) || 8;
   attSettings.shiftStart    = document.getElementById('att-shiftstart').value || '09:00';
   attSettings.graceMinutes  = parseInt(document.getElementById('att-gracemins').value) || 0;
+  attSettings.shiftEnd      = document.getElementById('att-shiftend').value || '18:00';
+  attSettings.otMultiplier  = parseFloat(document.getElementById('att-otmult').value) || 1.5;
+  attSettings.lateDeductionAmount = parseFloat(document.getElementById('att-latededamt').value) || 0;
+  attSettings.lateDeductionPeriodMins = parseInt(document.getElementById('att-latededperiod').value) || 15;
+  attSettings.lunchBreakMins = parseInt(document.getElementById('att-lunchbreak').value) || 0;
+  attSettings.halfDayHours  = parseFloat(document.getElementById('att-halfdayhours').value) || 4;
   clearTimeout(_attSaveTimer);
   _attSaveTimer = setTimeout(saveAttendanceSettings, 700);
   renderAttPayBreakdown(); // instant feedback even before save completes
@@ -2723,6 +2766,12 @@ async function saveAttendanceSettings() {
       hours_per_day: attSettings.hoursPerDay,
       shift_start: attSettings.shiftStart,
       grace_minutes: attSettings.graceMinutes,
+      shift_end: attSettings.shiftEnd,
+      ot_multiplier: attSettings.otMultiplier,
+      late_deduction_amount: attSettings.lateDeductionAmount,
+      late_deduction_period_mins: attSettings.lateDeductionPeriodMins,
+      lunch_break_mins: attSettings.lunchBreakMins,
+      half_day_hours: attSettings.halfDayHours,
       updated_at: new Date().toISOString()
     };
     const { error } = await withTimeout(
@@ -2812,7 +2861,8 @@ function renderAttendance() {
       const shiftMins = timeToMinutes(attSettings.shiftStart) ?? 540;
       const isLate = entry?.login && timeToMinutes(entry.login) > shiftMins + (attSettings.graceMinutes ?? 15);
       const lateFlag = isLate ? `<span class="att-late-dot" title="Late arrival — logged in at ${entry.login}">⏰</span>` : '';
-      html += `<div class="${cls}" ${clickable ? `onclick="toggleAttendanceDay('${ds}')"` : ''}>${d}${lateFlag}</div>`;
+      const viewIcon = (entry?.login && entry?.logout) ? `<span class="att-view-dot" title="View day details" onclick="event.stopPropagation();openDayDrawer('${ds}')">🔍</span>` : '';
+      html += `<div class="${cls}" ${clickable ? `onclick="toggleAttendanceDay('${ds}')"` : ''}>${d}${lateFlag}${viewIcon}</div>`;
     }
     grid.innerHTML = html;
   }
@@ -2851,6 +2901,105 @@ function renderAttMetrics() {
 function timeToMinutes(t) { if (!t) return null; const [h,m] = t.split(':').map(Number); return h*60+m; }
 function minutesToTime(mins) { mins = ((mins%1440)+1440)%1440; const h=Math.floor(mins/60), m=Math.round(mins%60); return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`; }
 function monthPrefix(y,m) { return `${y}-${String(m+1).padStart(2,'0')}-`; }
+
+// ── MINUTE-PRECISION PAYROLL ENGINE (Phase 7) ──
+// Computes worked/late/OT minutes and actual pay earned for a single day,
+// using login/logout times if present. Returns null if no times recorded.
+function calcDayPay(dateStr) {
+  const entry = attLogs[dateStr];
+  if (!entry || !entry.login || !entry.logout) return null;
+
+  const loginMins = timeToMinutes(entry.login);
+  const logoutMins = timeToMinutes(entry.logout);
+  const shiftStartMins = timeToMinutes(attSettings.shiftStart) ?? 540;
+  const shiftEndMins = timeToMinutes(attSettings.shiftEnd) ?? 1080;
+  const grace = attSettings.graceMinutes ?? 15;
+  const lunchMins = attSettings.lunchBreakMins ?? 30;
+  const expectedMins = (attSettings.hoursPerDay || 8) * 60;
+
+  let rawSpan = logoutMins - loginMins;
+  if (rawSpan < 0) rawSpan += 1440; // crossed midnight guard
+  const workedMins = Math.max(0, rawSpan - lunchMins);
+
+  const lateMins = Math.max(0, loginMins - (shiftStartMins + grace));
+  const earlyMins = Math.max(0, shiftEndMins - logoutMins);
+  const otMins = Math.max(0, workedMins - expectedMins);
+  const regularMins = Math.min(workedMins, expectedMins);
+
+  const dailySalary = attSettings.workdays > 0 ? attSettings.salary / attSettings.workdays : 0;
+  const minuteSalary = expectedMins > 0 ? dailySalary / expectedMins : 0;
+
+  const regularPay = minuteSalary * regularMins;
+  const otPay = minuteSalary * (attSettings.otMultiplier ?? 1.5) * otMins;
+  const lateDedPeriod = attSettings.lateDeductionPeriodMins || 15;
+  const lateDeduction = lateMins > 0 ? Math.ceil(lateMins / lateDedPeriod) * (attSettings.lateDeductionAmount || 0) : 0;
+  const isHalfDay = (workedMins / 60) < (attSettings.halfDayHours ?? 4);
+  const netPay = Math.max(0, regularPay + otPay - lateDeduction);
+
+  return { workedMins, regularMins, otMins, lateMins, earlyMins, isHalfDay, regularPay, otPay, lateDeduction, netPay, dailySalary, minuteSalary };
+}
+function fmtMins(mins) { const h = Math.floor(mins/60), m = Math.round(mins%60); return h ? `${h}h ${m}m` : `${m}m`; }
+
+// ── ATTENDANCE DAY DRAWER (Phase 7) ──
+function openDayDrawer(dateStr) {
+  const entry = attLogs[dateStr]; if (!entry) return;
+  const pay = calcDayPay(dateStr);
+  document.getElementById('dd-date').textContent = new Date(dateStr).toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('dd-status').textContent = (entry.status||'').charAt(0).toUpperCase() + (entry.status||'').slice(1);
+
+  const body = document.getElementById('dd-body');
+  if (!pay) {
+    body.innerHTML = `<div class="empty-td">No login/logout time recorded for this day.</div>
+      <div class="btn-group" style="margin-top:12px"><button class="btn btn-danger btn-sm" onclick="deleteDayFromDrawer('${dateStr}')">🗑 Delete Entry</button></div>`;
+    return;
+  }
+  body.innerHTML = `
+    <div class="wj-detail-row"><span>Login</span><span class="wj-val">${entry.login}</span></div>
+    <div class="wj-detail-row"><span>Logout</span><span class="wj-val">${entry.logout}</span></div>
+    <div class="wj-detail-row"><span>Break Deducted</span><span class="wj-val">${attSettings.lunchBreakMins||0}m</span></div>
+    <div class="wj-detail-row"><span>Worked</span><span class="wj-val">${fmtMins(pay.workedMins)}</span></div>
+    <div class="wj-detail-row"><span>Overtime</span><span class="wj-val" style="color:var(--green)">${pay.otMins?fmtMins(pay.otMins):'—'}</span></div>
+    <div class="wj-detail-row"><span>Late By</span><span class="wj-val" style="color:${pay.lateMins?'var(--red)':'inherit'}">${pay.lateMins?fmtMins(pay.lateMins):'On time'}</span></div>
+    <div class="wj-detail-row"><span>Early Exit</span><span class="wj-val">${pay.earlyMins?fmtMins(pay.earlyMins):'—'}</span></div>
+    <div class="wj-detail-row total"><span>Salary Earned Today</span><span class="wj-val">₹${pay.netPay.toFixed(2)}</span></div>
+    <div class="wj-detail-row"><span>Regular Pay</span><span class="wj-val">₹${pay.regularPay.toFixed(2)}</span></div>
+    <div class="wj-detail-row"><span>OT Pay</span><span class="wj-val">${pay.otPay?'+₹'+pay.otPay.toFixed(2):'—'}</span></div>
+    <div class="wj-detail-row"><span>Late Deduction</span><span class="wj-val">${pay.lateDeduction?'−₹'+pay.lateDeduction.toFixed(2):'—'}</span></div>
+    <div class="ff" style="margin-top:12px"><label>Notes</label><textarea id="dd-notes-input" style="min-height:60px">${esc(entry.notes||'')}</textarea></div>
+    <div class="btn-group" style="margin-top:12px">
+      <button class="btn btn-violet btn-sm" onclick="saveDayNotes('${dateStr}')">💾 Save Notes</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteDayFromDrawer('${dateStr}')">🗑 Delete Entry</button>
+    </div>
+  `;
+  document.getElementById('day-drawer-overlay').classList.add('show');
+}
+function closeDayDrawer() { document.getElementById('day-drawer-overlay').classList.remove('show'); }
+async function saveDayNotes(dateStr) {
+  const notes = document.getElementById('dd-notes-input').value;
+  const entry = attLogs[dateStr]; if (!entry) return;
+  entry.notes = notes;
+  try {
+    const payload = { user_id: currentUser.id, company_id: activeCompanyId || null, date: dateStr, status: entry.status, login_time: entry.login, logout_time: entry.logout, notes };
+    await _supa.from('attendance_logs').upsert(payload, { onConflict: 'user_id,date,company_id' });
+    toast('✓ Notes saved');
+  } catch (err) { toast('Save failed', 'error'); }
+}
+async function deleteDayFromDrawer(dateStr) {
+  closeDayDrawer();
+  await toggleAttendanceDay_forceClear(dateStr);
+  renderAttendance();
+}
+async function toggleAttendanceDay_forceClear(dateStr) {
+  delete attLogs[dateStr];
+  try {
+    let q = _supa.from('attendance_logs').delete().eq('user_id', currentUser.id).eq('date', dateStr);
+    q = activeCompanyId ? q.eq('company_id', activeCompanyId) : q.is('company_id', null);
+    await q;
+    setSyncStatus('synced', '☁ Saved');
+  } catch (err) { setSyncStatus('error', '⚠ Sync failed'); }
+}
+
+
 
 function renderAttAnalytics() {
   const kpiEl = document.getElementById('att-analytics-kpis');
@@ -2976,8 +3125,18 @@ function calcAttendanceDeduction() {
 function renderAttPayBreakdown() {
   const el = document.getElementById('att-pay-rows');
   if (!el) return;
-  const { c, perDay, modeNote, quota, unpaidAbsences, halfDayDeduction, absentDeduction, totalDeduction } = calcAttendanceDeduction();
+  const { c, perDay, hf, modeNote, quota, unpaidAbsences, halfDayDeduction, absentDeduction, totalDeduction } = calcAttendanceDeduction();
   const finalPay = Math.max(0, attSettings.salary - totalDeduction);
+
+  // Minute-precision totals (Phase 7) — only counts days with a login+logout recorded
+  const y = attDate.getFullYear(), m = attDate.getMonth();
+  const prefix = monthPrefix(y, m);
+  const timedDates = Object.keys(attLogs).filter(d => d.startsWith(prefix) && attLogs[d].login && attLogs[d].logout);
+  const dayPays = timedDates.map(d => calcDayPay(d)).filter(Boolean);
+  const workedHoursTotal = dayPays.reduce((s,p)=>s+p.workedMins,0) / 60;
+  const otHoursTotal = dayPays.reduce((s,p)=>s+p.otMins,0) / 60;
+  const minutePrecisionEarned = dayPays.reduce((s,p)=>s+p.netPay,0);
+  const lateDeductionTotal = dayPays.reduce((s,p)=>s+p.lateDeduction,0);
 
   el.innerHTML = `
     <div class="att-pay-row"><span class="lbl">Monthly Salary</span><span class="val">₹${attSettings.salary.toLocaleString('en-IN')}</span></div>
@@ -2986,13 +3145,20 @@ function renderAttPayBreakdown() {
     <div class="att-pay-row"><span class="lbl">Paid Leave Quota (${modeNote})</span><span class="val" style="color:var(--blue)">${quota}</span></div>
     <div class="att-pay-row deduction"><span class="lbl">Half-Day Deduction (${c.half} × ${hf} × ₹${perDay.toFixed(0)})</span><span class="val">−₹${halfDayDeduction.toFixed(0)}</span></div>
     <div class="att-pay-row deduction"><span class="lbl">Unpaid Absence Deduction (${unpaidAbsences.toFixed(unpaidAbsences % 1 ? 1 : 0)} × ₹${perDay.toFixed(0)})</span><span class="val">−₹${absentDeduction.toFixed(0)}</span></div>
-    <div class="att-pay-row total"><span class="lbl">Estimated Take-Home Pay</span><span class="val">₹${finalPay.toLocaleString('en-IN',{maximumFractionDigits:0})}</span></div>
+    <div class="att-pay-row total"><span class="lbl">Estimated Take-Home Pay (day-count based)</span><span class="val">₹${finalPay.toLocaleString('en-IN',{maximumFractionDigits:0})}</span></div>
+    ${timedDates.length ? `
+    <div class="att-pay-row" style="border-top:2px solid var(--border2);padding-top:12px;margin-top:4px"><span class="lbl" style="font-weight:700">Minute-Precision (from ${timedDates.length} logged day${timedDates.length>1?'s':''})</span><span class="val"></span></div>
+    <div class="att-pay-row"><span class="lbl">Worked Hours</span><span class="val">${workedHoursTotal.toFixed(1)}h</span></div>
+    <div class="att-pay-row"><span class="lbl">Overtime Hours</span><span class="val" style="color:var(--green)">${otHoursTotal.toFixed(1)}h</span></div>
+    <div class="att-pay-row deduction"><span class="lbl">Late Deductions</span><span class="val">−₹${lateDeductionTotal.toFixed(0)}</span></div>
+    <div class="att-pay-row total"><span class="lbl">Salary Earned (logged days, minute-precision)</span><span class="val">₹${minutePrecisionEarned.toLocaleString('en-IN',{maximumFractionDigits:0})}</span></div>
+    ` : `<div style="font-size:10.5px;color:var(--text4);padding:8px 0 0">Log login/logout times on calendar days to see minute-precision pay here.</div>`}
   `;
 }
 
 // Wire up settings inputs to auto-save on change (event delegation, set up once at boot)
 function initAttendanceInputs() {
-  ['att-salary','att-workdays','att-paidleaves','att-halffactor','att-leavemode','att-hoursperday','att-shiftstart','att-gracemins'].forEach(id => {
+  ['att-salary','att-workdays','att-paidleaves','att-halffactor','att-leavemode','att-hoursperday','att-shiftstart','att-gracemins','att-shiftend','att-otmult','att-latededamt','att-latededperiod','att-lunchbreak','att-halfdayhours'].forEach(id => {
     const el = document.getElementById(id);
     if (el && !el._wired) {
       el.addEventListener('input', queueAttendanceSettingsSave);
