@@ -263,6 +263,24 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .career-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--peach-xl),#fdf1e8);color:var(--peach);box-shadow:inset 0 0 0 1px #e8926b40}
 .utilities-tabbar .ws-tab:hover{background:var(--sage-xl);color:var(--sage)}
 .utilities-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--sage-xl),#eff5ec);color:var(--sage);box-shadow:inset 0 0 0 1px #6f9c6a40}
+/* ── WORK JOURNAL SUMMARY (Phase 6E) ── */
+.wj-period-tabs{display:flex;gap:4px;background:var(--s2);border-radius:10px;padding:3px}
+.wj-period-btn{border:none;background:none;cursor:pointer;padding:6px 12px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--text3)}
+.wj-period-btn.active{background:var(--s1);color:var(--violet-l);box-shadow:var(--shadow-soft)}
+.wj-detail-row{display:flex;justify-content:space-between;padding:7px 4px;font-size:12px;border-bottom:1px dashed var(--border2)}
+.wj-detail-row:last-child{border-bottom:none}
+.wj-detail-row .wj-val{font-weight:600;color:var(--text)}
+/* ── KNOWLEDGE HUB ── */
+.kh-kind-picker{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.kh-kind-btn{border:1px solid var(--border2);background:var(--s2);border-radius:10px;padding:7px 12px;font-size:11.5px;cursor:pointer;color:var(--text2);transition:all .15s}
+.kh-kind-btn:hover{background:var(--s3)}
+.kh-kind-btn.active{background:var(--violet-xl);color:var(--violet-l);border-color:var(--border3);font-weight:600}
+.kh-extra-fields{background:var(--s2);border-radius:var(--r2);padding:14px;margin-bottom:12px}
+.kh-filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.kh-filters input{flex:1;min-width:200px;padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px}
+.kh-filters select{padding:7px 10px;border-radius:10px;border:1px solid var(--border2);font-size:12px;background:var(--s1)}
+.note-card .kh-kind-tag{font-size:9.5px;padding:2px 7px;border-radius:6px;font-weight:600}
+.note-card .kh-pin-btn{position:absolute;top:8px;left:8px;background:none;border:none;cursor:pointer;font-size:12px}
 /* ── CLIENT SUPPORT MERGED TIMELINE ── */
 .cs-filters{display:flex;flex-wrap:wrap;gap:8px}
 .cs-filters input{flex:1;min-width:200px;padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px}
@@ -927,7 +945,7 @@ tr:hover td{background:#8b5cf608}
       <button class="sb-item" data-nav="stickies" onclick="nav('stickies')"><span class="si">🗒</span>Sticky Notes<span class="sb-badge" id="nb-stickies">0</span></button>
       <button class="sb-item" data-nav="reports" onclick="nav('reports')"><span class="si">📊</span>Reports & Export</button>
       <button class="sb-item" data-nav="goals" onclick="nav('goals')"><span class="si">🎯</span>Goals</button>
-      <button class="sb-item" data-nav="notes" onclick="nav('notes')"><span class="si">📝</span>Notes</button>
+      <button class="sb-item" data-nav="notes" onclick="nav('notes')"><span class="si">🧠</span>Knowledge Hub</button>
       <button class="sb-item" data-nav="mood" onclick="nav('mood')"><span class="si">✨</span>Mood</button>
     </div>
 
@@ -1079,6 +1097,20 @@ tr:hover td{background:#8b5cf608}
 
 <!-- ═══ QUICK LOG ═══ -->
 <div id="page-quicklog" class="page">
+  <div class="card mb16">
+    <div class="card-hd">
+      <div class="card-title">📊 Work Journal Summary</div>
+      <div class="wj-period-tabs">
+        <button class="wj-period-btn active" data-period="today" onclick="setJournalPeriod('today',this)">Today</button>
+        <button class="wj-period-btn" data-period="week" onclick="setJournalPeriod('week',this)">This Week</button>
+        <button class="wj-period-btn" data-period="month" onclick="setJournalPeriod('month',this)">This Month</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="gauto mb12" id="wj-summary-kpis"></div>
+      <div id="wj-summary-details"></div>
+    </div>
+  </div>
   <div class="quick-panel">
     <div class="ql-title">⚡ Log Today's Work <span style="font-size:11px;font-weight:400;color:var(--text3)">— under 2 minutes</span></div>
     <div class="fgrid">
@@ -1456,7 +1488,7 @@ tr:hover td{background:#8b5cf608}
   <button class="ws-tab" data-ws-tab="stickies" onclick="nav('stickies')">🗒 Sticky Notes</button>
   <button class="ws-tab" data-ws-tab="reports" onclick="nav('reports')">📊 Reports & Export</button>
   <button class="ws-tab" data-ws-tab="goals" onclick="nav('goals')">🎯 Goals</button>
-  <button class="ws-tab" data-ws-tab="notes" onclick="nav('notes')">📝 Notes</button>
+  <button class="ws-tab" data-ws-tab="notes" onclick="nav('notes')">🧠 Knowledge Hub</button>
   <button class="ws-tab" data-ws-tab="mood" onclick="nav('mood')">✨ Mood</button>
 </div>
 
@@ -1721,15 +1753,59 @@ tr:hover td{background:#8b5cf608}
 <!-- ═══ NOTES ═══ -->
 <div id="page-notes" class="page">
   <div class="card mb16">
-    <div class="card-hd"><div class="card-title">📝 New Note</div></div>
+    <div class="card-hd"><div class="card-title">🧠 New Knowledge Hub Entry</div></div>
     <div class="card-body">
+      <div class="kh-kind-picker" id="kh-kind-picker">
+        <button class="kh-kind-btn active" data-kind="general" onclick="setNoteKind('general',this)">📝 General</button>
+        <button class="kh-kind-btn" data-kind="technical" onclick="setNoteKind('technical',this)">💻 Technical Note</button>
+        <button class="kh-kind-btn" data-kind="sop" onclick="setNoteKind('sop',this)">📋 SOP</button>
+        <button class="kh-kind-btn" data-kind="troubleshooting" onclick="setNoteKind('troubleshooting',this)">🔍 Troubleshooting</button>
+      </div>
       <div class="ff mb12"><label>Title</label><input id="nt-title" placeholder="Note title..."></div>
-      <div class="ff mb12"><label>Content</label><textarea id="nt-content" placeholder="Your thoughts, ideas, reflections..." style="min-height:120px"></textarea></div>
-      <div class="ff mb12"><label>Tag</label><select id="nt-tag"><option>Work</option><option>Learning</option><option>Idea</option><option>Personal</option><option>Memory</option></select></div>
-      <button class="btn btn-violet" onclick="addNote()">💾 Save Note</button>
+      <div class="ff mb12"><label>Content</label><textarea id="nt-content" placeholder="Your thoughts, ideas, reflections..." style="min-height:100px"></textarea></div>
+
+      <div id="kh-fields-technical" class="kh-extra-fields" style="display:none">
+        <div class="fgrid">
+          <div class="ff"><label>Language</label><input id="kh-tech-lang" placeholder="C, Python, Bash..."></div>
+          <div class="ff s2"><label>Code / Commands</label><input id="kh-tech-code" placeholder="Snippet, command, register map..."></div>
+        </div>
+      </div>
+      <div id="kh-fields-sop" class="kh-extra-fields" style="display:none">
+        <div class="fgrid">
+          <div class="ff s2"><label>Purpose</label><input id="kh-sop-purpose" placeholder="What this SOP is for"></div>
+          <div class="ff full"><label>Step-by-Step Instructions</label><input id="kh-sop-steps" placeholder="1. ... 2. ... 3. ..."></div>
+          <div class="ff full"><label>Warnings / Safety Notes</label><input id="kh-sop-warnings" placeholder="Anything to watch out for"></div>
+        </div>
+      </div>
+      <div id="kh-fields-troubleshooting" class="kh-extra-fields" style="display:none">
+        <div class="fgrid">
+          <div class="ff"><label>Error Code</label><input id="kh-ts-errorcode" placeholder="e.g. ERR_TIMEOUT"></div>
+          <div class="ff s2"><label>Symptoms</label><input id="kh-ts-symptoms" placeholder="What you observed"></div>
+          <div class="ff full"><label>Root Cause</label><input id="kh-ts-cause" placeholder="Why it happened"></div>
+          <div class="ff full"><label>Solution</label><input id="kh-ts-solution" placeholder="How it was fixed"></div>
+        </div>
+      </div>
+
+      <div class="fgrid mb12" style="margin-top:12px">
+        <div class="ff"><label>Tag</label><select id="nt-tag"><option>Work</option><option>Learning</option><option>Idea</option><option>Personal</option><option>Memory</option></select></div>
+        <div class="ff"><label>Tags (comma-separated)</label><input id="kh-tags" placeholder="stm32, uart, debugging..."></div>
+      </div>
+      <button class="btn btn-violet" onclick="addNote()">💾 Save to Knowledge Hub</button>
     </div>
   </div>
-  <div id="notes-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px"></div>
+
+  <div class="kh-filters">
+    <input id="kh-search" placeholder="🔍 Search title, content, tags..." oninput="renderNotes()">
+    <select id="kh-kind-filter" onchange="renderNotes()">
+      <option value="all">All Types</option>
+      <option value="general">📝 General</option>
+      <option value="technical">💻 Technical</option>
+      <option value="sop">📋 SOP</option>
+      <option value="troubleshooting">🔍 Troubleshooting</option>
+    </select>
+    <label class="widget-toggle"><input type="checkbox" id="kh-pinned-only" onchange="renderNotes()"> Pinned only</label>
+  </div>
+  <div id="notes-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px"></div>
 </div>
 
 <!-- ═══ MOOD ═══ -->
@@ -2097,7 +2173,7 @@ const ROW_TO_D = {
   star:         r => ({ id:r.id, s:r.situation, t:r.task_desc, a:r.action_taken, r:r.result_impact, created_at:r.created_at }),
   plans:        r => ({ id:r.id, date:r.date, task:r.task, prio:r.priority||'Medium', done:r.done||false, created_at:r.created_at }),
   goals:        r => ({ id:r.id, goal:r.goal, cat:r.category||'Career', date:r.target_date||'', done:r.completed||false, created_at:r.created_at }),
-  notes:        r => ({ id:r.id, date:r.date||today(), title:r.title, content:r.content||'', tag:r.tag||'Work', created_at:r.created_at }),
+  notes:        r => ({ id:r.id, date:r.date||today(), title:r.title, content:r.content||'', tag:r.tag||'Work', kind:r.kind||'general', tags:r.tags||'', pinned:!!r.pinned, data:r.data||{}, created_at:r.created_at }),
   mood:         r => ({ id:r.id, date:r.date, mood:r.mood, note:r.note||'', created_at:r.created_at }),
   tasks:        r => ({ id:r.id, title:r.title, notes:r.notes||'', col:r.column_status||'inbox', prio:r.priority||'Medium', due:r.due_date||'', project:r.project||'', tags:r.tags||'', subtasks:r.subtasks||[], created_at:r.created_at }),
   meetings:     r => ({ id:r.id, date:r.date||'', attendees:r.attendees||'', agenda:r.agenda||'', discussion:r.discussion||'', action:r.action_items||'', followup:r.follow_up_date||'', status:r.status||'Open', created_at:r.created_at }),
@@ -2119,7 +2195,7 @@ const D_TO_ROW = {
   star:         r => ({ situation:r.s, task_desc:r.t, action_taken:r.a, result_impact:r.r }),
   plans:        r => ({ date:r.date, task:r.task, priority:r.prio, done:r.done }),
   goals:        r => ({ goal:r.goal, category:r.cat, target_date:r.date||null, completed:r.done }),
-  notes:        r => ({ date:r.date||today(), title:r.title, content:r.content, tag:r.tag }),
+  notes:        r => ({ date:r.date||today(), title:r.title, content:r.content, tag:r.tag, kind:r.kind, tags:r.tags, pinned:r.pinned, data:r.data }),
   mood:         r => ({ date:r.date, mood:r.mood, note:r.note }),
   tasks:        r => ({ title:r.title, notes:r.notes, column_status:r.col, priority:r.prio, due_date:r.due||null, project:r.project, tags:r.tags, subtasks:r.subtasks||[] }),
   meetings:     r => ({ date:r.date||null, attendees:r.attendees, agenda:r.agenda, discussion:r.discussion, action_items:r.action, follow_up_date:r.followup||null, status:r.status }),
@@ -3030,7 +3106,7 @@ function nav(id) {
     ai:'AI Writer', projects:'Projects', learning:'Learning',
     clients:'Client Calls', support:'Technical Support', docs:'Documentation',
     achievements:'Achievements', reports:'Reports & Export',
-    planner:'Planner', goals:'Goals', notes:'Notes',
+    planner:'Planner', goals:'Goals', notes:'Knowledge Hub',
     mood:'Mood Tracker', profile:'My Profile',
     tasks:'Task Manager', meetings:'Meeting Notes', ideas:'Idea Board',
     companies:'Company Manager', salary:'Salary Calculator', stickies:'Sticky Notes', technologies:'Technologies', clientsupport:'Client Support'
@@ -3191,6 +3267,7 @@ function renderDaily() {
     <td style="font-size:11px;color:var(--text2);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.impact)||'—'}</td>
     <td>${delBtn('daily',r.id,'renderDaily')}</td>
   </tr>`).join('');
+  renderJournalSummary();
 }
 
 // ── RICH TEXT EDITOR (Work Journal) ──
@@ -3219,6 +3296,91 @@ function openJournalView(id) {
   document.getElementById('jv-overlay').classList.add('show');
 }
 function closeJournalView() { document.getElementById('jv-overlay').classList.remove('show'); }
+
+// ── WORK JOURNAL SUMMARY: Today / Week / Month (Phase 6E) ──
+let journalPeriod = 'today';
+function setJournalPeriod(p, btn) {
+  journalPeriod = p;
+  document.querySelectorAll('.wj-period-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderJournalSummary();
+}
+function dateInRange(dateStr, start, end) { return dateStr >= start && dateStr <= end; }
+function renderJournalSummary() {
+  const kpiEl = document.getElementById('wj-summary-kpis');
+  const detailEl = document.getElementById('wj-summary-details');
+  if (!kpiEl) return;
+
+  const now = new Date();
+  const todayStr = today();
+  let start, end, label;
+  if (journalPeriod === 'today') {
+    start = end = todayStr; label = 'today';
+  } else if (journalPeriod === 'week') {
+    const day = now.getDay();
+    const monday = new Date(now); monday.setDate(now.getDate() - ((day+6)%7));
+    start = monday.toISOString().slice(0,10); end = todayStr; label = 'this week';
+  } else {
+    start = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`; end = todayStr; label = 'this month';
+  }
+
+  const entries = D.daily.filter(r => dateInRange(r.date, start, end));
+  const totalHours = entries.reduce((s,r) => s + (Number(r.hours)||0), 0);
+  const expectedPerDay = attSettings.hoursPerDay || 8;
+  const daysSpanned = journalPeriod === 'today' ? 1 : (Math.floor((new Date(end)-new Date(start))/86400000)+1);
+  const overtimeHours = Math.max(0, totalHours - expectedPerDay * daysSpanned);
+
+  const projectCounts = {}; entries.forEach(r => { if (r.project) projectCounts[r.project] = (projectCounts[r.project]||0)+1; });
+  const topProject = Object.entries(projectCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
+  const techCounts = {}; entries.forEach(r => (r.tech||'').split(',').forEach(t => { t=t.trim(); if(t) techCounts[t]=(techCounts[t]||0)+1; }));
+  const topTech = Object.entries(techCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
+  const problemsSolved = entries.filter(r => r.problem && r.problem.trim()).length;
+  const meetingsInRange = D.meetings.filter(m => dateInRange(m.date, start, end)).length;
+  const supportInRange = D.support.filter(s => dateInRange(s.date, start, end)).length + D.clients.filter(c => dateInRange(c.date, start, end)).length;
+  const achievementsInRange = D.achievements.filter(a => dateInRange(a.date, start, end)).length;
+
+  // Attendance-derived stats (from Phase 6A login/logout + status)
+  const attInRange = Object.entries(attLogs).filter(([d]) => dateInRange(d, start, end));
+  const presentDays = attInRange.filter(([,e]) => e.status === 'present').length;
+  const absentDays = attInRange.filter(([,e]) => e.status === 'absent').length;
+  const leaveDays = attInRange.filter(([,e]) => e.status === 'paid').length;
+  const holidayDays = attInRange.filter(([,e]) => e.status === 'holiday').length;
+  const shiftMins = timeToMinutes(attSettings.shiftStart) ?? 540;
+  const lateDays = attInRange.filter(([,e]) => e.login && timeToMinutes(e.login) > shiftMins + (attSettings.graceMinutes??15)).length;
+  const timedLogins = attInRange.map(([,e])=>e.login).filter(Boolean);
+  const timedLogouts = attInRange.map(([,e])=>e.logout).filter(Boolean);
+  const avgLogin = timedLogins.length ? minutesToTime(timedLogins.map(timeToMinutes).reduce((a,b)=>a+b,0)/timedLogins.length) : '—';
+  const avgLogout = timedLogouts.length ? minutesToTime(timedLogouts.map(timeToMinutes).reduce((a,b)=>a+b,0)/timedLogouts.length) : '—';
+
+  const kpis = journalPeriod === 'today'
+    ? [
+        { i:'🕐', l:'Login', v:attLogs[todayStr]?.login || '—', cls:'kb' },
+        { i:'🕕', l:'Logout', v:attLogs[todayStr]?.logout || '—', cls:'kv' },
+        { i:'⏱', l:'Hours Logged', v:totalHours.toFixed(1)+'h', cls:'kg' },
+        { i:'✅', l:'Tasks Logged', v:entries.length, cls:'ka' },
+      ]
+    : [
+        { i:'⏱', l:'Total Hours', v:totalHours.toFixed(1)+'h', cls:'kg' },
+        { i:'🔥', l:'Overtime', v:overtimeHours.toFixed(1)+'h', cls:'kr' },
+        { i:'✅', l:'Tasks Logged', v:entries.length, cls:'ka' },
+        { i:'📊', l:'Avg Login / Logout', v:`${avgLogin} / ${avgLogout}`, cls:'kb' },
+      ];
+  kpiEl.innerHTML = kpis.map(k => `<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val" style="font-size:${String(k.v).length>9?'14px':'20px'}">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
+
+  const rows = [
+    ['Top Project', topProject],
+    ['Top Technology', topTech],
+    ['Problems Solved', problemsSolved],
+    ['Meetings', meetingsInRange],
+    ['Client / Support Sessions', supportInRange],
+    ['Achievements Logged', achievementsInRange],
+  ];
+  if (journalPeriod !== 'today') {
+    rows.push(['Present Days', presentDays], ['Absent Days', absentDays], ['Paid Leave Days', leaveDays], ['Holidays', holidayDays], ['Late Arrivals', lateDays]);
+  }
+  detailEl.innerHTML = `<div style="font-size:10.5px;color:var(--text4);margin-bottom:6px">Summary for ${label}</div>` +
+    rows.map(([l,v]) => `<div class="wj-detail-row"><span>${l}</span><span class="wj-val">${esc(String(v))}</span></div>`).join('');
+}
 
 // ── PROJECTS ──
 async function addProject() {
@@ -3936,23 +4098,83 @@ function renderGoals() {
 }
 
 // ── NOTES ──
-async function addNote() {
-  const r = { id:'', date:today(), title:document.getElementById('nt-title').value||'Untitled', content:document.getElementById('nt-content').value, tag:document.getElementById('nt-tag').value };
-  await addItem('notes', r, renderNotes);
-  document.getElementById('nt-title').value=''; document.getElementById('nt-content').value='';
-  toast('📝 Note saved');
+// ── KNOWLEDGE HUB (Phase 6D — upgraded Notes) ──
+let noteKind = 'general';
+function setNoteKind(kind, btn) {
+  noteKind = kind;
+  document.querySelectorAll('#kh-kind-picker .kh-kind-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.kh-extra-fields').forEach(f => f.style.display = 'none');
+  const target = document.getElementById('kh-fields-' + kind);
+  if (target) target.style.display = 'block';
 }
+async function addNote() {
+  let data = {};
+  if (noteKind === 'technical') {
+    data = { language: document.getElementById('kh-tech-lang').value, code: document.getElementById('kh-tech-code').value };
+  } else if (noteKind === 'sop') {
+    data = { purpose: document.getElementById('kh-sop-purpose').value, steps: document.getElementById('kh-sop-steps').value, warnings: document.getElementById('kh-sop-warnings').value };
+  } else if (noteKind === 'troubleshooting') {
+    data = { errorCode: document.getElementById('kh-ts-errorcode').value, symptoms: document.getElementById('kh-ts-symptoms').value, rootCause: document.getElementById('kh-ts-cause').value, solution: document.getElementById('kh-ts-solution').value };
+  }
+  const r = {
+    id:'', date:today(), title:document.getElementById('nt-title').value||'Untitled',
+    content:document.getElementById('nt-content').value, tag:document.getElementById('nt-tag').value,
+    kind:noteKind, tags:document.getElementById('kh-tags').value, pinned:false, data
+  };
+  await addItem('notes', r, renderNotes);
+  document.getElementById('nt-title').value=''; document.getElementById('nt-content').value=''; document.getElementById('kh-tags').value='';
+  ['kh-tech-lang','kh-tech-code','kh-sop-purpose','kh-sop-steps','kh-sop-warnings','kh-ts-errorcode','kh-ts-symptoms','kh-ts-cause','kh-ts-solution']
+    .forEach(id => { const el=document.getElementById(id); if (el) el.value=''; });
+  toast('🧠 Saved to Knowledge Hub');
+}
+async function toggleNotePin(id) {
+  const n = D.notes.find(x => x.id === id); if (!n) return;
+  await updateItem('notes', id, { pinned: !n.pinned }, renderNotes);
+}
+const KH_KIND_META = {
+  general:{ label:'General', cls:'bn' }, technical:{ label:'Technical', cls:'bv' },
+  sop:{ label:'SOP', cls:'ba' }, troubleshooting:{ label:'Troubleshooting', cls:'br' }
+};
 function renderNotes() {
   const g = document.getElementById('notes-grid'); if (!g) return;
-  if (!D.notes.length) { g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--text3)">No notes yet.</div>`; return }
+  const q = (document.getElementById('kh-search')?.value || '').toLowerCase();
+  const kindFilter = document.getElementById('kh-kind-filter')?.value || 'all';
+  const pinnedOnly = document.getElementById('kh-pinned-only')?.checked;
+
+  let list = D.notes.filter(n => {
+    if (kindFilter !== 'all' && (n.kind||'general') !== kindFilter) return false;
+    if (pinnedOnly && !n.pinned) return false;
+    if (q) {
+      const haystack = `${n.title} ${n.content} ${n.tags||''} ${JSON.stringify(n.data||{})}`.toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    return true;
+  });
+  list.sort((a,b) => (b.pinned - a.pinned));
+
+  if (!list.length) { g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--text3)">No entries match — try a different filter, or add your first one above.</div>`; return }
   const tagColors = {Work:'bv',Learning:'bp',Idea:'ba',Personal:'bg',Memory:'bb'};
-  g.innerHTML = D.notes.map(n => `<div class="note-card">
-    <button style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px" onclick="del('notes','${n.id}','renderNotes')">✕</button>
-    <div style="font-size:10px;margin-bottom:6px"><span class="badge ${tagColors[n.tag]||'bn'}">${n.tag}</span></div>
-    <div class="note-title">${esc(n.title)}</div>
-    <div class="note-preview">${esc(n.content)}</div>
-    <div class="note-date">${n.date}</div>
-  </div>`).join('');
+  g.innerHTML = list.map(n => {
+    const meta = KH_KIND_META[n.kind||'general'];
+    let extra = '';
+    if (n.kind === 'troubleshooting' && n.data?.errorCode) extra = `<div style="font-size:10.5px;color:var(--red);margin-top:4px;font-family:monospace">${esc(n.data.errorCode)}</div>`;
+    if (n.kind === 'sop' && n.data?.purpose) extra = `<div style="font-size:10.5px;color:var(--text3);margin-top:4px">${esc(n.data.purpose)}</div>`;
+    if (n.kind === 'technical' && n.data?.language) extra = `<div style="font-size:10.5px;color:var(--text3);margin-top:4px">${esc(n.data.language)}</div>`;
+    return `<div class="note-card">
+      <button class="kh-pin-btn" onclick="toggleNotePin('${n.id}')" title="${n.pinned?'Unpin':'Pin'}">${n.pinned?'📌':'📍'}</button>
+      <button style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px" onclick="del('notes','${n.id}','renderNotes')">✕</button>
+      <div style="font-size:10px;margin:2px 0 6px;display:flex;gap:4px;flex-wrap:wrap;padding-left:16px">
+        <span class="kh-kind-tag badge ${meta.cls}">${meta.label}</span>
+        <span class="badge ${tagColors[n.tag]||'bn'}">${n.tag}</span>
+      </div>
+      <div class="note-title">${esc(n.title)}</div>
+      <div class="note-preview">${esc(n.content)}</div>
+      ${extra}
+      ${n.tags ? `<div style="font-size:10px;color:var(--text4);margin-top:6px">🏷 ${esc(n.tags)}</div>` : ''}
+      <div class="note-date">${n.date}</div>
+    </div>`;
+  }).join('');
 }
 
 // ── PLANNER ──
