@@ -263,6 +263,59 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .career-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--peach-xl),#fdf1e8);color:var(--peach);box-shadow:inset 0 0 0 1px #e8926b40}
 .utilities-tabbar .ws-tab:hover{background:var(--sage-xl);color:var(--sage)}
 .utilities-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--sage-xl),#eff5ec);color:var(--sage);box-shadow:inset 0 0 0 1px #6f9c6a40}
+/* ── DASHBOARD WIDGET SYSTEM ── */
+.dash-toolbar{display:flex;justify-content:flex-end;margin-bottom:12px}
+.widget-manager{
+  display:flex;flex-wrap:wrap;gap:10px;background:var(--s1);border:1px solid var(--border);
+  border-radius:var(--r2);padding:14px 16px;margin-bottom:16px;box-shadow:var(--shadow-soft);
+}
+.widget-toggle{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer}
+.dash-widget{position:relative}
+.dash-widget.wdragging{opacity:.4}
+.widget-bar{
+  display:flex;align-items:center;gap:8px;padding:4px 4px 8px;
+  font-size:10.5px;color:var(--text4);letter-spacing:.03em;text-transform:uppercase;font-weight:600;
+}
+.widget-drag{cursor:grab;font-size:13px;color:var(--text4)}
+.widget-name{flex:1}
+.widget-hide-btn{border:none;background:none;cursor:pointer;color:var(--text4);font-size:11px;padding:2px 6px;border-radius:6px}
+.widget-hide-btn:hover{background:var(--s2);color:var(--red)}
+/* ── FOCUS TIMER ── */
+.timer-modes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.timer-mode.active{background:var(--violet-xl);color:var(--violet-l);box-shadow:inset 0 0 0 1px var(--border3)}
+.timer-display{font-family:'Bricolage Grotesque',sans-serif;font-size:40px;font-weight:700;text-align:center;color:var(--violet-l);margin-bottom:14px;letter-spacing:.02em}
+/* ── STICKY PREVIEW (Dashboard widget) ── */
+.dash-sticky-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;padding:14px 18px}
+.dash-sticky-mini{border-radius:10px;padding:10px 12px;font-size:11px;line-height:1.4;cursor:pointer;box-shadow:var(--shadow-soft)}
+/* ── STICKY NOTES ── */
+.sticky-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.sticky-toolbar input#stk-search{padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px;background:var(--s1);width:200px}
+.sticky-color-pick{display:flex;gap:6px}
+.stk-swatch{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;display:inline-block}
+.stk-swatch.active{border-color:var(--text)}
+.sw-lavender{background:#e4d9fb}.sw-pink{background:#fbdcec}.sw-peach{background:var(--peach-dim)}
+.sw-powder{background:var(--powder-dim)}.sw-sage{background:var(--sage-dim)}.sw-cream{background:#f3ead9}
+.sticky-archived-toggle{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px;margin-left:auto}
+.sticky-board{position:relative;min-height:560px;background:var(--s2);border:1px dashed var(--border2);border-radius:var(--r3);overflow:auto}
+.sticky-note{
+  position:absolute;border-radius:14px;padding:12px 14px;
+  box-shadow:var(--shadow-lift);display:flex;flex-direction:column;gap:8px;
+  cursor:grab;overflow:hidden;
+}
+.sticky-note.dragging{cursor:grabbing;opacity:.85;z-index:50}
+.sticky-note.pinned{box-shadow:0 0 0 2px var(--violet-l), var(--shadow-lift)}
+.sn-lavender{background:linear-gradient(160deg,#efe6fd,#f7f0ff)}
+.sn-pink{background:linear-gradient(160deg,#fde6f1,#fff0f7)}
+.sn-peach{background:linear-gradient(160deg,var(--peach-xl),#fff6ef)}
+.sn-powder{background:linear-gradient(160deg,var(--powder-xl),#f3fafd)}
+.sn-sage{background:linear-gradient(160deg,var(--sage-xl),#f5faf3)}
+.sn-cream{background:linear-gradient(160deg,#f6efdf,#fffaf0)}
+.sn-text{flex:1;font-size:12px;line-height:1.5;background:transparent;border:none;resize:none;outline:none;color:var(--text);font-family:inherit}
+.sn-toolbar{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.sn-toolbar button{border:none;background:#ffffff80;border-radius:6px;padding:3px 6px;font-size:10px;cursor:pointer;color:var(--text2)}
+.sn-toolbar button:hover{background:#ffffffc0}
+.sn-resize{position:absolute;right:2px;bottom:2px;width:14px;height:14px;cursor:nwse-resize;opacity:.4}
+.sn-archived{opacity:.55}
 /* ── SALARY CALCULATOR ── */
 .sal-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
 .sal-list{padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-height:60px}
@@ -555,6 +608,8 @@ tr:hover td{background:#8b5cf608}
   .kanban-cols{grid-template-columns:1fr}
   .kanban-board{grid-template-columns:1fr;overflow-x:visible}
   .idea-grid{grid-template-columns:1fr}
+  .dash-sticky-grid{grid-template-columns:1fr 1fr}
+  .timer-display{font-size:32px}
   .ws-tabbar{overflow-x:auto;flex-wrap:nowrap}
   .career-tabbar{overflow-x:auto;flex-wrap:nowrap}
   .utilities-tabbar{overflow-x:auto;flex-wrap:nowrap}
@@ -839,6 +894,7 @@ tr:hover td{background:#8b5cf608}
     <div class="sb-sublist" data-grp-list="utilities">
       <button class="sb-item" data-nav="companies" onclick="nav('companies')"><span class="si">🏢</span>Companies</button>
       <button class="sb-item" data-nav="salary" onclick="nav('salary')"><span class="si">💰</span>Salary Calculator</button>
+      <button class="sb-item" data-nav="stickies" onclick="nav('stickies')"><span class="si">🗒</span>Sticky Notes<span class="sb-badge" id="nb-stickies">0</span></button>
       <button class="sb-item" data-nav="reports" onclick="nav('reports')"><span class="si">📊</span>Reports & Export</button>
       <button class="sb-item" data-nav="goals" onclick="nav('goals')"><span class="si">🎯</span>Goals</button>
       <button class="sb-item" data-nav="notes" onclick="nav('notes')"><span class="si">📝</span>Notes</button>
@@ -884,6 +940,14 @@ tr:hover td{background:#8b5cf608}
 
 <!-- ═══ DASHBOARD ═══ -->
 <div id="page-dashboard" class="page active">
+  <div class="dash-toolbar">
+    <button class="btn btn-ghost btn-sm" onclick="toggleWidgetManager()">⚙ Manage Widgets</button>
+  </div>
+  <div id="widget-manager" class="widget-manager" style="display:none"></div>
+  <div id="dash-widgets"></div>
+</div>
+
+<template id="tpl-w-score">
   <div class="score-hero">
     <div class="score-arc-wrap">
       <svg width="120" height="120" viewBox="0 0 120 120">
@@ -903,18 +967,28 @@ tr:hover td{background:#8b5cf608}
       <div class="score-pills" id="score-pills"></div>
     </div>
   </div>
-  <div class="gauto mb20" id="dash-kpis"></div>
-  <div class="g2 mb16">
-    <div class="card">
-      <div class="card-hd"><div class="card-title">📋 Recent Work</div><button class="btn btn-ghost btn-sm" onclick="nav('quicklog')">+ Log</button></div>
-      <div id="dash-recent" style="padding:0"></div>
-    </div>
-    <div class="card">
-      <div class="card-hd"><div class="card-title">🏆 Recent Achievements</div><button class="btn btn-ghost btn-sm" onclick="nav('achievements')">+ Add</button></div>
-      <div id="dash-ach" style="padding:0"></div>
-    </div>
+</template>
+
+<template id="tpl-w-kpis">
+  <div class="gauto" id="dash-kpis"></div>
+</template>
+
+<template id="tpl-w-recent-work">
+  <div class="card">
+    <div class="card-hd"><div class="card-title">📋 Recent Work</div><button class="btn btn-ghost btn-sm" onclick="nav('quicklog')">+ Log</button></div>
+    <div id="dash-recent" style="padding:0"></div>
   </div>
-  <div class="card mb16">
+</template>
+
+<template id="tpl-w-recent-ach">
+  <div class="card">
+    <div class="card-hd"><div class="card-title">🏆 Recent Achievements</div><button class="btn btn-ghost btn-sm" onclick="nav('achievements')">+ Add</button></div>
+    <div id="dash-ach" style="padding:0"></div>
+  </div>
+</template>
+
+<template id="tpl-w-star">
+  <div class="card">
     <div class="card-hd"><div class="card-title">⭐ STAR Contributions</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('star-fs')">+ Add STAR</button></div>
     <div class="card-body">
       <div id="star-fs" class="form-section mb12">
@@ -929,7 +1003,34 @@ tr:hover td{background:#8b5cf608}
       <div class="tbl-wrap"><table><thead><tr><th>Situation</th><th>Task</th><th>Action</th><th>Result</th><th></th></tr></thead><tbody id="star-body"></tbody></table></div>
     </div>
   </div>
-</div>
+</template>
+
+<template id="tpl-w-sticky">
+  <div class="card">
+    <div class="card-hd"><div class="card-title">🗒 Sticky Notes</div><button class="btn btn-ghost btn-sm" onclick="nav('stickies')">Open Board</button></div>
+    <div id="dash-sticky-preview" class="dash-sticky-preview"></div>
+  </div>
+</template>
+
+<template id="tpl-w-timer">
+  <div class="card">
+    <div class="card-hd"><div class="card-title">⏱ Focus Timer</div></div>
+    <div class="card-body">
+      <div class="timer-modes">
+        <button class="btn btn-ghost btn-sm timer-mode active" data-mins="25" onclick="setTimerMode(25,this)">🍅 Pomodoro 25</button>
+        <button class="btn btn-ghost btn-sm timer-mode" data-mins="50" onclick="setTimerMode(50,this)">🧠 Deep Work 50</button>
+        <button class="btn btn-ghost btn-sm timer-mode" data-mins="5" onclick="setTimerMode(5,this)">☕ Break 5</button>
+      </div>
+      <div class="timer-display" id="timer-display">25:00</div>
+      <input id="timer-label" placeholder="What are you focusing on?" style="width:100%;margin-bottom:10px;padding:7px 10px;border-radius:9px;border:1px solid var(--border2);font-size:12px">
+      <div class="btn-group">
+        <button class="btn btn-violet btn-sm" id="timer-start-btn" onclick="toggleTimer()">▶ Start</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetTimer()">↺ Reset</button>
+        <button class="btn btn-ghost btn-sm" onclick="logTimerSession()">📝 Log to Journal</button>
+      </div>
+    </div>
+  </div>
+</template>
 
 <!-- ═══ WORKSPACE TAB BAR (shown above any Workspace-group page) ═══ -->
 <div id="ws-tabbar" class="ws-tabbar" style="display:none">
@@ -1276,6 +1377,7 @@ tr:hover td{background:#8b5cf608}
 <div id="utilities-tabbar" class="ws-tabbar utilities-tabbar" style="display:none">
   <button class="ws-tab" data-ws-tab="companies" onclick="nav('companies')">🏢 Companies</button>
   <button class="ws-tab" data-ws-tab="salary" onclick="nav('salary')">💰 Salary Calculator</button>
+  <button class="ws-tab" data-ws-tab="stickies" onclick="nav('stickies')">🗒 Sticky Notes</button>
   <button class="ws-tab" data-ws-tab="reports" onclick="nav('reports')">📊 Reports & Export</button>
   <button class="ws-tab" data-ws-tab="goals" onclick="nav('goals')">🎯 Goals</button>
   <button class="ws-tab" data-ws-tab="notes" onclick="nav('notes')">📝 Notes</button>
@@ -1334,6 +1436,24 @@ tr:hover td{background:#8b5cf608}
     <div class="card-hd"><div class="card-title">📐 Summary</div></div>
     <div class="card-body" id="sal-summary"></div>
   </div>
+</div>
+
+<!-- ═══ STICKY NOTES ═══ -->
+<div id="page-stickies" class="page">
+  <div class="sticky-toolbar">
+    <input id="stk-search" placeholder="🔍 Search notes..." oninput="renderStickies()">
+    <div class="sticky-color-pick" id="stk-color-pick">
+      <span class="stk-swatch sw-lavender active" data-color="lavender" onclick="pickStickyColor(this)"></span>
+      <span class="stk-swatch sw-pink" data-color="pink" onclick="pickStickyColor(this)"></span>
+      <span class="stk-swatch sw-peach" data-color="peach" onclick="pickStickyColor(this)"></span>
+      <span class="stk-swatch sw-powder" data-color="powder" onclick="pickStickyColor(this)"></span>
+      <span class="stk-swatch sw-sage" data-color="sage" onclick="pickStickyColor(this)"></span>
+      <span class="stk-swatch sw-cream" data-color="cream" onclick="pickStickyColor(this)"></span>
+    </div>
+    <button class="btn btn-violet btn-sm" onclick="addSticky()">+ New Note</button>
+    <label class="sticky-archived-toggle"><input type="checkbox" id="stk-show-archived" onchange="renderStickies()"> Show archived</label>
+  </div>
+  <div class="sticky-board" id="sticky-board"></div>
 </div>
 
 <!-- ═══ REPORTS ═══ -->
@@ -1597,7 +1717,7 @@ let D = {
   daily: [], projects: [], learning: [], clients: [],
   support: [], docs: [], achievements: [], evidence: [],
   star: [], plans: [], goals: [], notes: [], mood: [],
-  tasks: [], meetings: [], ideas: [], salcomp: [],
+  tasks: [], meetings: [], ideas: [], salcomp: [], stickies: [],
   profile: { name:'', email:'', links:'' }
 };
 
@@ -1756,7 +1876,7 @@ function resetAppState() {
     daily:[], projects:[], learning:[], clients:[],
     support:[], docs:[], achievements:[], evidence:[],
     star:[], plans:[], goals:[], notes:[], mood:[],
-    tasks:[], meetings:[], ideas:[], salcomp:[],
+    tasks:[], meetings:[], ideas:[], salcomp:[], stickies:[],
     profile:{ name:'',email:'',links:'' }
   };
 }
@@ -1855,6 +1975,7 @@ const TABLE_MAP = {
   meetings:     'meetings',
   ideas:        'ideas',
   salcomp:      'salary_components',
+  stickies:     'sticky_notes',
 };
 
 // Tables whose records belong to a specific employer. Personal tables
@@ -1889,6 +2010,7 @@ const ROW_TO_D = {
   meetings:     r => ({ id:r.id, date:r.date||'', attendees:r.attendees||'', agenda:r.agenda||'', discussion:r.discussion||'', action:r.action_items||'', followup:r.follow_up_date||'', status:r.status||'Open', created_at:r.created_at }),
   ideas:        r => ({ id:r.id, title:r.title, cat:r.category||'Software', desc:r.description||'', status:r.status||'New', created_at:r.created_at }),
   salcomp:      r => ({ id:r.id, kind:r.kind||'earning', label:r.label, amount:r.amount||0, created_at:r.created_at }),
+  stickies:     r => ({ id:r.id, text:r.text||'', color:r.color||'lavender', pinned:!!r.pinned, archived:!!r.archived, x:r.pos_x??40, y:r.pos_y??40, w:r.w??200, h:r.h??170, created_at:r.created_at }),
 };
 
 // Map: local D object → Supabase insert payload
@@ -1910,6 +2032,7 @@ const D_TO_ROW = {
   meetings:     r => ({ date:r.date||null, attendees:r.attendees, agenda:r.agenda, discussion:r.discussion, action_items:r.action, follow_up_date:r.followup||null, status:r.status }),
   ideas:        r => ({ title:r.title, category:r.cat, description:r.desc, status:r.status }),
   salcomp:      r => ({ kind:r.kind, label:r.label, amount:r.amount }),
+  stickies:     r => ({ text:r.text, color:r.color, pinned:r.pinned, archived:r.archived, pos_x:r.x, pos_y:r.y, w:r.w, h:r.h }),
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -2085,7 +2208,7 @@ async function del(arr, id, cbName) {
     achievements:'renderAchievements', evidence:'renderEvidence',
     star:'renderStar', plans:'renderPlan', goals:'renderGoals',
     notes:'renderNotes', mood:'renderMood',
-    tasks:'renderTasks', meetings:'renderMeetings', ideas:'renderIdeas', salcomp:'renderSalary'
+    tasks:'renderTasks', meetings:'renderMeetings', ideas:'renderIdeas', salcomp:'renderSalary', stickies:'renderStickies'
   };
   const fn = window[renderMap[arr] || cbName];
   await delItem(arr, id, fn);
@@ -2688,7 +2811,7 @@ const NAV_GROUP = {
   tasks:'workspace', meetings:'workspace', ideas:'workspace',
   achievements:'career', evidence:'career', ai:'career',
   reports:'utilities', goals:'utilities', notes:'utilities', mood:'utilities',
-  companies:'utilities', salary:'utilities'
+  companies:'utilities', salary:'utilities', stickies:'utilities'
 };
 
 function nav(id) {
@@ -2708,7 +2831,7 @@ function nav(id) {
     planner:'Planner', goals:'Goals', notes:'Notes',
     mood:'Mood Tracker', profile:'My Profile',
     tasks:'Task Manager', meetings:'Meeting Notes', ideas:'Idea Board',
-    companies:'Company Manager', salary:'Salary Calculator'
+    companies:'Company Manager', salary:'Salary Calculator', stickies:'Sticky Notes'
   };
   document.getElementById('page-title').textContent = titles[id] || id;
   document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
@@ -2733,6 +2856,7 @@ function nav(id) {
   if (id==='ideas')       renderIdeas();
   if (id==='companies')   renderCompanyManager();
   if (id==='salary')      renderSalary();
+  if (id==='stickies')    renderStickies();
   closeSidebar();
 }
 
@@ -2803,7 +2927,8 @@ function updateAll() {
   const badges = [['nb-daily',D.daily.length],['nb-projects',D.projects.length],['nb-learning',D.learning.length],
     ['nb-clients',D.clients.length],['nb-support',D.support.length],['nb-docs',D.docs.length],
     ['nb-ach',D.achievements.length],['nb-evidence',D.evidence.length],
-    ['nb-tasks',D.tasks.length],['nb-meetings',D.meetings.length],['nb-ideas',D.ideas.length]];
+    ['nb-tasks',D.tasks.length],['nb-meetings',D.meetings.length],['nb-ideas',D.ideas.length],
+    ['nb-stickies', (D.stickies||[]).filter(s=>!s.archived).length]];
   badges.forEach(([id,v]) => { const el=document.getElementById(id); if(el) el.textContent=v });
 }
 
@@ -3203,6 +3328,123 @@ function renderSalary() {
   `;
 }
 
+// ── STICKY NOTES ──
+let stickyPickedColor = 'lavender';
+function pickStickyColor(el) {
+  stickyPickedColor = el.dataset.color;
+  document.querySelectorAll('#stk-color-pick .stk-swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+}
+async function addSticky() {
+  const board = document.getElementById('sticky-board');
+  const x = 20 + (D.stickies.length % 6) * 30, y = 20 + (D.stickies.length % 4) * 26;
+  await addItem('stickies', { id:'', text:'New note...', color:stickyPickedColor, pinned:false, archived:false, x, y, w:200, h:170 }, renderStickies);
+}
+function renderStickies() {
+  const board = document.getElementById('sticky-board'); if (!board) return;
+  document.getElementById('nb-stickies') && (document.getElementById('nb-stickies').textContent = D.stickies.filter(s=>!s.archived).length);
+  const q = (document.getElementById('stk-search')?.value || '').toLowerCase();
+  const showArchived = document.getElementById('stk-show-archived')?.checked;
+  const list = D.stickies
+    .filter(s => showArchived || !s.archived)
+    .filter(s => !q || s.text.toLowerCase().includes(q))
+    .sort((a,b) => (b.pinned - a.pinned));
+
+  board.innerHTML = list.map(s => `
+    <div class="sticky-note sn-${s.color} ${s.pinned?'pinned':''} ${s.archived?'sn-archived':''}" data-id="${s.id}"
+         style="left:${s.x}px;top:${s.y}px;width:${s.w}px;height:${s.h}px">
+      <textarea class="sn-text" onblur="saveStickyText('${s.id}', this.value)" ${s.archived?'readonly':''}>${esc(s.text)}</textarea>
+      <div class="sn-toolbar">
+        <button onclick="toggleStickyPin('${s.id}')" title="Pin">${s.pinned?'📌':'📍'}</button>
+        <button onclick="toggleStickyArchive('${s.id}')" title="${s.archived?'Restore':'Archive'}">${s.archived?'♻️':'🗄'}</button>
+        <button onclick="convertSticky('${s.id}','task')" title="To Task">✅</button>
+        <button onclick="convertSticky('${s.id}','project')" title="To Project">🚀</button>
+        <button onclick="convertSticky('${s.id}','meeting')" title="To Meeting">🗓</button>
+        <button onclick="convertSticky('${s.id}','journal')" title="To Journal">⚡</button>
+        <button onclick="convertSticky('${s.id}','idea')" title="To Idea">💡</button>
+        <button onclick="del('stickies','${s.id}')" title="Delete" style="margin-left:auto;color:var(--red)">✕</button>
+      </div>
+      <div class="sn-resize" onmousedown="startStickyResize(event,'${s.id}')">◢</div>
+    </div>
+  `).join('') || `<div class="empty-td" style="padding:40px">No sticky notes yet — click "+ New Note" to start one.</div>`;
+
+  board.querySelectorAll('.sticky-note').forEach(el => {
+    el.addEventListener('mousedown', e => {
+      if (e.target.closest('.sn-resize') || e.target.closest('button') || e.target.tagName === 'TEXTAREA') return;
+      startStickyDrag(e, el);
+    });
+  });
+}
+async function saveStickyText(id, text) {
+  await updateItem('stickies', id, { text }, null);
+  const n = D.stickies.find(s => s.id === id); if (n) n.text = text;
+}
+async function toggleStickyPin(id) {
+  const n = D.stickies.find(s => s.id === id); if (!n) return;
+  await updateItem('stickies', id, { pinned: !n.pinned }, renderStickies);
+}
+async function toggleStickyArchive(id) {
+  const n = D.stickies.find(s => s.id === id); if (!n) return;
+  await updateItem('stickies', id, { archived: !n.archived }, renderStickies);
+}
+function startStickyDrag(e, el) {
+  e.preventDefault();
+  const board = document.getElementById('sticky-board');
+  const boardRect = board.getBoundingClientRect();
+  const startLeft = parseInt(el.style.left), startTop = parseInt(el.style.top);
+  const startX = e.clientX, startY = e.clientY;
+  el.classList.add('dragging');
+  function onMove(ev) {
+    const nx = Math.max(0, startLeft + (ev.clientX - startX));
+    const ny = Math.max(0, startTop + (ev.clientY - startY));
+    el.style.left = nx + 'px'; el.style.top = ny + 'px';
+  }
+  async function onUp() {
+    el.classList.remove('dragging');
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    const id = el.dataset.id;
+    await updateItem('stickies', id, { pos_x: parseInt(el.style.left), pos_y: parseInt(el.style.top) }, null);
+  }
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+function startStickyResize(e, id) {
+  e.preventDefault(); e.stopPropagation();
+  const el = e.target.closest('.sticky-note');
+  const startW = el.offsetWidth, startH = el.offsetHeight;
+  const startX = e.clientX, startY = e.clientY;
+  function onMove(ev) {
+    el.style.width = Math.max(140, startW + (ev.clientX - startX)) + 'px';
+    el.style.height = Math.max(110, startH + (ev.clientY - startY)) + 'px';
+  }
+  async function onUp() {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    await updateItem('stickies', id, { w: el.offsetWidth, h: el.offsetHeight }, null);
+  }
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+async function convertSticky(id, kind) {
+  const note = D.stickies.find(s => s.id === id); if (!note) return;
+  const text = note.text.trim() || 'Untitled';
+  if (kind === 'task') {
+    await addItem('tasks', { id:'', title:text, notes:'', col:'inbox', prio:'Medium', due:'', project:'', tags:'', subtasks:[] }, null);
+  } else if (kind === 'project') {
+    await addItem('projects', { id:'', name:text, client:'', role:'', start:'', end:'', status:'In Progress', prog:0, tech:'', contrib:'', outcome:'' }, null);
+  } else if (kind === 'meeting') {
+    await addItem('meetings', { id:'', date:today(), attendees:'', agenda:text, discussion:'', action:'', followup:'', status:'Open' }, null);
+  } else if (kind === 'journal') {
+    await addItem('daily', { id:'', date:today(), task:text, project:'', client:'', hours:'', cat:'Development', prio:'Medium', status:'Completed', impact:'', problem:'', tech:'', support:'No', self:'', richNotes:'' }, null);
+  } else if (kind === 'idea') {
+    await addItem('ideas', { id:'', title:text, cat:'Software', desc:'', status:'New' }, null);
+  }
+  await del('stickies', id, 'renderStickies');
+  toast(`✓ Converted to ${kind}`);
+  nav(kind === 'journal' ? 'quicklog' : kind);
+}
+
 // ── ACHIEVEMENTS ──
 async function addAchievement() {
   const r = {
@@ -3457,6 +3699,165 @@ function renderPlan() {
 // ── SECTION 12: DASHBOARD & REPORTS ──
 // ══════════════════════════════════════════════════════════════════
 
+// ══════════════════════════════════════════════════════════════════
+// ── DASHBOARD WIDGET SYSTEM (drag to reorder, hide/show, remembered) ──
+// ══════════════════════════════════════════════════════════════════
+const DASH_WIDGETS = [
+  { id:'score',        title:'Promotion Readiness' },
+  { id:'kpis',         title:'Stats Overview' },
+  { id:'timer',        title:'Focus Timer' },
+  { id:'sticky',       title:'Sticky Notes' },
+  { id:'recent-work',  title:'Recent Work' },
+  { id:'recent-ach',   title:'Recent Achievements' },
+  { id:'star',         title:'STAR Contributions' },
+];
+const DASH_LAYOUT_KEY = 'elevatrack_dash_layout_v1';
+function getWidgetLayout() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DASH_LAYOUT_KEY));
+    if (saved && Array.isArray(saved.order)) return saved;
+  } catch(e) {}
+  return { order: DASH_WIDGETS.map(w => w.id), hidden: [] };
+}
+function saveWidgetLayout(layout) { localStorage.setItem(DASH_LAYOUT_KEY, JSON.stringify(layout)); }
+
+function renderDashboardWidgets() {
+  const container = document.getElementById('dash-widgets'); if (!container) return;
+  const layout = getWidgetLayout();
+  // Guard against a stale saved layout missing newly-added widgets
+  DASH_WIDGETS.forEach(w => { if (!layout.order.includes(w.id)) layout.order.push(w.id); });
+  container.innerHTML = '';
+  layout.order.forEach(id => {
+    if (layout.hidden.includes(id)) return;
+    const reg = DASH_WIDGETS.find(w => w.id === id);
+    const tpl = document.getElementById('tpl-w-' + id);
+    if (!reg || !tpl) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'dash-widget mb16';
+    wrap.draggable = true;
+    wrap.dataset.widgetId = id;
+    wrap.innerHTML = `<div class="widget-bar"><span class="widget-drag" title="Drag to reorder">⋮⋮</span><span class="widget-name">${reg.title}</span><button class="widget-hide-btn" onclick="hideWidget('${id}')" title="Hide">✕</button></div>`;
+    wrap.appendChild(tpl.content.cloneNode(true));
+    wrap.addEventListener('dragstart', () => wrap.classList.add('wdragging'));
+    wrap.addEventListener('dragend', () => { wrap.classList.remove('wdragging'); persistWidgetOrder(); });
+    container.appendChild(wrap);
+  });
+  if (!container._wired) {
+    container.addEventListener('dragover', e => {
+      e.preventDefault();
+      const dragging = container.querySelector('.wdragging'); if (!dragging) return;
+      const els = [...container.querySelectorAll('.dash-widget:not(.wdragging)')];
+      const after = els.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = e.clientY - box.top - box.height / 2;
+        return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
+      }, { offset: -Infinity, element: null }).element;
+      if (after == null) container.appendChild(dragging); else container.insertBefore(dragging, after);
+    });
+    container._wired = true;
+  }
+  syncTimerUI();
+}
+function persistWidgetOrder() {
+  const container = document.getElementById('dash-widgets'); if (!container) return;
+  const layout = getWidgetLayout();
+  layout.order = [...container.querySelectorAll('.dash-widget')].map(w => w.dataset.widgetId);
+  saveWidgetLayout(layout);
+}
+function hideWidget(id) {
+  const layout = getWidgetLayout();
+  if (!layout.hidden.includes(id)) layout.hidden.push(id);
+  saveWidgetLayout(layout);
+  renderAll(); renderWidgetManager();
+}
+function showWidget(id) {
+  const layout = getWidgetLayout();
+  layout.hidden = layout.hidden.filter(x => x !== id);
+  saveWidgetLayout(layout);
+  renderAll(); renderWidgetManager();
+}
+function toggleWidgetManager() {
+  const el = document.getElementById('widget-manager');
+  const opening = el.style.display === 'none';
+  el.style.display = opening ? 'flex' : 'none';
+  if (opening) renderWidgetManager();
+}
+function renderWidgetManager() {
+  const el = document.getElementById('widget-manager'); if (!el) return;
+  const layout = getWidgetLayout();
+  el.innerHTML = DASH_WIDGETS.map(w => {
+    const hidden = layout.hidden.includes(w.id);
+    return `<label class="widget-toggle"><input type="checkbox" ${hidden?'':'checked'} onchange="${hidden?'showWidget':'hideWidget'}('${w.id}')"> ${w.title}</label>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── FOCUS TIMER (Pomodoro / Deep Work) ──
+// ══════════════════════════════════════════════════════════════════
+let timerModeMinutes = 25;
+let timerTotalSeconds = 25 * 60;
+let timerRemaining = 25 * 60;
+let timerRunning = false;
+let timerInterval = null;
+
+function setTimerMode(mins, btn) {
+  if (timerRunning) { toast('⚠️ Pause the timer before switching modes', 'error'); return; }
+  timerModeMinutes = mins; timerTotalSeconds = mins * 60; timerRemaining = mins * 60;
+  updateTimerDisplay();
+  document.querySelectorAll('.timer-mode').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+function updateTimerDisplay() {
+  const el = document.getElementById('timer-display'); if (!el) return;
+  const m = Math.floor(Math.max(0,timerRemaining) / 60), s = Math.max(0,timerRemaining) % 60;
+  el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+function toggleTimer() {
+  const btn = document.getElementById('timer-start-btn');
+  if (timerRunning) {
+    clearInterval(timerInterval); timerRunning = false;
+    if (btn) btn.textContent = '▶ Start';
+  } else {
+    timerRunning = true;
+    if (btn) btn.textContent = '⏸ Pause';
+    timerInterval = setInterval(() => {
+      timerRemaining--;
+      updateTimerDisplay();
+      if (timerRemaining <= 0) {
+        clearInterval(timerInterval); timerRunning = false;
+        const b = document.getElementById('timer-start-btn'); if (b) b.textContent = '▶ Start';
+        toast('⏱ Focus session complete!');
+        logTimerSession(true);
+      }
+    }, 1000);
+  }
+}
+function resetTimer() {
+  clearInterval(timerInterval); timerRunning = false;
+  timerRemaining = timerTotalSeconds;
+  updateTimerDisplay();
+  const btn = document.getElementById('timer-start-btn'); if (btn) btn.textContent = '▶ Start';
+}
+async function logTimerSession(auto) {
+  const label = document.getElementById('timer-label')?.value || 'Focus session';
+  const elapsedMin = Math.round((timerTotalSeconds - timerRemaining) / 60);
+  if (elapsedMin <= 0) { if (!auto) toast('⚠️ No time elapsed yet', 'error'); return; }
+  const hours = (elapsedMin / 60).toFixed(2);
+  await addItem('daily', {
+    id:'', date:today(), task:label, project:'', client:'', hours,
+    cat:'Deep Work', prio:'Medium', status:'Completed', impact:'', problem:'',
+    tech:'', support:'No', self:`Focused for ${elapsedMin} min via a ${timerModeMinutes}-min timer.`, richNotes:''
+  }, null);
+  toast(`✓ Logged ${elapsedMin} min to your Work Journal`);
+  if (!auto) resetTimer();
+}
+// Keep the timer widget's on-screen state correct after a DOM rebuild (hide/show/reorder)
+function syncTimerUI() {
+  updateTimerDisplay();
+  const btn = document.getElementById('timer-start-btn'); if (btn) btn.textContent = timerRunning ? '⏸ Pause' : '▶ Start';
+  document.querySelectorAll('.timer-mode').forEach(b => b.classList.toggle('active', Number(b.dataset.mins) === timerModeMinutes));
+}
+
 function renderDashboard() {
   const totalH = D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const done   = D.daily.filter(r=>r.status==='Completed').length;
@@ -3486,6 +3887,11 @@ function renderDashboard() {
   const ach=document.getElementById('dash-ach');
   if(ach){
     ach.innerHTML=D.achievements.slice(0,5).map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border)"><span style="font-size:16px">🏆</span><div style="flex:1"><div style="font-size:12.5px;font-weight:500">${esc(a.achievement)}</div><div style="font-size:10.5px;color:var(--text3);margin-top:1px">${a.type} · ${a.date}</div></div></div>`).join('')||`<div class="empty-td">Add achievements to show your wins.</div>`;
+  }
+  const stkPrev=document.getElementById('dash-sticky-preview');
+  if(stkPrev){
+    const top=(D.stickies||[]).filter(s=>!s.archived).sort((a,b)=>(b.pinned-a.pinned)).slice(0,4);
+    stkPrev.innerHTML = top.length ? `<div class="dash-sticky-grid">${top.map(s=>`<div class="dash-sticky-mini sn-${s.color}" onclick="nav('stickies')">${esc((s.text||'').slice(0,80))}</div>`).join('')}</div>` : `<div class="empty-td">No sticky notes yet — jump into the board to add one.</div>`;
   }
 }
 function renderReports() {
@@ -3663,6 +4069,7 @@ function exportPDF(){
 // ══════════════════════════════════════════════════════════════════
 
 function renderAll() {
+  renderDashboardWidgets();
   renderDaily(); renderProjects(); renderLearning(); renderClients();
   renderSupport(); renderDocs(); renderAchievements(); renderEvidence();
   renderStar(); renderMood(); renderGoals(); renderNotes(); renderPlan();
