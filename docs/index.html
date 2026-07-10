@@ -305,6 +305,7 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .tech-bar-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--powder));border-radius:6px}
 .tech-count{width:110px;flex-shrink:0;font-size:11px;color:var(--text3);text-align:right}
 /* ── ATTENDANCE ANALYTICS ── */
+.att-quick-checkin{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
 .att-time-capture{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:14px;padding:10px 14px;background:var(--s2);border-radius:10px;font-size:11.5px;color:var(--text2)}
 .att-time-capture label{display:flex;align-items:center;gap:6px}
 .att-time-capture input[type="time"]{padding:4px 8px;border-radius:7px;border:1px solid var(--border2);font-size:11.5px}
@@ -1661,10 +1662,15 @@ tr:hover td{background:#8b5cf608}
         </div>
       </div>
       <div class="card-body">
+        <div class="att-quick-checkin">
+          <button class="btn btn-violet btn-sm" onclick="quickCheckIn()">⚡ Check In Now</button>
+          <button class="btn btn-ghost btn-sm" onclick="quickCheckOut()">🚪 Check Out Now</button>
+          <span id="att-checkin-status" style="font-size:11px;color:var(--text3)"></span>
+        </div>
         <div class="att-time-capture">
-          <label>Login time for next click <input type="time" id="att-login-input"></label>
-          <label>Logout time for next click <input type="time" id="att-logout-input"></label>
-          <span style="font-size:10.5px;color:var(--text4)">Only applied when marking Present / Half-Day — optional</span>
+          <label>Or set manually — Login <input type="time" id="att-login-input"></label>
+          <label>Logout <input type="time" id="att-logout-input"></label>
+          <span style="font-size:10.5px;color:var(--text4)">For backfilling past days. Only applied when marking Present / Half-Day.</span>
         </div>
         <div class="cal-grid mb12" id="att-cal-headers"></div>
         <div class="cal-grid" id="att-cal-grid"></div>
@@ -2776,6 +2782,51 @@ async function saveAttendanceSettings() {
 }
 
 // Click a calendar day → mark/unmark it with the currently selected status
+function nowHHMM() {
+  const d = new Date();
+  return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+async function quickCheckIn() {
+  if (!currentUser) { toast('Not signed in', 'error'); return; }
+  const dateStr = today();
+  const t = nowHHMM();
+  const existing = attLogs[dateStr];
+  attLogs[dateStr] = { status: 'present', login: t, logout: existing?.logout || null, notes: existing?.notes || '' };
+  const loginEl = document.getElementById('att-login-input'); if (loginEl) loginEl.value = t;
+  renderAttendance();
+  document.getElementById('att-checkin-status').textContent = `✓ Checked in at ${t}`;
+  try {
+    const payload = { user_id: currentUser.id, company_id: activeCompanyId || null, date: dateStr, status: 'present', login_time: t, logout_time: existing?.logout || null };
+    const { error } = await _supa.from('attendance_logs').upsert(payload, { onConflict: 'user_id,date,company_id' });
+    if (error) throw error;
+    setSyncStatus('synced', '☁ Saved');
+    toast(`⚡ Checked in at ${t}`);
+  } catch (err) {
+    console.error('✗ Check in failed:', err.message);
+    setSyncStatus('error', '⚠ Sync failed');
+  }
+}
+async function quickCheckOut() {
+  if (!currentUser) { toast('Not signed in', 'error'); return; }
+  const dateStr = today();
+  const t = nowHHMM();
+  const existing = attLogs[dateStr];
+  if (!existing) { toast('⚠️ Check in first', 'error'); return; }
+  existing.logout = t;
+  const logoutEl = document.getElementById('att-logout-input'); if (logoutEl) logoutEl.value = t;
+  renderAttendance();
+  document.getElementById('att-checkin-status').textContent = `✓ Checked out at ${t}`;
+  try {
+    const payload = { user_id: currentUser.id, company_id: activeCompanyId || null, date: dateStr, status: existing.status, login_time: existing.login, logout_time: t };
+    const { error } = await _supa.from('attendance_logs').upsert(payload, { onConflict: 'user_id,date,company_id' });
+    if (error) throw error;
+    setSyncStatus('synced', '☁ Saved');
+    toast(`🚪 Checked out at ${t}`);
+  } catch (err) {
+    console.error('✗ Check out failed:', err.message);
+    setSyncStatus('error', '⚠ Sync failed');
+  }
+}
 async function toggleAttendanceDay(dateStr) {
   if (!currentUser) { toast('Not signed in', 'error'); return; }
   const current = attLogs[dateStr]?.status;
@@ -3766,6 +3817,8 @@ async function addTask() {
   ['tk-title','tk-due','tk-project','tk-tags','tk-notes'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
 }
 async function moveTask(id, toCol) {
+  const item = D.tasks.find(t => t.id === id);
+  if (item) item.col = toCol; // fix local state immediately so the card visibly moves
   await updateItem('tasks', id, { column_status: toCol }, renderTasks);
 }
 function renderTasks() {
@@ -4011,7 +4064,10 @@ function startStickyDrag(e, el) {
     document.removeEventListener('mousemove', onMove);
     document.removeEventListener('mouseup', onUp);
     const id = el.dataset.id;
-    await updateItem('stickies', id, { pos_x: parseInt(el.style.left), pos_y: parseInt(el.style.top) }, null);
+    const nx = parseInt(el.style.left), ny = parseInt(el.style.top);
+    const item = D.stickies.find(s => s.id === id);
+    if (item) { item.x = nx; item.y = ny; } // fix local state so position survives re-render
+    await updateItem('stickies', id, { pos_x: nx, pos_y: ny }, null);
   }
   document.addEventListener('mousemove', onMove);
   document.addEventListener('mouseup', onUp);
