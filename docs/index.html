@@ -219,11 +219,16 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .kanban-toolbar input{padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px;background:var(--s1);width:220px}
 .kanban-board{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:12px;overflow-x:auto}
 .kanban-col{background:var(--s2);border-radius:var(--r2);padding:10px;min-height:120px;display:flex;flex-direction:column;gap:8px}
+.kanban-col-body{display:flex;flex-direction:column;gap:8px;min-height:80px;border-radius:10px;transition:background .15s}
+.kanban-col-body.kdragover{background:var(--violet-xl);box-shadow:inset 0 0 0 2px var(--border3)}
+.kanban-empty-hint{font-size:11px;color:var(--text4);text-align:center;padding:16px 4px;border:1.5px dashed var(--border2);border-radius:8px}
+.task-card.kdragging{opacity:.4;transform:scale(.97)}
 .kanban-col-hd{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text3);display:flex;justify-content:space-between;align-items:center;padding:2px 4px 6px}
 .task-card{
   background:var(--s1);border:1px solid var(--border);border-radius:12px;
-  padding:10px 12px;box-shadow:var(--shadow-soft);cursor:default;
+  padding:10px 12px;box-shadow:var(--shadow-soft);cursor:grab;transition:box-shadow .15s,transform .15s;
 }
+.task-card:active{cursor:grabbing}
 .task-card-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:6px}
 .task-card-meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-bottom:6px}
 .task-card-move{display:flex;gap:4px;flex-wrap:wrap}
@@ -933,19 +938,14 @@ tr:hover td{background:#8b5cf608}
       <button class="sb-item" data-nav="ideas" onclick="nav('ideas')"><span class="si">💡</span>Idea Board<span class="sb-badge" id="nb-ideas">0</span></button>
       <button class="sb-item" data-nav="learning" onclick="nav('learning')"><span class="si">📚</span>Learning<span class="sb-badge" id="nb-learning">0</span></button>
       <button class="sb-item" data-nav="clientsupport" onclick="nav('clientsupport')"><span class="si">🤝</span>Client Support</button>
-      <button class="sb-item" data-nav="clients" onclick="nav('clients')"><span class="si">📞</span>Client Calls<span class="sb-badge" id="nb-clients">0</span></button>
-      <button class="sb-item" data-nav="support" onclick="nav('support')"><span class="si">🔧</span>Support<span class="sb-badge" id="nb-support">0</span></button>
-      <button class="sb-item" data-nav="docs" onclick="nav('docs')"><span class="si">📄</span>Docs<span class="sb-badge" id="nb-docs">0</span></button>
-      <button class="sb-item" data-nav="planner" onclick="nav('planner')"><span class="si">🌸</span>Planner</button>
+      <button class="sb-item" data-nav="planner" onclick="nav('planner')"><span class="si">🌸</span>Attendance & Pay</button>
     </div>
 
     <button class="sb-group" data-tint="peach" data-grp="career" onclick="toggleGroup('career')">
       <span class="si">🏆</span>Career Hub<span class="chev">▸</span>
     </button>
     <div class="sb-sublist" data-grp-list="career">
-      <button class="sb-item" data-nav="achievements" onclick="nav('achievements')"><span class="si">🏆</span>Achievements<span class="sb-badge" id="nb-ach">0</span></button>
-      <button class="sb-item" data-nav="evidence" onclick="nav('evidence')"><span class="si">🗄</span>Evidence Vault<span class="sb-badge" id="nb-evidence">0</span></button>
-      <button class="sb-item" data-nav="technologies" onclick="nav('technologies')"><span class="si">🔧</span>Technologies</button>
+      <button class="sb-item" data-nav="achievements" onclick="nav('achievements')"><span class="si">🏆</span>Achievements & Evidence<span class="sb-badge" id="nb-ach">0</span></button>
       <button class="sb-item" data-nav="ai" onclick="nav('ai')"><span class="si">✦</span>AI Writer</button>
     </div>
 
@@ -954,7 +954,6 @@ tr:hover td{background:#8b5cf608}
     </button>
     <div class="sb-sublist" data-grp-list="utilities">
       <button class="sb-item" data-nav="companies" onclick="nav('companies')"><span class="si">🏢</span>Companies</button>
-      <button class="sb-item" data-nav="salary" onclick="nav('salary')"><span class="si">💰</span>Salary Calculator</button>
       <button class="sb-item" data-nav="stickies" onclick="nav('stickies')"><span class="si">🗒</span>Sticky Notes<span class="sb-badge" id="nb-stickies">0</span></button>
       <button class="sb-item" data-nav="reports" onclick="nav('reports')"><span class="si">📊</span>Reports & Export</button>
       <button class="sb-item" data-nav="goals" onclick="nav('goals')"><span class="si">🎯</span>Goals</button>
@@ -1102,10 +1101,7 @@ tr:hover td{background:#8b5cf608}
   <button class="ws-tab" data-ws-tab="ideas" onclick="nav('ideas')">💡 Ideas</button>
   <button class="ws-tab" data-ws-tab="learning" onclick="nav('learning')">📚 Learning</button>
   <button class="ws-tab" data-ws-tab="clientsupport" onclick="nav('clientsupport')">🤝 Client Support</button>
-  <button class="ws-tab" data-ws-tab="clients" onclick="nav('clients')">📞 Clients</button>
-  <button class="ws-tab" data-ws-tab="support" onclick="nav('support')">🔧 Support</button>
-  <button class="ws-tab" data-ws-tab="docs" onclick="nav('docs')">📄 Docs</button>
-  <button class="ws-tab" data-ws-tab="planner" onclick="nav('planner')">🌸 Planner</button>
+  <button class="ws-tab" data-ws-tab="planner" onclick="nav('planner')">🌸 Attendance & Pay</button>
 </div>
 
 <!-- ═══ QUICK LOG ═══ -->
@@ -1177,68 +1173,8 @@ tr:hover td{background:#8b5cf608}
 
 <!-- ═══ CAREER HUB TAB BAR (shown above any Career-group page) ═══ -->
 <div id="career-tabbar" class="ws-tabbar career-tabbar" style="display:none">
-  <button class="ws-tab" data-ws-tab="achievements" onclick="nav('achievements')">🏆 Achievements</button>
-  <button class="ws-tab" data-ws-tab="evidence" onclick="nav('evidence')">🗄 Evidence Vault</button>
-  <button class="ws-tab" data-ws-tab="technologies" onclick="nav('technologies')">🔧 Technologies</button>
+  <button class="ws-tab" data-ws-tab="achievements" onclick="nav('achievements')">🏆 Achievements & Evidence</button>
   <button class="ws-tab" data-ws-tab="ai" onclick="nav('ai')">✦ AI Writer</button>
-</div>
-
-<!-- ═══ EVIDENCE VAULT ═══ -->
-<div id="page-evidence" class="page">
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">🗄 Upload Evidence</div></div>
-    <div class="card-body">
-      <div class="fgrid">
-        <div class="ff s2"><label>Title / Description</label><input id="ev-title" placeholder="Appreciation email from client, Certificate name..."></div>
-        <div class="ff"><label>Category</label>
-          <select id="ev-cat">
-            <option>Appreciation Email</option><option>Client Appreciation</option>
-            <option>Certificate</option><option>Manual / Guide</option>
-            <option>Presentation</option><option>Screenshot</option>
-            <option>PDF Document</option><option>Image</option><option>Other</option>
-          </select>
-        </div>
-        <div class="ff"><label>Linked Project</label><input id="ev-project" placeholder="Project or task it relates to"></div>
-        <div class="ff"><label>Date</label><input type="date" id="ev-date"></div>
-        <div class="ff full"><label>Notes</label><input id="ev-notes" placeholder="Additional context..."></div>
-        <div class="ff full"><label>Attach File (image/pdf/doc)</label><input type="file" id="ev-file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx" onchange="previewFile(this)"></div>
-      </div>
-      <div id="ev-preview" style="margin-top:10px;display:none">
-        <img id="ev-img" style="max-height:120px;border-radius:8px;border:1px solid var(--border)" src="" alt="">
-        <div id="ev-fname" style="font-size:11px;color:var(--text3);margin-top:4px"></div>
-      </div>
-      <div class="btn-group" style="margin-top:14px">
-        <button class="btn btn-violet" onclick="addEvidence()">📎 Add to Vault</button>
-      </div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-hd"><div class="card-title">🗃 Evidence Collection</div><span id="ev-cnt" style="font-size:11px;color:var(--text3)">0 files</span></div>
-    <div class="card-body">
-      <div id="ev-filters" class="btn-group mb12">
-        <button class="btn btn-ghost btn-sm ev-filter active" onclick="filterEv('all',this)">All</button>
-        <button class="btn btn-ghost btn-sm ev-filter" onclick="filterEv('Appreciation Email',this)">Appreciation</button>
-        <button class="btn btn-ghost btn-sm ev-filter" onclick="filterEv('Certificate',this)">Certificates</button>
-        <button class="btn btn-ghost btn-sm ev-filter" onclick="filterEv('Screenshot',this)">Screenshots</button>
-      </div>
-      <div id="ev-grid" class="ev-grid"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ TECHNOLOGIES ═══ -->
-<div id="page-technologies" class="page">
-  <div class="card mb16">
-    <div class="card-body">
-      <p style="font-size:11.5px;color:var(--text3);line-height:1.6">Automatically pulled from the Technologies field on your Projects and Work Journal entries — no manual tagging needed. This is your skills footprint at a glance.</p>
-      <input id="tech-search" placeholder="🔍 Filter technologies..." oninput="renderTechnologies()" style="margin-top:10px;width:100%;max-width:280px;padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px">
-    </div>
-  </div>
-  <div class="gauto mb16" id="tech-summary-kpis"></div>
-  <div class="card">
-    <div class="card-hd"><div class="card-title">🔧 Most Used Technologies</div></div>
-    <div class="card-body" id="tech-list"></div>
-  </div>
 </div>
 
 <!-- ═══ AI WRITER ═══ -->
@@ -1323,7 +1259,7 @@ tr:hover td{background:#8b5cf608}
 <div id="page-clientsupport" class="page">
   <div class="card mb16">
     <div class="card-body">
-      <p style="font-size:11.5px;color:var(--text3);line-height:1.6;margin-bottom:12px">One searchable timeline across your Client Calls and Technical Support logs. To add or edit a specific record, use the Clients or Support tabs — this view is for browsing everything together.</p>
+      <p style="font-size:11.5px;color:var(--text3);line-height:1.6;margin-bottom:12px">Log client calls and support cases below — everything shows up together in one searchable timeline.</p>
       <div class="cs-filters">
         <input id="cs-search" placeholder="🔍 Search client, issue, resolution..." oninput="renderClientSupport()">
         <select id="cs-type-filter" onchange="renderClientSupport()">
@@ -1342,17 +1278,14 @@ tr:hover td{background:#8b5cf608}
     </div>
   </div>
   <div class="gauto mb16" id="cs-summary-kpis"></div>
-  <div class="card">
+  <div class="card mb16">
     <div class="card-hd"><div class="card-title">🤝 Combined Timeline</div><span style="font-size:11px;color:var(--text3)" id="cs-cnt"></span></div>
     <div class="card-body" id="cs-timeline" style="padding:0"></div>
   </div>
-</div>
 
-<!-- ═══ CLIENT CALLS ═══ -->
-<div id="page-clients" class="page">
   <div class="card mb16">
-    <div class="card-hd"><div class="card-title">+ Log Client Call</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('client-fs')">▾ Toggle</button></div>
-    <div class="card-body form-section open" id="client-fs">
+    <div class="card-hd"><div class="card-title">📞 Log Client Call</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('client-fs')">▾ Toggle</button></div>
+    <div class="card-body form-section" id="client-fs">
       <div class="fgrid">
         <div class="ff"><label>Date</label><input type="date" id="cl-date"></div>
         <div class="ff"><label>Client Name</label><input id="cl-client" placeholder="Contact person"></div>
@@ -1363,17 +1296,13 @@ tr:hover td{background:#8b5cf608}
         <div class="ff"><label>Follow-up Required?</label><select id="cl-followup"><option>No</option><option>Yes</option></select></div>
         <div class="ff"><label>Communication Rating: <span class="rval" id="cr-v">8</span>/10</label><input type="range" id="cl-rating" min="1" max="10" value="8" oninput="document.getElementById('cr-v').textContent=this.value"></div>
       </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addClient()">💾 Save</button></div>
+      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addClient()">💾 Save Client Call</button></div>
     </div>
   </div>
-  <div class="card"><div class="card-hd"><div class="card-title">📞 Client Call Log</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Client</th><th>Org</th><th>Duration</th><th>Purpose</th><th>Resolution</th><th>Follow-up</th><th>Rating</th><th></th></tr></thead><tbody id="client-body"></tbody></table></div></div>
-</div>
 
-<!-- ═══ SUPPORT ═══ -->
-<div id="page-support" class="page">
   <div class="card mb16">
-    <div class="card-hd"><div class="card-title">+ Log Support Case</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('support-fs')">▾ Toggle</button></div>
-    <div class="card-body form-section open" id="support-fs">
+    <div class="card-hd"><div class="card-title">🔧 Log Support Case</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('support-fs')">▾ Toggle</button></div>
+    <div class="card-body form-section" id="support-fs">
       <div class="fgrid">
         <div class="ff"><label>Date</label><input type="date" id="sp-date"></div>
         <div class="ff s2"><label>Issue Description *</label><input id="sp-issue" placeholder="What was the problem?"></div>
@@ -1384,13 +1313,18 @@ tr:hover td{background:#8b5cf608}
         <div class="ff"><label>Time Taken</label><input id="sp-time" placeholder="e.g. 2 hrs"></div>
         <div class="ff"><label>CSAT: <span class="rval" id="cs-v">8</span>/10</label><input type="range" id="sp-sat" min="1" max="10" value="8" oninput="document.getElementById('cs-v').textContent=this.value"></div>
       </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addSupport()">💾 Save</button></div>
+      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addSupport()">💾 Save Support Case</button></div>
     </div>
   </div>
-  <div class="card"><div class="card-hd"><div class="card-title">🔧 Support Cases</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Issue</th><th>Priority</th><th>Root Cause</th><th>Solution</th><th>Time</th><th>CSAT</th><th>Status</th><th></th></tr></thead><tbody id="support-body"></tbody></table></div></div>
+
+  <!-- Hidden data tables kept for renderClients()/renderSupport() to populate — the Combined Timeline above is the real browsing view -->
+  <div style="display:none">
+    <table><tbody id="client-body"></tbody></table>
+    <table><tbody id="support-body"></tbody></table>
+  </div>
 </div>
 
-<!-- ═══ DOCS ═══ -->
+<!-- ═══ DOCS (kept for data integrity; no longer in navigation per user request) ═══ -->
 <div id="page-docs" class="page">
   <div class="card mb16">
     <div class="card-hd"><div class="card-title">+ Add Document</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('docs-fs')">▾ Toggle</button></div>
@@ -1491,13 +1425,64 @@ tr:hover td{background:#8b5cf608}
       <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addAchievement()">💾 Save</button></div>
     </div>
   </div>
-  <div class="card"><div class="card-hd"><div class="card-title">🏆 Achievements & Recognition</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Achievement</th><th>Type</th><th>Impact</th><th>Revenue Impact</th><th>Evidence</th><th></th></tr></thead><tbody id="ach-body"></tbody></table></div></div>
+  <div class="card mb16"><div class="card-hd"><div class="card-title">🏆 Achievements & Recognition</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Achievement</th><th>Type</th><th>Impact</th><th>Revenue Impact</th><th>Evidence</th><th></th></tr></thead><tbody id="ach-body"></tbody></table></div></div>
+
+  <div class="card mb16">
+    <div class="card-hd"><div class="card-title">🗄 Upload Evidence</div></div>
+    <div class="card-body">
+      <div class="fgrid">
+        <div class="ff s2"><label>Title / Description</label><input id="ev-title" placeholder="Appreciation email from client, Certificate name..."></div>
+        <div class="ff"><label>Category</label>
+          <select id="ev-cat">
+            <option>Appreciation Email</option><option>Client Appreciation</option>
+            <option>Certificate</option><option>Manual / Guide</option>
+            <option>Presentation</option><option>Screenshot</option>
+            <option>PDF Document</option><option>Image</option><option>Other</option>
+          </select>
+        </div>
+        <div class="ff"><label>Linked Project</label><input id="ev-project" placeholder="Project or task it relates to"></div>
+        <div class="ff"><label>Date</label><input type="date" id="ev-date"></div>
+        <div class="ff full"><label>Notes</label><input id="ev-notes" placeholder="Additional context..."></div>
+        <div class="ff full"><label>Attach File (image/pdf/doc)</label><input type="file" id="ev-file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx" onchange="previewFile(this)"></div>
+      </div>
+      <div id="ev-preview" style="margin-top:10px;display:none">
+        <img id="ev-img" style="max-height:120px;border-radius:8px;border:1px solid var(--border)" src="" alt="">
+        <div id="ev-fname" style="font-size:11px;color:var(--text3);margin-top:4px"></div>
+      </div>
+      <div class="btn-group" style="margin-top:14px">
+        <button class="btn btn-violet" onclick="addEvidence()">📎 Add to Vault</button>
+      </div>
+    </div>
+  </div>
+  <div class="card mb16">
+    <div class="card-hd"><div class="card-title">🗃 Evidence Collection</div><span id="ev-cnt" style="font-size:11px;color:var(--text3)">0 files</span></div>
+    <div class="card-body">
+      <div id="ev-filters" class="btn-group mb12">
+        <button class="btn btn-ghost btn-sm ev-filter active" onclick="filterEv('all',this)">All</button>
+        <button class="btn btn-ghost btn-sm ev-filter" onclick="filterEv('Appreciation Email',this)">Appreciation</button>
+        <button class="btn btn-ghost btn-sm ev-filter" onclick="filterEv('Certificate',this)">Certificates</button>
+        <button class="btn btn-ghost btn-sm ev-filter" onclick="filterEv('Screenshot',this)">Screenshots</button>
+      </div>
+      <div id="ev-grid" class="ev-grid"></div>
+    </div>
+  </div>
+
+  <div class="card mb16">
+    <div class="card-body">
+      <p style="font-size:11.5px;color:var(--text3);line-height:1.6">🔧 <strong>Technologies</strong> — automatically pulled from the Technologies field on your Projects and Work Journal entries. This is your skills footprint at a glance.</p>
+      <input id="tech-search" placeholder="🔍 Filter technologies..." oninput="renderTechnologies()" style="margin-top:10px;width:100%;max-width:280px;padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px">
+    </div>
+  </div>
+  <div class="gauto mb16" id="tech-summary-kpis"></div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">🔧 Most Used Technologies</div></div>
+    <div class="card-body" id="tech-list"></div>
+  </div>
 </div>
 
 <!-- ═══ UTILITIES TAB BAR ═══ -->
 <div id="utilities-tabbar" class="ws-tabbar utilities-tabbar" style="display:none">
   <button class="ws-tab" data-ws-tab="companies" onclick="nav('companies')">🏢 Companies</button>
-  <button class="ws-tab" data-ws-tab="salary" onclick="nav('salary')">💰 Salary Calculator</button>
   <button class="ws-tab" data-ws-tab="stickies" onclick="nav('stickies')">🗒 Sticky Notes</button>
   <button class="ws-tab" data-ws-tab="reports" onclick="nav('reports')">📊 Reports & Export</button>
   <button class="ws-tab" data-ws-tab="goals" onclick="nav('goals')">🎯 Goals</button>
@@ -1528,37 +1513,6 @@ tr:hover td{background:#8b5cf608}
 </div>
 
 <!-- ═══ SALARY CALCULATOR ═══ -->
-<div id="page-salary" class="page">
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">💰 Salary Calculator — <span id="sal-company-name" style="font-weight:400;color:var(--text3)">Active Company</span></div></div>
-    <div class="card-body">
-      <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Add unlimited earning and deduction line items. This is saved per company — switch companies and the structure switches with it. Attendance-based deductions from your Pay Settings are added automatically.</p>
-      <div class="fgrid">
-        <div class="ff s2"><label>Label</label><input id="sc-label" placeholder="e.g. Basic, HRA, PF, Bonus..."></div>
-        <div class="ff"><label>Kind</label><select id="sc-kind"><option value="earning">Earning</option><option value="deduction">Deduction</option></select></div>
-        <div class="ff"><label>Amount (₹)</label><input type="number" id="sc-amount" placeholder="0"></div>
-      </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet btn-sm" onclick="addSalComp()">+ Add Line Item</button></div>
-    </div>
-  </div>
-
-  <div class="sal-grid">
-    <div class="card">
-      <div class="card-hd"><div class="card-title" style="color:var(--sage)">＋ Earnings</div></div>
-      <div id="sal-earnings-list" class="sal-list"></div>
-    </div>
-    <div class="card">
-      <div class="card-hd"><div class="card-title" style="color:var(--peach)">－ Deductions</div></div>
-      <div id="sal-deductions-list" class="sal-list"></div>
-    </div>
-  </div>
-
-  <div class="card mt16">
-    <div class="card-hd"><div class="card-title">📐 Summary</div></div>
-    <div class="card-body" id="sal-summary"></div>
-  </div>
-</div>
-
 <!-- ═══ STICKY NOTES ═══ -->
 <div id="page-stickies" class="page">
   <div class="sticky-toolbar">
@@ -1633,6 +1587,7 @@ tr:hover td{background:#8b5cf608}
   <div class="planner-tabs mb16">
     <button class="planner-tab active" onclick="switchPlannerTab('daily',this)">🗓 Daily Plan</button>
     <button class="planner-tab" onclick="switchPlannerTab('attendance',this)">📋 Attendance & Pay</button>
+    <button class="planner-tab" onclick="switchPlannerTab('salary',this)">💰 Salary Calculator</button>
   </div>
 
   <div id="planner-daily" class="planner-subpage active">
@@ -1740,6 +1695,37 @@ tr:hover td{background:#8b5cf608}
       <div class="att-legend-item"><div class="att-legend-box" style="background:var(--s3)"></div>Sunday (off)</div>
     </div>
     <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:12px">Click a date to mark it with the selected status above — click again to clear. Sundays are excluded automatically.</p>
+  </div>
+
+  <div id="planner-salary" class="planner-subpage">
+    <div class="card mb16">
+      <div class="card-hd"><div class="card-title">💰 Salary Calculator — <span id="sal-company-name" style="font-weight:400;color:var(--text3)">Active Company</span></div></div>
+      <div class="card-body">
+        <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Add unlimited earning and deduction line items. This is saved per company — switch companies and the structure switches with it. Attendance-based deductions from Pay Settings above are added automatically.</p>
+        <div class="fgrid">
+          <div class="ff s2"><label>Label</label><input id="sc-label" placeholder="e.g. Basic, HRA, PF, Bonus..."></div>
+          <div class="ff"><label>Kind</label><select id="sc-kind"><option value="earning">Earning</option><option value="deduction">Deduction</option></select></div>
+          <div class="ff"><label>Amount (₹)</label><input type="number" id="sc-amount" placeholder="0"></div>
+        </div>
+        <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet btn-sm" onclick="addSalComp()">+ Add Line Item</button></div>
+      </div>
+    </div>
+
+    <div class="sal-grid">
+      <div class="card">
+        <div class="card-hd"><div class="card-title" style="color:var(--sage)">＋ Earnings</div></div>
+        <div id="sal-earnings-list" class="sal-list"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title" style="color:var(--peach)">－ Deductions</div></div>
+        <div id="sal-deductions-list" class="sal-list"></div>
+      </div>
+    </div>
+
+    <div class="card mt16">
+      <div class="card-hd"><div class="card-title">📐 Summary</div></div>
+      <div class="card-body" id="sal-summary"></div>
+    </div>
   </div>
 </div>
 
@@ -2634,6 +2620,9 @@ function switchPlannerTab(tab, el) {
   if (tab === 'attendance') {
     loadAttendanceData().then(renderAttendance);
   }
+  if (tab === 'salary') {
+    renderSalary();
+  }
 }
 
 // ── ATTENDANCE STATE ──
@@ -3250,12 +3239,12 @@ async function migrateLocalData() {
 
 // Which notebook-tab group each page id lives under (used to auto-expand the right group)
 const NAV_GROUP = {
-  quicklog:'workspace', projects:'workspace', learning:'workspace', clients:'workspace',
-  support:'workspace', docs:'workspace', planner:'workspace', clientsupport:'workspace',
+  quicklog:'workspace', projects:'workspace', learning:'workspace',
+  planner:'workspace', clientsupport:'workspace',
   tasks:'workspace', meetings:'workspace', ideas:'workspace',
-  achievements:'career', evidence:'career', ai:'career', technologies:'career',
+  achievements:'career', ai:'career',
   reports:'utilities', goals:'utilities', notes:'utilities', mood:'utilities',
-  companies:'utilities', salary:'utilities', stickies:'utilities'
+  companies:'utilities', stickies:'utilities'
 };
 
 function nav(id) {
@@ -3268,14 +3257,12 @@ function nav(id) {
   const grp = NAV_GROUP[id];
   if (grp) openGroup(grp); else closeAllGroups();
   const titles = {
-    dashboard:'Dashboard', quicklog:'Work Journal', evidence:'Evidence Vault',
-    ai:'AI Writer', projects:'Projects', learning:'Learning',
-    clients:'Client Calls', support:'Technical Support', docs:'Documentation',
-    achievements:'Achievements', reports:'Reports & Export',
-    planner:'Planner', goals:'Goals', notes:'Knowledge Hub',
+    dashboard:'Dashboard', quicklog:'Work Journal', ai:'AI Writer', projects:'Projects', learning:'Learning',
+    achievements:'Achievements & Evidence', reports:'Reports & Export',
+    planner:'Attendance & Pay', goals:'Goals', notes:'Knowledge Hub',
     mood:'Mood Tracker', profile:'My Profile',
     tasks:'Task Manager', meetings:'Meeting Notes', ideas:'Idea Board',
-    companies:'Company Manager', salary:'Salary Calculator', stickies:'Sticky Notes', technologies:'Technologies', clientsupport:'Client Support'
+    companies:'Company Manager', stickies:'Sticky Notes', clientsupport:'Client Support'
   };
   document.getElementById('page-title').textContent = titles[id] || id;
   document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
@@ -3289,19 +3276,17 @@ function nav(id) {
   document.querySelectorAll('.ws-tab').forEach(t => t.classList.toggle('active', t.dataset.wsTab === id));
   if (id==='dashboard')   renderDashboard();
   if (id==='reports')     renderReports();
-  if (id==='planner')     renderCal();
+  if (id==='planner')     { renderCal(); renderSalary(); }
   if (id==='goals')       renderGoals();
   if (id==='notes')       renderNotes();
   if (id==='mood')        renderMood();
-  if (id==='evidence')    renderEvidence();
+  if (id==='achievements') { renderEvidence(); renderTechnologies(); }
   if (id==='profile')     loadProfile();
   if (id==='tasks')       renderTasks();
   if (id==='meetings')    renderMeetings();
   if (id==='ideas')       renderIdeas();
   if (id==='companies')   renderCompanyManager();
-  if (id==='salary')      renderSalary();
   if (id==='stickies')    renderStickies();
-  if (id==='technologies') renderTechnologies();
   if (id==='clientsupport') renderClientSupport();
   closeSidebar();
 }
@@ -3671,6 +3656,13 @@ function renderSupport() {
 }
 
 // ── CLIENT SUPPORT (merged view over Clients + Support, Phase 6C) ──
+function scrollToCSForm(kind) {
+  const fsId = kind === 'client' ? 'client-fs' : 'support-fs';
+  const el = document.getElementById(fsId);
+  if (!el) return;
+  if (!el.classList.contains('open')) el.classList.add('open');
+  el.scrollIntoView({ behavior:'smooth', block:'center' });
+}
 function renderClientSupport() {
   const el = document.getElementById('cs-timeline'); if (!el) return;
   const q = (document.getElementById('cs-search')?.value || '').toLowerCase();
@@ -3719,7 +3711,7 @@ function renderClientSupport() {
         ${i.desc ? `<div class="cs-desc">${esc(i.desc)}</div>` : ''}
         ${i.resolution ? `<div class="cs-desc" style="color:var(--green)">✓ ${esc(i.resolution)}</div>` : ''}
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="nav('${i.kind==='client'?'clients':'support'}')" style="align-self:flex-start;flex-shrink:0">Edit →</button>
+      <button class="btn btn-ghost btn-sm" onclick="scrollToCSForm('${i.kind}')" style="align-self:flex-start;flex-shrink:0">View form ↓</button>
     </div>
   `).join('');
 }
@@ -3783,11 +3775,12 @@ function renderTasks() {
   document.getElementById('tasks-cnt').textContent = D.tasks.length + ' tasks';
   board.innerHTML = TASK_COLUMNS.map(col => {
     const items = list.filter(t => (t.col||'inbox') === col.key);
-    return `<div class="kanban-col">
+    return `<div class="kanban-col" data-col-key="${col.key}">
       <div class="kanban-col-hd"><span>${col.label}</span><span>${items.length}</span></div>
+      <div class="kanban-col-body" data-col-key="${col.key}">
       ${items.map(t => {
         const others = TASK_COLUMNS.filter(c => c.key !== col.key);
-        return `<div class="task-card">
+        return `<div class="task-card" draggable="true" data-task-id="${t.id}">
           <div class="task-card-title">${esc(t.title)}</div>
           <div class="task-card-meta">${prioBadge(t.prio)}${t.due ? `<span class="badge bn" style="font-size:9.5px">📅 ${t.due}</span>` : ''}${t.project ? `<span class="badge bv" style="font-size:9.5px">${esc(t.project)}</span>` : ''}</div>
           <div class="task-card-move">
@@ -3795,9 +3788,37 @@ function renderTasks() {
             ${delBtn('tasks', t.id, 'renderTasks')}
           </div>
         </div>`;
-      }).join('') || `<div style="font-size:11px;color:var(--text4);text-align:center;padding:10px 4px">Empty</div>`}
+      }).join('') || `<div class="kanban-empty-hint">Drop a task here</div>`}
+      </div>
     </div>`;
   }).join('');
+  wireKanbanDragDrop(board);
+}
+
+// Native HTML5 drag-and-drop between Kanban columns — smooth drag, drop-target highlight
+function wireKanbanDragDrop(board) {
+  board.querySelectorAll('.task-card').forEach(card => {
+    card.addEventListener('dragstart', e => {
+      card.classList.add('kdragging');
+      e.dataTransfer.setData('text/plain', card.dataset.taskId);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', () => card.classList.remove('kdragging'));
+  });
+  board.querySelectorAll('.kanban-col-body').forEach(colBody => {
+    colBody.addEventListener('dragover', e => {
+      e.preventDefault();
+      colBody.classList.add('kdragover');
+    });
+    colBody.addEventListener('dragleave', () => colBody.classList.remove('kdragover'));
+    colBody.addEventListener('drop', e => {
+      e.preventDefault();
+      colBody.classList.remove('kdragover');
+      const taskId = e.dataTransfer.getData('text/plain');
+      const targetCol = colBody.dataset.colKey;
+      if (taskId && targetCol) moveTask(taskId, targetCol);
+    });
+  });
 }
 
 // ── MEETING NOTES ──
