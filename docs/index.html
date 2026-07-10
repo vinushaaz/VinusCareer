@@ -305,10 +305,7 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .tech-bar-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--powder));border-radius:6px}
 .tech-count{width:110px;flex-shrink:0;font-size:11px;color:var(--text3);text-align:right}
 /* ── ATTENDANCE ANALYTICS ── */
-.att-quick-checkin{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.att-time-capture{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:14px;padding:10px 14px;background:var(--s2);border-radius:10px;font-size:11.5px;color:var(--text2)}
-.att-time-capture label{display:flex;align-items:center;gap:6px}
-.att-time-capture input[type="time"]{padding:4px 8px;border-radius:7px;border:1px solid var(--border2);font-size:11.5px}
+.att-click-hint{background:var(--violet-xl);color:var(--violet-l);border-radius:10px;padding:10px 14px;font-size:11.5px;margin-bottom:14px;line-height:1.5}
 .att-insights{display:flex;flex-direction:column;gap:6px}
 .att-insight{font-size:12px;color:var(--text2);background:var(--s2);padding:8px 12px;border-radius:9px;line-height:1.5}
 .att-insight strong{color:var(--violet-l)}
@@ -1662,16 +1659,7 @@ tr:hover td{background:#8b5cf608}
         </div>
       </div>
       <div class="card-body">
-        <div class="att-quick-checkin">
-          <button class="btn btn-violet btn-sm" onclick="quickCheckIn()">⚡ Check In Now</button>
-          <button class="btn btn-ghost btn-sm" onclick="quickCheckOut()">🚪 Check Out Now</button>
-          <span id="att-checkin-status" style="font-size:11px;color:var(--text3)"></span>
-        </div>
-        <div class="att-time-capture">
-          <label>Or set manually — Login <input type="time" id="att-login-input"></label>
-          <label>Logout <input type="time" id="att-logout-input"></label>
-          <span style="font-size:10.5px;color:var(--text4)">For backfilling past days. Only applied when marking Present / Half-Day.</span>
-        </div>
+        <div class="att-click-hint">💡 Click a date once to record <strong>login</strong> (current time), click it again to record <strong>logout</strong>, click a third time to clear it. Works the same for Present and Half-Day.</div>
         <div class="cal-grid mb12" id="att-cal-headers"></div>
         <div class="cal-grid" id="att-cal-grid"></div>
       </div>
@@ -2786,53 +2774,50 @@ function nowHHMM() {
   const d = new Date();
   return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 }
-async function quickCheckIn() {
-  if (!currentUser) { toast('Not signed in', 'error'); return; }
-  const dateStr = today();
-  const t = nowHHMM();
-  const existing = attLogs[dateStr];
-  attLogs[dateStr] = { status: 'present', login: t, logout: existing?.logout || null, notes: existing?.notes || '' };
-  const loginEl = document.getElementById('att-login-input'); if (loginEl) loginEl.value = t;
-  renderAttendance();
-  document.getElementById('att-checkin-status').textContent = `✓ Checked in at ${t}`;
-  try {
-    const payload = { user_id: currentUser.id, company_id: activeCompanyId || null, date: dateStr, status: 'present', login_time: t, logout_time: existing?.logout || null };
-    const { error } = await _supa.from('attendance_logs').upsert(payload, { onConflict: 'user_id,date,company_id' });
-    if (error) throw error;
-    setSyncStatus('synced', '☁ Saved');
-    toast(`⚡ Checked in at ${t}`);
-  } catch (err) {
-    console.error('✗ Check in failed:', err.message);
-    setSyncStatus('error', '⚠ Sync failed');
-  }
-}
-async function quickCheckOut() {
-  if (!currentUser) { toast('Not signed in', 'error'); return; }
-  const dateStr = today();
-  const t = nowHHMM();
-  const existing = attLogs[dateStr];
-  if (!existing) { toast('⚠️ Check in first', 'error'); return; }
-  existing.logout = t;
-  const logoutEl = document.getElementById('att-logout-input'); if (logoutEl) logoutEl.value = t;
-  renderAttendance();
-  document.getElementById('att-checkin-status').textContent = `✓ Checked out at ${t}`;
-  try {
-    const payload = { user_id: currentUser.id, company_id: activeCompanyId || null, date: dateStr, status: existing.status, login_time: existing.login, logout_time: t };
-    const { error } = await _supa.from('attendance_logs').upsert(payload, { onConflict: 'user_id,date,company_id' });
-    if (error) throw error;
-    setSyncStatus('synced', '☁ Saved');
-    toast(`🚪 Checked out at ${t}`);
-  } catch (err) {
-    console.error('✗ Check out failed:', err.message);
-    setSyncStatus('error', '⚠ Sync failed');
-  }
-}
 async function toggleAttendanceDay(dateStr) {
   if (!currentUser) { toast('Not signed in', 'error'); return; }
-  const current = attLogs[dateStr]?.status;
+  const entry = attLogs[dateStr];
 
-  if (current === attMode) {
-    // Clicking the same status again clears it
+  // Statuses without login/logout — simple mark / click-again-to-clear
+  if (attMode !== 'present' && attMode !== 'half') {
+    if (entry?.status === attMode) {
+      delete attLogs[dateStr];
+      renderAttendance();
+      try {
+        let q = _supa.from('attendance_logs').delete().eq('user_id', currentUser.id).eq('date', dateStr);
+        q = activeCompanyId ? q.eq('company_id', activeCompanyId) : q.is('company_id', null);
+        await withTimeout(q, 8000, 'toggleAttendanceDay delete');
+        setSyncStatus('synced', '☁ Saved');
+      } catch (err) {
+        console.error('✗ Clear attendance day failed:', err.message);
+        setSyncStatus('error', '⚠ Sync failed');
+      }
+      return;
+    }
+    attLogs[dateStr] = { status: attMode, login: null, logout: null, notes: entry?.notes || '' };
+    renderAttendance();
+    try {
+      const payload = { user_id: currentUser.id, company_id: activeCompanyId || null, date: dateStr, status: attMode, login_time: null, logout_time: null };
+      const { error } = await withTimeout(_supa.from('attendance_logs').upsert(payload, { onConflict: 'user_id,date,company_id' }), 8000, 'toggleAttendanceDay upsert');
+      if (error) throw error;
+      setSyncStatus('synced', '☁ Saved');
+    } catch (err) {
+      console.error('✗ Save attendance day failed:', err.message);
+      setSyncStatus('error', '⚠ Sync failed');
+    }
+    return;
+  }
+
+  // Present / Half-Day — every click captures the current time automatically:
+  // 1st click → login recorded · 2nd click → logout recorded · 3rd click → cleared
+  const t = nowHHMM();
+  let action, loginVal, logoutVal;
+  if (!entry || entry.status !== attMode || !entry.login) {
+    action = 'login'; loginVal = t; logoutVal = null;
+  } else if (!entry.logout) {
+    action = 'logout'; loginVal = entry.login; logoutVal = t;
+  } else {
+    // Already has both login and logout — clear the day
     delete attLogs[dateStr];
     renderAttendance();
     try {
@@ -2840,6 +2825,7 @@ async function toggleAttendanceDay(dateStr) {
       q = activeCompanyId ? q.eq('company_id', activeCompanyId) : q.is('company_id', null);
       await withTimeout(q, 8000, 'toggleAttendanceDay delete');
       setSyncStatus('synced', '☁ Saved');
+      toast('Cleared');
     } catch (err) {
       console.error('✗ Clear attendance day failed:', err.message);
       setSyncStatus('error', '⚠ Sync failed');
@@ -2847,10 +2833,7 @@ async function toggleAttendanceDay(dateStr) {
     return;
   }
 
-  // Only Present/Half-Day carry meaningful login/logout times
-  const loginVal = (attMode === 'present' || attMode === 'half') ? (document.getElementById('att-login-input')?.value || null) : null;
-  const logoutVal = (attMode === 'present' || attMode === 'half') ? (document.getElementById('att-logout-input')?.value || null) : null;
-  attLogs[dateStr] = { status: attMode, login: loginVal, logout: logoutVal };
+  attLogs[dateStr] = { status: attMode, login: loginVal, logout: logoutVal, notes: entry?.notes || '' };
   renderAttendance();
   try {
     const payload = {
@@ -2863,6 +2846,7 @@ async function toggleAttendanceDay(dateStr) {
     );
     if (error) throw error;
     setSyncStatus('synced', '☁ Saved');
+    toast(action === 'login' ? `✓ Login recorded: ${t}` : `✓ Logout recorded: ${t}`);
   } catch (err) {
     console.error('✗ Save attendance day failed:', err.message);
     setSyncStatus('error', '⚠ Sync failed');
