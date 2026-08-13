@@ -9,6 +9,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script>hljs.configure({ignoreUnescapedHTML:true});</script>
 <style>
 /* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -181,32 +184,57 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 #content{padding:24px;flex:1}
 .page{display:none}.page.active{display:block;animation:fadeUp .2s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-/* ── RICH TEXT EDITOR (Work Journal) ── */
+/* ── RICH TEXT EDITOR (shared across Work Journal, Meetings, Achievements, Stickies, Vault) ── */
+.rt-wrap{position:relative}
+.rt-wrap.fullscreen{position:fixed;inset:16px;z-index:600;background:var(--s1);border-radius:var(--r3);box-shadow:0 20px 60px rgba(0,0,0,.35);display:flex;flex-direction:column;padding:12px}
+.rt-wrap.fullscreen .rt-editor{flex:1;max-height:none}
 .rt-toolbar{
-  display:flex;align-items:center;gap:4px;flex-wrap:wrap;
+  display:flex;align-items:center;gap:2px;flex-wrap:wrap;
   background:var(--s2);border:1px solid var(--border);
-  border-radius:10px 10px 0 0;padding:6px 8px;
+  border-radius:10px 10px 0 0;padding:5px 6px;position:relative;
 }
 .rt-toolbar button{
   border:none;background:none;cursor:pointer;
-  padding:5px 8px;border-radius:6px;font-size:12px;color:var(--text2);
-  transition:all .12s;
+  padding:5px 7px;border-radius:6px;font-size:12px;color:var(--text2);
+  transition:all .12s;min-width:26px;
 }
 .rt-toolbar button:hover{background:var(--s1);color:var(--violet-l)}
-.rt-sep{width:1px;height:16px;background:var(--border2);margin:0 4px}
+.rt-toolbar button.on{background:var(--violet-xl);color:var(--violet-l)}
+.rt-toolbar input[type=color]{width:22px;height:22px;border:none;border-radius:6px;padding:0;cursor:pointer;background:none;vertical-align:middle}
+.rt-sep{width:1px;height:16px;background:var(--border2);margin:0 3px;flex-shrink:0}
+.rt-compact .rt-toolbar button{padding:4px 5px;font-size:11px}
 .rt-editor{
   min-height:90px;max-height:260px;overflow-y:auto;
   border:1px solid var(--border);border-top:none;
-  border-radius:0 0 10px 10px;padding:10px 12px;
+  padding:10px 12px;
   font-size:12.5px;color:var(--text);background:var(--s1);
-  line-height:1.55;
+  line-height:1.6;
 }
+.rt-wrap:not(.rt-has-foot) .rt-editor{border-radius:0 0 10px 10px}
+.rt-editor:focus{outline:none}
 .rt-editor:empty::before{content:attr(data-placeholder);color:var(--text4)}
-.rt-editor pre{background:var(--s2);border-radius:6px;padding:8px 10px;font-family:monospace;font-size:11.5px;overflow-x:auto;margin:6px 0}
-.rt-editor ul{padding-left:20px}
+.rt-editor pre{background:#1e1e2e;color:#e2e2f0;border-radius:8px;padding:10px 12px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11.5px;overflow-x:auto;margin:8px 0}
+.rt-editor blockquote{border-left:3px solid var(--violet);margin:8px 0;padding:2px 12px;color:var(--text2);font-style:italic}
+.rt-editor code{background:var(--s2);padding:1px 5px;border-radius:5px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px}
+.rt-editor pre code{background:none;padding:0}
+.rt-editor ul,.rt-editor ol{padding-left:22px;margin:4px 0}
 .rt-editor a{color:var(--violet-l)}
+.rt-editor hr{border:none;border-top:1px solid var(--border2);margin:10px 0}
+.rt-editor img{max-width:100%;border-radius:8px;cursor:pointer;margin:6px 0}
+.rt-editor table{border-collapse:collapse;width:100%;margin:8px 0;font-size:11.5px}
+.rt-editor table td,.rt-editor table th{border:1px solid var(--border2);padding:5px 8px}
+.rt-editor h1{font-size:19px;font-weight:800;margin:8px 0 4px}
+.rt-editor h2{font-size:16px;font-weight:700;margin:7px 0 4px}
+.rt-editor h3{font-size:13.5px;font-weight:700;margin:6px 0 3px}
 .rt-checklist{list-style:none;padding-left:0}
 .rt-checklist li{display:flex;gap:6px;align-items:flex-start;margin:2px 0}
+.rt-checklist input[type=checkbox]{margin-top:2px}
+.rt-foot{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;color:var(--text4);background:var(--s1);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:5px 10px}
+.rt-emoji-panel{position:absolute;top:100%;left:0;z-index:20;background:var(--s1);border:1px solid var(--border2);border-radius:10px;box-shadow:var(--shadow-lift);padding:8px;display:grid;grid-template-columns:repeat(8,1fr);gap:2px;width:220px}
+.rt-emoji-panel button{font-size:15px;padding:4px;border-radius:6px}
+.rt-img-toolbar{position:fixed;z-index:700;background:#1e1e2e;border-radius:8px;padding:4px;display:none;gap:2px;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.rt-img-toolbar button{background:none;border:none;color:#e2e2f0;font-size:10.5px;padding:5px 8px;border-radius:5px;cursor:pointer}
+.rt-img-toolbar button:hover{background:#33334a}
 /* ── JOURNAL VIEW MODAL ── */
 .jv-overlay{position:fixed;inset:0;background:#28203a30;backdrop-filter:blur(2px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
 .jv-overlay.show{display:flex}
@@ -214,6 +242,25 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .jv-modal-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
 .jv-modal-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px}
 .jv-modal-close{border:none;background:var(--s2);border-radius:8px;width:28px;height:28px;cursor:pointer;font-size:13px;color:var(--text3)}
+/* ── GLOBAL SEARCH (Ctrl+K) ── */
+.gsearch-overlay{position:fixed;inset:0;background:#20182f55;backdrop-filter:blur(3px);z-index:800;display:none;align-items:flex-start;justify-content:center;padding:12vh 20px 20px}
+.gsearch-overlay.show{display:flex}
+.gsearch-modal{background:var(--s1);border-radius:var(--r3);max-width:600px;width:100%;max-height:70vh;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.35);overflow:hidden}
+.gsearch-input-row{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.gsearch-icon{font-size:15px;opacity:.6}
+.gsearch-input-row input{flex:1;border:none;background:none;font-size:14.5px;color:var(--text)}
+.gsearch-input-row input:focus{outline:none}
+.gsearch-kbd{font-size:10px;color:var(--text4);background:var(--s2);border:1px solid var(--border2);border-radius:6px;padding:2px 7px}
+.gsearch-results{overflow-y:auto;padding:8px}
+.gsearch-empty{padding:30px 16px;text-align:center;color:var(--text4);font-size:12.5px}
+.gsearch-group-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text4);padding:10px 10px 5px}
+.gsearch-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer}
+.gsearch-item:hover,.gsearch-item.sel{background:var(--violet-xl)}
+.gsearch-item-ico{font-size:14px;width:20px;text-align:center;flex-shrink:0}
+.gsearch-item-body{flex:1;min-width:0}
+.gsearch-item-title{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gsearch-item-sub{font-size:10.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gsearch-item-type{font-size:9px;color:var(--text4);background:var(--s2);border-radius:6px;padding:2px 6px;flex-shrink:0}
 /* ── KANBAN (Task Manager) ── */
 .kanban-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .kanban-toolbar input{padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px;background:var(--s1);width:220px}
@@ -237,18 +284,6 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
   padding:2px 6px;cursor:pointer;color:var(--text3);
 }
 .task-card-move button:hover{color:var(--powder);border-color:#5b9bc450}
-/* ── IDEA BOARD ── */
-.idea-toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.idea-toolbar .btn.active{background:var(--peach-xl);color:var(--peach);border-color:#e8926b40}
-.idea-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-.idea-card{
-  background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);
-  padding:14px;box-shadow:var(--shadow-soft);transition:box-shadow .2s;
-}
-.idea-card:hover{box-shadow:var(--shadow-lift)}
-.idea-card-title{font-size:13px;font-weight:700;margin-bottom:6px}
-.idea-card-desc{font-size:11.5px;color:var(--text2);margin-bottom:10px;line-height:1.5}
-.idea-card-foot{display:flex;justify-content:space-between;align-items:center;gap:6px}
 /* ── WORKSPACE TAB BAR ── */
 .ws-tabbar{
   display:flex;flex-wrap:wrap;gap:6px;
@@ -264,8 +299,6 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 }
 .ws-tab:hover{background:var(--powder-xl);color:var(--powder)}
 .ws-tab.active{background:linear-gradient(135deg,var(--powder-xl),#eef6fb);color:var(--powder);box-shadow:inset 0 0 0 1px #5b9bc430}
-.career-tabbar .ws-tab:hover{background:var(--peach-xl);color:var(--peach)}
-.career-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--peach-xl),#fdf1e8);color:var(--peach);box-shadow:inset 0 0 0 1px #e8926b40}
 .utilities-tabbar .ws-tab:hover{background:var(--sage-xl);color:var(--sage)}
 .utilities-tabbar .ws-tab.active{background:linear-gradient(135deg,var(--sage-xl),#eff5ec);color:var(--sage);box-shadow:inset 0 0 0 1px #6f9c6a40}
 /* ── WORK JOURNAL SUMMARY (Phase 6E) ── */
@@ -275,28 +308,6 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .wj-detail-row{display:flex;justify-content:space-between;padding:7px 4px;font-size:12px;border-bottom:1px dashed var(--border2)}
 .wj-detail-row:last-child{border-bottom:none}
 .wj-detail-row .wj-val{font-weight:600;color:var(--text)}
-/* ── KNOWLEDGE HUB ── */
-.kh-kind-picker{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.kh-kind-btn{border:1px solid var(--border2);background:var(--s2);border-radius:10px;padding:7px 12px;font-size:11.5px;cursor:pointer;color:var(--text2);transition:all .15s}
-.kh-kind-btn:hover{background:var(--s3)}
-.kh-kind-btn.active{background:var(--violet-xl);color:var(--violet-l);border-color:var(--border3);font-weight:600}
-.kh-extra-fields{background:var(--s2);border-radius:var(--r2);padding:14px;margin-bottom:12px}
-.kh-filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
-.kh-filters input{flex:1;min-width:200px;padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px}
-.kh-filters select{padding:7px 10px;border-radius:10px;border:1px solid var(--border2);font-size:12px;background:var(--s1)}
-.note-card .kh-kind-tag{font-size:9.5px;padding:2px 7px;border-radius:6px;font-weight:600}
-.note-card .kh-pin-btn{position:absolute;top:8px;left:8px;background:none;border:none;cursor:pointer;font-size:12px}
-/* ── CLIENT SUPPORT MERGED TIMELINE ── */
-.cs-filters{display:flex;flex-wrap:wrap;gap:8px}
-.cs-filters input{flex:1;min-width:200px;padding:7px 12px;border-radius:10px;border:1px solid var(--border2);font-size:12px}
-.cs-filters select{padding:7px 10px;border-radius:10px;border:1px solid var(--border2);font-size:12px;background:var(--s1)}
-.cs-item{display:flex;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border)}
-.cs-item:last-child{border-bottom:none}
-.cs-icon{font-size:16px;flex-shrink:0;margin-top:1px}
-.cs-body{flex:1;min-width:0}
-.cs-title{font-size:12.5px;font-weight:600}
-.cs-meta{font-size:10.5px;color:var(--text3);margin-top:3px}
-.cs-desc{font-size:11.5px;color:var(--text2);margin-top:4px;line-height:1.5}
 /* ── TECHNOLOGY TRACKING ── */
 .tech-row{display:flex;align-items:center;gap:12px;padding:9px 4px;border-bottom:1px solid var(--border)}
 .tech-row:last-child{border-bottom:none}
@@ -359,6 +370,12 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .sn-sage{background:linear-gradient(160deg,var(--sage-xl),#f5faf3)}
 .sn-cream{background:linear-gradient(160deg,#f6efdf,#fffaf0)}
 .sn-text{flex:1;font-size:12px;line-height:1.5;background:transparent;border:none;resize:none;outline:none;color:var(--text);font-family:inherit}
+.sn-rt{flex:1;min-height:0;display:flex;flex-direction:column;background:transparent}
+.sn-rt .rt-toolbar{background:#ffffff70;border:none;border-radius:8px;padding:2px 3px;gap:0}
+.sn-rt .rt-toolbar button{padding:3px 5px;font-size:10px;color:var(--text2);min-width:auto}
+.sn-rt .rt-toolbar button:hover{background:#ffffffc0}
+.sn-rt .rt-editor{flex:1;min-height:0;overflow-y:auto;border:none;background:transparent;padding:4px 2px;font-size:12px;line-height:1.5}
+.sn-rt .rt-editor p{margin:0 0 4px}
 .sn-toolbar{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
 .sn-toolbar button{border:none;background:#ffffff80;border-radius:6px;padding:3px 6px;font-size:10px;cursor:pointer;color:var(--text2)}
 .sn-toolbar button:hover{background:#ffffffc0}
@@ -488,26 +505,6 @@ tr:hover td{background:#8b5cf608}
   background:var(--s2);cursor:pointer;font-size:13px;transition:all .15s;
 }
 .mood-btn:hover,.mood-btn.sel{border-color:var(--violet);background:var(--violet-xl)}
-/* ── AI BOX ── */
-.ai-box{
-  background:linear-gradient(135deg,#f3e8ff,#fdf4ff);
-  border:1px solid var(--border3);border-radius:var(--r2);
-  padding:18px;margin-bottom:16px;
-}
-.ai-label{
-  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--violet);margin-bottom:10px;display:flex;align-items:center;gap:6px;
-}
-.ai-output{
-  font-size:12.5px;line-height:1.8;color:var(--text2);
-  white-space:pre-wrap;min-height:60px;
-}
-.ai-loading{
-  display:flex;align-items:center;gap:8px;color:var(--text3);font-size:12px;
-}
-.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--violet);animation:dot .6s ease-in-out infinite}
-.ai-dot:nth-child(2){animation-delay:.15s}.ai-dot:nth-child(3){animation-delay:.3s}
-@keyframes dot{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
 /* ── EVIDENCE VAULT ── */
 .ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
 .ev-card{
@@ -593,16 +590,83 @@ tr:hover td{background:#8b5cf608}
 .att-view-dot{position:absolute;bottom:1px;right:2px;font-size:8px;line-height:1;cursor:pointer;opacity:.55}
 .att-view-dot:hover{opacity:1}
 .cal-header-day{font-size:10px;text-align:center;color:var(--text3);font-weight:600;padding-bottom:6px}
-/* ── NOTES / SCRAPBOOK ── */
-.note-card{
-  background:var(--s2);border:1px solid var(--border);
-  border-radius:var(--r);padding:14px;
-  transition:all .15s;cursor:pointer;position:relative;
+/* ── KNOWLEDGE VAULT ── */
+.kv-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.kv-section-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.kv-tab{border:1px solid var(--border2);background:var(--s2);border-radius:10px;padding:7px 13px;font-size:12px;cursor:pointer;color:var(--text2);transition:all .15s;font-weight:500}
+.kv-tab:hover{background:var(--s3)}
+.kv-tab.active{background:var(--violet-xl);color:var(--violet-l);border-color:var(--border3);font-weight:700}
+.kv-body{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start}
+.kv-sidebar{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:14px;position:sticky;top:0}
+.kv-search-input{width:100%;padding:8px 10px;border-radius:9px;border:1px solid var(--border2);font-size:12px;margin-bottom:12px;background:var(--s2);color:var(--text)}
+.kv-filter-group{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.kv-filter-group .widget-toggle{font-size:11.5px}
+.kv-folders-hd{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text4);margin-bottom:8px}
+.kv-folders{display:flex;flex-direction:column;gap:2px;max-height:220px;overflow-y:auto;margin-bottom:14px}
+.kv-folder-btn{display:flex;justify-content:space-between;align-items:center;gap:6px;background:none;border:none;text-align:left;padding:6px 8px;border-radius:7px;font-size:12px;color:var(--text2);cursor:pointer}
+.kv-folder-btn:hover{background:var(--s2)}
+.kv-folder-btn.active{background:var(--violet-xl);color:var(--violet-l);font-weight:600}
+.kv-folder-count{font-size:10px;color:var(--text4);background:var(--s2);border-radius:8px;padding:1px 6px}
+.kv-folder-btn.active .kv-folder-count{background:rgba(255,255,255,.5)}
+.kv-sidebar-actions{display:flex;flex-direction:column;gap:6px}
+.kv-stats-bar{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text3);margin-bottom:12px;padding:0 2px}
+.kv-stats-bar b{color:var(--text2)}
+.kv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.kv-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:14px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow-soft);position:relative;display:flex;flex-direction:column;gap:8px}
+.kv-card:hover{border-color:var(--border3);box-shadow:var(--shadow-lift);transform:translateY(-1px)}
+.kv-card.pinned{border-color:#e8926b60;background:linear-gradient(135deg,var(--s1),#fdf6f0)}
+.kv-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.kv-card-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.35;flex:1}
+.kv-card-icons{display:flex;gap:4px;flex-shrink:0}
+.kv-card-icon-btn{background:none;border:none;cursor:pointer;font-size:12.5px;opacity:.45;padding:2px;line-height:1}
+.kv-card-icon-btn:hover{opacity:1}
+.kv-card-icon-btn.on{opacity:1}
+.kv-card-badges{display:flex;gap:5px;flex-wrap:wrap}
+.kv-badge{font-size:9.5px;padding:2px 7px;border-radius:6px;font-weight:600;letter-spacing:.02em}
+.kv-badge.section-tech{background:var(--violet-xl);color:var(--violet-l)}
+.kv-badge.section-snippet{background:var(--powder-xl);color:var(--powder)}
+.kv-badge.section-cheatsheet{background:var(--peach-xl);color:var(--peach)}
+.kv-badge.folder{background:var(--s2);color:var(--text3)}
+.kv-card-preview{font-size:11.5px;color:var(--text3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-family:inherit}
+.kv-card-preview.code{font-family:'SF Mono',Menlo,Consolas,monospace;background:var(--s2);padding:8px;border-radius:7px;font-size:10.5px;white-space:pre-wrap}
+.kv-card-tags{display:flex;gap:4px;flex-wrap:wrap}
+.kv-tag-chip{font-size:9.5px;color:var(--text4);background:var(--s2);padding:1px 6px;border-radius:5px}
+.kv-card-foot{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;color:var(--text4);margin-top:2px}
+.kv-card.archived{opacity:.55}
+/* ── Editor modal ── */
+.kv-modal-overlay{position:fixed;inset:0;background:rgba(20,15,35,.55);backdrop-filter:blur(2px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.kv-modal{background:var(--s1);border-radius:var(--r3);width:100%;max-width:720px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}
+.kv-modal-hd{display:flex;align-items:center;gap:10px;padding:16px 18px 10px}
+.kv-title-input{flex:1;font-size:17px;font-weight:700;border:none;background:none;color:var(--text);padding:4px 0}
+.kv-title-input:focus{outline:none}
+.kv-modal-hd-actions{display:flex;gap:4px;align-items:center;flex-shrink:0}
+.kv-icon-btn{background:var(--s2);border:1px solid var(--border2);border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:13px;opacity:.5}
+.kv-icon-btn.on{opacity:1;background:var(--violet-xl);border-color:var(--border3)}
+.kv-modal-close{background:none;border:none;cursor:pointer;font-size:16px;color:var(--text3);width:30px;height:30px}
+.kv-modal-meta{display:flex;gap:8px;flex-wrap:wrap;padding:0 18px 10px}
+.kv-modal-meta select,.kv-modal-meta input{padding:6px 10px;border-radius:8px;border:1px solid var(--border2);font-size:11.5px;background:var(--s2);color:var(--text);flex:1;min-width:120px}
+.kv-quick-tags{display:flex;gap:5px;flex-wrap:wrap;padding:0 18px 10px}
+.kv-quick-tag-btn{font-size:10px;padding:3px 9px;border-radius:7px;border:1px dashed var(--border2);background:none;color:var(--text3);cursor:pointer}
+.kv-quick-tag-btn:hover{background:var(--violet-xl);color:var(--violet-l);border-style:solid}
+.kv-rich-host{padding:0 18px 10px;display:flex;flex-direction:column}
+.kv-rich-host .rt-editor{min-height:280px;max-height:420px;border-radius:0 0 10px 10px}
+.kv-rich-host .rt-toolbar{border-radius:10px 10px 0 0}
+.kv-checklist{list-style:none;padding-left:0}
+.kv-check-item{display:flex;align-items:flex-start;gap:7px;padding:2px 0}
+.kv-check-item.done{color:var(--text4);text-decoration:line-through}
+.kv-check-box{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--border3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--violet);margin-top:1px}
+.kv-inline-code{background:var(--s2);padding:1px 5px;border-radius:5px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px}
+.kv-code-block{margin:10px 0;border-radius:9px;overflow:hidden;border:1px solid var(--border)}
+.kv-code-bar{display:flex;justify-content:space-between;align-items:center;background:#1e1e2e;color:#a6accd;font-size:10px;padding:6px 12px}
+.kv-copy-btn{background:none;border:1px solid #3a3a52;color:#a6accd;border-radius:6px;padding:2px 8px;font-size:10px;cursor:pointer}
+.kv-copy-btn:hover{background:#2a2a3e}
+.kv-code-block pre{margin:0;padding:12px;overflow-x:auto;font-size:11.5px}
+.kv-modal-foot{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-top:1px solid var(--border);background:var(--s2)}
+.kv-stats-inline{font-size:10.5px;color:var(--text4)}
+@media(max-width:720px){
+  .kv-body{grid-template-columns:1fr}
+  .kv-sidebar{position:static}
 }
-.note-card:hover{border-color:var(--border3);transform:translateY(-1px)}
-.note-title{font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text)}
-.note-preview{font-size:11.5px;color:var(--text3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.note-date{font-size:10px;color:var(--text4);margin-top:8px}
 /* ── GOALS ── */
 .goal-item{
   display:flex;align-items:flex-start;gap:10px;
@@ -658,11 +722,9 @@ tr:hover td{background:#8b5cf608}
   .score-info p{max-width:none}
   .kanban-cols{grid-template-columns:1fr}
   .kanban-board{grid-template-columns:1fr;overflow-x:visible}
-  .idea-grid{grid-template-columns:1fr}
   .dash-sticky-grid{grid-template-columns:1fr 1fr}
   .timer-display{font-size:32px}
   .ws-tabbar{overflow-x:auto;flex-wrap:nowrap}
-  .career-tabbar{overflow-x:auto;flex-wrap:nowrap}
   .utilities-tabbar{overflow-x:auto;flex-wrap:nowrap}
   .sal-grid{grid-template-columns:1fr}
   #topbar{padding:0 12px;gap:8px}
@@ -994,9 +1056,24 @@ tr:hover td{background:#8b5cf608}
   <div class="jv-modal">
     <div class="jv-modal-hd">
       <div><div class="jv-modal-title" id="jv-title"></div><div style="font-size:11px;color:var(--text3)" id="jv-date"></div></div>
-      <button class="jv-modal-close" onclick="closeJournalView()">✕</button>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+        <span id="jv-edit-wrap"></span>
+        <button class="jv-modal-close" onclick="closeJournalView()">✕</button>
+      </div>
     </div>
     <div id="jv-body"></div>
+  </div>
+</div>
+
+<!-- ═══ GLOBAL SEARCH (Ctrl+K) ═══ -->
+<div id="gsearch-overlay" class="gsearch-overlay" onclick="if(event.target===this) closeGlobalSearch()">
+  <div class="gsearch-modal">
+    <div class="gsearch-input-row">
+      <span class="gsearch-icon">🔍</span>
+      <input id="gsearch-input" placeholder="Search tasks, meetings, achievements, notes, journal, companies..." oninput="renderGlobalSearch()" onkeydown="gsearchKeydown(event)" autocomplete="off">
+      <span class="gsearch-kbd">Esc</span>
+    </div>
+    <div id="gsearch-results" class="gsearch-results"></div>
   </div>
 </div>
 
@@ -1018,12 +1095,8 @@ tr:hover td{background:#8b5cf608}
     </button>
     <div class="sb-sublist" data-grp-list="workspace">
       <button class="sb-item" data-nav="quicklog" onclick="nav('quicklog')"><span class="si">⚡</span>Work Journal<span class="sb-badge" id="nb-daily">0</span></button>
-      <button class="sb-item" data-nav="projects" onclick="nav('projects')"><span class="si">🚀</span>Projects<span class="sb-badge" id="nb-projects">0</span></button>
       <button class="sb-item" data-nav="tasks" onclick="nav('tasks')"><span class="si">🗂</span>Task Manager<span class="sb-badge" id="nb-tasks">0</span></button>
       <button class="sb-item" data-nav="meetings" onclick="nav('meetings')"><span class="si">🗓</span>Meeting Notes<span class="sb-badge" id="nb-meetings">0</span></button>
-      <button class="sb-item" data-nav="ideas" onclick="nav('ideas')"><span class="si">💡</span>Idea Board<span class="sb-badge" id="nb-ideas">0</span></button>
-      <button class="sb-item" data-nav="learning" onclick="nav('learning')"><span class="si">📚</span>Learning<span class="sb-badge" id="nb-learning">0</span></button>
-      <button class="sb-item" data-nav="clientsupport" onclick="nav('clientsupport')"><span class="si">🤝</span>Client Support</button>
       <button class="sb-item" data-nav="planner" onclick="nav('planner')"><span class="si">🌸</span>Attendance & Pay</button>
     </div>
 
@@ -1032,7 +1105,13 @@ tr:hover td{background:#8b5cf608}
     </button>
     <div class="sb-sublist" data-grp-list="career">
       <button class="sb-item" data-nav="achievements" onclick="nav('achievements')"><span class="si">🏆</span>Achievements & Evidence<span class="sb-badge" id="nb-ach">0</span></button>
-      <button class="sb-item" data-nav="ai" onclick="nav('ai')"><span class="si">✦</span>AI Writer</button>
+    </div>
+
+    <button class="sb-group" data-tint="violet" data-grp="knowledge" onclick="toggleGroup('knowledge')">
+      <span class="si">💻</span>Knowledge<span class="chev">▸</span>
+    </button>
+    <div class="sb-sublist" data-grp-list="knowledge">
+      <button class="sb-item" data-nav="vault" onclick="nav('vault')"><span class="si">💻</span>Knowledge Vault<span class="sb-badge" id="nb-vault">0</span></button>
     </div>
 
     <button class="sb-group" data-tint="sage" data-grp="utilities" onclick="toggleGroup('utilities')">
@@ -1043,7 +1122,6 @@ tr:hover td{background:#8b5cf608}
       <button class="sb-item" data-nav="stickies" onclick="nav('stickies')"><span class="si">🗒</span>Sticky Notes<span class="sb-badge" id="nb-stickies">0</span></button>
       <button class="sb-item" data-nav="reports" onclick="nav('reports')"><span class="si">📊</span>Reports & Export</button>
       <button class="sb-item" data-nav="goals" onclick="nav('goals')"><span class="si">🎯</span>Goals</button>
-      <button class="sb-item" data-nav="notes" onclick="nav('notes')"><span class="si">🧠</span>Knowledge Hub</button>
       <button class="sb-item" data-nav="mood" onclick="nav('mood')"><span class="si">✨</span>Mood</button>
     </div>
 
@@ -1064,6 +1142,7 @@ tr:hover td{background:#8b5cf608}
     <button id="menu-btn" onclick="openSidebar()">☰</button>
     <div><div id="page-title">Dashboard</div><div id="page-sub"></div></div>
     <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="openGlobalSearch()" title="Search everything (Ctrl+K)">🔍 <span class="btn-label">Search</span></button>
       <div id="sync-status" class="offline" title="Cloud sync status">
         <span class="sync-dot"></span><span id="sync-label">—</span>
       </div>
@@ -1181,12 +1260,8 @@ tr:hover td{background:#8b5cf608}
 <!-- ═══ WORKSPACE TAB BAR (shown above any Workspace-group page) ═══ -->
 <div id="ws-tabbar" class="ws-tabbar" style="display:none">
   <button class="ws-tab" data-ws-tab="quicklog" onclick="nav('quicklog')">⚡ Work Journal</button>
-  <button class="ws-tab" data-ws-tab="projects" onclick="nav('projects')">🚀 Projects</button>
   <button class="ws-tab" data-ws-tab="tasks" onclick="nav('tasks')">🗂 Tasks</button>
   <button class="ws-tab" data-ws-tab="meetings" onclick="nav('meetings')">🗓 Meetings</button>
-  <button class="ws-tab" data-ws-tab="ideas" onclick="nav('ideas')">💡 Ideas</button>
-  <button class="ws-tab" data-ws-tab="learning" onclick="nav('learning')">📚 Learning</button>
-  <button class="ws-tab" data-ws-tab="clientsupport" onclick="nav('clientsupport')">🤝 Client Support</button>
   <button class="ws-tab" data-ws-tab="planner" onclick="nav('planner')">🌸 Attendance & Pay</button>
 </div>
 
@@ -1232,203 +1307,21 @@ tr:hover td{background:#8b5cf608}
       <div class="ff full"><label>Self Remarks</label><textarea id="dl-self" placeholder="Your reflection — what went well, what was hard?" style="min-height:60px"></textarea></div>
       <div class="ff full">
         <label>Journal Notes <span style="font-weight:400;color:var(--text4)">— rich text, autosaved with this entry</span></label>
-        <div class="rt-toolbar">
-          <button type="button" onclick="rtCmd('bold')"><b>B</b></button>
-          <button type="button" onclick="rtCmd('italic')"><i>I</i></button>
-          <button type="button" onclick="rtCmd('underline')"><u>U</u></button>
-          <button type="button" onclick="rtCmd('hiliteColor','#fef3c7')" title="Highlight">🖍</button>
-          <span class="rt-sep"></span>
-          <button type="button" onclick="rtCmd('insertUnorderedList')" title="Bullet list">• List</button>
-          <button type="button" onclick="rtInsertChecklist()" title="Checklist">☑ Check</button>
-          <button type="button" onclick="rtInsertCodeBlock()" title="Code block">&lt;/&gt;</button>
-          <button type="button" onclick="rtInsertLink()" title="Link">🔗</button>
-        </div>
-        <div id="dl-rich" class="rt-editor" contenteditable="true" data-placeholder="What did you work on today? Problems faced, solutions found, ideas..."></div>
+        <div id="dl-rich-host"></div>
       </div>
     </div>
     <div class="btn-group" style="margin-top:14px">
-      <button class="btn btn-violet" onclick="addDaily()">💾 Save Entry</button>
+      <button class="btn btn-violet" id="dl-submit-btn" onclick="saveDaily()">💾 Save Entry</button>
       <button class="btn btn-ghost" onclick="clearDaily()">Clear</button>
+      <button class="btn btn-ghost" id="dl-cancel-btn" onclick="cancelDailyEdit()" style="display:none">✕ Cancel Edit</button>
     </div>
+    <div id="dl-edit-banner" style="display:none;font-size:11px;color:var(--violet-l);background:var(--violet-xl);border-radius:8px;padding:6px 10px;margin-top:8px">✏️ Editing an existing entry — Save Entry will update it.</div>
   </div>
   <div class="card">
     <div class="card-hd"><div class="card-title">📋 All Work Entries</div><span id="daily-cnt" style="font-size:11px;color:var(--text3)">0 entries</span></div>
     <div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Task</th><th>Project</th><th>Category</th><th>Hrs</th><th>Priority</th><th>Status</th><th>Impact</th><th></th></tr></thead><tbody id="daily-body"></tbody></table></div>
   </div>
 </div>
-
-<!-- ═══ CAREER HUB TAB BAR (shown above any Career-group page) ═══ -->
-<div id="career-tabbar" class="ws-tabbar career-tabbar" style="display:none">
-  <button class="ws-tab" data-ws-tab="achievements" onclick="nav('achievements')">🏆 Achievements & Evidence</button>
-  <button class="ws-tab" data-ws-tab="ai" onclick="nav('ai')">✦ AI Writer</button>
-</div>
-
-<!-- ═══ AI WRITER ═══ -->
-<div id="page-ai" class="page">
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">✦ AI Appraisal Writer</div><span style="font-size:11px;color:var(--text3)">Prompt Builder</span></div>
-    <div class="card-body">
-      <p style="font-size:12.5px;color:var(--text2);line-height:1.7;margin-bottom:16px">Pick what you want to generate. This builds a ready-to-use prompt from your real logged data — copy it and paste into Claude (or any AI assistant) to get polished, professional text.</p>
-      <div class="g2">
-        <button class="btn btn-ghost" style="justify-content:flex-start;padding:14px" onclick="aiGenerate('summary')"><span style="font-size:20px">📝</span><div style="text-align:left"><div style="font-weight:600;font-size:12px">Appraisal Summary</div><div style="font-size:10.5px;color:var(--text3)">Executive-level overview of contributions</div></div></button>
-        <button class="btn btn-ghost" style="justify-content:flex-start;padding:14px" onclick="aiGenerate('star')"><span style="font-size:20px">⭐</span><div style="text-align:left"><div style="font-weight:600;font-size:12px">STAR Stories</div><div style="font-size:10.5px;color:var(--text3)">Auto-generate from your logged work</div></div></button>
-        <button class="btn btn-ghost" style="justify-content:flex-start;padding:14px" onclick="aiGenerate('resume')"><span style="font-size:20px">📋</span><div style="text-align:left"><div style="font-weight:600;font-size:12px">Resume Bullets</div><div style="font-size:10.5px;color:var(--text3)">Impact-focused bullet points</div></div></button>
-        <button class="btn btn-ghost" style="justify-content:flex-start;padding:14px" onclick="aiGenerate('promotion')"><span style="font-size:20px">🚀</span><div style="text-align:left"><div style="font-weight:600;font-size:12px">Promotion Justification</div><div style="font-size:10.5px;color:var(--text3)">Why you deserve the next level</div></div></button>
-        <button class="btn btn-ghost" style="justify-content:flex-start;padding:14px" onclick="aiGenerate('monthly')"><span style="font-size:20px">📆</span><div style="text-align:left"><div style="font-weight:600;font-size:12px">Monthly Self-Evaluation</div><div style="font-size:10.5px;color:var(--text3)">Professional self-assessment</div></div></button>
-        <button class="btn btn-ghost" style="justify-content:flex-start;padding:14px" onclick="aiGenerate('manager')"><span style="font-size:20px">👤</span><div style="text-align:left"><div style="font-weight:600;font-size:12px">Manager Remarks Draft</div><div style="font-size:10.5px;color:var(--text3)">Ready for your manager to review</div></div></button>
-      </div>
-    </div>
-  </div>
-  <div class="ai-box" id="ai-output-box" style="display:none">
-    <div class="ai-label">✦ <span id="ai-type-label">Generated Content</span></div>
-    <div class="ai-output" id="ai-output"></div>
-    <div class="btn-group" style="margin-top:12px">
-      <button class="btn btn-ghost btn-sm" onclick="copyAI()">📋 Copy Prompt</button>
-      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('ai-output-box').style.display='none'">✕ Close</button>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-hd"><div class="card-title">✏️ Custom Prompt Builder</div></div>
-    <div class="card-body">
-      <div class="ff mb12"><label>Your Question / Request</label><textarea id="ai-custom" placeholder="e.g. Write a paragraph about my technical contributions in firmware development for my yearly appraisal..." style="min-height:80px"></textarea></div>
-      <button class="btn btn-violet" onclick="aiCustom()">✦ Build Prompt</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ PROJECTS ═══ -->
-<div id="page-projects" class="page">
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">+ Add Project</div><button class="btn btn-ghost btn-sm toggle-form" onclick="toggleFS('proj-fs')">▾ Toggle Form</button></div>
-    <div class="card-body form-section open" id="proj-fs">
-      <div class="fgrid">
-        <div class="ff s2"><label>Project Name *</label><input id="pj-name" placeholder="Project title"></div>
-        <div class="ff"><label>Client / Stakeholder</label><input id="pj-client" placeholder="Internal or external client"></div>
-        <div class="ff"><label>Your Role</label><input id="pj-role" placeholder="Lead Engineer, Developer..."></div>
-        <div class="ff"><label>Start Date</label><input type="date" id="pj-start"></div>
-        <div class="ff"><label>End Date</label><input type="date" id="pj-end"></div>
-        <div class="ff"><label>Status</label><select id="pj-status"><option>In Progress</option><option>Completed</option><option>On Hold</option><option>Cancelled</option></select></div>
-        <div class="ff"><label>Progress: <span class="rval" id="pj-pv">50</span>%</label><input type="range" id="pj-prog" min="0" max="100" value="50" oninput="document.getElementById('pj-pv').textContent=this.value"></div>
-        <div class="ff s2"><label>Technologies</label><input id="pj-tech" placeholder="ESP32, FreeRTOS, CAN, UART, Python..."></div>
-        <div class="ff full"><label>Your Contribution</label><textarea id="pj-contrib" placeholder="Specifically what you built, designed, or delivered"></textarea></div>
-        <div class="ff full"><label>Business Value / Outcome</label><input id="pj-outcome" placeholder="Quantified result: reduced errors 40%, saved 20 hrs/week..."></div>
-      </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addProject()">💾 Save Project</button></div>
-    </div>
-  </div>
-  <div class="card"><div class="card-hd"><div class="card-title">🚀 All Projects</div></div><div class="tbl-wrap"><table><thead><tr><th>Project</th><th>Client</th><th>Role</th><th>Start</th><th>End</th><th>Progress</th><th>Status</th><th>Outcome</th><th></th></tr></thead><tbody id="proj-body"></tbody></table></div></div>
-</div>
-
-<!-- ═══ LEARNING ═══ -->
-<div id="page-learning" class="page">
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">+ Log Learning</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('learn-fs')">▾ Toggle</button></div>
-    <div class="card-body form-section open" id="learn-fs">
-      <div class="fgrid">
-        <div class="ff"><label>Date</label><input type="date" id="ln-date"></div>
-        <div class="ff s2"><label>Topic / Skill *</label><input id="ln-topic" placeholder="e.g. FreeRTOS task scheduling, CAN protocol, DoIP"></div>
-        <div class="ff"><label>Source</label><select id="ln-type"><option>Course</option><option>Book</option><option>Article</option><option>Video</option><option>Documentation</option><option>Colleague / Mentor</option><option>Hands-on Practice</option></select></div>
-        <div class="ff"><label>Platform / Reference</label><input id="ln-source" placeholder="Udemy, YouTube, Pantech..."></div>
-        <div class="ff"><label>Skill Category</label><select id="ln-cat"><option>Firmware</option><option>Embedded</option><option>IoT</option><option>Networking</option><option>RTOS</option><option>Tools / DevOps</option><option>Protocols</option><option>Soft Skills</option><option>Other</option></select></div>
-        <div class="ff"><label>Hours</label><input type="number" id="ln-hours" placeholder="2" step="0.5"></div>
-        <div class="ff"><label>Applied at Work?</label><select id="ln-applied"><option>Yes</option><option>No</option><option>Planned</option></select></div>
-        <div class="ff"><label>Certificate Earned?</label><select id="ln-cert"><option>No</option><option>Yes</option></select></div>
-        <div class="ff full"><label>Key Takeaways</label><textarea id="ln-notes" placeholder="What you learned and how it's applicable..." style="min-height:60px"></textarea></div>
-      </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addLearning()">💾 Save</button></div>
-    </div>
-  </div>
-  <div class="card"><div class="card-hd"><div class="card-title">📚 Learning Log</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Topic</th><th>Source</th><th>Category</th><th>Hrs</th><th>Applied?</th><th>Cert</th><th></th></tr></thead><tbody id="learn-body"></tbody></table></div></div>
-</div>
-
-<!-- ═══ CLIENT SUPPORT (merged timeline) ═══ -->
-<div id="page-clientsupport" class="page">
-  <div class="card mb16">
-    <div class="card-body">
-      <p style="font-size:11.5px;color:var(--text3);line-height:1.6;margin-bottom:12px">Log client calls and support cases below — everything shows up together in one searchable timeline.</p>
-      <div class="cs-filters">
-        <input id="cs-search" placeholder="🔍 Search client, issue, resolution..." oninput="renderClientSupport()">
-        <select id="cs-type-filter" onchange="renderClientSupport()">
-          <option value="all">All Types</option>
-          <option value="client">📞 Client Calls</option>
-          <option value="support">🔧 Support Cases</option>
-        </select>
-        <select id="cs-status-filter" onchange="renderClientSupport()">
-          <option value="all">All Status/Priority</option>
-          <option value="Resolved">Resolved</option>
-          <option value="Open">Open</option>
-          <option value="High">High Priority</option>
-          <option value="Critical">Critical</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  <div class="gauto mb16" id="cs-summary-kpis"></div>
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">🤝 Combined Timeline</div><span style="font-size:11px;color:var(--text3)" id="cs-cnt"></span></div>
-    <div class="card-body" id="cs-timeline" style="padding:0"></div>
-  </div>
-
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">📞 Log Client Call</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('client-fs')">▾ Toggle</button></div>
-    <div class="card-body form-section" id="client-fs">
-      <div class="fgrid">
-        <div class="ff"><label>Date</label><input type="date" id="cl-date"></div>
-        <div class="ff"><label>Client Name</label><input id="cl-client" placeholder="Contact person"></div>
-        <div class="ff"><label>Organization</label><input id="cl-org" placeholder="Company / team"></div>
-        <div class="ff"><label>Duration (mins)</label><input type="number" id="cl-dur" placeholder="30"></div>
-        <div class="ff s2"><label>Purpose</label><input id="cl-purpose" placeholder="Why this call happened"></div>
-        <div class="ff full"><label>Resolution / Outcome</label><textarea id="cl-resolution" placeholder="What was decided, resolved, or communicated?" style="min-height:56px"></textarea></div>
-        <div class="ff"><label>Follow-up Required?</label><select id="cl-followup"><option>No</option><option>Yes</option></select></div>
-        <div class="ff"><label>Communication Rating: <span class="rval" id="cr-v">8</span>/10</label><input type="range" id="cl-rating" min="1" max="10" value="8" oninput="document.getElementById('cr-v').textContent=this.value"></div>
-      </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addClient()">💾 Save Client Call</button></div>
-    </div>
-  </div>
-
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">🔧 Log Support Case</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('support-fs')">▾ Toggle</button></div>
-    <div class="card-body form-section" id="support-fs">
-      <div class="fgrid">
-        <div class="ff"><label>Date</label><input type="date" id="sp-date"></div>
-        <div class="ff s2"><label>Issue Description *</label><input id="sp-issue" placeholder="What was the problem?"></div>
-        <div class="ff"><label>Priority</label><select id="sp-prio"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
-        <div class="ff"><label>Status</label><select id="sp-status"><option>Resolved</option><option>In Progress</option><option>Escalated</option></select></div>
-        <div class="ff full"><label>Root Cause</label><textarea id="sp-cause" placeholder="Why did this happen?" style="min-height:56px"></textarea></div>
-        <div class="ff full"><label>Solution</label><textarea id="sp-solution" placeholder="How was it fixed?" style="min-height:56px"></textarea></div>
-        <div class="ff"><label>Time Taken</label><input id="sp-time" placeholder="e.g. 2 hrs"></div>
-        <div class="ff"><label>CSAT: <span class="rval" id="cs-v">8</span>/10</label><input type="range" id="sp-sat" min="1" max="10" value="8" oninput="document.getElementById('cs-v').textContent=this.value"></div>
-      </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addSupport()">💾 Save Support Case</button></div>
-    </div>
-  </div>
-
-  <!-- Hidden data tables kept for renderClients()/renderSupport() to populate — the Combined Timeline above is the real browsing view -->
-  <div style="display:none">
-    <table><tbody id="client-body"></tbody></table>
-    <table><tbody id="support-body"></tbody></table>
-  </div>
-</div>
-
-<!-- ═══ DOCS (kept for data integrity; no longer in navigation per user request) ═══ -->
-<div id="page-docs" class="page">
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">+ Add Document</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('docs-fs')">▾ Toggle</button></div>
-    <div class="card-body form-section open" id="docs-fs">
-      <div class="fgrid">
-        <div class="ff"><label>Date</label><input type="date" id="dc-date"></div>
-        <div class="ff s2"><label>Document Name *</label><input id="dc-name" placeholder="Document title"></div>
-        <div class="ff"><label>Type</label><select id="dc-type"><option>Installation Guide</option><option>User Guide</option><option>Technical Guide</option><option>SOP</option><option>Troubleshooting Guide</option><option>API Documentation</option><option>Manual</option><option>Training Material</option><option>Other</option></select></div>
-        <div class="ff"><label>Revision</label><input id="dc-rev" placeholder="v1.0"></div>
-        <div class="ff"><label>Pages</label><input type="number" id="dc-pages" placeholder="20"></div>
-        <div class="ff full"><label>Remarks</label><input id="dc-remarks" placeholder="What it covers, who it's for..."></div>
-      </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addDoc()">💾 Save</button></div>
-    </div>
-  </div>
-  <div class="card"><div class="card-hd"><div class="card-title">📄 Documentation Created</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Document</th><th>Type</th><th>Revision</th><th>Pages</th><th>Remarks</th><th></th></tr></thead><tbody id="docs-body"></tbody></table></div></div>
-</div>
-
 <!-- ═══ TASK MANAGER (KANBAN) ═══ -->
 <div id="page-tasks" class="page">
   <div class="card mb16">
@@ -1442,7 +1335,10 @@ tr:hover td{background:#8b5cf608}
         <div class="ff"><label>Tags</label><input id="tk-tags" placeholder="firmware, urgent..."></div>
         <div class="ff full"><label>Notes</label><input id="tk-notes" placeholder="Any extra detail"></div>
       </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addTask()">💾 Add to Inbox</button></div>
+      <div class="btn-group" style="margin-top:12px">
+        <button class="btn btn-violet" id="tk-submit-btn" onclick="saveTask()">💾 Add to Inbox</button>
+        <button class="btn btn-ghost" id="tk-cancel-btn" onclick="cancelTaskEdit()" style="display:none">✕ Cancel Edit</button>
+      </div>
     </div>
   </div>
   <div class="kanban-toolbar">
@@ -1462,37 +1358,17 @@ tr:hover td{background:#8b5cf608}
         <div class="ff s2"><label>Attendees</label><input id="mt-attendees" placeholder="Names, roles"></div>
         <div class="ff"><label>Follow-up Date</label><input type="date" id="mt-followup"></div>
         <div class="ff full"><label>Agenda</label><input id="mt-agenda" placeholder="What this meeting is about"></div>
-        <div class="ff full"><label>Discussion Summary</label><input id="mt-discussion" placeholder="Key points discussed"></div>
+        <div class="ff full"><label>Discussion Summary <span style="font-weight:400;color:var(--text4)">— rich text</span></label><div id="mt-rich-host"></div></div>
         <div class="ff full"><label>Action Items</label><input id="mt-action" placeholder="Who does what, by when"></div>
         <div class="ff"><label>Status</label><select id="mt-status"><option>Open</option><option>Closed</option></select></div>
       </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addMeeting()">💾 Save</button></div>
+      <div class="btn-group" style="margin-top:12px">
+        <button class="btn btn-violet" id="mt-submit-btn" onclick="saveMeeting()">💾 Save</button>
+        <button class="btn btn-ghost" id="mt-cancel-btn" onclick="cancelMeetingEdit()" style="display:none">✕ Cancel Edit</button>
+      </div>
     </div>
   </div>
   <div class="card"><div class="card-hd"><div class="card-title">🗓 Meeting Log</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Attendees</th><th>Agenda</th><th>Action Items</th><th>Follow-up</th><th>Status</th><th></th></tr></thead><tbody id="meetings-body"></tbody></table></div></div>
-</div>
-
-<!-- ═══ IDEA BOARD ═══ -->
-<div id="page-ideas" class="page">
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">+ Add Idea</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('idea-fs')">▾ Toggle</button></div>
-    <div class="card-body form-section open" id="idea-fs">
-      <div class="fgrid">
-        <div class="ff s2"><label>Title *</label><input id="id-title" placeholder="The idea, in one line"></div>
-        <div class="ff"><label>Category</label><select id="id-cat"><option>Automation</option><option>Firmware</option><option>Hardware</option><option>UI</option><option selected>Software</option><option>Business</option><option>Improvement</option><option>Feature Requests</option></select></div>
-        <div class="ff full"><label>Description</label><input id="id-desc" placeholder="What it is, why it matters"></div>
-      </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addIdea()">💾 Save Idea</button></div>
-    </div>
-  </div>
-  <div class="idea-toolbar">
-    <button class="btn btn-ghost btn-sm active" data-idea-filter="all" onclick="filterIdeas('all',this)">All</button>
-    <button class="btn btn-ghost btn-sm" data-idea-filter="New" onclick="filterIdeas('New',this)">New</button>
-    <button class="btn btn-ghost btn-sm" data-idea-filter="Considering" onclick="filterIdeas('Considering',this)">Considering</button>
-    <button class="btn btn-ghost btn-sm" data-idea-filter="Planned" onclick="filterIdeas('Planned',this)">Planned</button>
-    <button class="btn btn-ghost btn-sm" data-idea-filter="Archived" onclick="filterIdeas('Archived',this)">Archived</button>
-  </div>
-  <div class="idea-grid" id="idea-grid"></div>
 </div>
 
 <!-- ═══ ACHIEVEMENTS ═══ -->
@@ -1507,8 +1383,12 @@ tr:hover td{background:#8b5cf608}
         <div class="ff s2"><label>Business Impact</label><input id="ac-impact" placeholder="Quantify: saved 2 days, improved efficiency 20%..."></div>
         <div class="ff"><label>Revenue / Cost Impact</label><input id="ac-revenue" placeholder="e.g. ₹50,000 saved"></div>
         <div class="ff"><label>Evidence / Source</label><input id="ac-proof" placeholder="Email subject, award name..."></div>
+        <div class="ff full"><label>Notes <span style="font-weight:400;color:var(--text4)">— rich text, full story/context</span></label><div id="ac-rich-host"></div></div>
       </div>
-      <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet" onclick="addAchievement()">💾 Save</button></div>
+      <div class="btn-group" style="margin-top:12px">
+        <button class="btn btn-violet" id="ac-submit-btn" onclick="saveAchievement()">💾 Save</button>
+        <button class="btn btn-ghost" id="ac-cancel-btn" onclick="cancelAchievementEdit()" style="display:none">✕ Cancel Edit</button>
+      </div>
     </div>
   </div>
   <div class="card mb16"><div class="card-hd"><div class="card-title">🏆 Achievements & Recognition</div></div><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Achievement</th><th>Type</th><th>Impact</th><th>Revenue Impact</th><th>Evidence</th><th></th></tr></thead><tbody id="ach-body"></tbody></table></div></div>
@@ -1572,7 +1452,6 @@ tr:hover td{background:#8b5cf608}
   <button class="ws-tab" data-ws-tab="stickies" onclick="nav('stickies')">🗒 Sticky Notes</button>
   <button class="ws-tab" data-ws-tab="reports" onclick="nav('reports')">📊 Reports & Export</button>
   <button class="ws-tab" data-ws-tab="goals" onclick="nav('goals')">🎯 Goals</button>
-  <button class="ws-tab" data-ws-tab="notes" onclick="nav('notes')">🧠 Knowledge Hub</button>
   <button class="ws-tab" data-ws-tab="mood" onclick="nav('mood')">✨ Mood</button>
 </div>
 
@@ -1652,18 +1531,26 @@ tr:hover td{background:#8b5cf608}
           <div>✦ Cover Page with your name &amp; score</div>
           <div>✦ Executive Summary</div>
           <div>✦ KPI Dashboard</div>
-          <div>✦ Projects with outcomes</div>
           <div>✦ Achievements &amp; Recognition</div>
-          <div>✦ Learning &amp; Certifications</div>
-          <div>✦ Client Interactions</div>
-          <div>✦ Technical Support Cases</div>
-          <div>✦ Documents Created</div>
+          <div>✦ Meetings</div>
           <div>✦ STAR Contributions</div>
           <div>✦ Evidence Index</div>
           <div>✦ Performance Score</div>
           <div>✦ Signature Page</div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">🗄 Backup & Restore</div><span style="font-size:11px;color:var(--text3)">Versioned snapshot of everything</span></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px">Download a complete snapshot of every module — Work Journal, Tasks, Meetings, Achievements, Evidence, STAR, Goals, Mood, Sticky Notes, Knowledge Vault, and your profile. Restoring adds the backed-up records back into your account; it never deletes anything currently in place.</p>
+      <div class="btn-group">
+        <button class="btn btn-violet btn-sm" onclick="exportFullBackup()">⬇ Download Full Backup</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('backup-restore-file').click()">⬆ Restore from Backup</button>
+        <input type="file" id="backup-restore-file" accept="application/json" style="display:none" onchange="importFullBackup(this)">
+      </div>
+      <div id="backup-last-info" style="font-size:10.5px;color:var(--text4);margin-top:10px"></div>
     </div>
   </div>
 </div>
@@ -1792,62 +1679,81 @@ tr:hover td{background:#8b5cf608}
   </div>
 </div>
 
-<!-- ═══ NOTES ═══ -->
-<div id="page-notes" class="page">
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">🧠 New Knowledge Hub Entry</div></div>
-    <div class="card-body">
-      <div class="kh-kind-picker" id="kh-kind-picker">
-        <button class="kh-kind-btn active" data-kind="general" onclick="setNoteKind('general',this)">📝 General</button>
-        <button class="kh-kind-btn" data-kind="technical" onclick="setNoteKind('technical',this)">💻 Technical Note</button>
-        <button class="kh-kind-btn" data-kind="sop" onclick="setNoteKind('sop',this)">📋 SOP</button>
-        <button class="kh-kind-btn" data-kind="troubleshooting" onclick="setNoteKind('troubleshooting',this)">🔍 Troubleshooting</button>
-      </div>
-      <div class="ff mb12"><label>Title</label><input id="nt-title" placeholder="Note title..."></div>
-      <div class="ff mb12"><label>Content</label><textarea id="nt-content" placeholder="Your thoughts, ideas, reflections..." style="min-height:100px"></textarea></div>
+<!-- ═══ KNOWLEDGE VAULT ═══ -->
+<div id="page-vault" class="page">
+  <div class="kv-toolbar">
+    <div class="kv-section-tabs" id="kv-section-tabs">
+      <button data-kv-section="all" class="kv-tab active" onclick="setVaultSection('all',this)">🗂 All</button>
+      <button data-kv-section="tech" class="kv-tab" onclick="setVaultSection('tech',this)">📘 Tech Notes</button>
+      <button data-kv-section="snippet" class="kv-tab" onclick="setVaultSection('snippet',this)">💻 Code Snippets</button>
+      <button data-kv-section="cheatsheet" class="kv-tab" onclick="setVaultSection('cheatsheet',this)">🔖 Cheat Sheets</button>
+    </div>
+    <button class="btn btn-violet btn-sm" onclick="openVaultEditor()">+ New Entry</button>
+  </div>
 
-      <div id="kh-fields-technical" class="kh-extra-fields" style="display:none">
-        <div class="fgrid">
-          <div class="ff"><label>Language</label><input id="kh-tech-lang" placeholder="C, Python, Bash..."></div>
-          <div class="ff s2"><label>Code / Commands</label><input id="kh-tech-code" placeholder="Snippet, command, register map..."></div>
-        </div>
+  <div class="kv-body">
+    <div class="kv-sidebar">
+      <input id="kv-search" class="kv-search-input" placeholder="🔍 Quick search..." oninput="renderVault()">
+      <div class="kv-filter-group">
+        <label class="widget-toggle"><input type="checkbox" id="kv-fav-only" onchange="renderVault()"> ⭐ Favorites only</label>
+        <label class="widget-toggle"><input type="checkbox" id="kv-pinned-only" onchange="renderVault()"> 📌 Pinned only</label>
+        <label class="widget-toggle"><input type="checkbox" id="kv-archived-only" onchange="renderVault()"> 🗄 Show archived</label>
       </div>
-      <div id="kh-fields-sop" class="kh-extra-fields" style="display:none">
-        <div class="fgrid">
-          <div class="ff s2"><label>Purpose</label><input id="kh-sop-purpose" placeholder="What this SOP is for"></div>
-          <div class="ff full"><label>Step-by-Step Instructions</label><input id="kh-sop-steps" placeholder="1. ... 2. ... 3. ..."></div>
-          <div class="ff full"><label>Warnings / Safety Notes</label><input id="kh-sop-warnings" placeholder="Anything to watch out for"></div>
-        </div>
+      <div class="kv-folders-hd">Folders</div>
+      <div class="kv-folders" id="kv-folder-list"></div>
+      <div class="kv-sidebar-actions">
+        <button class="btn btn-ghost btn-sm" onclick="exportVaultAll()">⬇ Export All</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('kv-import-file').click()">⬆ Import</button>
+        <input type="file" id="kv-import-file" accept="application/json" style="display:none" onchange="importVaultFile(this)">
       </div>
-      <div id="kh-fields-troubleshooting" class="kh-extra-fields" style="display:none">
-        <div class="fgrid">
-          <div class="ff"><label>Error Code</label><input id="kh-ts-errorcode" placeholder="e.g. ERR_TIMEOUT"></div>
-          <div class="ff s2"><label>Symptoms</label><input id="kh-ts-symptoms" placeholder="What you observed"></div>
-          <div class="ff full"><label>Root Cause</label><input id="kh-ts-cause" placeholder="Why it happened"></div>
-          <div class="ff full"><label>Solution</label><input id="kh-ts-solution" placeholder="How it was fixed"></div>
-        </div>
-      </div>
-
-      <div class="fgrid mb12" style="margin-top:12px">
-        <div class="ff"><label>Tag</label><select id="nt-tag"><option>Work</option><option>Learning</option><option>Idea</option><option>Personal</option><option>Memory</option></select></div>
-        <div class="ff"><label>Tags (comma-separated)</label><input id="kh-tags" placeholder="stm32, uart, debugging..."></div>
-      </div>
-      <button class="btn btn-violet" onclick="addNote()">💾 Save to Knowledge Hub</button>
+    </div>
+    <div class="kv-main">
+      <div class="kv-stats-bar" id="kv-stats-bar"></div>
+      <div class="kv-grid" id="kv-grid"></div>
     </div>
   </div>
+</div>
 
-  <div class="kh-filters">
-    <input id="kh-search" placeholder="🔍 Search title, content, tags..." oninput="renderNotes()">
-    <select id="kh-kind-filter" onchange="renderNotes()">
-      <option value="all">All Types</option>
-      <option value="general">📝 General</option>
-      <option value="technical">💻 Technical</option>
-      <option value="sop">📋 SOP</option>
-      <option value="troubleshooting">🔍 Troubleshooting</option>
-    </select>
-    <label class="widget-toggle"><input type="checkbox" id="kh-pinned-only" onchange="renderNotes()"> Pinned only</label>
+<!-- Knowledge Vault Editor Modal -->
+<div id="kv-editor-overlay" class="kv-modal-overlay" style="display:none" onclick="if(event.target===this) closeVaultEditor()">
+  <div class="kv-modal">
+    <div class="kv-modal-hd">
+      <input id="kv-e-title" class="kv-title-input" placeholder="Untitled note...">
+      <div class="kv-modal-hd-actions">
+        <button class="kv-icon-btn" id="kv-e-fav-btn" title="Favorite" onclick="toggleEditorFlag('favorite')">⭐</button>
+        <button class="kv-icon-btn" id="kv-e-pin-btn" title="Pin" onclick="toggleEditorFlag('pinned')">📌</button>
+        <button class="kv-icon-btn" id="kv-e-arc-btn" title="Archive" onclick="toggleEditorFlag('archived')">🗄</button>
+        <button class="kv-modal-close" onclick="closeVaultEditor()">✕</button>
+      </div>
+    </div>
+    <div class="kv-modal-meta">
+      <select id="kv-e-section" onchange="onVaultSectionChange()">
+        <option value="tech">📘 Tech Note</option>
+        <option value="snippet">💻 Code Snippet</option>
+        <option value="cheatsheet">🔖 Cheat Sheet</option>
+      </select>
+      <input id="kv-e-folder" list="kv-folder-datalist" placeholder="Folder (e.g. Embedded)">
+      <datalist id="kv-folder-datalist"></datalist>
+      <input id="kv-e-category" list="kv-category-datalist" placeholder="Category">
+      <datalist id="kv-category-datalist">
+        <option value="Firmware"><option value="Hardware"><option value="Networking">
+        <option value="DevOps"><option value="Cloud"><option value="Languages">
+        <option value="Tools"><option value="RTOS"><option value="General">
+      </datalist>
+      <input id="kv-e-language" placeholder="Language (e.g. c, python, bash)" style="display:none">
+      <input id="kv-e-tags" placeholder="tags, comma, separated">
+    </div>
+    <div class="kv-quick-tags" id="kv-quick-tags"></div>
+    <div id="kv-rich-host" class="kv-rich-host"></div>
+    <div class="kv-modal-foot">
+      <div class="kv-stats-inline" id="kv-e-stats">0 words · &lt;1 min read</div>
+      <div class="btn-group">
+        <button class="btn btn-ghost btn-sm" id="kv-e-dup-btn" onclick="duplicateCurrentVaultEntry()" style="display:none">⧉ Duplicate</button>
+        <button class="btn btn-ghost btn-sm" id="kv-e-del-btn" onclick="deleteCurrentVaultEntry()" style="display:none">🗑 Delete</button>
+        <button class="btn btn-violet btn-sm" onclick="saveVaultEntry()">💾 Save</button>
+      </div>
+    </div>
   </div>
-  <div id="notes-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px"></div>
 </div>
 
 <!-- ═══ MOOD ═══ -->
@@ -1925,10 +1831,9 @@ const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 
 // ── APP STATE ── normalized tables, no single blob
 let D = {
-  daily: [], projects: [], learning: [], clients: [],
-  support: [], docs: [], achievements: [], evidence: [],
-  star: [], plans: [], goals: [], notes: [], mood: [],
-  tasks: [], meetings: [], ideas: [], stickies: [],
+  daily: [], achievements: [], evidence: [],
+  star: [], plans: [], goals: [], mood: [],
+  tasks: [], meetings: [], stickies: [], vault: [],
   profile: { name:'', email:'', links:'' }
 };
 
@@ -2084,10 +1989,9 @@ function showAppScreen() {
 
 function resetAppState() {
   D = {
-    daily:[], projects:[], learning:[], clients:[],
-    support:[], docs:[], achievements:[], evidence:[],
-    star:[], plans:[], goals:[], notes:[], mood:[],
-    tasks:[], meetings:[], ideas:[], stickies:[],
+    daily:[], achievements:[], evidence:[],
+    star:[], plans:[], goals:[], mood:[],
+    tasks:[], meetings:[], stickies:[], vault:[],
     profile:{ name:'',email:'',links:'' }
   };
 }
@@ -2170,27 +2074,21 @@ async function dbDelete(table, id) {
 // Map: D key → Supabase table name
 const TABLE_MAP = {
   daily:        'daily_logs',
-  projects:     'projects',
-  learning:     'learning',
-  clients:      'client_calls',
-  support:      'support_cases',
-  docs:         'documentation',
   achievements: 'achievements',
   evidence:     'evidence',
   star:         'star_entries',
   plans:        'plans',
   goals:        'goals',
-  notes:        'notes',
   mood:         'mood_logs',
   tasks:        'tasks',
   meetings:     'meetings',
-  ideas:        'ideas',
   stickies:     'sticky_notes',
+  vault:        'knowledge_vault',
 };
 
 // Tables whose records belong to a specific employer. Personal tables
-// (plans, goals, notes, mood) follow the user across every company.
-const COMPANY_SCOPED = new Set(['daily','projects','learning','clients','support','docs','achievements','evidence','star','tasks','meetings','ideas']);
+// (plans, goals, mood, vault) follow the user across every company.
+const COMPANY_SCOPED = new Set(['daily','achievements','evidence','star','tasks','meetings']);
 
 // ── COMPANY STATE ──
 let companies = [];          // all companies this user has ever logged
@@ -2204,43 +2102,31 @@ function getActiveCompany() {
 // Map: table row → local D object (handle any column name differences)
 const ROW_TO_D = {
   daily:        r => ({ id:r.id, date:r.date, task:r.task, project:r.project||'', client:r.client||'', hours:r.hours||'', cat:r.category||'', prio:r.priority||'Medium', status:r.status||'Completed', impact:r.impact||'', problem:r.problem_solved||'', tech:r.technologies||'', support:r.technical_support||'No', self:r.self_remarks||'', richNotes:r.rich_notes||'', created_at:r.created_at }),
-  projects:     r => ({ id:r.id, name:r.name, client:r.client||'', role:r.role||'', start:r.start_date||'', end:r.end_date||'', status:r.status||'In Progress', prog:r.progress||0, tech:r.technologies||'', contrib:r.contribution||'', outcome:r.outcome||'', created_at:r.created_at }),
-  learning:     r => ({ id:r.id, date:r.date, topic:r.topic, type:r.source_type||'Course', source:r.source||'', cat:r.category||'Firmware', hours:r.hours||'', applied:r.applied_at_work||'No', cert:r.certificate||'No', notes:r.notes||'', created_at:r.created_at }),
-  clients:      r => ({ id:r.id, date:r.date, client:r.client_name, org:r.organization||'', dur:r.duration_mins||'', purpose:r.purpose||'', resolution:r.resolution||'', followup:r.follow_up||'No', rating:r.communication_rating||'8', created_at:r.created_at }),
-  support:      r => ({ id:r.id, date:r.date, issue:r.issue, prio:r.priority||'Medium', status:r.status||'Resolved', cause:r.root_cause||'', solution:r.solution||'', time:r.time_taken||'', sat:r.csat||'8', created_at:r.created_at }),
-  docs:         r => ({ id:r.id, date:r.date, name:r.name, type:r.doc_type||'User Guide', rev:r.revision||'', pages:r.pages||'', remarks:r.remarks||'', created_at:r.created_at }),
-  achievements: r => ({ id:r.id, date:r.date, achievement:r.title, type:r.type||'Other', impact:r.impact||'', revenue:r.revenue_impact||'', proof:r.proof||'', created_at:r.created_at }),
+  achievements: r => ({ id:r.id, date:r.date, achievement:r.title, type:r.type||'Other', impact:r.impact||'', revenue:r.revenue_impact||'', proof:r.proof||'', notes:r.notes||'', created_at:r.created_at }),
   evidence:     r => ({ id:r.id, title:r.title, cat:r.category||'Other', project:r.project||'', date:r.date||'', notes:r.notes||'', fileName:r.file_name||'', fileUrl:r.file_url||'', dataUrl:r.data_url||'', created_at:r.created_at }),
   star:         r => ({ id:r.id, s:r.situation, t:r.task_desc, a:r.action_taken, r:r.result_impact, created_at:r.created_at }),
   plans:        r => ({ id:r.id, date:r.date, task:r.task, prio:r.priority||'Medium', done:r.done||false, created_at:r.created_at }),
   goals:        r => ({ id:r.id, goal:r.goal, cat:r.category||'Career', date:r.target_date||'', done:r.completed||false, created_at:r.created_at }),
-  notes:        r => ({ id:r.id, date:r.date||today(), title:r.title, content:r.content||'', tag:r.tag||'Work', kind:r.kind||'general', tags:r.tags||'', pinned:!!r.pinned, data:r.data||{}, created_at:r.created_at }),
   mood:         r => ({ id:r.id, date:r.date, mood:r.mood, note:r.note||'', created_at:r.created_at }),
   tasks:        r => ({ id:r.id, title:r.title, notes:r.notes||'', col:r.column_status||'inbox', prio:r.priority||'Medium', due:r.due_date||'', project:r.project||'', tags:r.tags||'', subtasks:r.subtasks||[], created_at:r.created_at }),
   meetings:     r => ({ id:r.id, date:r.date||'', attendees:r.attendees||'', agenda:r.agenda||'', discussion:r.discussion||'', action:r.action_items||'', followup:r.follow_up_date||'', status:r.status||'Open', created_at:r.created_at }),
-  ideas:        r => ({ id:r.id, title:r.title, cat:r.category||'Software', desc:r.description||'', status:r.status||'New', created_at:r.created_at }),
   stickies:     r => ({ id:r.id, text:r.text||'', color:r.color||'lavender', pinned:!!r.pinned, archived:!!r.archived, x:r.pos_x??40, y:r.pos_y??40, w:r.w??200, h:r.h??170, created_at:r.created_at }),
+  vault:        r => ({ id:r.id, section:r.section||'tech', title:r.title||'Untitled', folder:r.folder||'', category:r.category||'', tags:r.tags||'', language:r.language||'', content:r.content||'', favorite:!!r.favorite, pinned:!!r.pinned, archived:!!r.archived, created_at:r.created_at, updated_at:r.updated_at||r.created_at }),
 };
 
 // Map: local D object → Supabase insert payload
 const D_TO_ROW = {
   daily:        r => ({ date:r.date, task:r.task, project:r.project, client:r.client, hours:r.hours?Number(r.hours):null, category:r.cat, priority:r.prio, status:r.status, impact:r.impact, problem_solved:r.problem, technologies:r.tech, technical_support:r.support, self_remarks:r.self, rich_notes:r.richNotes||'' }),
-  projects:     r => ({ name:r.name, client:r.client, role:r.role, start_date:r.start||null, end_date:r.end||null, status:r.status, progress:r.prog?Number(r.prog):0, technologies:r.tech, contribution:r.contrib, outcome:r.outcome }),
-  learning:     r => ({ date:r.date, topic:r.topic, source_type:r.type, source:r.source, category:r.cat, hours:r.hours?Number(r.hours):null, applied_at_work:r.applied, certificate:r.cert, notes:r.notes }),
-  clients:      r => ({ date:r.date, client_name:r.client, organization:r.org, duration_mins:r.dur?Number(r.dur):null, purpose:r.purpose, resolution:r.resolution, follow_up:r.followup, communication_rating:r.rating?Number(r.rating):null }),
-  support:      r => ({ date:r.date, issue:r.issue, priority:r.prio, status:r.status, root_cause:r.cause, solution:r.solution, time_taken:r.time, csat:r.sat?Number(r.sat):null }),
-  docs:         r => ({ date:r.date, name:r.name, doc_type:r.type, revision:r.rev, pages:r.pages?Number(r.pages):null, remarks:r.remarks }),
-  achievements: r => ({ date:r.date, title:r.achievement, type:r.type, impact:r.impact, revenue_impact:r.revenue, proof:r.proof }),
+  achievements: r => ({ date:r.date, title:r.achievement, type:r.type, impact:r.impact, revenue_impact:r.revenue, proof:r.proof, notes:r.notes||'' }),
   evidence:     r => ({ title:r.title, category:r.cat, project:r.project, date:r.date, notes:r.notes, file_name:r.fileName, file_url:r.fileUrl||'', data_url:r.dataUrl||'' }),
   star:         r => ({ situation:r.s, task_desc:r.t, action_taken:r.a, result_impact:r.r }),
   plans:        r => ({ date:r.date, task:r.task, priority:r.prio, done:r.done }),
   goals:        r => ({ goal:r.goal, category:r.cat, target_date:r.date||null, completed:r.done }),
-  notes:        r => ({ date:r.date||today(), title:r.title, content:r.content, tag:r.tag, kind:r.kind, tags:r.tags, pinned:r.pinned, data:r.data }),
   mood:         r => ({ date:r.date, mood:r.mood, note:r.note }),
   tasks:        r => ({ title:r.title, notes:r.notes, column_status:r.col, priority:r.prio, due_date:r.due||null, project:r.project, tags:r.tags, subtasks:r.subtasks||[] }),
   meetings:     r => ({ date:r.date||null, attendees:r.attendees, agenda:r.agenda, discussion:r.discussion, action_items:r.action, follow_up_date:r.followup||null, status:r.status }),
-  ideas:        r => ({ title:r.title, category:r.cat, description:r.desc, status:r.status }),
   stickies:     r => ({ text:r.text, color:r.color, pinned:r.pinned, archived:r.archived, pos_x:r.x, pos_y:r.y, w:r.w, h:r.h }),
+  vault:        r => ({ section:r.section, title:r.title, folder:r.folder, category:r.category, tags:r.tags, language:r.language, content:r.content, favorite:!!r.favorite, pinned:!!r.pinned, archived:!!r.archived, updated_at:r.updated_at||new Date().toISOString() }),
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -2411,12 +2297,11 @@ async function updateItem(key, id, updates, renderFn) {
 // Legacy del() wrapper used by inline HTML onclick
 async function del(arr, id, cbName) {
   const renderMap = {
-    daily:'renderDaily', projects:'renderProjects', learning:'renderLearning',
-    clients:'renderClients', support:'renderSupport', docs:'renderDocs',
+    daily:'renderDaily',
     achievements:'renderAchievements', evidence:'renderEvidence',
-    star:'renderStar', plans:'renderPlan', goals:'renderGoals',
-    notes:'renderNotes', mood:'renderMood',
-    tasks:'renderTasks', meetings:'renderMeetings', ideas:'renderIdeas', stickies:'renderStickies'
+    star:'renderStar', plans:'renderPlan', goals:'renderGoals', mood:'renderMood',
+    tasks:'renderTasks', meetings:'renderMeetings', stickies:'renderStickies',
+    vault:'renderVault'
   };
   const fn = window[renderMap[arr] || cbName];
   await delItem(arr, id, fn);
@@ -3191,11 +3076,10 @@ async function migrateLocalData() {
   toast('Migrating local data to cloud...');
 
   const migrationMap = [
-    ['daily','daily'], ['projects','projects'], ['learning','learning'],
-    ['clients','clients'], ['support','support'], ['docs','docs'],
+    ['daily','daily'],
     ['achievements','achievements'], ['evidence','evidence'],
     ['star','star'], ['plans','plans'], ['goals','goals'],
-    ['notes','notes'], ['mood','mood']
+    ['mood','mood']
   ];
 
   let migrated = 0;
@@ -3260,11 +3144,11 @@ async function migrateLocalData() {
 
 // Which notebook-tab group each page id lives under (used to auto-expand the right group)
 const NAV_GROUP = {
-  quicklog:'workspace', projects:'workspace', learning:'workspace',
-  planner:'workspace', clientsupport:'workspace',
-  tasks:'workspace', meetings:'workspace', ideas:'workspace',
-  achievements:'career', ai:'career',
-  reports:'utilities', goals:'utilities', notes:'utilities', mood:'utilities',
+  quicklog:'workspace', planner:'workspace',
+  tasks:'workspace', meetings:'workspace',
+  achievements:'career',
+  vault:'knowledge',
+  reports:'utilities', goals:'utilities', mood:'utilities',
   companies:'utilities', stickies:'utilities'
 };
 
@@ -3278,20 +3162,19 @@ function nav(id) {
   const grp = NAV_GROUP[id];
   if (grp) openGroup(grp); else closeAllGroups();
   const titles = {
-    dashboard:'Dashboard', quicklog:'Work Journal', ai:'AI Writer', projects:'Projects', learning:'Learning',
+    dashboard:'Dashboard', quicklog:'Work Journal',
     achievements:'Achievements & Evidence', reports:'Reports & Export',
-    planner:'Attendance & Pay', goals:'Goals', notes:'Knowledge Hub',
+    planner:'Attendance & Pay', goals:'Goals',
     mood:'Mood Tracker', profile:'My Profile',
-    tasks:'Task Manager', meetings:'Meeting Notes', ideas:'Idea Board',
-    companies:'Company Manager', stickies:'Sticky Notes', clientsupport:'Client Support'
+    tasks:'Task Manager', meetings:'Meeting Notes',
+    companies:'Company Manager', stickies:'Sticky Notes',
+    vault:'Knowledge Vault'
   };
   document.getElementById('page-title').textContent = titles[id] || id;
   document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
     {weekday:'long',year:'numeric',month:'long',day:'numeric'});
   const wsBar = document.getElementById('ws-tabbar');
   if (wsBar) wsBar.style.display = (grp === 'workspace') ? 'flex' : 'none';
-  const careerBar = document.getElementById('career-tabbar');
-  if (careerBar) careerBar.style.display = (grp === 'career') ? 'flex' : 'none';
   const utilBar = document.getElementById('utilities-tabbar');
   if (utilBar) utilBar.style.display = (grp === 'utilities') ? 'flex' : 'none';
   document.querySelectorAll('.ws-tab').forEach(t => t.classList.toggle('active', t.dataset.wsTab === id));
@@ -3299,16 +3182,14 @@ function nav(id) {
   if (id==='reports')     renderReports();
   if (id==='planner')     renderCal();
   if (id==='goals')       renderGoals();
-  if (id==='notes')       renderNotes();
   if (id==='mood')        renderMood();
   if (id==='achievements') { renderEvidence(); renderTechnologies(); }
   if (id==='profile')     loadProfile();
   if (id==='tasks')       renderTasks();
   if (id==='meetings')    renderMeetings();
-  if (id==='ideas')       renderIdeas();
   if (id==='companies')   renderCompanyManager();
   if (id==='stickies')    renderStickies();
-  if (id==='clientsupport') renderClientSupport();
+  if (id==='vault')       renderVault();
   closeSidebar();
 }
 
@@ -3341,14 +3222,10 @@ function closeSidebar() { document.getElementById('sidebar').classList.remove('o
 
 function calcScore() {
   let s = 0;
-  s += Math.min(25, D.daily.length * 2);
-  s += Math.min(20, D.projects.length * 5);
-  s += Math.min(15, D.achievements.length * 4);
-  s += Math.min(15, D.learning.length * 3);
-  s += Math.min(10, D.support.length * 2);
-  s += Math.min(8,  D.clients.length * 2);
-  s += Math.min(5,  D.docs.length * 2);
-  s += Math.min(2,  D.evidence.length);
+  s += Math.min(40, D.daily.length * 3);
+  s += Math.min(30, D.achievements.length * 6);
+  s += Math.min(15, D.star.length * 3);
+  s += Math.min(15, D.evidence.length * 3);
   return Math.min(100, Math.round(s));
 }
 
@@ -3369,18 +3246,18 @@ function updateScore() {
   }
   const pills = document.getElementById('score-pills');
   if (pills) {
-    pills.innerHTML = [[D.daily.length,'tasks'],[D.projects.length,'projects'],[D.achievements.length,'wins'],[D.learning.length,'topics']]
+    pills.innerHTML = [[D.daily.length,'tasks'],[D.achievements.length,'wins'],[D.star.length,'STAR'],[D.evidence.length,'evidence']]
       .map(([v,l]) => `<div class="score-pill"><span style="font-weight:700;color:var(--violet-l)">${v}</span>${l}</div>`).join('');
   }
 }
 
 function updateAll() {
   updateScore();
-  const badges = [['nb-daily',D.daily.length],['nb-projects',D.projects.length],['nb-learning',D.learning.length],
-    ['nb-clients',D.clients.length],['nb-support',D.support.length],['nb-docs',D.docs.length],
+  const badges = [['nb-daily',D.daily.length],
     ['nb-ach',D.achievements.length],['nb-evidence',D.evidence.length],
-    ['nb-tasks',D.tasks.length],['nb-meetings',D.meetings.length],['nb-ideas',D.ideas.length],
-    ['nb-stickies', (D.stickies||[]).filter(s=>!s.archived).length]];
+    ['nb-tasks',D.tasks.length],['nb-meetings',D.meetings.length],
+    ['nb-stickies', (D.stickies||[]).filter(s=>!s.archived).length],
+    ['nb-vault', (D.vault||[]).filter(v=>!v.archived).length]];
   badges.forEach(([id,v]) => { const el=document.getElementById(id); if(el) el.textContent=v });
 }
 
@@ -3398,9 +3275,10 @@ function delBtn(arr,id,cb) { return`<button style="background:var(--red-dim);col
 // ══════════════════════════════════════════════════════════════════
 
 // ── DAILY ──
-async function addDaily() {
+let dailyEditingId = null;
+async function saveDaily() {
   const r = {
-    id:'', date:document.getElementById('dl-date').value||today(),
+    date:document.getElementById('dl-date').value||today(),
     task:document.getElementById('dl-task').value,
     project:document.getElementById('dl-project').value,
     client:document.getElementById('dl-client').value,
@@ -3416,8 +3294,44 @@ async function addDaily() {
     richNotes:document.getElementById('dl-rich').innerHTML
   };
   if (!r.task) { toast('⚠️ Task title required', 'error'); return; }
-  await addItem('daily', r, renderDaily);
+  if (dailyEditingId) {
+    await updateItem('daily', dailyEditingId, r, renderDaily);
+    toast('✓ Journal entry updated');
+    cancelDailyEdit();
+  } else {
+    await addItem('daily', { id:'', ...r }, renderDaily);
+    clearDaily();
+  }
+}
+function openDailyEditor(id) {
+  const r = D.daily.find(x => x.id === id); if (!r) return;
+  dailyEditingId = id;
+  document.getElementById('dl-date').value = r.date||today();
+  document.getElementById('dl-task').value = r.task||'';
+  document.getElementById('dl-project').value = r.project||'';
+  document.getElementById('dl-client').value = r.client||'';
+  document.getElementById('dl-hours').value = r.hours||'';
+  document.getElementById('dl-cat').value = r.cat||'Development';
+  document.getElementById('dl-prio').value = r.prio||'Medium';
+  document.getElementById('dl-status').value = r.status||'Completed';
+  document.getElementById('dl-impact').value = r.impact||'';
+  document.getElementById('dl-problem').value = r.problem||'';
+  document.getElementById('dl-tech').value = r.tech||'';
+  document.getElementById('dl-support').value = r.support||'No';
+  document.getElementById('dl-self').value = r.self||'';
+  const rich = document.getElementById('dl-rich'); if (rich) { rich.innerHTML = r.richNotes||''; rtUpdateStats(rich) }
+  document.getElementById('dl-submit-btn').textContent = '💾 Update Entry';
+  document.getElementById('dl-cancel-btn').style.display = '';
+  document.getElementById('dl-edit-banner').style.display = '';
+  document.getElementById('dl-task').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+function cancelDailyEdit() {
+  dailyEditingId = null;
   clearDaily();
+  document.getElementById('dl-date').value = today();
+  document.getElementById('dl-submit-btn').textContent = '💾 Save Entry';
+  document.getElementById('dl-cancel-btn').style.display = 'none';
+  document.getElementById('dl-edit-banner').style.display = 'none';
 }
 function clearDaily() {
   ['dl-task','dl-project','dl-client','dl-hours','dl-impact','dl-problem','dl-tech','dl-self']
@@ -3437,37 +3351,238 @@ function renderDaily() {
     <td>${prioBadge(r.prio)}</td>
     <td>${statusBadge(r.status)}</td>
     <td style="font-size:11px;color:var(--text2);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.impact)||'—'}</td>
-    <td>${delBtn('daily',r.id,'renderDaily')}</td>
+    <td><button onclick='openDailyEditor(${JSON.stringify(r.id)})' title="Edit entry" style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:11px;margin-right:4px">✏️</button>${delBtn('daily',r.id,'renderDaily')}</td>
   </tr>`).join('');
   renderJournalSummary();
 }
 
-// ── RICH TEXT EDITOR (Work Journal) ──
-function rtCmd(cmd, val) {
-  document.getElementById('dl-rich').focus();
-  document.execCommand(cmd, false, val || null);
+// ══════════════════════════════════════════════════════════════════
+// ── SHARED RICH TEXT EDITOR (Work Journal, Meetings, Achievements, Stickies, Vault) ──
+// ══════════════════════════════════════════════════════════════════
+const RT_EMOJIS = ['👍','✅','⚠️','🔥','💡','🐛','🚀','📌','⭐','🎯','🧠','💻','🔧','📝','✏️','📅','⏰','❤️','😀','😅','🤔','👀','✔️','❌','➡️','⬆️','⬇️','🔗','📎','🎉','☕','🙌'];
+
+function isHtmlContent(s) { return /<[a-z][\s\S]*>/i.test(s || '') }
+function rtLegacyToHtml(s) { if (!s) return ''; return isHtmlContent(s) ? s : `<p>${esc(s).replace(/\n/g,'<br>')}</p>` }
+function htmlToPlainText(html) {
+  if (!html) return '';
+  const tmp = document.createElement('div'); tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g,' ').trim();
 }
-function rtInsertChecklist() {
-  const rich = document.getElementById('dl-rich'); rich.focus();
-  document.execCommand('insertHTML', false, '<ul class="rt-checklist"><li><input type="checkbox"> <span>Item</span></li></ul><br>');
+
+function rtToolbarHTML(opts) {
+  opts = opts || {};
+  const fileInput = `<input type="file" accept="image/*" style="display:none" onchange="rtImageFileSelected(this)">`;
+  if (opts.compact) {
+    return `<div class="rt-toolbar">
+      <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'bold')" title="Bold"><b>B</b></button>
+      <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'italic')" title="Italic"><i>I</i></button>
+      <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'underline')" title="Underline"><u>U</u></button>
+      <span class="rt-sep"></span>
+      <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'insertUnorderedList')" title="Bullet list">•</button>
+      <button type="button" onmousedown="event.preventDefault()" onclick="rtInsertChecklist(this)" title="Checklist">☑</button>
+      <button type="button" onmousedown="event.preventDefault()" onclick="rtInsertLink(this)" title="Link">🔗</button>
+      <button type="button" onmousedown="event.preventDefault()" onclick="rtToggleEmoji(this)" title="Emoji">🙂</button>
+      ${fileInput}
+    </div>`;
+  }
+  return `<div class="rt-toolbar">
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'undo')" title="Undo">↺</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'redo')" title="Redo">↻</button>
+    <span class="rt-sep"></span>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'bold')" title="Bold"><b>B</b></button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'italic')" title="Italic"><i>I</i></button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'underline')" title="Underline"><u>U</u></button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'strikeThrough')" title="Strikethrough"><s>S</s></button>
+    <span class="rt-sep"></span>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtFormatBlock(this,'H1')" title="Heading 1">H1</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtFormatBlock(this,'H2')" title="Heading 2">H2</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtFormatBlock(this,'H3')" title="Heading 3">H3</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtFormatBlock(this,'P')" title="Paragraph">¶</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtFormatBlock(this,'BLOCKQUOTE')" title="Quote">❝</button>
+    <span class="rt-sep"></span>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'insertUnorderedList')" title="Bullet list">• List</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'insertOrderedList')" title="Numbered list">1. List</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtInsertChecklist(this)" title="Checklist">☑ Check</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'indent')" title="Indent">→|</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'outdent')" title="Outdent">|←</button>
+    <span class="rt-sep"></span>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtInlineCode(this)" title="Inline code">&lt;/&gt;</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtInsertCodeBlock(this)" title="Code block">[ ]</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtInsertHR(this)" title="Divider">―</button>
+    <span class="rt-sep"></span>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'justifyLeft')" title="Align left">⇤</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'justifyCenter')" title="Align center">⇔</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'justifyRight')" title="Align right">⇥</button>
+    <span class="rt-sep"></span>
+    <input type="color" title="Text color" onmousedown="event.preventDefault()" oninput="rtSetColor(this,'foreColor',this.value)" value="#7c3aed">
+    <input type="color" title="Highlight" onmousedown="event.preventDefault()" oninput="rtSetColor(this,'hiliteColor',this.value)" value="#fef3c7">
+    <span class="rt-sep"></span>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtInsertLink(this)" title="Link">🔗</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtTriggerImage(this)" title="Image">🖼</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtInsertTable(this)" title="Table">▦</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtToggleEmoji(this)" title="Emoji">🙂</button>
+    <span class="rt-sep"></span>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtCmd(this,'removeFormat')" title="Clear formatting">⨯</button>
+    <button type="button" onmousedown="event.preventDefault()" onclick="rtToggleFullscreen(this)" title="Fullscreen">⛶</button>
+    ${fileInput}
+  </div>`;
 }
-function rtInsertCodeBlock() {
-  const rich = document.getElementById('dl-rich'); rich.focus();
-  document.execCommand('insertHTML', false, '<pre>code</pre><br>');
+
+// Mount a toolbar + editable region + stats footer into a host element. Returns the editor element.
+function rtMount(host, editorId, placeholder, opts) {
+  opts = opts || {};
+  if (typeof host === 'string') host = document.getElementById(host);
+  if (!host) return null;
+  host.classList.add('rt-wrap');
+  if (!opts.noFoot) host.classList.add('rt-has-foot');
+  if (opts.compact) host.classList.add('rt-compact');
+  host.innerHTML = rtToolbarHTML(opts) +
+    `<div id="${editorId}" class="rt-editor" contenteditable="true" data-placeholder="${esc(placeholder||'')}"></div>` +
+    (opts.noFoot ? '' : `<div class="rt-foot"><span class="rt-stats">0 words · &lt;1 min read</span></div>`);
+  const ed = document.getElementById(editorId);
+  ed.addEventListener('input', () => { rtUpdateStats(ed); if (opts.onInput) opts.onInput(ed) });
+  ed.addEventListener('keyup', e => rtMarkdownShortcut(ed, e));
+  if (opts.onBlur) ed.addEventListener('blur', () => opts.onBlur(ed));
+  rtUpdateStats(ed);
+  return ed;
 }
-function rtInsertLink() {
-  const url = prompt('Link URL:'); if (!url) return;
-  document.getElementById('dl-rich').focus();
-  document.execCommand('createLink', false, url);
+
+function rtGetEditor(btn) { const w = btn.closest('.rt-wrap'); return w ? w.querySelector('.rt-editor') : null }
+
+function rtUpdateStats(ed) {
+  const text = ed.innerText || '';
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const mins = Math.max(1, Math.round(words / 200));
+  const wrap = ed.closest('.rt-wrap');
+  const stats = wrap && wrap.querySelector('.rt-stats');
+  if (stats) stats.textContent = `${words} word${words===1?'':'s'} · ${text.length} chars · ${mins} min read`;
 }
-function openJournalView(id) {
-  const r = D.daily.find(x => x.id === id); if (!r) return;
-  document.getElementById('jv-title').textContent = r.task || 'Journal Note';
-  document.getElementById('jv-date').textContent = r.date || '';
-  document.getElementById('jv-body').innerHTML = r.richNotes || '<span style="color:var(--text4)">No notes.</span>';
+
+function rtCmd(btn, cmd, val) { const ed = rtGetEditor(btn); if(!ed) return; ed.focus(); document.execCommand(cmd, false, val || null); rtUpdateStats(ed) }
+function rtFormatBlock(btn, tag) { const ed = rtGetEditor(btn); if(!ed) return; ed.focus(); document.execCommand('formatBlock', false, tag) }
+function rtSetColor(input, cmd, color) { const ed = rtGetEditor(input); if(!ed) return; ed.focus(); document.execCommand(cmd, false, color) }
+function rtInlineCode(btn) {
+  const ed = rtGetEditor(btn); if(!ed) return; ed.focus();
+  const sel = window.getSelection();
+  if (!sel.rangeCount || sel.isCollapsed) { document.execCommand('insertHTML', false, '<code>code</code>'); return }
+  const range = sel.getRangeAt(0);
+  const codeEl = document.createElement('code');
+  codeEl.appendChild(range.extractContents());
+  range.insertNode(codeEl);
+  rtUpdateStats(ed);
+}
+function rtInsertChecklist(btn) { const ed = rtGetEditor(btn); if(!ed) return; ed.focus(); document.execCommand('insertHTML', false, '<ul class="rt-checklist"><li><input type="checkbox"> <span>Item</span></li></ul><p><br></p>') }
+function rtInsertCodeBlock(btn) { const ed = rtGetEditor(btn); if(!ed) return; ed.focus(); document.execCommand('insertHTML', false, '<pre>// code here</pre><p><br></p>') }
+function rtInsertHR(btn) { const ed = rtGetEditor(btn); if(!ed) return; ed.focus(); document.execCommand('insertHorizontalRule') }
+function rtInsertLink(btn) { const ed = rtGetEditor(btn); if(!ed) return; ed.focus(); const url = prompt('Link URL:'); if (!url) return; document.execCommand('createLink', false, url) }
+function rtInsertTable(btn) {
+  const ed = rtGetEditor(btn); if(!ed) return; ed.focus();
+  let rows = ''; for (let r=0;r<3;r++){ let cols=''; for(let c=0;c<3;c++) cols+='<td>&nbsp;</td>'; rows+=`<tr>${cols}</tr>` }
+  document.execCommand('insertHTML', false, `<table>${rows}</table><p><br></p>`);
+}
+function rtTriggerImage(btn) { const wrap = btn.closest('.rt-wrap'); const inp = wrap.querySelector('input[type=file]'); if (inp) inp.click() }
+function rtImageFileSelected(input) { const file = input.files[0]; if (!file) return; const ed = input.closest('.rt-wrap').querySelector('.rt-editor'); rtInsertImageFile(ed, file); input.value='' }
+function rtInsertImageFile(ed, file) {
+  if (!file || !file.type || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = () => { ed.focus(); document.execCommand('insertHTML', false, `<img src="${reader.result}" style="width:360px">`); rtUpdateStats(ed) };
+  reader.readAsDataURL(file);
+}
+function rtToggleEmoji(btn) {
+  const wrap = btn.closest('.rt-wrap');
+  let panel = wrap.querySelector('.rt-emoji-panel');
+  if (panel) { panel.remove(); return }
+  panel = document.createElement('div'); panel.className = 'rt-emoji-panel';
+  panel.innerHTML = RT_EMOJIS.map(e => `<button type="button" onmousedown="event.preventDefault()" onclick="rtInsertEmoji(this,'${e}')">${e}</button>`).join('');
+  btn.closest('.rt-toolbar').appendChild(panel);
+  setTimeout(() => document.addEventListener('click', rtCloseEmojiOnce, { once:true }), 0);
+}
+function rtCloseEmojiOnce(e) {
+  if (!e.target.closest('.rt-emoji-panel') && !e.target.closest('[onclick*="rtToggleEmoji"]')) {
+    document.querySelectorAll('.rt-emoji-panel').forEach(p => p.remove());
+  }
+}
+function rtInsertEmoji(btn, emoji) { const ed = rtGetEditor(btn); if(!ed) return; ed.focus(); document.execCommand('insertText', false, emoji); btn.closest('.rt-emoji-panel')?.remove(); rtUpdateStats(ed) }
+function rtToggleFullscreen(btn) { const wrap = btn.closest('.rt-wrap'); wrap.classList.toggle('fullscreen') }
+
+// Typed-markdown shortcuts: "# ", "## ", "### ", "- ", "1. ", "> " at the start of a line
+function rtMarkdownShortcut(ed, e) {
+  if (!e || e.key !== ' ') return;
+  const sel = window.getSelection(); if (!sel.rangeCount) return;
+  const node = sel.anchorNode; if (!node) return;
+  const el = node.nodeType === 3 ? node.parentElement : node;
+  const blockEl = (el && el.closest) ? (el.closest('p,div,li') || el) : null; if (!blockEl) return;
+  const text = blockEl.textContent || '';
+  const m = text.match(/^(#{1,3}|-|\*|>|\d+\.)\s$/); if (!m) return;
+  const token = m[1];
+  blockEl.textContent = '';
+  if (token === '#') document.execCommand('formatBlock', false, 'H1');
+  else if (token === '##') document.execCommand('formatBlock', false, 'H2');
+  else if (token === '###') document.execCommand('formatBlock', false, 'H3');
+  else if (token === '-' || token === '*') document.execCommand('insertUnorderedList');
+  else if (token === '>') document.execCommand('formatBlock', false, 'BLOCKQUOTE');
+  else if (/^\d+\.$/.test(token)) document.execCommand('insertOrderedList');
+  rtUpdateStats(ed);
+}
+
+// Paste / drag-drop images anywhere inside a .rt-editor
+document.addEventListener('paste', e => {
+  const ed = e.target.closest && e.target.closest('.rt-editor'); if (!ed) return;
+  const items = (e.clipboardData || window.clipboardData)?.items; if (!items) return;
+  for (const item of items) {
+    if (item.type && item.type.startsWith('image/')) { e.preventDefault(); rtInsertImageFile(ed, item.getAsFile()); return }
+  }
+});
+document.addEventListener('dragover', e => { if (e.target.closest && e.target.closest('.rt-editor')) e.preventDefault() });
+document.addEventListener('drop', e => {
+  const ed = e.target.closest && e.target.closest('.rt-editor'); if (!ed) return;
+  if (e.dataTransfer.files && e.dataTransfer.files.length) { e.preventDefault(); rtInsertImageFile(ed, e.dataTransfer.files[0]) }
+});
+// Click an image inside an editor to resize / delete it
+document.addEventListener('click', e => {
+  const img = e.target.closest && e.target.closest('.rt-editor img');
+  if (img) { rtShowImageToolbar(img) }
+  else if (!e.target.closest('.rt-img-toolbar')) { const t = document.getElementById('rt-img-toolbar'); if (t) t.style.display = 'none' }
+});
+function rtShowImageToolbar(img) {
+  let bar = document.getElementById('rt-img-toolbar');
+  if (!bar) { bar = document.createElement('div'); bar.id = 'rt-img-toolbar'; bar.className = 'rt-img-toolbar'; document.body.appendChild(bar) }
+  bar.innerHTML = ['Small','Medium','Large','Full'].map(s => `<button type="button" onclick="rtResizeImage('${s}')">${s}</button>`).join('') + `<button type="button" onclick="rtDeleteImage()">🗑</button>`;
+  window.__rtCurrentImg = img;
+  const rect = img.getBoundingClientRect();
+  bar.style.left = rect.left + 'px'; bar.style.top = Math.max(4, rect.top - 36) + 'px';
+  bar.style.display = 'flex';
+}
+function rtResizeImage(size) {
+  const img = window.__rtCurrentImg; if (!img) return;
+  const widths = { Small:'180px', Medium:'360px', Large:'560px', Full:'100%' };
+  img.style.width = widths[size];
+  document.getElementById('rt-img-toolbar').style.display = 'none';
+}
+function rtDeleteImage() { const img = window.__rtCurrentImg; if (!img) return; img.remove(); document.getElementById('rt-img-toolbar').style.display = 'none' }
+
+// ── Generic rich-content viewer (reused by Work Journal / Meetings / Achievements) ──
+let jvEditTarget = null;
+function openRichView(title, dateLabel, html, editTarget) {
+  document.getElementById('jv-title').textContent = title || 'Notes';
+  document.getElementById('jv-date').textContent = dateLabel || '';
+  document.getElementById('jv-body').innerHTML = html || '<span style="color:var(--text4)">No notes.</span>';
+  jvEditTarget = editTarget || null;
+  const editWrap = document.getElementById('jv-edit-wrap');
+  if (editWrap) editWrap.innerHTML = jvEditTarget ? `<button class="btn btn-ghost btn-sm" onclick="jvEditActivate()">✏️ Edit</button>` : '';
   document.getElementById('jv-overlay').classList.add('show');
 }
-function closeJournalView() { document.getElementById('jv-overlay').classList.remove('show'); }
+function jvEditActivate() {
+  const t = jvEditTarget; if (!t) return;
+  closeJournalView();
+  if (t.type === 'daily') { nav('quicklog'); openDailyEditor(t.id) }
+  else if (t.type === 'meeting') { nav('meetings'); openMeetingEditor(t.id) }
+  else if (t.type === 'achievement') { nav('achievements'); openAchievementEditor(t.id) }
+}
+function closeJournalView() { document.getElementById('jv-overlay').classList.remove('show') }
+function openJournalView(id) { const r = D.daily.find(x => x.id === id); if (!r) return; openRichView(r.task, r.date, r.richNotes, { type:'daily', id }) }
+function openMeetingView(id) { const m = D.meetings.find(x => x.id === id); if (!m) return; openRichView(m.agenda, m.date, m.discussion, { type:'meeting', id }) }
+function openAchievementView(id) { const a = D.achievements.find(x => x.id === id); if (!a) return; openRichView(a.achievement, a.date, a.notes, { type:'achievement', id }) }
 
 // ── WORK JOURNAL SUMMARY: Today / Week / Month (Phase 6E) ──
 let journalPeriod = 'today';
@@ -3508,7 +3623,6 @@ function renderJournalSummary() {
   const topTech = Object.entries(techCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
   const problemsSolved = entries.filter(r => r.problem && r.problem.trim()).length;
   const meetingsInRange = D.meetings.filter(m => dateInRange(m.date, start, end)).length;
-  const supportInRange = D.support.filter(s => dateInRange(s.date, start, end)).length + D.clients.filter(c => dateInRange(c.date, start, end)).length;
   const achievementsInRange = D.achievements.filter(a => dateInRange(a.date, start, end)).length;
 
   // Attendance-derived stats (from Phase 6A login/logout + status)
@@ -3544,7 +3658,6 @@ function renderJournalSummary() {
     ['Top Technology', topTech],
     ['Problems Solved', problemsSolved],
     ['Meetings', meetingsInRange],
-    ['Client / Support Sessions', supportInRange],
     ['Achievements Logged', achievementsInRange],
   ];
   if (journalPeriod !== 'today') {
@@ -3552,216 +3665,6 @@ function renderJournalSummary() {
   }
   detailEl.innerHTML = `<div style="font-size:10.5px;color:var(--text4);margin-bottom:6px">Summary for ${label}</div>` +
     rows.map(([l,v]) => `<div class="wj-detail-row"><span>${l}</span><span class="wj-val">${esc(String(v))}</span></div>`).join('');
-}
-
-// ── PROJECTS ──
-async function addProject() {
-  const r = {
-    id:'', name:document.getElementById('pj-name').value,
-    client:document.getElementById('pj-client').value, role:document.getElementById('pj-role').value,
-    start:document.getElementById('pj-start').value, end:document.getElementById('pj-end').value,
-    status:document.getElementById('pj-status').value, prog:document.getElementById('pj-prog').value,
-    tech:document.getElementById('pj-tech').value, contrib:document.getElementById('pj-contrib').value,
-    outcome:document.getElementById('pj-outcome').value
-  };
-  if (!r.name) { toast('⚠️ Project name required','error'); return; }
-  await addItem('projects', r, renderProjects);
-}
-function renderProjects() {
-  const b = document.getElementById('proj-body'); if (!b) return;
-  if (!D.projects.length) { b.innerHTML=`<tr><td colspan="9" class="empty-td">No projects yet.</td></tr>`; return }
-  b.innerHTML = D.projects.map(r => `<tr>
-    <td><strong>${esc(r.name)}</strong></td>
-    <td style="font-size:11px">${esc(r.client)||'—'}</td>
-    <td style="font-size:11px">${esc(r.role)||'—'}</td>
-    <td style="font-size:11px;white-space:nowrap">${r.start||'—'}</td>
-    <td style="font-size:11px;white-space:nowrap">${r.end||'—'}</td>
-    <td style="min-width:90px"><div class="pbar-wrap"><div class="pbar-fill" style="width:${r.prog||0}%"></div></div><span style="font-size:9.5px;color:var(--text3)">${r.prog||0}%</span></td>
-    <td>${statusBadge(r.status)}</td>
-    <td style="font-size:11px;color:var(--green);max-width:160px">${esc(r.outcome)||'—'}</td>
-    <td>${delBtn('projects',r.id,'renderProjects')}</td>
-  </tr>`).join('');
-}
-
-// ── LEARNING ──
-async function addLearning() {
-  const r = {
-    id:'', date:document.getElementById('ln-date').value||today(),
-    topic:document.getElementById('ln-topic').value,
-    type:document.getElementById('ln-type').value,
-    source:document.getElementById('ln-source').value,
-    cat:document.getElementById('ln-cat').value,
-    hours:document.getElementById('ln-hours').value,
-    applied:document.getElementById('ln-applied').value,
-    cert:document.getElementById('ln-cert').value,
-    notes:document.getElementById('ln-notes').value
-  };
-  if (!r.topic) { toast('⚠️ Topic required','error'); return; }
-  await addItem('learning', r, renderLearning);
-}
-function renderLearning() {
-  const b = document.getElementById('learn-body'); if (!b) return;
-  if (!D.learning.length) { b.innerHTML=`<tr><td colspan="8" class="empty-td">No learning logged.</td></tr>`; return }
-  b.innerHTML = D.learning.map(r => `<tr>
-    <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong>${esc(r.topic)}</strong></td>
-    <td style="font-size:11px">${esc(r.source)||'—'}</td>
-    <td><span class="badge bp">${esc(r.cat)}</span></td>
-    <td style="font-variant-numeric:tabular-nums;text-align:center">${r.hours||'—'}</td>
-    <td>${appliedBadge(r.applied)}</td>
-    <td><span class="badge ${r.cert==='Yes'?'bg':'bn'}">${r.cert}</span></td>
-    <td>${delBtn('learning',r.id,'renderLearning')}</td>
-  </tr>`).join('');
-}
-
-// ── CLIENT CALLS ──
-async function addClient() {
-  const r = {
-    id:'', date:document.getElementById('cl-date').value||today(),
-    client:document.getElementById('cl-client').value,
-    org:document.getElementById('cl-org').value,
-    dur:document.getElementById('cl-dur').value,
-    purpose:document.getElementById('cl-purpose').value,
-    resolution:document.getElementById('cl-resolution').value,
-    followup:document.getElementById('cl-followup').value,
-    rating:document.getElementById('cl-rating').value
-  };
-  if (!r.client) { toast('⚠️ Client name required','error'); return; }
-  await addItem('clients', r, renderClients);
-}
-function renderClients() {
-  const b = document.getElementById('client-body'); if (!b) return;
-  if (!D.clients.length) { b.innerHTML=`<tr><td colspan="9" class="empty-td">No client calls logged.</td></tr>`; return }
-  b.innerHTML = D.clients.map(r => `<tr>
-    <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong>${esc(r.client)}</strong></td>
-    <td style="font-size:11px">${esc(r.org)||'—'}</td>
-    <td style="font-size:11px">${r.dur?r.dur+' min':'—'}</td>
-    <td style="font-size:11px;max-width:120px">${esc(r.purpose)||'—'}</td>
-    <td style="font-size:11px;color:var(--green);max-width:150px">${esc(r.resolution)||'—'}</td>
-    <td><span class="badge ${r.followup==='Yes'?'ba':'bg'}">${r.followup}</span></td>
-    <td style="font-variant-numeric:tabular-nums">${r.rating||'—'}/10</td>
-    <td>${delBtn('clients',r.id,'renderClients')}</td>
-  </tr>`).join('');
-}
-
-// ── SUPPORT ──
-async function addSupport() {
-  const r = {
-    id:'', date:document.getElementById('sp-date').value||today(),
-    issue:document.getElementById('sp-issue').value,
-    prio:document.getElementById('sp-prio').value,
-    status:document.getElementById('sp-status').value,
-    cause:document.getElementById('sp-cause').value,
-    solution:document.getElementById('sp-solution').value,
-    time:document.getElementById('sp-time').value,
-    sat:document.getElementById('sp-sat').value
-  };
-  if (!r.issue) { toast('⚠️ Issue required','error'); return; }
-  await addItem('support', r, renderSupport);
-}
-function renderSupport() {
-  const b = document.getElementById('support-body'); if (!b) return;
-  if (!D.support.length) { b.innerHTML=`<tr><td colspan="9" class="empty-td">No support cases.</td></tr>`; return }
-  b.innerHTML = D.support.map(r => `<tr>
-    <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong style="font-size:12px">${esc(r.issue)}</strong></td>
-    <td>${prioBadge(r.prio)}</td>
-    <td style="font-size:11px;color:var(--text2);max-width:120px">${esc(r.cause)||'—'}</td>
-    <td style="font-size:11px;color:var(--green);max-width:150px">${esc(r.solution)||'—'}</td>
-    <td style="font-size:11px">${esc(r.time)||'—'}</td>
-    <td style="font-variant-numeric:tabular-nums">${r.sat||'—'}/10</td>
-    <td>${statusBadge(r.status)}</td>
-    <td>${delBtn('support',r.id,'renderSupport')}</td>
-  </tr>`).join('');
-}
-
-// ── CLIENT SUPPORT (merged view over Clients + Support, Phase 6C) ──
-function scrollToCSForm(kind) {
-  const fsId = kind === 'client' ? 'client-fs' : 'support-fs';
-  const el = document.getElementById(fsId);
-  if (!el) return;
-  if (!el.classList.contains('open')) el.classList.add('open');
-  el.scrollIntoView({ behavior:'smooth', block:'center' });
-}
-function renderClientSupport() {
-  const el = document.getElementById('cs-timeline'); if (!el) return;
-  const q = (document.getElementById('cs-search')?.value || '').toLowerCase();
-  const typeFilter = document.getElementById('cs-type-filter')?.value || 'all';
-  const statusFilter = document.getElementById('cs-status-filter')?.value || 'all';
-
-  const clientItems = D.clients.map(r => ({
-    kind:'client', id:r.id, date:r.date, title:r.client, sub:r.org,
-    desc:r.purpose, resolution:r.resolution, badge:r.rating?`${r.rating}/10`:null,
-    statusOrPrio: null
-  }));
-  const supportItems = D.support.map(r => ({
-    kind:'support', id:r.id, date:r.date, title:r.issue, sub:r.cause,
-    desc:r.solution, resolution:null, badge:r.sat?`${r.sat}/10`:null,
-    statusOrPrio: r.status, prio: r.prio
-  }));
-
-  let combined = [...clientItems, ...supportItems];
-  if (typeFilter !== 'all') combined = combined.filter(i => i.kind === typeFilter);
-  if (statusFilter !== 'all') combined = combined.filter(i => i.statusOrPrio === statusFilter || i.prio === statusFilter);
-  if (q) combined = combined.filter(i => `${i.title} ${i.sub||''} ${i.desc||''} ${i.resolution||''}`.toLowerCase().includes(q));
-  combined.sort((a,b) => (b.date||'').localeCompare(a.date||''));
-
-  const cntEl = document.getElementById('cs-cnt');
-  if (cntEl) cntEl.textContent = `${combined.length} of ${clientItems.length + supportItems.length}`;
-
-  const kpiEl = document.getElementById('cs-summary-kpis');
-  if (kpiEl) {
-    const avgRating = D.clients.length ? (D.clients.reduce((s,r)=>s+(Number(r.rating)||0),0)/D.clients.length).toFixed(1) : '—';
-    const openCases = D.support.filter(r => r.status === 'Open').length;
-    kpiEl.innerHTML = [
-      { i:'📞', l:'Client Calls', v:D.clients.length, cls:'kb' },
-      { i:'🔧', l:'Support Cases', v:D.support.length, cls:'kv' },
-      { i:'🚨', l:'Open Cases', v:openCases, cls:'kr' },
-      { i:'⭐', l:'Avg Client Rating', v:avgRating!=='—'?avgRating+'/10':'—', cls:'kg' },
-    ].map(k => `<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
-  }
-
-  if (!combined.length) { el.innerHTML = `<div class="empty-td">Nothing matches — try clearing filters.</div>`; return; }
-  el.innerHTML = combined.map(i => `
-    <div class="cs-item">
-      <div class="cs-icon">${i.kind==='client' ? '📞' : '🔧'}</div>
-      <div class="cs-body">
-        <div class="cs-title">${esc(i.title)} ${i.prio ? prioBadge(i.prio) : ''} ${i.statusOrPrio ? statusBadge(i.statusOrPrio) : ''}</div>
-        <div class="cs-meta">${i.kind==='client'?'Client Call':'Support Case'} · ${i.date}${i.sub?` · ${esc(i.sub)}`:''}${i.badge?` · Rating ${i.badge}`:''}</div>
-        ${i.desc ? `<div class="cs-desc">${esc(i.desc)}</div>` : ''}
-        ${i.resolution ? `<div class="cs-desc" style="color:var(--green)">✓ ${esc(i.resolution)}</div>` : ''}
-      </div>
-      <button class="btn btn-ghost btn-sm" onclick="scrollToCSForm('${i.kind}')" style="align-self:flex-start;flex-shrink:0">View form ↓</button>
-    </div>
-  `).join('');
-}
-
-// ── DOCS ──
-async function addDoc() {
-  const r = {
-    id:'', date:document.getElementById('dc-date').value||today(),
-    name:document.getElementById('dc-name').value,
-    type:document.getElementById('dc-type').value,
-    rev:document.getElementById('dc-rev').value,
-    pages:document.getElementById('dc-pages').value,
-    remarks:document.getElementById('dc-remarks').value
-  };
-  if (!r.name) { toast('⚠️ Name required','error'); return; }
-  await addItem('docs', r, renderDocs);
-}
-function renderDocs() {
-  const b = document.getElementById('docs-body'); if (!b) return;
-  if (!D.docs.length) { b.innerHTML=`<tr><td colspan="7" class="empty-td">No documents logged.</td></tr>`; return }
-  b.innerHTML = D.docs.map(r => `<tr>
-    <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong>${esc(r.name)}</strong></td>
-    <td><span class="badge bb">${esc(r.type)}</span></td>
-    <td style="font-size:11px">${esc(r.rev)||'—'}</td>
-    <td style="text-align:center">${r.pages||'—'}</td>
-    <td style="font-size:11px;color:var(--text2)">${esc(r.remarks)||'—'}</td>
-    <td>${delBtn('docs',r.id,'renderDocs')}</td>
-  </tr>`).join('');
 }
 
 // ── TASK MANAGER (KANBAN) ──
@@ -3772,19 +3675,46 @@ const TASK_COLUMNS = [
   { key:'waiting',     label:'Waiting' },
   { key:'completed',   label:'Completed' },
 ];
-async function addTask() {
+let taskEditingId = null;
+async function saveTask() {
   const r = {
-    id:'', title:document.getElementById('tk-title').value,
+    title:document.getElementById('tk-title').value,
     prio:document.getElementById('tk-prio').value,
     due:document.getElementById('tk-due').value,
     project:document.getElementById('tk-project').value,
     tags:document.getElementById('tk-tags').value,
     notes:document.getElementById('tk-notes').value,
-    col:'inbox', subtasks:[]
   };
   if (!r.title) { toast('⚠️ Task title required','error'); return; }
-  await addItem('tasks', r, renderTasks);
+  if (taskEditingId) {
+    await updateItem('tasks', taskEditingId, r, renderTasks);
+    toast('✓ Task updated');
+    cancelTaskEdit();
+  } else {
+    await addItem('tasks', { id:'', ...r, col:'inbox', subtasks:[] }, renderTasks);
+    ['tk-title','tk-due','tk-project','tk-tags','tk-notes'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+  }
+}
+function openTaskEditor(id) {
+  const t = D.tasks.find(x => x.id === id); if (!t) return;
+  taskEditingId = id;
+  document.getElementById('tk-title').value = t.title||'';
+  document.getElementById('tk-prio').value = t.prio||'Medium';
+  document.getElementById('tk-due').value = t.due||'';
+  document.getElementById('tk-project').value = t.project||'';
+  document.getElementById('tk-tags').value = t.tags||'';
+  document.getElementById('tk-notes').value = t.notes||'';
+  document.getElementById('tk-submit-btn').textContent = '💾 Update Task';
+  document.getElementById('tk-cancel-btn').style.display = '';
+  const fs = document.getElementById('task-fs'); if (fs && !fs.classList.contains('open')) toggleFS('task-fs');
+  document.getElementById('tk-title').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+function cancelTaskEdit() {
+  taskEditingId = null;
   ['tk-title','tk-due','tk-project','tk-tags','tk-notes'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+  document.getElementById('tk-prio').value = 'Medium';
+  document.getElementById('tk-submit-btn').textContent = '💾 Add to Inbox';
+  document.getElementById('tk-cancel-btn').style.display = 'none';
 }
 async function moveTask(id, toCol) {
   const item = D.tasks.find(t => t.id === id);
@@ -3803,7 +3733,7 @@ function renderTasks() {
       <div class="kanban-col-body" data-col-key="${col.key}">
       ${items.map(t => {
         const others = TASK_COLUMNS.filter(c => c.key !== col.key);
-        return `<div class="task-card" draggable="true" data-task-id="${t.id}">
+        return `<div class="task-card" draggable="true" data-task-id="${t.id}" title="Click to edit">
           <div class="task-card-title">${esc(t.title)}</div>
           <div class="task-card-meta">${prioBadge(t.prio)}${t.due ? `<span class="badge bn" style="font-size:9.5px">📅 ${t.due}</span>` : ''}${t.project ? `<span class="badge bv" style="font-size:9.5px">${esc(t.project)}</span>` : ''}</div>
           <div class="task-card-move">
@@ -3827,6 +3757,10 @@ function wireKanbanDragDrop(board) {
       e.dataTransfer.effectAllowed = 'move';
     });
     card.addEventListener('dragend', () => card.classList.remove('kdragging'));
+    card.addEventListener('click', e => {
+      if (e.target.closest('button')) return;
+      openTaskEditor(card.dataset.taskId);
+    });
   });
   board.querySelectorAll('.kanban-col-body').forEach(colBody => {
     colBody.addEventListener('dragover', e => {
@@ -3845,19 +3779,49 @@ function wireKanbanDragDrop(board) {
 }
 
 // ── MEETING NOTES ──
-async function addMeeting() {
+let meetingEditingId = null;
+async function saveMeeting() {
   const r = {
-    id:'', date:document.getElementById('mt-date').value||today(),
+    date:document.getElementById('mt-date').value||today(),
     attendees:document.getElementById('mt-attendees').value,
     agenda:document.getElementById('mt-agenda').value,
-    discussion:document.getElementById('mt-discussion').value,
+    discussion:document.getElementById('mt-rich').innerHTML,
     action:document.getElementById('mt-action').value,
     followup:document.getElementById('mt-followup').value,
     status:document.getElementById('mt-status').value
   };
   if (!r.agenda) { toast('⚠️ Agenda required','error'); return; }
-  await addItem('meetings', r, renderMeetings);
-  ['mt-attendees','mt-agenda','mt-discussion','mt-action','mt-followup'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+  if (meetingEditingId) {
+    await updateItem('meetings', meetingEditingId, r, renderMeetings);
+    toast('✓ Meeting updated');
+    cancelMeetingEdit();
+  } else {
+    await addItem('meetings', { id:'', ...r }, renderMeetings);
+    ['mt-attendees','mt-agenda','mt-action','mt-followup'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+    const rich = document.getElementById('mt-rich'); if (rich) rich.innerHTML = '';
+  }
+}
+function openMeetingEditor(id) {
+  const m = D.meetings.find(x => x.id === id); if (!m) return;
+  meetingEditingId = id;
+  document.getElementById('mt-date').value = m.date||'';
+  document.getElementById('mt-attendees').value = m.attendees||'';
+  document.getElementById('mt-agenda').value = m.agenda||'';
+  document.getElementById('mt-action').value = m.action||'';
+  document.getElementById('mt-followup').value = m.followup||'';
+  document.getElementById('mt-status').value = m.status||'Open';
+  const rich = document.getElementById('mt-rich'); if (rich) { rich.innerHTML = m.discussion||''; rtUpdateStats(rich) }
+  document.getElementById('mt-submit-btn').textContent = '💾 Update Meeting';
+  document.getElementById('mt-cancel-btn').style.display = '';
+  document.getElementById('mt-agenda').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+function cancelMeetingEdit() {
+  meetingEditingId = null;
+  ['mt-attendees','mt-agenda','mt-action','mt-followup'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+  document.getElementById('mt-status').value = 'Open';
+  const rich = document.getElementById('mt-rich'); if (rich) rich.innerHTML = '';
+  document.getElementById('mt-submit-btn').textContent = '💾 Save';
+  document.getElementById('mt-cancel-btn').style.display = 'none';
 }
 function renderMeetings() {
   const b = document.getElementById('meetings-body'); if (!b) return;
@@ -3865,52 +3829,12 @@ function renderMeetings() {
   b.innerHTML = D.meetings.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3);white-space:nowrap">${r.date||'—'}</td>
     <td style="font-size:11px">${esc(r.attendees)||'—'}</td>
-    <td style="font-size:12px"><strong>${esc(r.agenda)}</strong></td>
+    <td style="font-size:12px"><strong>${esc(r.agenda)}</strong>${r.discussion ? ` <button onclick="openMeetingView('${r.id}')" title="View discussion notes" style="border:none;background:none;cursor:pointer;color:var(--violet-l);font-size:11px">📝</button>` : ''}</td>
     <td style="font-size:11px;color:var(--text2);max-width:200px">${esc(r.action)||'—'}</td>
     <td style="font-size:11px;white-space:nowrap">${r.followup||'—'}</td>
     <td>${statusBadge(r.status)}</td>
-    <td>${delBtn('meetings',r.id,'renderMeetings')}</td>
+    <td><button onclick="openMeetingEditor('${r.id}')" title="Edit meeting" style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:11px;margin-right:4px">✏️</button>${delBtn('meetings',r.id,'renderMeetings')}</td>
   </tr>`).join('');
-}
-
-// ── IDEA BOARD ──
-let ideaFilter = 'all';
-async function addIdea() {
-  const r = {
-    id:'', title:document.getElementById('id-title').value,
-    cat:document.getElementById('id-cat').value,
-    desc:document.getElementById('id-desc').value,
-    status:'New'
-  };
-  if (!r.title) { toast('⚠️ Idea title required','error'); return; }
-  await addItem('ideas', r, renderIdeas);
-  ['id-title','id-desc'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
-}
-function filterIdeas(f, btn) {
-  ideaFilter = f;
-  document.querySelectorAll('[data-idea-filter]').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  renderIdeas();
-}
-async function setIdeaStatus(id, status) {
-  await updateItem('ideas', id, { status }, renderIdeas);
-}
-function renderIdeas() {
-  const grid = document.getElementById('idea-grid'); if (!grid) return;
-  const list = D.ideas.filter(i => ideaFilter === 'all' || i.status === ideaFilter);
-  if (!list.length) { grid.innerHTML = `<div class="empty-td" style="grid-column:1/-1">No ideas here yet.</div>`; return }
-  const statusOpts = ['New','Considering','Planned','Archived'];
-  grid.innerHTML = list.map(i => `<div class="idea-card">
-    <div class="idea-card-title">${esc(i.title)}</div>
-    <div class="idea-card-desc">${esc(i.desc)||'—'}</div>
-    <div class="idea-card-foot">
-      <span class="badge bv" style="font-size:9.5px">${esc(i.cat)}</span>
-      <select onchange="setIdeaStatus('${i.id}', this.value)" style="font-size:10.5px;padding:3px 6px;border-radius:6px;border:1px solid var(--border2)">
-        ${statusOpts.map(s => `<option ${s===i.status?'selected':''}>${s}</option>`).join('')}
-      </select>
-      ${delBtn('ideas', i.id, 'renderIdeas')}
-    </div>
-  </div>`).join('');
 }
 
 // ── STICKY NOTES ──
@@ -3932,21 +3856,24 @@ function renderStickies() {
   const showArchived = document.getElementById('stk-show-archived')?.checked;
   const list = D.stickies
     .filter(s => showArchived || !s.archived)
-    .filter(s => !q || s.text.toLowerCase().includes(q))
+    .filter(s => !q || htmlToPlainText(s.text).toLowerCase().includes(q))
     .sort((a,b) => (b.pinned - a.pinned));
 
   board.innerHTML = list.map(s => `
     <div class="sticky-note sn-${s.color} ${s.pinned?'pinned':''} ${s.archived?'sn-archived':''}" data-id="${s.id}"
          style="left:${s.x}px;top:${s.y}px;width:${s.w}px;height:${s.h}px">
-      <textarea class="sn-text" onblur="saveStickyText('${s.id}', this.value)" ${s.archived?'readonly':''}>${esc(s.text)}</textarea>
+      <div class="sn-rt rt-wrap rt-compact">
+        ${rtToolbarHTML({compact:true})}
+        <div class="rt-editor" contenteditable="${s.archived?'false':'true'}" data-placeholder="Type your note..."
+             oninput="rtDebounceSaveSticky('${s.id}', this)" onkeyup="rtMarkdownShortcut(this, event)"
+             onblur="saveStickyRich('${s.id}', this)">${rtLegacyToHtml(s.text)}</div>
+      </div>
       <div class="sn-toolbar">
         <button onclick="toggleStickyPin('${s.id}')" title="Pin">${s.pinned?'📌':'📍'}</button>
         <button onclick="toggleStickyArchive('${s.id}')" title="${s.archived?'Restore':'Archive'}">${s.archived?'♻️':'🗄'}</button>
         <button onclick="convertSticky('${s.id}','task')" title="To Task">✅</button>
-        <button onclick="convertSticky('${s.id}','project')" title="To Project">🚀</button>
         <button onclick="convertSticky('${s.id}','meeting')" title="To Meeting">🗓</button>
         <button onclick="convertSticky('${s.id}','journal')" title="To Journal">⚡</button>
-        <button onclick="convertSticky('${s.id}','idea')" title="To Idea">💡</button>
         <button onclick="del('stickies','${s.id}')" title="Delete" style="margin-left:auto;color:var(--red)">✕</button>
       </div>
       <div class="sn-resize" onmousedown="startStickyResize(event,'${s.id}')">◢</div>
@@ -3955,14 +3882,21 @@ function renderStickies() {
 
   board.querySelectorAll('.sticky-note').forEach(el => {
     el.addEventListener('mousedown', e => {
-      if (e.target.closest('.sn-resize') || e.target.closest('button') || e.target.tagName === 'TEXTAREA') return;
+      if (e.target.closest('.sn-resize') || e.target.closest('button') || e.target.closest('.rt-wrap')) return;
       startStickyDrag(e, el);
     });
   });
 }
-async function saveStickyText(id, text) {
-  await updateItem('stickies', id, { text }, null);
-  const n = D.stickies.find(s => s.id === id); if (n) n.text = text;
+let stickyAutosaveTimers = {};
+function rtDebounceSaveSticky(id, ed) {
+  clearTimeout(stickyAutosaveTimers[id]);
+  stickyAutosaveTimers[id] = setTimeout(() => saveStickyRich(id, ed), 1200);
+}
+async function saveStickyRich(id, ed) {
+  clearTimeout(stickyAutosaveTimers[id]);
+  const html = ed.innerHTML;
+  const n = D.stickies.find(s => s.id === id); if (n) n.text = html;
+  await updateItem('stickies', id, { text: html }, null);
 }
 async function toggleStickyPin(id) {
   const n = D.stickies.find(s => s.id === id); if (!n) return;
@@ -4016,17 +3950,13 @@ function startStickyResize(e, id) {
 }
 async function convertSticky(id, kind) {
   const note = D.stickies.find(s => s.id === id); if (!note) return;
-  const text = note.text.trim() || 'Untitled';
+  const text = htmlToPlainText(note.text).trim() || 'Untitled';
   if (kind === 'task') {
     await addItem('tasks', { id:'', title:text, notes:'', col:'inbox', prio:'Medium', due:'', project:'', tags:'', subtasks:[] }, null);
-  } else if (kind === 'project') {
-    await addItem('projects', { id:'', name:text, client:'', role:'', start:'', end:'', status:'In Progress', prog:0, tech:'', contrib:'', outcome:'' }, null);
   } else if (kind === 'meeting') {
     await addItem('meetings', { id:'', date:today(), attendees:'', agenda:text, discussion:'', action:'', followup:'', status:'Open' }, null);
   } else if (kind === 'journal') {
     await addItem('daily', { id:'', date:today(), task:text, project:'', client:'', hours:'', cat:'Development', prio:'Medium', status:'Completed', impact:'', problem:'', tech:'', support:'No', self:'', richNotes:'' }, null);
-  } else if (kind === 'idea') {
-    await addItem('ideas', { id:'', title:text, cat:'Software', desc:'', status:'New' }, null);
   }
   await del('stickies', id, 'renderStickies');
   toast(`✓ Converted to ${kind}`);
@@ -4034,29 +3964,62 @@ async function convertSticky(id, kind) {
 }
 
 // ── ACHIEVEMENTS ──
-async function addAchievement() {
+let achievementEditingId = null;
+async function saveAchievement() {
   const r = {
-    id:'', date:document.getElementById('ac-date').value||today(),
+    date:document.getElementById('ac-date').value||today(),
     achievement:document.getElementById('ac-achievement').value,
     type:document.getElementById('ac-type').value,
     impact:document.getElementById('ac-impact').value,
     revenue:document.getElementById('ac-revenue').value,
-    proof:document.getElementById('ac-proof').value
+    proof:document.getElementById('ac-proof').value,
+    notes:document.getElementById('ac-rich').innerHTML
   };
   if (!r.achievement) { toast('⚠️ Achievement required','error'); return; }
-  await addItem('achievements', r, renderAchievements);
+  if (achievementEditingId) {
+    await updateItem('achievements', achievementEditingId, r, renderAchievements);
+    toast('✓ Achievement updated');
+    cancelAchievementEdit();
+  } else {
+    await addItem('achievements', { id:'', ...r }, renderAchievements);
+    ['ac-achievement','ac-impact','ac-revenue','ac-proof'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+    const rich = document.getElementById('ac-rich'); if (rich) rich.innerHTML = '';
+  }
+}
+function openAchievementEditor(id) {
+  const a = D.achievements.find(x => x.id === id); if (!a) return;
+  achievementEditingId = id;
+  document.getElementById('ac-date').value = a.date||today();
+  document.getElementById('ac-achievement').value = a.achievement||'';
+  document.getElementById('ac-type').value = a.type||'Other';
+  document.getElementById('ac-impact').value = a.impact||'';
+  document.getElementById('ac-revenue').value = a.revenue||'';
+  document.getElementById('ac-proof').value = a.proof||'';
+  const rich = document.getElementById('ac-rich'); if (rich) { rich.innerHTML = a.notes||''; rtUpdateStats(rich) }
+  document.getElementById('ac-submit-btn').textContent = '💾 Update Achievement';
+  document.getElementById('ac-cancel-btn').style.display = '';
+  document.getElementById('ac-achievement').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+function cancelAchievementEdit() {
+  achievementEditingId = null;
+  ['ac-achievement','ac-impact','ac-revenue','ac-proof'].forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
+  document.getElementById('ac-date').value = today();
+  document.getElementById('ac-type').value = 'Other';
+  const rich = document.getElementById('ac-rich'); if (rich) rich.innerHTML = '';
+  document.getElementById('ac-submit-btn').textContent = '💾 Save';
+  document.getElementById('ac-cancel-btn').style.display = 'none';
 }
 function renderAchievements() {
   const b = document.getElementById('ach-body'); if (!b) return;
   if (!D.achievements.length) { b.innerHTML=`<tr><td colspan="7" class="empty-td">No achievements logged.</td></tr>`; return }
   b.innerHTML = D.achievements.map(r => `<tr>
     <td style="font-size:11px;color:var(--text3)">${r.date}</td>
-    <td><strong>${esc(r.achievement)}</strong></td>
+    <td><strong>${esc(r.achievement)}</strong>${r.notes ? ` <button onclick="openAchievementView('${r.id}')" title="View notes" style="border:none;background:none;cursor:pointer;color:var(--violet-l);font-size:11px">📝</button>` : ''}</td>
     <td><span class="badge ba">${esc(r.type)}</span></td>
     <td style="font-size:11px;color:var(--green)">${esc(r.impact)||'—'}</td>
     <td style="font-size:11px;color:var(--amber)">${esc(r.revenue)||'—'}</td>
     <td style="font-size:11px;color:var(--text2)">${esc(r.proof)||'—'}</td>
-    <td>${delBtn('achievements',r.id,'renderAchievements')}</td>
+    <td><button onclick="openAchievementEditor('${r.id}')" title="Edit achievement" style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:11px;margin-right:4px">✏️</button>${delBtn('achievements',r.id,'renderAchievements')}</td>
   </tr>`).join('');
 }
 
@@ -4164,7 +4127,6 @@ function renderTechnologies() {
     if (date && (!techMap[key].lastUsed || date > techMap[key].lastUsed)) techMap[key].lastUsed = date;
   };
 
-  D.projects.forEach(p => (p.tech||'').split(',').forEach(t => touch(t, p.name, p.end || p.start)));
   D.daily.forEach(r => (r.tech||'').split(',').forEach(t => touch(t, r.project, r.date)));
 
   const q = (document.getElementById('tech-search')?.value || '').toLowerCase();
@@ -4183,7 +4145,7 @@ function renderTechnologies() {
     { i:'🕐', l:'Most Recent', v:recentTech, cls:'kb' },
   ].map(k => `<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val" style="font-size:${k.v.length>10?'13px':'20px'}">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
 
-  if (!list.length) { listEl.innerHTML = `<div class="empty-td">No technologies logged yet — add them to your Projects or Work Journal entries.</div>`; return; }
+  if (!list.length) { listEl.innerHTML = `<div class="empty-td">No technologies logged yet — add them to your Work Journal entries.</div>`; return; }
   const maxCount = list[0].count || 1;
   listEl.innerHTML = list.map(t => `
     <div class="tech-row" title="${t.projects.size ? 'Projects: '+[...t.projects].join(', ') : ''}">
@@ -4265,85 +4227,484 @@ function renderGoals() {
   a.innerHTML = goalHTML(active); d.innerHTML = goalHTML(done);
 }
 
-// ── NOTES ──
-// ── KNOWLEDGE HUB (Phase 6D — upgraded Notes) ──
-let noteKind = 'general';
-function setNoteKind(kind, btn) {
-  noteKind = kind;
-  document.querySelectorAll('#kh-kind-picker .kh-kind-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  document.querySelectorAll('.kh-extra-fields').forEach(f => f.style.display = 'none');
-  const target = document.getElementById('kh-fields-' + kind);
-  if (target) target.style.display = 'block';
-}
-async function addNote() {
-  let data = {};
-  if (noteKind === 'technical') {
-    data = { language: document.getElementById('kh-tech-lang').value, code: document.getElementById('kh-tech-code').value };
-  } else if (noteKind === 'sop') {
-    data = { purpose: document.getElementById('kh-sop-purpose').value, steps: document.getElementById('kh-sop-steps').value, warnings: document.getElementById('kh-sop-warnings').value };
-  } else if (noteKind === 'troubleshooting') {
-    data = { errorCode: document.getElementById('kh-ts-errorcode').value, symptoms: document.getElementById('kh-ts-symptoms').value, rootCause: document.getElementById('kh-ts-cause').value, solution: document.getElementById('kh-ts-solution').value };
-  }
-  const r = {
-    id:'', date:today(), title:document.getElementById('nt-title').value||'Untitled',
-    content:document.getElementById('nt-content').value, tag:document.getElementById('nt-tag').value,
-    kind:noteKind, tags:document.getElementById('kh-tags').value, pinned:false, data
-  };
-  await addItem('notes', r, renderNotes);
-  document.getElementById('nt-title').value=''; document.getElementById('nt-content').value=''; document.getElementById('kh-tags').value='';
-  ['kh-tech-lang','kh-tech-code','kh-sop-purpose','kh-sop-steps','kh-sop-warnings','kh-ts-errorcode','kh-ts-symptoms','kh-ts-cause','kh-ts-solution']
-    .forEach(id => { const el=document.getElementById(id); if (el) el.value=''; });
-  toast('🧠 Saved to Knowledge Hub');
-}
-async function toggleNotePin(id) {
-  const n = D.notes.find(x => x.id === id); if (!n) return;
-  await updateItem('notes', id, { pinned: !n.pinned }, renderNotes);
-}
-const KH_KIND_META = {
-  general:{ label:'General', cls:'bn' }, technical:{ label:'Technical', cls:'bv' },
-  sop:{ label:'SOP', cls:'ba' }, troubleshooting:{ label:'Troubleshooting', cls:'br' }
-};
-function renderNotes() {
-  const g = document.getElementById('notes-grid'); if (!g) return;
-  const q = (document.getElementById('kh-search')?.value || '').toLowerCase();
-  const kindFilter = document.getElementById('kh-kind-filter')?.value || 'all';
-  const pinnedOnly = document.getElementById('kh-pinned-only')?.checked;
 
-  let list = D.notes.filter(n => {
-    if (kindFilter !== 'all' && (n.kind||'general') !== kindFilter) return false;
-    if (pinnedOnly && !n.pinned) return false;
+// ══════════════════════════════════════════════════════════════════
+// ── KNOWLEDGE VAULT ──
+// ══════════════════════════════════════════════════════════════════
+const KV_QUICK_TAGS = ['STM32','ESP32','CAN','UART','SPI','I2C','Git','Linux','FreeRTOS','Docker','AWS','MQTT','C','C++','Python','React','Next.js'];
+const KV_SECTION_META = {
+  tech:       { label:'Tech Note',    icon:'📘', cls:'section-tech' },
+  snippet:    { label:'Code Snippet', icon:'💻', cls:'section-snippet' },
+  cheatsheet: { label:'Cheat Sheet',  icon:'🔖', cls:'section-cheatsheet' },
+};
+let vaultSection = 'all';
+let vaultFolder = 'all';
+let vaultEditingId = null;
+let vaultEditorFlags = { favorite:false, pinned:false, archived:false };
+let vaultAutosaveTimer = null;
+
+function setVaultSection(sec, btn) {
+  vaultSection = sec; vaultFolder = 'all';
+  document.querySelectorAll('#kv-section-tabs .kv-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderVault();
+}
+
+function kvWordStats(content) {
+  const plain = isHtmlContent(content) ? htmlToPlainText(content) : (content||'');
+  const words = plain.trim().split(/\s+/).filter(Boolean).length;
+  const mins = Math.max(1, Math.round(words / 200));
+  return { words, mins };
+}
+
+function vaultFilteredList() {
+  const q = (document.getElementById('kv-search')?.value || '').toLowerCase().trim();
+  const favOnly = document.getElementById('kv-fav-only')?.checked;
+  const pinOnly = document.getElementById('kv-pinned-only')?.checked;
+  const showArchived = document.getElementById('kv-archived-only')?.checked;
+  return (D.vault || []).filter(v => {
+    if (showArchived ? !v.archived : v.archived) return false;
+    if (vaultSection !== 'all' && v.section !== vaultSection) return false;
+    if (vaultFolder !== 'all' && (v.folder || 'Uncategorized') !== vaultFolder) return false;
+    if (favOnly && !v.favorite) return false;
+    if (pinOnly && !v.pinned) return false;
     if (q) {
-      const haystack = `${n.title} ${n.content} ${n.tags||''} ${JSON.stringify(n.data||{})}`.toLowerCase();
-      if (!haystack.includes(q)) return false;
+      const hay = `${v.title} ${v.content} ${v.tags} ${v.folder} ${v.category}`.toLowerCase();
+      if (!hay.includes(q)) return false;
     }
     return true;
-  });
-  list.sort((a,b) => (b.pinned - a.pinned));
+  }).sort((a,b) => (b.pinned - a.pinned) || (b.favorite - a.favorite) || ((b.updated_at||b.created_at||'').localeCompare(a.updated_at||a.created_at||'')));
+}
 
-  if (!list.length) { g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--text3)">No entries match — try a different filter, or add your first one above.</div>`; return }
-  const tagColors = {Work:'bv',Learning:'bp',Idea:'ba',Personal:'bg',Memory:'bb'};
-  g.innerHTML = list.map(n => {
-    const meta = KH_KIND_META[n.kind||'general'];
-    let extra = '';
-    if (n.kind === 'troubleshooting' && n.data?.errorCode) extra = `<div style="font-size:10.5px;color:var(--red);margin-top:4px;font-family:monospace">${esc(n.data.errorCode)}</div>`;
-    if (n.kind === 'sop' && n.data?.purpose) extra = `<div style="font-size:10.5px;color:var(--text3);margin-top:4px">${esc(n.data.purpose)}</div>`;
-    if (n.kind === 'technical' && n.data?.language) extra = `<div style="font-size:10.5px;color:var(--text3);margin-top:4px">${esc(n.data.language)}</div>`;
-    return `<div class="note-card">
-      <button class="kh-pin-btn" onclick="toggleNotePin('${n.id}')" title="${n.pinned?'Unpin':'Pin'}">${n.pinned?'📌':'📍'}</button>
-      <button style="position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px" onclick="del('notes','${n.id}','renderNotes')">✕</button>
-      <div style="font-size:10px;margin:2px 0 6px;display:flex;gap:4px;flex-wrap:wrap;padding-left:16px">
-        <span class="kh-kind-tag badge ${meta.cls}">${meta.label}</span>
-        <span class="badge ${tagColors[n.tag]||'bn'}">${n.tag}</span>
+function renderVaultFolders() {
+  const el = document.getElementById('kv-folder-list'); if (!el) return;
+  const pool = (D.vault || []).filter(v => vaultSection === 'all' || v.section === vaultSection);
+  const counts = {};
+  pool.forEach(v => { const f = v.folder || 'Uncategorized'; counts[f] = (counts[f]||0) + 1 });
+  const folders = Object.keys(counts).sort((a,b) => a.localeCompare(b));
+  const allBtn = `<button class="kv-folder-btn ${vaultFolder==='all'?'active':''}" onclick="setVaultFolder('all')"><span>📁 All</span><span class="kv-folder-count">${pool.length}</span></button>`;
+  const rest = folders.map(f => `<button class="kv-folder-btn ${vaultFolder===f?'active':''}" onclick="setVaultFolder('${esc(f).replace(/'/g,"\\'")}')"><span>📂 ${esc(f)}</span><span class="kv-folder-count">${counts[f]}</span></button>`).join('');
+  el.innerHTML = allBtn + rest;
+}
+function setVaultFolder(f) { vaultFolder = f; renderVault(); }
+
+function renderVault() {
+  const grid = document.getElementById('kv-grid'); if (!grid) return;
+  renderVaultFolders();
+  const list = vaultFilteredList();
+  const statsBar = document.getElementById('kv-stats-bar');
+  if (statsBar) {
+    const total = (D.vault||[]).filter(v=>!v.archived).length;
+    const favs = (D.vault||[]).filter(v=>v.favorite && !v.archived).length;
+    statsBar.innerHTML = `<span><b>${list.length}</b> shown</span><span><b>${total}</b> total entries</span><span><b>${favs}</b> favorites</span>`;
+  }
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-td" style="grid-column:1/-1">No entries here yet — hit <b>+ New Entry</b> to start your Knowledge Vault.</div>`;
+    return;
+  }
+  grid.innerHTML = list.map(v => {
+    const meta = KV_SECTION_META[v.section] || KV_SECTION_META.tech;
+    const { words, mins } = kvWordStats(v.content);
+    const isCode = v.section === 'snippet';
+    const plainContent = isHtmlContent(v.content) ? htmlToPlainText(v.content) : (v.content||'').replace(/```[\s\S]*?```/g,'[code]').replace(/[#*`>-]/g,'');
+    const previewText = plainContent.slice(0, 220);
+    const tags = (v.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
+    const dateLabel = (v.updated_at || v.created_at || '').split('T')[0];
+    return `<div class="kv-card ${v.pinned?'pinned':''} ${v.archived?'archived':''}" onclick="openVaultEditor('${v.id}')">
+      <div class="kv-card-top">
+        <div class="kv-card-title">${esc(v.title)}</div>
+        <div class="kv-card-icons">
+          <button class="kv-card-icon-btn ${v.favorite?'on':''}" onclick="event.stopPropagation();toggleVaultFlag('${v.id}','favorite')" title="Favorite">⭐</button>
+          <button class="kv-card-icon-btn ${v.pinned?'on':''}" onclick="event.stopPropagation();toggleVaultFlag('${v.id}','pinned')" title="Pin">📌</button>
+        </div>
       </div>
-      <div class="note-title">${esc(n.title)}</div>
-      <div class="note-preview">${esc(n.content)}</div>
-      ${extra}
-      ${n.tags ? `<div style="font-size:10px;color:var(--text4);margin-top:6px">🏷 ${esc(n.tags)}</div>` : ''}
-      <div class="note-date">${n.date}</div>
+      <div class="kv-card-badges">
+        <span class="kv-badge ${meta.cls}">${meta.icon} ${meta.label}</span>
+        ${v.folder ? `<span class="kv-badge folder">📂 ${esc(v.folder)}</span>` : ''}
+        ${v.category ? `<span class="kv-badge folder">${esc(v.category)}</span>` : ''}
+      </div>
+      <div class="kv-card-preview ${isCode?'code':''}">${esc(previewText)||'—'}</div>
+      ${tags.length ? `<div class="kv-card-tags">${tags.slice(0,5).map(t=>`<span class="kv-tag-chip">#${esc(t)}</span>`).join('')}</div>` : ''}
+      <div class="kv-card-foot">
+        <span>${words} words · ${mins} min read</span>
+        <span>${v.archived ? '🗄 archived · ' : ''}${dateLabel}</span>
+      </div>
     </div>`;
   }).join('');
 }
+
+async function toggleVaultFlag(id, flag) {
+  const item = D.vault.find(x => x.id === id); if (!item) return;
+  await updateItem('vault', id, { [flag]: !item[flag], updated_at: new Date().toISOString() }, renderVault);
+}
+
+function renderQuickTags(currentTags) {
+  const el = document.getElementById('kv-quick-tags'); if (!el) return;
+  const have = new Set((currentTags||'').split(',').map(t=>t.trim().toLowerCase()).filter(Boolean));
+  el.innerHTML = KV_QUICK_TAGS.map(t => `<button type="button" class="kv-quick-tag-btn" onclick="addQuickTag('${t.replace(/'/g,"\\'")}')" ${have.has(t.toLowerCase())?'style="opacity:.35;pointer-events:none"':''}>+ ${t}</button>`).join('');
+}
+function addQuickTag(tag) {
+  const input = document.getElementById('kv-e-tags');
+  const existing = input.value.split(',').map(t=>t.trim()).filter(Boolean);
+  if (!existing.some(t => t.toLowerCase() === tag.toLowerCase())) existing.push(tag);
+  input.value = existing.join(', ');
+  renderQuickTags(input.value);
+}
+
+function kvOnRichInput(ed) {
+  const words = (ed.innerText||'').trim() ? (ed.innerText||'').trim().split(/\s+/).length : 0;
+  const mins = Math.max(1, Math.round(words / 200));
+  const stats = document.getElementById('kv-e-stats');
+  if (stats) stats.textContent = `${words} words · ${mins} min read`;
+  vaultAutosaveKick();
+}
+
+function onVaultSectionChange() {
+  const sec = document.getElementById('kv-e-section').value;
+  document.getElementById('kv-e-language').style.display = (sec === 'snippet' || sec === 'cheatsheet') ? '' : 'none';
+}
+
+function toggleEditorFlag(flag) {
+  vaultEditorFlags[flag] = !vaultEditorFlags[flag];
+  document.getElementById(flag === 'favorite' ? 'kv-e-fav-btn' : flag === 'pinned' ? 'kv-e-pin-btn' : 'kv-e-arc-btn').classList.toggle('on', vaultEditorFlags[flag]);
+}
+
+function openVaultEditor(id) {
+  vaultEditingId = id || null;
+  clearTimeout(vaultAutosaveTimer);
+  const overlay = document.getElementById('kv-editor-overlay');
+  const isNew = !id;
+  const entry = isNew ? null : D.vault.find(x => x.id === id);
+  vaultEditorFlags = entry ? { favorite:!!entry.favorite, pinned:!!entry.pinned, archived:!!entry.archived } : { favorite:false, pinned:false, archived:false };
+  document.getElementById('kv-e-title').value = entry ? entry.title : '';
+  document.getElementById('kv-e-section').value = entry ? entry.section : (vaultSection !== 'all' ? vaultSection : 'tech');
+  document.getElementById('kv-e-folder').value = entry ? entry.folder : (vaultFolder !== 'all' ? vaultFolder : '');
+  document.getElementById('kv-e-category').value = entry ? entry.category : '';
+  document.getElementById('kv-e-language').value = entry ? entry.language : '';
+  document.getElementById('kv-e-tags').value = entry ? entry.tags : '';
+  const kvEd = document.getElementById('kv-rich');
+  if (kvEd) {
+    kvEd.innerHTML = entry ? (isHtmlContent(entry.content) ? entry.content : renderVaultBody(entry.content, entry.section, entry.language)) : '';
+    kvEd.querySelectorAll('pre code').forEach(c => { try { hljs.highlightElement(c) } catch(e){} });
+    rtUpdateStats(kvEd);
+  }
+  onVaultSectionChange();
+  renderQuickTags(document.getElementById('kv-e-tags').value);
+  ['favorite','pinned','archived'].forEach(f => {
+    const btnId = f === 'favorite' ? 'kv-e-fav-btn' : f === 'pinned' ? 'kv-e-pin-btn' : 'kv-e-arc-btn';
+    document.getElementById(btnId).classList.toggle('on', vaultEditorFlags[f]);
+  });
+  document.getElementById('kv-e-dup-btn').style.display = isNew ? 'none' : '';
+  document.getElementById('kv-e-del-btn').style.display = isNew ? 'none' : '';
+  refreshFolderDatalist();
+  overlay.style.display = 'flex';
+  setTimeout(() => document.getElementById('kv-e-title').focus(), 50);
+}
+
+function refreshFolderDatalist() {
+  const dl = document.getElementById('kv-folder-datalist'); if (!dl) return;
+  const folders = [...new Set((D.vault||[]).map(v => v.folder).filter(Boolean))].sort();
+  dl.innerHTML = folders.map(f => `<option value="${esc(f)}">`).join('');
+}
+
+function closeVaultEditor() {
+  clearTimeout(vaultAutosaveTimer);
+  document.getElementById('kv-editor-overlay').style.display = 'none';
+  vaultEditingId = null;
+}
+
+function vaultAutosaveKick() {
+  if (!vaultEditingId) return;
+  clearTimeout(vaultAutosaveTimer);
+  vaultAutosaveTimer = setTimeout(() => saveVaultEntry(true), 1500);
+}
+
+async function saveVaultEntry(silent) {
+  const title = document.getElementById('kv-e-title').value.trim() || 'Untitled';
+  const kvEd = document.getElementById('kv-rich');
+  const payload = {
+    title,
+    section: document.getElementById('kv-e-section').value,
+    folder: document.getElementById('kv-e-folder').value.trim(),
+    category: document.getElementById('kv-e-category').value.trim(),
+    language: document.getElementById('kv-e-language').value.trim(),
+    tags: document.getElementById('kv-e-tags').value.trim(),
+    content: kvEd ? kvEd.innerHTML : '',
+    favorite: vaultEditorFlags.favorite,
+    pinned: vaultEditorFlags.pinned,
+    archived: vaultEditorFlags.archived,
+    updated_at: new Date().toISOString(),
+  };
+  if (vaultEditingId) {
+    await updateItem('vault', vaultEditingId, payload, renderVault);
+    if (!silent) toast('✦ Saved to Knowledge Vault');
+  } else {
+    const localObj = { id:'', ...payload, created_at: new Date().toISOString() };
+    await addItem('vault', localObj, renderVault);
+    vaultEditingId = localObj.id;
+    document.getElementById('kv-e-dup-btn').style.display = '';
+    document.getElementById('kv-e-del-btn').style.display = '';
+  }
+  if (!silent) closeVaultEditor();
+}
+
+async function deleteCurrentVaultEntry() {
+  if (!vaultEditingId) return;
+  await del('vault', vaultEditingId, 'renderVault');
+  closeVaultEditor();
+}
+
+async function duplicateCurrentVaultEntry() {
+  if (!vaultEditingId) return;
+  const src = D.vault.find(x => x.id === vaultEditingId); if (!src) return;
+  const clone = { id:'', section:src.section, title: src.title + ' (Copy)', folder:src.folder, category:src.category, language:src.language, tags:src.tags, content:src.content, favorite:false, pinned:false, archived:false, created_at:new Date().toISOString(), updated_at:new Date().toISOString() };
+  await addItem('vault', clone, renderVault);
+  toast('⧉ Duplicated');
+  openVaultEditor(clone.id);
+}
+
+// ── Markdown-lite renderer for vault content ──
+function kvEscHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+function kvInlineFmt(s) {
+  s = kvEscHtml(s);
+  s = s.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  s = s.replace(/`([^`]+)`/g, '<code class="kv-inline-code">$1</code>');
+  s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  return s;
+}
+function kvRenderInlineBlock(text) {
+  if (!text) return '';
+  const lines = text.split('\n');
+  let html = '', inList = false;
+  lines.forEach(line => {
+    const cl = line.match(/^\s*-\s+\[( |x|X)\]\s+(.*)$/);
+    const bl = !cl && line.match(/^\s*-\s+(.*)$/);
+    if (cl) {
+      if (!inList) { html += '<ul class="kv-checklist">'; inList = true }
+      const checked = cl[1].toLowerCase() === 'x';
+      html += `<li class="kv-check-item ${checked?'done':''}"><span class="kv-check-box">${checked?'✓':''}</span>${kvInlineFmt(cl[2])}</li>`;
+    } else if (bl) {
+      if (!inList) { html += '<ul>'; inList = true }
+      html += `<li>${kvInlineFmt(bl[1])}</li>`;
+    } else {
+      if (inList) { html += '</ul>'; inList = false }
+      html += line.trim() === '' ? '<br>' : `<p>${kvInlineFmt(line)}</p>`;
+    }
+  });
+  if (inList) html += '</ul>';
+  return html;
+}
+function kvCodeBlockHtml(lang, code) {
+  const id = 'kvcode_' + Math.random().toString(36).slice(2, 9);
+  return `<div class="kv-code-block"><div class="kv-code-bar"><span>${kvEscHtml(lang||'code')}</span><button class="kv-copy-btn" data-code-id="${id}" onclick="copyVaultCode(this)">📋 Copy</button></div><pre><code id="${id}" class="language-${kvEscHtml(lang||'plaintext')}">${kvEscHtml(code)}</code></pre></div>`;
+}
+function copyVaultCode(btn) {
+  const codeEl = document.getElementById(btn.dataset.codeId);
+  navigator.clipboard.writeText(codeEl.textContent).then(() => {
+    const orig = btn.textContent; btn.textContent = '✓ Copied';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
+function renderVaultBody(content, section, defaultLang) {
+  if (!content) return '<p style="color:var(--text4)">Nothing here yet.</p>';
+  if (section === 'snippet') return kvCodeBlockHtml(defaultLang, content);
+  const parts = content.split(/```(\w*)\n?([\s\S]*?)```/g);
+  let html = '';
+  for (let i = 0; i < parts.length; i += 3) {
+    html += kvRenderInlineBlock(parts[i]);
+    if (parts[i+1] !== undefined) html += kvCodeBlockHtml(parts[i+1] || defaultLang, parts[i+2] || '');
+  }
+  return html;
+}
+
+function exportVaultAll() {
+  const data = JSON.stringify(D.vault, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `KnowledgeVault_${today()}.json`;
+  a.click();
+  toast('⬇ Vault exported');
+}
+
+async function importVaultFile(input) {
+  const file = input.files[0]; if (!file) return;
+  try {
+    const text = await file.text();
+    const arr = JSON.parse(text);
+    if (!Array.isArray(arr)) throw new Error('Invalid file');
+    let count = 0;
+    for (const row of arr) {
+      const localObj = {
+        id:'', section: row.section || 'tech', title: row.title || 'Untitled',
+        folder: row.folder || '', category: row.category || '', language: row.language || '',
+        tags: row.tags || '', content: row.content || '',
+        favorite: !!row.favorite, pinned: !!row.pinned, archived: !!row.archived,
+        created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+      };
+      await addItem('vault', localObj, null);
+      count++;
+    }
+    renderVault();
+    toast(`⬆ Imported ${count} entr${count===1?'y':'ies'}`);
+  } catch (err) {
+    toast('⚠️ Could not read that file', 'error');
+  }
+  input.value = '';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── FULL BACKUP & RESTORE (versioned snapshot across every module) ──
+// ══════════════════════════════════════════════════════════════════
+const BACKUP_TABLES = ['daily','achievements','evidence','star','plans','goals','mood','tasks','meetings','stickies','vault'];
+const BACKUP_VERSION = 1;
+
+function exportFullBackup() {
+  const snapshot = { version: BACKUP_VERSION, exportedAt: new Date().toISOString(), profile: D.profile || {}, data: {} };
+  BACKUP_TABLES.forEach(key => { snapshot.data[key] = D[key] || [] });
+  const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `ElevaTrack_Backup_${today()}.json`;
+  a.click();
+  const info = document.getElementById('backup-last-info');
+  if (info) info.textContent = `Last backup downloaded: ${new Date().toLocaleString()}`;
+  toast('🗄 Full backup downloaded');
+}
+
+async function importFullBackup(input) {
+  const file = input.files[0]; if (!file) return;
+  try {
+    const text = await file.text();
+    const snapshot = JSON.parse(text);
+    if (!snapshot || typeof snapshot !== 'object' || !snapshot.data) throw new Error('Invalid backup file');
+    if (!confirm('Restore this backup? Every record inside it will be added back into your account as new entries. Nothing currently in your account will be deleted or overwritten.')) { input.value=''; return }
+    let totalCount = 0;
+    for (const key of BACKUP_TABLES) {
+      const rows = snapshot.data[key];
+      if (!Array.isArray(rows) || !rows.length) continue;
+      for (const row of rows) {
+        const clean = { ...row, id:'' };
+        delete clean.created_at; delete clean.updated_at;
+        await addItem(key, { id:'', ...clean, created_at:new Date().toISOString() }, null);
+        totalCount++;
+      }
+    }
+    renderAll();
+    const info = document.getElementById('backup-last-info');
+    if (info) info.textContent = `Last restore: ${new Date().toLocaleString()} — ${totalCount} record(s) added`;
+    toast(`⬆ Restored ${totalCount} record(s) from backup`);
+  } catch (err) {
+    toast('⚠️ Could not read that backup file', 'error');
+  }
+  input.value = '';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── GLOBAL SEARCH (Ctrl+K) ──
+// ══════════════════════════════════════════════════════════════════
+function buildSearchIndex() {
+  const idx = [];
+  (D.daily||[]).forEach(r => idx.push({
+    type:'Journal', icon:'⚡', title:r.task||'(untitled)', sub:`${r.date||''}${r.project?' · '+r.project:''}`,
+    hay:`${r.task} ${r.project} ${r.impact} ${htmlToPlainText(r.richNotes)} ${r.tech}`,
+    action:() => { nav('quicklog'); openJournalView(r.id) }
+  }));
+  (D.tasks||[]).forEach(t => idx.push({
+    type:'Task', icon:'🗂', title:t.title||'(untitled)', sub:(t.col||'inbox').replace('_',' '),
+    hay:`${t.title} ${t.notes} ${t.tags} ${t.project}`,
+    action:() => { nav('tasks'); openTaskEditor(t.id) }
+  }));
+  (D.meetings||[]).forEach(m => idx.push({
+    type:'Meeting', icon:'🗓', title:m.agenda||'(untitled)', sub:`${m.date||''}${m.attendees?' · '+m.attendees:''}`,
+    hay:`${m.agenda} ${m.attendees} ${htmlToPlainText(m.discussion)} ${m.action}`,
+    action:() => { nav('meetings'); openMeetingView(m.id) }
+  }));
+  (D.achievements||[]).forEach(a => idx.push({
+    type:'Achievement', icon:'🏆', title:a.achievement||'(untitled)', sub:`${a.date||''}${a.type?' · '+a.type:''}`,
+    hay:`${a.achievement} ${a.impact} ${a.proof} ${htmlToPlainText(a.notes)}`,
+    action:() => { nav('achievements'); a.notes ? openAchievementView(a.id) : openAchievementEditor(a.id) }
+  }));
+  (D.vault||[]).forEach(v => idx.push({
+    type:'Knowledge Vault', icon: (KV_SECTION_META[v.section]||{}).icon || '💻', title:v.title||'(untitled)', sub:v.folder||v.category||'',
+    hay:`${v.title} ${v.tags} ${v.folder} ${v.category} ${isHtmlContent(v.content)?htmlToPlainText(v.content):v.content}`,
+    action:() => { nav('vault'); openVaultEditor(v.id) }
+  }));
+  (D.stickies||[]).filter(s=>!s.archived).forEach(s => {
+    const plain = htmlToPlainText(s.text);
+    idx.push({ type:'Sticky Note', icon:'🗒', title: plain.slice(0,60) || '(empty note)', sub:'', hay: plain, action:() => nav('stickies') });
+  });
+  (D.goals||[]).forEach(g => idx.push({ type:'Goal', icon:'🎯', title:g.goal||'(untitled)', sub:g.cat||'', hay:`${g.goal} ${g.cat}`, action:() => nav('goals') }));
+  (companies||[]).forEach(c => idx.push({ type:'Company', icon:'🏢', title:c.name||'(untitled)', sub:c.role||'', hay:`${c.name} ${c.role} ${c.department||''}`, action:() => nav('companies') }));
+  return idx;
+}
+let gsearchIndex = [];
+let gsearchSelIdx = 0;
+function openGlobalSearch() {
+  gsearchIndex = buildSearchIndex();
+  document.getElementById('gsearch-overlay').classList.add('show');
+  const input = document.getElementById('gsearch-input');
+  input.value = '';
+  renderGlobalSearch();
+  setTimeout(() => input.focus(), 30);
+}
+function closeGlobalSearch() { document.getElementById('gsearch-overlay').classList.remove('show') }
+function renderGlobalSearch() {
+  const q = document.getElementById('gsearch-input').value.trim().toLowerCase();
+  const results = document.getElementById('gsearch-results');
+  gsearchSelIdx = 0;
+  if (!q) {
+    results.innerHTML = `<div class="gsearch-empty">Type to search across your whole workspace — tasks, meetings, achievements, journal, Knowledge Vault, sticky notes, goals, companies.</div>`;
+    window.__gsearchMatches = [];
+    return;
+  }
+  const matches = gsearchIndex.filter(item => item.hay.toLowerCase().includes(q)).slice(0, 40);
+  window.__gsearchMatches = matches;
+  if (!matches.length) { results.innerHTML = `<div class="gsearch-empty">No matches for "${esc(q)}"</div>`; return }
+  const groups = {}; const order = [];
+  matches.forEach(m => { if (!groups[m.type]) { groups[m.type]=[]; order.push(m.type) } groups[m.type].push(m) });
+  let html = ''; let flatIdx = 0;
+  order.forEach(type => {
+    html += `<div class="gsearch-group-label">${type}</div>`;
+    groups[type].forEach(m => {
+      html += `<div class="gsearch-item ${flatIdx===0?'sel':''}" data-idx="${flatIdx}" onclick="gsearchActivate(${flatIdx})">
+        <span class="gsearch-item-ico">${m.icon}</span>
+        <div class="gsearch-item-body"><div class="gsearch-item-title">${esc(m.title)}</div>${m.sub?`<div class="gsearch-item-sub">${esc(m.sub)}</div>`:''}</div>
+        <span class="gsearch-item-type">${m.type}</span>
+      </div>`;
+      flatIdx++;
+    });
+  });
+  results.innerHTML = html;
+}
+function gsearchActivate(idx) {
+  const m = (window.__gsearchMatches||[])[idx]; if (!m) return;
+  closeGlobalSearch();
+  m.action();
+}
+function gsearchKeydown(e) {
+  const matches = window.__gsearchMatches || [];
+  if (e.key === 'ArrowDown') { e.preventDefault(); if (matches.length) { gsearchSelIdx = Math.min(matches.length-1, gsearchSelIdx+1); gsearchUpdateSel() } }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); if (matches.length) { gsearchSelIdx = Math.max(0, gsearchSelIdx-1); gsearchUpdateSel() } }
+  else if (e.key === 'Enter') { e.preventDefault(); gsearchActivate(gsearchSelIdx) }
+  else if (e.key === 'Escape') { closeGlobalSearch() }
+}
+function gsearchUpdateSel() {
+  document.querySelectorAll('.gsearch-item').forEach((el,i) => el.classList.toggle('sel', i===gsearchSelIdx));
+  const sel = document.querySelector('.gsearch-item.sel');
+  if (sel) sel.scrollIntoView({ block:'nearest' });
+}
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    const overlay = document.getElementById('gsearch-overlay');
+    if (overlay && overlay.classList.contains('show')) closeGlobalSearch();
+    else openGlobalSearch();
+  } else if (e.key === 'Escape') {
+    const overlay = document.getElementById('gsearch-overlay');
+    if (overlay && overlay.classList.contains('show')) closeGlobalSearch();
+  }
+});
 
 // ── PLANNER ──
 let calDate = new Date();
@@ -4555,26 +4916,21 @@ function syncTimerUI() {
 function renderDashboard() {
   const totalH = D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const done   = D.daily.filter(r=>r.status==='Completed').length;
-  const learnH = D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const kpis = [
     {i:'📋',l:'Tasks Logged',v:D.daily.length,cls:'kv'},
     {i:'✅',l:'Completed',v:done,cls:'kg'},
     {i:'⏱',l:'Hours Logged',v:totalH.toFixed(1),cls:'kb'},
-    {i:'🚀',l:'Projects',v:D.projects.length,cls:'kv'},
     {i:'🏆',l:'Achievements',v:D.achievements.length,cls:'ka'},
-    {i:'📚',l:'Learning Hrs',v:learnH.toFixed(1),cls:'kp'},
-    {i:'📞',l:'Client Calls',v:D.clients.length,cls:'kg'},
-    {i:'🔧',l:'Support',v:D.support.length,cls:'kb'},
-    {i:'📄',l:'Documents',v:D.docs.length,cls:'kv'},
+    {i:'⭐',l:'STAR Entries',v:D.star.length,cls:'kp'},
     {i:'🗄',l:'Evidence Files',v:D.evidence.length,cls:'ka'},
-    {i:'💡',l:'Certs Earned',v:D.learning.filter(r=>r.cert==='Yes').length,cls:'kp'},
+    {i:'🗓',l:'Meetings',v:D.meetings.length,cls:'kb'},
     {i:'✦',l:'Promo Score',v:calcScore()+'/100',cls:'kv'},
   ];
   const grid=document.getElementById('dash-kpis');
   if(grid) grid.innerHTML=kpis.map(k=>`<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
   const rec=document.getElementById('dash-recent');
   if(rec){
-    const items=[...D.daily.map(r=>({date:r.date,text:r.task,sub:r.project||r.cat,icon:'📋'})),...D.achievements.map(r=>({date:r.date,text:r.achievement,sub:r.type,icon:'🏆'})),...D.learning.map(r=>({date:r.date,text:r.topic,sub:r.source,icon:'📚'}))]
+    const items=[...D.daily.map(r=>({date:r.date,text:r.task,sub:r.project||r.cat,icon:'📋'})),...D.achievements.map(r=>({date:r.date,text:r.achievement,sub:r.type,icon:'🏆'}))]
       .sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,7);
     rec.innerHTML=items.length?items.map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border)"><span style="font-size:16px">${a.icon}</span><div style="flex:1"><div style="font-size:12.5px;font-weight:500">${esc(a.text)}</div><div style="font-size:10.5px;color:var(--text3);margin-top:1px">${esc(a.sub||'')} · ${a.date}</div></div></div>`).join(''):`<div class="empty-td">Log work to see activity here.</div>`;
   }
@@ -4585,49 +4941,19 @@ function renderDashboard() {
   const stkPrev=document.getElementById('dash-sticky-preview');
   if(stkPrev){
     const top=(D.stickies||[]).filter(s=>!s.archived).sort((a,b)=>(b.pinned-a.pinned)).slice(0,4);
-    stkPrev.innerHTML = top.length ? `<div class="dash-sticky-grid">${top.map(s=>`<div class="dash-sticky-mini sn-${s.color}" onclick="nav('stickies')">${esc((s.text||'').slice(0,80))}</div>`).join('')}</div>` : `<div class="empty-td">No sticky notes yet — jump into the board to add one.</div>`;
+    stkPrev.innerHTML = top.length ? `<div class="dash-sticky-grid">${top.map(s=>`<div class="dash-sticky-mini sn-${s.color}" onclick="nav('stickies')">${esc(htmlToPlainText(s.text).slice(0,80))}</div>`).join('')}</div>` : `<div class="empty-td">No sticky notes yet — jump into the board to add one.</div>`;
   }
 }
 function renderReports() {
   const totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const done=D.daily.filter(r=>r.status==='Completed').length;
-  const learnH=D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const el=document.getElementById('report-metrics'); if(!el) return;
-  const metrics=[['Total Tasks',D.daily.length],['Completed',done],['Completion Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%'],['Hours Logged',totalH.toFixed(1)],['Projects',D.projects.length],['Achievements',D.achievements.length],['Learning Hours',learnH.toFixed(1)],['Certs',D.learning.filter(r=>r.cert==='Yes').length],['Client Calls',D.clients.length],['Support Cases',D.support.length],['Documents',D.docs.length],['Evidence Files',D.evidence.length],['Promo Score',calcScore()+'/100']];
+  const metrics=[['Total Tasks',D.daily.length],['Completed',done],['Completion Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%'],['Hours Logged',totalH.toFixed(1)],['Achievements',D.achievements.length],['STAR Entries',D.star.length],['Evidence Files',D.evidence.length],['Meetings',D.meetings.length],['Promo Score',calcScore()+'/100']];
   el.innerHTML=metrics.map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--text2)">${l}</span><span style="font-weight:600;color:var(--text)">${v}</span></div>`).join('');
   const sc=calcScore(), arc=235.6*0.75, off=arc-(sc/100)*arc+58.9;
   const ra=document.getElementById('report-arc'); if(ra) ra.style.strokeDashoffset=off;
   const rs=document.getElementById('report-score'); if(rs) rs.textContent=sc;
 }
-
-// ══════════════════════════════════════════════════════════════════
-// ── SECTION 13: AI PROMPT BUILDER ──
-// ══════════════════════════════════════════════════════════════════
-
-function buildContext() {
-  const pf=D.profile||{};
-  const totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
-  const learnH=D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
-  const techSet=new Set(D.projects.flatMap(p=>(p.tech||'').split(',').map(t=>t.trim()).filter(Boolean)));
-  return `Employee: ${pf.name||'[Name]'}, Role: ${pf.role||'[Role]'}, Company: ${pf.company||'[Company]'}, Department: ${pf.dept||'[Dept]'}.
-Data: Tasks=${D.daily.length} (${D.daily.filter(r=>r.status==='Completed').length} done, ${totalH.toFixed(1)}h), Projects=${D.projects.length}, Achievements=${D.achievements.length} (${D.achievements.map(a=>a.achievement).slice(0,3).join('; ')}), Learning=${D.learning.length} topics ${learnH.toFixed(1)}h ${D.learning.filter(r=>r.cert==='Yes').length} certs, Client calls=${D.clients.length}, Support=${D.support.length}, Docs=${D.docs.length}, Technologies: ${[...techSet].join(', ')||'various'}, Key impacts: ${D.daily.filter(r=>r.impact).slice(0,4).map(r=>r.impact).join('; ')||'—'}, Key projects: ${D.projects.slice(0,3).map(p=>p.name+(p.outcome?' ('+p.outcome+')':'')).join('; ')||'—'}, Score: ${calcScore()}/100`;
-}
-const aiLabels={ summary:'Executive Appraisal Summary', star:'STAR Stories', resume:'Resume Bullets', promotion:'Promotion Justification', monthly:'Monthly Self-Evaluation', manager:'Manager Remarks Draft' };
-const aiPrompts={ summary:'Write a concise 3-paragraph executive appraisal summary from this data. Confident, achievement-focused, corporate HR style.', star:'Generate 3 STAR stories from this work data. Format: S: / T: / A: / R: for each.', resume:'Generate 7 strong PAR resume bullet points. Start with action verbs, include quantified impact.', promotion:'Write a compelling 2-paragraph promotion justification with specific evidence.', monthly:'Write a professional 2-paragraph monthly self-evaluation covering wins, challenges, growth.', manager:'Draft 4 manager remarks a direct manager could review and sign off on.' };
-async function aiGenerate(type) {
-  const box=document.getElementById('ai-output-box'), out=document.getElementById('ai-output'), lbl=document.getElementById('ai-type-label');
-  box.style.display='block'; lbl.textContent=aiLabels[type]+' — Prompt Ready';
-  out.textContent=`${aiPrompts[type]}\n\nContext:\n${buildContext()}\n\nTone: Professional, confident, specific.`;
-  toast('✦ Prompt ready — copy & paste into Claude.ai');
-}
-async function aiCustom() {
-  const custom=document.getElementById('ai-custom').value; if(!custom){toast('⚠️ Enter a prompt','error');return}
-  const box=document.getElementById('ai-output-box'), out=document.getElementById('ai-output'), lbl=document.getElementById('ai-type-label');
-  box.style.display='block'; lbl.textContent='Custom Prompt Ready';
-  out.textContent=`${custom}\n\nContext:\n${buildContext()}`;
-  toast('✦ Prompt ready — copy & paste into Claude.ai');
-}
-function copyAI(){ navigator.clipboard.writeText(document.getElementById('ai-output').textContent).then(()=>toast('📋 Copied — paste into Claude.ai')) }
 
 // ══════════════════════════════════════════════════════════════════
 // ── SECTION 14: EXCEL EXPORT ──
@@ -4637,15 +4963,11 @@ function exportExcel() {
   const wb=XLSX.utils.book_new();
   function ws(name,arr,cols){ const rows=arr.map(r=>cols.map(c=>r[c]||'')); const sheet=XLSX.utils.aoa_to_sheet([cols,...rows]); sheet['!cols']=cols.map(()=>({wch:22})); XLSX.utils.book_append_sheet(wb,sheet,name) }
   ws('Daily Work',D.daily,['date','task','project','client','hours','cat','prio','status','impact','problem','tech']);
-  ws('Projects',D.projects,['name','client','role','start','end','status','prog','tech','contrib','outcome']);
-  ws('Learning',D.learning,['date','topic','type','source','cat','hours','applied','cert','notes']);
-  ws('Client Calls',D.clients,['date','client','org','dur','purpose','resolution','followup','rating']);
-  ws('Support Cases',D.support,['date','issue','prio','status','cause','solution','time','sat']);
-  ws('Documentation',D.docs,['date','name','type','rev','pages','remarks']);
-  ws('Achievements',D.achievements,['date','achievement','type','impact','revenue','proof']);
+  ws('Achievements',D.achievements.map(r=>({...r,notes:htmlToPlainText(r.notes)})),['date','achievement','type','impact','revenue','proof','notes']);
   ws('STAR',D.star,['s','t','a','r']);
+  ws('Meetings',D.meetings.map(r=>({...r,discussion:htmlToPlainText(r.discussion)})),['date','attendees','agenda','discussion','action','followup','status']);
   const totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
-  const sumSheet=XLSX.utils.aoa_to_sheet([['Metric','Value'],['Total Tasks',D.daily.length],['Completed',D.daily.filter(r=>r.status==='Completed').length],['Hours',totalH.toFixed(1)],['Projects',D.projects.length],['Achievements',D.achievements.length],['Learning Hours',D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0).toFixed(1)],['Certs',D.learning.filter(r=>r.cert==='Yes').length],['Client Calls',D.clients.length],['Support',D.support.length],['Documents',D.docs.length],['Evidence',D.evidence.length],['Score',calcScore()+'/100']]);
+  const sumSheet=XLSX.utils.aoa_to_sheet([['Metric','Value'],['Total Tasks',D.daily.length],['Completed',D.daily.filter(r=>r.status==='Completed').length],['Hours',totalH.toFixed(1)],['Achievements',D.achievements.length],['STAR Entries',D.star.length],['Evidence',D.evidence.length],['Meetings',D.meetings.length],['Score',calcScore()+'/100']]);
   XLSX.utils.book_append_sheet(wb,sumSheet,'Summary Dashboard');
   XLSX.writeFile(wb,`ElevaTrack_${new Date().toISOString().split('T')[0]}.xlsx`);
   toast('📊 Excel exported');
@@ -4666,7 +4988,6 @@ function exportPDF(){
   const pf=D.profile||{};
   const score=calcScore(),totalH=D.daily.reduce((s,r)=>s+(parseFloat(r.hours)||0),0);
   const done=D.daily.filter(r=>r.status==='Completed').length;
-  const learnH=D.learning.reduce((s,r)=>s+(parseFloat(r.hours)||0),0),certs=D.learning.filter(r=>r.cert==='Yes').length;
   const dateStr=new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
   const year=new Date().getFullYear();
   let pageNum=0;
@@ -4698,10 +5019,10 @@ function exportPDF(){
   [[pf.dept,'Department'],[pf.company,'Company'],[pf.empid,'ID'],[pf.manager,'Manager']].filter(([v])=>v).forEach(([v,l],i)=>{const col=i%2,row=Math.floor(i/2);doc.setTextColor(...GRAY);doc.text(`${l}: `,ML+10+col*82,y+31+row*8);doc.setTextColor(...INK);doc.text(v,ML+10+col*82+doc.getTextWidth(`${l}: `),y+31+row*8)});
   doc.setTextColor(...GRAY);doc.text(`Generated: ${dateStr}`,ML+10,y+46);
   y+=60;
-  [[D.daily.length,'Tasks'],[totalH.toFixed(0),'Hours'],[D.projects.length,'Projects'],[D.achievements.length,'Wins']].forEach(([v,l],i)=>{const x=ML+i*(CW/4)+2;doc.setFillColor(...PANEL2);doc.roundedRect(x,y,CW/4-4,22,3,3,'F');doc.setFontSize(18);doc.setTextColor(...FUCH);doc.setFont('helvetica','bold');doc.text(String(v),x+(CW/4-4)/2,y+13,{align:'center'});doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(l,x+(CW/4-4)/2,y+19.5,{align:'center'})});
+  [[D.daily.length,'Tasks'],[totalH.toFixed(0),'Hours'],[D.achievements.length,'Wins'],[D.star.length,'STAR']].forEach(([v,l],i)=>{const x=ML+i*(CW/4)+2;doc.setFillColor(...PANEL2);doc.roundedRect(x,y,CW/4-4,22,3,3,'F');doc.setFontSize(18);doc.setTextColor(...FUCH);doc.setFont('helvetica','bold');doc.text(String(v),x+(CW/4-4)/2,y+13,{align:'center'});doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(l,x+(CW/4-4)/2,y+19.5,{align:'center'})});
   y+=30;
   doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');
-  y=wrap(`This report presents ${pf.name||'this employee'}'s professional contributions, technical achievements, client engagements, learning & development, and evidence during ${year}.`,ML+2,y,CW-4,5);
+  y=wrap(`This report presents ${pf.name||'this employee'}'s professional contributions, technical achievements, and evidence during ${year}.`,ML+2,y,CW-4,5);
   y+=8;
   doc.setFillColor(...PANEL2);doc.setDrawColor(...VIOL,50);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,12,2,2,'FD');
   doc.setFontSize(7.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('CONFIDENTIAL',ML+4,y+7);
@@ -4711,29 +5032,16 @@ function exportPDF(){
   newPage();y=16;
   doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Performance Dashboard',ML,y);y+=9;
   y=secHead('KEY PERFORMANCE INDICATORS',y);
-  [[['Total Tasks',D.daily.length,VIO],['Completed',done,GREEN]],[['Hours',totalH.toFixed(1),PINK],['Projects',D.projects.length,VIO]],[['Achievements',D.achievements.length,AMBER],['Certs',certs,GREEN]],[['Client Calls',D.clients.length,PINK],['Support',D.support.length,AMBER]],[['Docs',D.docs.length,VIO],['Evidence',D.evidence.length,GREEN]],[['Completion',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%',GREEN],['Score',score+'/100',FUCH]]].forEach(([l,r])=>{y=chk(y,13);const hw=CW/2-3;[[l,ML],[r,ML+hw+6]].forEach(([[label,val,col],x])=>{doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,11,2,2,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);doc.setFontSize(11);doc.setTextColor(...col);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+8,{align:'right'})});y+=14});
+  [[['Total Tasks',D.daily.length,VIO],['Completed',done,GREEN]],[['Hours',totalH.toFixed(1),PINK],['Achievements',D.achievements.length,AMBER]],[['STAR Entries',D.star.length,VIO],['Evidence',D.evidence.length,GREEN]],[['Meetings',D.meetings.length,PINK],['Completion',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%',GREEN]],[['Score',score+'/100',FUCH]]].forEach(([l,r])=>{y=chk(y,13);const hw=CW/2-3;[[l,ML],[r,r?ML+hw+6:null]].filter(([c])=>c).forEach(([[label,val,col],x])=>{doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,11,2,2,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);doc.setFontSize(11);doc.setTextColor(...col);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+8,{align:'right'})});y+=14});
   y+=4;y=secHead('EXECUTIVE SUMMARY',y);
   doc.setFontSize(8.5);doc.setTextColor(...INK);doc.setFont('helvetica','normal');
-  y=wrap(`During ${year}, ${pf.name||'this employee'} contributed across ${D.projects.length} project(s), logging ${totalH.toFixed(1)} hours across ${D.daily.length} tasks (${D.daily.length?Math.round(done/D.daily.length*100):0}% completed). ${D.achievements.length} achievement(s) recorded, ${learnH.toFixed(1)}h learning with ${certs} cert(s), ${D.clients.length} client call(s), ${D.support.length} support case(s), ${D.docs.length} document(s).`,ML,y,CW,5);
+  y=wrap(`During ${year}, ${pf.name||'this employee'} logged ${totalH.toFixed(1)} hours across ${D.daily.length} tasks (${D.daily.length?Math.round(done/D.daily.length*100):0}% completed). ${D.achievements.length} achievement(s) recorded, ${D.star.length} STAR ${D.star.length===1?'story':'stories'} documented, ${D.meetings.length} meeting(s) logged.`,ML,y,CW,5);
   footer();
-  // Projects
-  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Projects',ML,y);y+=9;y=secHead('PROJECT TRACKER',y);
-  D.projects.length?D.projects.forEach(p=>{y=chk(y,34);doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,30,2,2,'FD');doc.setFillColor(...VIO);doc.roundedRect(ML,y,3,30,1,1,'F');doc.setFontSize(10.5);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text(p.name||'—',ML+6,y+7);const sc2=p.status==='Completed'?GREEN:p.status==='In Progress'?VIO:AMBER;doc.setFillColor(...(p.status==='Completed'?GREENBG:p.status==='In Progress'?PANEL2:AMBERBG));doc.roundedRect(ML+CW-34,y+2,32,6,2,2,'F');doc.setFontSize(7);doc.setTextColor(...sc2);doc.setFont('helvetica','bold');doc.text(p.status||'—',ML+CW-18,y+5.8,{align:'center'});doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');[`Role: ${p.role||'—'}`,`Client: ${p.client||'—'}`,`Period: ${p.start||'—'} → ${p.end||'—'}`,`Stack: ${p.tech||'—'}`].forEach((l,i)=>{doc.text(l,ML+6+Math.floor(i%2)*80,y+12+Math.floor(i/2)*5.5)});if(p.outcome){doc.setFillColor(...GREENBG);doc.roundedRect(ML+4,y+23,CW-8,5,1,1,'F');doc.setFontSize(7);doc.setTextColor(...GREEN);doc.setFont('helvetica','bold');doc.text('OUTCOME: ',ML+6,y+26.5);doc.setFont('helvetica','normal');doc.setTextColor(...INK);doc.text(doc.splitTextToSize(p.outcome,CW-30)[0],ML+25,y+26.5)}y+=34}):(doc.setFontSize(8.5),doc.setTextColor(...GRAY),doc.text('No projects.',ML,y),y+=8);
-  footer();
-  // Achievements + Learning
-  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Achievements & Learning',ML,y);y+=9;y=secHead('ACHIEVEMENTS',y);
+  // Achievements
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Achievements',ML,y);y+=9;y=secHead('ACHIEVEMENTS',y);
   if(D.achievements.length){doc.autoTable({head:[['Date','Achievement','Type','Impact','Revenue']],body:D.achievements.map(a=>[a.date,a.achievement,a.type,a.impact||'—',a.revenue||'—']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('None.',ML,y);y+=8}
-  y=chk(y,20);y=secHead('LEARNING',y);
-  [[learnH.toFixed(1),'Hours',VIO],[D.learning.length,'Topics',PINK],[certs,'Certs',GREEN]].forEach(([v,l,c],i)=>{const x=ML+i*56;doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,50,18,3,3,'FD');doc.setFontSize(16);doc.setTextColor(...c);doc.setFont('helvetica','bold');doc.text(String(v),x+25,y+11,{align:'center'});doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(l,x+25,y+16,{align:'center'})});y+=22;
-  if(D.learning.length){doc.autoTable({head:[['Date','Topic','Source','Cat','Hours','Applied','Cert']],body:D.learning.map(l=>[l.date,l.topic,l.source||'—',l.cat,l.hours||'—',l.applied,l.cert]),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:PINK,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}
-  footer();
-  // Clients / Support / Docs
-  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Client & Support',ML,y);y+=9;y=secHead('CLIENT INTERACTIONS',y);
-  if(D.clients.length){doc.autoTable({head:[['Date','Client','Org','Mins','Purpose','Resolution','Rating']],body:D.clients.map(c=>[c.date,c.client,c.org||'—',c.dur?c.dur+' min':'—',c.purpose||'—',c.resolution||'—',(c.rating||'—')+'/10']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:VIOL,textColor:INK,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('None.',ML,y);y+=8}
-  y=chk(y,20);y=secHead('SUPPORT CASES',y);
-  if(D.support.length){doc.autoTable({head:[['Date','Issue','Priority','Solution','Time','CSAT','Status']],body:D.support.map(s=>[s.date,s.issue,s.prio||'—',s.solution||'—',s.time||'—',(s.sat||'—')+'/10',s.status]),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:AMBER,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('None.',ML,y);y+=8}
-  y=chk(y,20);y=secHead('DOCUMENTATION',y);
-  if(D.docs.length){doc.autoTable({head:[['Date','Name','Type','Rev','Pages','Remarks']],body:D.docs.map(d=>[d.date,d.name,d.type,d.rev||'—',d.pages||'—',d.remarks||'—']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:[71,85,105],textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}
+  y=chk(y,20);y=secHead('MEETINGS',y);
+  if(D.meetings.length){doc.autoTable({head:[['Date','Attendees','Agenda','Action Items','Status']],body:D.meetings.map(m=>[m.date||'—',m.attendees||'—',m.agenda||'—',m.action||'—',m.status]),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:PINK,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('None.',ML,y);y+=8}
   footer();
   // STAR + Evidence
   newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('STAR & Evidence',ML,y);y+=9;y=secHead('STAR CONTRIBUTIONS',y);
@@ -4745,7 +5053,7 @@ function exportPDF(){
   footer();
   // Sign-off
   newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Summary & Sign-off',ML,y);y+=9;y=secHead('PERFORMANCE SUMMARY',y);
-  [['Score',score+'/100'],['Tasks',D.daily.length],['Completed',done],['Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%'],['Hours',totalH.toFixed(1)],['Projects',D.projects.length],['Learning Hrs',learnH.toFixed(1)],['Certs',certs],['Achievements',D.achievements.length],['Client Calls',D.clients.length],['Support',D.support.length],['Docs',D.docs.length],['Evidence',D.evidence.length],['STAR Entries',D.star.length]].reduce((acc,m,i)=>{if(i%2===0)acc.push([m]);else acc[acc.length-1].push(m);return acc},[]).forEach(pair=>{y=chk(y,12);const hw=CW/2-3;pair.forEach(([label,val],col)=>{const x=ML+col*(hw+6);doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,10,1.5,1.5,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);const vc=label==='Score'?FUCH:['Completed','Rate'].includes(label)?GREEN:VIO;doc.setFontSize(10);doc.setTextColor(...vc);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+7.5,{align:'right'})});y+=13});
+  [['Score',score+'/100'],['Tasks',D.daily.length],['Completed',done],['Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%'],['Hours',totalH.toFixed(1)],['Achievements',D.achievements.length],['STAR Entries',D.star.length],['Evidence',D.evidence.length],['Meetings',D.meetings.length]].reduce((acc,m,i)=>{if(i%2===0)acc.push([m]);else acc[acc.length-1].push(m);return acc},[]).forEach(pair=>{y=chk(y,12);const hw=CW/2-3;pair.forEach(([label,val],col)=>{const x=ML+col*(hw+6);doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,10,1.5,1.5,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);const vc=label==='Score'?FUCH:['Completed','Rate'].includes(label)?GREEN:VIO;doc.setFontSize(10);doc.setTextColor(...vc);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+7.5,{align:'right'})});y+=13});
   y+=6;y=secHead('DECLARATION & SIGN-OFF',y);
   doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');
   y=wrap(`I declare all information in this report is accurate. Compiled automatically from daily work logs. Period: ${year}.`,ML,y,CW,5);y+=8;
@@ -4758,15 +5066,15 @@ function exportPDF(){
   toast('✦ PDF exported');
 }
 
+
 // ══════════════════════════════════════════════════════════════════
 // ── SECTION 16: RENDER ALL ──
 // ══════════════════════════════════════════════════════════════════
 
 function renderAll() {
   renderDashboardWidgets();
-  renderDaily(); renderProjects(); renderLearning(); renderClients();
-  renderSupport(); renderDocs(); renderAchievements(); renderEvidence();
-  renderStar(); renderMood(); renderGoals(); renderNotes(); renderPlan();
+  renderDaily(); renderAchievements(); renderEvidence();
+  renderStar(); renderMood(); renderGoals(); renderPlan(); renderVault();
   renderDashboard(); updateScore(); updateAll(); updateSidebarProfile();
 }
 
@@ -4777,9 +5085,14 @@ function renderAll() {
 async function boot() {
   console.log('═══ boot() starting ═══');
   // Set default dates
-  ['dl-date','cl-date','sp-date','ac-date','dc-date','ln-date','ev-date'].forEach(id => {
+  ['dl-date','ac-date','ev-date'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = today();
   });
+  // Mount shared rich text editors
+  rtMount('dl-rich-host', 'dl-rich', 'What did you work on today? Problems faced, solutions found, ideas...');
+  rtMount('mt-rich-host', 'mt-rich', 'Key points discussed...');
+  rtMount('ac-rich-host', 'ac-rich', 'Full story, context, quotes from feedback...');
+  rtMount('kv-rich-host', 'kv-rich', 'Write your note...', { compact:false, noFoot:true, onInput: kvOnRichInput });
   document.getElementById('page-sub').textContent =
     new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   initAttendanceInputs();
