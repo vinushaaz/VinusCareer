@@ -1514,7 +1514,7 @@ tr:hover td{background:#8b5cf608}
       <h2>Generate Your Report</h2>
       <p>Export a professional appraisal report ready to hand to your manager. Choose your format below.</p>
       <div class="btn-group" style="margin-top:14px">
-        <button class="btn btn-violet" onclick="exportPDF()">✦ Export Premium PDF</button>
+        <button class="btn btn-violet" onclick="exportPDF()">✦ Export Full PDF (everything logged)</button>
         <button class="btn btn-ghost" onclick="exportExcel()">📊 Export Excel Workbook</button>
       </div>
     </div>
@@ -1529,14 +1529,13 @@ tr:hover td{background:#8b5cf608}
       <div class="card-body">
         <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--text2)">
           <div>✦ Cover Page with your name &amp; score</div>
-          <div>✦ Executive Summary</div>
-          <div>✦ KPI Dashboard</div>
-          <div>✦ Achievements &amp; Recognition</div>
-          <div>✦ Meetings</div>
-          <div>✦ STAR Contributions</div>
-          <div>✦ Evidence Index</div>
-          <div>✦ Performance Score</div>
-          <div>✦ Signature Page</div>
+          <div>✦ Executive Summary &amp; KPI Dashboard</div>
+          <div>✦ Full Work Journal (every entry)</div>
+          <div>✦ Tasks &amp; Goals</div>
+          <div>✦ Achievements &amp; Meetings</div>
+          <div>✦ STAR Contributions &amp; Evidence Index</div>
+          <div>✦ Knowledge Vault, Mood Log &amp; Sticky Notes</div>
+          <div>✦ Performance Score &amp; Signature Page</div>
         </div>
       </div>
     </div>
@@ -2280,7 +2279,10 @@ async function delItem(key, id, renderFn) {
   }
 }
 
-// Update a single field on an existing item
+// Update a single field on an existing item.
+// `updates` here must use the ACTUAL SUPABASE COLUMN NAMES — it is sent to the DB as-is
+// and also merged directly onto the local D[] object, so it only works when the local
+// field names already match the DB column names (true for stickies, goals, plans, vault).
 async function updateItem(key, id, updates, renderFn) {
   if (!currentUser) return;
   try {
@@ -2291,6 +2293,25 @@ async function updateItem(key, id, updates, renderFn) {
     setSyncStatus('synced', '☁ Saved');
   } catch (err) {
     setSyncStatus('error', '⚠ Sync failed');
+    toast('⚠️ Update failed — check your connection', 'error');
+  }
+}
+
+// Same as updateItem, but for modules where the local (in-app) field names differ from
+// the Supabase column names (e.g. local `cat` → column `category`, local `richNotes` →
+// column `rich_notes`). Pass the DB-shaped object for `dbUpdates` and the local-shaped
+// object for `localUpdates` — used by Work Journal, Meeting Notes, Achievements, Tasks.
+async function updateItemMapped(key, id, localUpdates, dbUpdates, renderFn) {
+  if (!currentUser) return;
+  try {
+    await dbUpdate(TABLE_MAP[key], id, dbUpdates);
+    const item = D[key].find(x => x.id === id);
+    if (item) Object.assign(item, localUpdates);
+    if (renderFn) renderFn();
+    setSyncStatus('synced', '☁ Saved');
+  } catch (err) {
+    setSyncStatus('error', '⚠ Sync failed');
+    toast('⚠️ Update failed — check your connection', 'error');
   }
 }
 
@@ -3295,7 +3316,14 @@ async function saveDaily() {
   };
   if (!r.task) { toast('⚠️ Task title required', 'error'); return; }
   if (dailyEditingId) {
-    await updateItem('daily', dailyEditingId, r, renderDaily);
+    const dbUpdates = {
+      date:r.date, task:r.task, project:r.project, client:r.client,
+      hours:r.hours ? Number(r.hours) : null,
+      category:r.cat, priority:r.prio, status:r.status, impact:r.impact,
+      problem_solved:r.problem, technologies:r.tech, technical_support:r.support,
+      self_remarks:r.self, rich_notes:r.richNotes||''
+    };
+    await updateItemMapped('daily', dailyEditingId, r, dbUpdates, renderDaily);
     toast('✓ Journal entry updated');
     cancelDailyEdit();
   } else {
@@ -3687,7 +3715,11 @@ async function saveTask() {
   };
   if (!r.title) { toast('⚠️ Task title required','error'); return; }
   if (taskEditingId) {
-    await updateItem('tasks', taskEditingId, r, renderTasks);
+    const dbUpdates = {
+      title:r.title, priority:r.prio, due_date:r.due||null,
+      project:r.project, tags:r.tags, notes:r.notes
+    };
+    await updateItemMapped('tasks', taskEditingId, r, dbUpdates, renderTasks);
     toast('✓ Task updated');
     cancelTaskEdit();
   } else {
@@ -3792,7 +3824,11 @@ async function saveMeeting() {
   };
   if (!r.agenda) { toast('⚠️ Agenda required','error'); return; }
   if (meetingEditingId) {
-    await updateItem('meetings', meetingEditingId, r, renderMeetings);
+    const dbUpdates = {
+      date:r.date||null, attendees:r.attendees, agenda:r.agenda, discussion:r.discussion,
+      action_items:r.action, follow_up_date:r.followup||null, status:r.status
+    };
+    await updateItemMapped('meetings', meetingEditingId, r, dbUpdates, renderMeetings);
     toast('✓ Meeting updated');
     cancelMeetingEdit();
   } else {
@@ -3943,7 +3979,10 @@ function startStickyResize(e, id) {
   async function onUp() {
     document.removeEventListener('mousemove', onMove);
     document.removeEventListener('mouseup', onUp);
-    await updateItem('stickies', id, { w: el.offsetWidth, h: el.offsetHeight }, null);
+    const w = el.offsetWidth, h = el.offsetHeight;
+    const item = D.stickies.find(s => s.id === id);
+    if (item) { item.w = w; item.h = h; } // fix local state so size survives re-render
+    await updateItem('stickies', id, { w, h }, null);
   }
   document.addEventListener('mousemove', onMove);
   document.addEventListener('mouseup', onUp);
@@ -3977,7 +4016,11 @@ async function saveAchievement() {
   };
   if (!r.achievement) { toast('⚠️ Achievement required','error'); return; }
   if (achievementEditingId) {
-    await updateItem('achievements', achievementEditingId, r, renderAchievements);
+    const dbUpdates = {
+      date:r.date, title:r.achievement, type:r.type, impact:r.impact,
+      revenue_impact:r.revenue, proof:r.proof, notes:r.notes||''
+    };
+    await updateItemMapped('achievements', achievementEditingId, r, dbUpdates, renderAchievements);
     toast('✓ Achievement updated');
     cancelAchievementEdit();
   } else {
@@ -4995,9 +5038,25 @@ function exportPDF(){
   const tblA={fillColor:PANEL};
   function newPage(){if(pageNum>0)doc.addPage();pageNum++;doc.setFillColor(...WHITE);doc.rect(0,0,PW,PH,'F');doc.setFillColor(...VIO);doc.rect(0,0,PW,2.5,'F')}
   function footer(){doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.line(ML,PH-12,PW-MR,PH-12);doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text('ElevaTrack — Track. Prove. Grow.  ·  Confidential  ·  made by Vinu',ML,PH-7);doc.text(`Page ${pageNum}  ·  ${dateStr}`,PW-MR,PH-7,{align:'right'})}
+  // autoTable can silently add its own pages when a table overflows; this re-stamps
+  // any such pages with our top bar + footer so the whole document stays consistent.
+  function stampAutoTablePages(){
+    const total=doc.internal.getNumberOfPages();
+    for(let p=pageNum+1;p<=total;p++){
+      doc.setPage(p);
+      doc.setFillColor(...VIO);doc.rect(0,0,PW,2.5,'F');
+      doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.line(ML,PH-12,PW-MR,PH-12);
+      doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');
+      doc.text('ElevaTrack — Track. Prove. Grow.  ·  Confidential  ·  made by Vinu',ML,PH-7);
+      doc.text(`Page ${p}  ·  ${dateStr}`,PW-MR,PH-7,{align:'right'});
+    }
+    pageNum=total;
+    doc.setPage(total);
+  }
   function secHead(txt,y){doc.setFillColor(...PANEL2);doc.roundedRect(ML,y,CW,7.5,1,1,'F');doc.setFillColor(...VIO);doc.roundedRect(ML,y,3,7.5,1,1,'F');doc.setFontSize(9);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text(txt,ML+6,y+5);return y+11}
   function wrap(txt,x,y,w,lh=4.5){doc.splitTextToSize(String(txt||'—'),w).forEach(l=>{doc.text(l,x,y);y+=lh});return y}
   function chk(y,n=20){if(y+n>PH-16){footer();newPage();return 16}return y}
+  function emptyLine(y,label){doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,ML,y);return y+8}
   // COVER
   newPage();
   doc.setFillColor(...PANEL2);doc.rect(0,0,PW,75,'F');
@@ -5019,10 +5078,10 @@ function exportPDF(){
   [[pf.dept,'Department'],[pf.company,'Company'],[pf.empid,'ID'],[pf.manager,'Manager']].filter(([v])=>v).forEach(([v,l],i)=>{const col=i%2,row=Math.floor(i/2);doc.setTextColor(...GRAY);doc.text(`${l}: `,ML+10+col*82,y+31+row*8);doc.setTextColor(...INK);doc.text(v,ML+10+col*82+doc.getTextWidth(`${l}: `),y+31+row*8)});
   doc.setTextColor(...GRAY);doc.text(`Generated: ${dateStr}`,ML+10,y+46);
   y+=60;
-  [[D.daily.length,'Tasks'],[totalH.toFixed(0),'Hours'],[D.achievements.length,'Wins'],[D.star.length,'STAR']].forEach(([v,l],i)=>{const x=ML+i*(CW/4)+2;doc.setFillColor(...PANEL2);doc.roundedRect(x,y,CW/4-4,22,3,3,'F');doc.setFontSize(18);doc.setTextColor(...FUCH);doc.setFont('helvetica','bold');doc.text(String(v),x+(CW/4-4)/2,y+13,{align:'center'});doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(l,x+(CW/4-4)/2,y+19.5,{align:'center'})});
+  [[D.daily.length,'Journal'],[totalH.toFixed(0),'Hours'],[D.achievements.length,'Wins'],[D.tasks.length,'Tasks']].forEach(([v,l],i)=>{const x=ML+i*(CW/4)+2;doc.setFillColor(...PANEL2);doc.roundedRect(x,y,CW/4-4,22,3,3,'F');doc.setFontSize(18);doc.setTextColor(...FUCH);doc.setFont('helvetica','bold');doc.text(String(v),x+(CW/4-4)/2,y+13,{align:'center'});doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(l,x+(CW/4-4)/2,y+19.5,{align:'center'})});
   y+=30;
   doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');
-  y=wrap(`This report presents ${pf.name||'this employee'}'s professional contributions, technical achievements, and evidence during ${year}.`,ML+2,y,CW-4,5);
+  y=wrap(`This report is a complete export of everything logged in ElevaTrack for ${pf.name||'this employee'} — work journal, tasks, meetings, achievements, evidence, STAR stories, goals, mood log, Knowledge Vault, and sticky notes — as of ${dateStr}.`,ML+2,y,CW-4,5);
   y+=8;
   doc.setFillColor(...PANEL2);doc.setDrawColor(...VIOL,50);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,12,2,2,'FD');
   doc.setFontSize(7.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('CONFIDENTIAL',ML+4,y+7);
@@ -5032,38 +5091,83 @@ function exportPDF(){
   newPage();y=16;
   doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Performance Dashboard',ML,y);y+=9;
   y=secHead('KEY PERFORMANCE INDICATORS',y);
-  [[['Total Tasks',D.daily.length,VIO],['Completed',done,GREEN]],[['Hours',totalH.toFixed(1),PINK],['Achievements',D.achievements.length,AMBER]],[['STAR Entries',D.star.length,VIO],['Evidence',D.evidence.length,GREEN]],[['Meetings',D.meetings.length,PINK],['Completion',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%',GREEN]],[['Score',score+'/100',FUCH]]].forEach(([l,r])=>{y=chk(y,13);const hw=CW/2-3;[[l,ML],[r,r?ML+hw+6:null]].filter(([c])=>c).forEach(([[label,val,col],x])=>{doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,11,2,2,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);doc.setFontSize(11);doc.setTextColor(...col);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+8,{align:'right'})});y+=14});
-  y+=4;y=secHead('EXECUTIVE SUMMARY',y);
+  [[['Total Tasks',D.daily.length,VIO],['Completed',done,GREEN]],
+   [['Hours',totalH.toFixed(1),PINK],['Achievements',D.achievements.length,AMBER]],
+   [['STAR Entries',D.star.length,VIO],['Evidence',D.evidence.length,GREEN]],
+   [['Meetings',D.meetings.length,PINK],['Kanban Tasks',D.tasks.length,VIO]],
+   [['Goals',D.goals.length,AMBER],['Vault Entries',D.vault.length,GREEN]],
+   [['Mood Logs',D.mood.length,PINK],['Sticky Notes',(D.stickies||[]).filter(s=>!s.archived).length,VIO]],
+   [['Completion',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%',GREEN],['Score',score+'/100',FUCH]]]
+   .forEach(([l,r])=>{y=chk(y,13);const hw=CW/2-3;[[l,ML],[r,r?ML+hw+6:null]].filter(([c])=>c).forEach(([[label,val,col],x])=>{doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,11,2,2,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);doc.setFontSize(11);doc.setTextColor(...col);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+8,{align:'right'})});y+=14});
+  y+=4;y=chk(y,30);y=secHead('EXECUTIVE SUMMARY',y);
   doc.setFontSize(8.5);doc.setTextColor(...INK);doc.setFont('helvetica','normal');
-  y=wrap(`During ${year}, ${pf.name||'this employee'} logged ${totalH.toFixed(1)} hours across ${D.daily.length} tasks (${D.daily.length?Math.round(done/D.daily.length*100):0}% completed). ${D.achievements.length} achievement(s) recorded, ${D.star.length} STAR ${D.star.length===1?'story':'stories'} documented, ${D.meetings.length} meeting(s) logged.`,ML,y,CW,5);
+  y=wrap(`During ${year}, ${pf.name||'this employee'} logged ${totalH.toFixed(1)} hours across ${D.daily.length} journal entries (${D.daily.length?Math.round(done/D.daily.length*100):0}% completed). ${D.achievements.length} achievement(s), ${D.star.length} STAR ${D.star.length===1?'story':'stories'}, ${D.meetings.length} meeting(s), ${D.tasks.length} tracked task(s), ${D.goals.length} goal(s), and ${D.vault.length} Knowledge Vault entr${D.vault.length===1?'y':'ies'} on record.`,ML,y,CW,5);
   footer();
-  // Achievements
-  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Achievements',ML,y);y+=9;y=secHead('ACHIEVEMENTS',y);
-  if(D.achievements.length){doc.autoTable({head:[['Date','Achievement','Type','Impact','Revenue']],body:D.achievements.map(a=>[a.date,a.achievement,a.type,a.impact||'—',a.revenue||'—']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('None.',ML,y);y+=8}
-  y=chk(y,20);y=secHead('MEETINGS',y);
-  if(D.meetings.length){doc.autoTable({head:[['Date','Attendees','Agenda','Action Items','Status']],body:D.meetings.map(m=>[m.date||'—',m.attendees||'—',m.agenda||'—',m.action||'—',m.status]),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:PINK,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('None.',ML,y);y+=8}
+  // Work Journal (full itemized log)
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Work Journal',ML,y);y+=9;y=secHead(`ALL LOGGED ENTRIES (${D.daily.length})`,y);
+  if(D.daily.length){
+    doc.autoTable({head:[['Date','Task','Category','Hours','Priority','Status','Impact']],body:D.daily.map(r=>[r.date||'—',r.task||'—',r.cat||'—',r.hours||'—',r.prio||'—',r.status||'—',(r.impact||'—')]),startY:y,margin:{left:ML,right:MR,bottom:16},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA,columnStyles:{1:{cellWidth:38},6:{cellWidth:34}}});
+    stampAutoTablePages();y=doc.lastAutoTable.finalY+8;
+  } else { y=emptyLine(y,'No journal entries logged.') }
+  footer();
+  // Tasks & Goals
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Tasks & Goals',ML,y);y+=9;y=secHead(`TASK MANAGER (${D.tasks.length})`,y);
+  if(D.tasks.length){
+    doc.autoTable({head:[['Title','Status','Priority','Due','Project','Tags']],body:D.tasks.map(t=>[t.title||'—',(t.col||'inbox').replace('_',' '),t.prio||'—',t.due||'—',t.project||'—',t.tags||'—']),startY:y,margin:{left:ML,right:MR,bottom:16},styles:tblS,headStyles:{fillColor:PINK,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});
+    stampAutoTablePages();y=doc.lastAutoTable.finalY+8;
+  } else { y=emptyLine(y,'No tasks logged.') }
+  y=chk(y,20);y=secHead(`GOALS (${D.goals.length})`,y);
+  if(D.goals.length){
+    doc.autoTable({head:[['Goal','Category','Target Date','Status']],body:D.goals.map(g=>[g.goal||'—',g.cat||'—',g.date||'—',g.done?'Completed':'Active']),startY:y,margin:{left:ML,right:MR,bottom:16},styles:tblS,headStyles:{fillColor:AMBER,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});
+    stampAutoTablePages();y=doc.lastAutoTable.finalY+8;
+  } else { y=emptyLine(y,'No goals logged.') }
+  footer();
+  // Achievements & Meetings
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Achievements & Meetings',ML,y);y+=9;y=secHead(`ACHIEVEMENTS (${D.achievements.length})`,y);
+  if(D.achievements.length){doc.autoTable({head:[['Date','Achievement','Type','Impact','Revenue']],body:D.achievements.map(a=>[a.date,a.achievement,a.type,a.impact||'—',a.revenue||'—']),startY:y,margin:{left:ML,right:MR,bottom:16},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});stampAutoTablePages();y=doc.lastAutoTable.finalY+8}else{y=emptyLine(y,'None.')}
+  y=chk(y,20);y=secHead(`MEETINGS (${D.meetings.length})`,y);
+  if(D.meetings.length){doc.autoTable({head:[['Date','Attendees','Agenda','Action Items','Status']],body:D.meetings.map(m=>[m.date||'—',m.attendees||'—',m.agenda||'—',m.action||'—',m.status]),startY:y,margin:{left:ML,right:MR,bottom:16},styles:tblS,headStyles:{fillColor:PINK,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});stampAutoTablePages();y=doc.lastAutoTable.finalY+8}else{y=emptyLine(y,'None.')}
   footer();
   // STAR + Evidence
-  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('STAR & Evidence',ML,y);y+=9;y=secHead('STAR CONTRIBUTIONS',y);
-  if(D.star.length){doc.autoTable({head:[['Situation','Task','Action','Result']],body:D.star.map(s=>[s.s,s.t,s.a,s.r]),startY:y,margin:{left:ML,right:MR},styles:{...tblS,fillColor:GREENBG},headStyles:{fillColor:GREEN,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:{fillColor:[230,250,240]}});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No STAR entries.',ML,y);y+=8}
-  y=chk(y,20);y=secHead('EVIDENCE INDEX',y);
-  if(D.evidence.length){doc.autoTable({head:[['Title','Category','Project','Date','Notes']],body:D.evidence.map(e=>[e.title,e.cat,e.project||'—',e.date,e.notes||'—']),startY:y,margin:{left:ML,right:MR},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});y=doc.lastAutoTable.finalY+8}else{doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.text('No evidence.',ML,y);y+=8}
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('STAR & Evidence',ML,y);y+=9;y=secHead(`STAR CONTRIBUTIONS (${D.star.length})`,y);
+  if(D.star.length){doc.autoTable({head:[['Situation','Task','Action','Result']],body:D.star.map(s=>[s.s,s.t,s.a,s.r]),startY:y,margin:{left:ML,right:MR,bottom:16},styles:{...tblS,fillColor:GREENBG},headStyles:{fillColor:GREEN,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:{fillColor:[230,250,240]}});stampAutoTablePages();y=doc.lastAutoTable.finalY+8}else{y=emptyLine(y,'No STAR entries.')}
+  y=chk(y,20);y=secHead(`EVIDENCE INDEX (${D.evidence.length})`,y);
+  if(D.evidence.length){doc.autoTable({head:[['Title','Category','Project','Date','Notes']],body:D.evidence.map(e=>[e.title,e.cat,e.project||'—',e.date,e.notes||'—']),startY:y,margin:{left:ML,right:MR,bottom:16},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});stampAutoTablePages();y=doc.lastAutoTable.finalY+8}else{y=emptyLine(y,'No evidence.')}
   const imgs=D.evidence.filter(e=>e.dataUrl||e.fileUrl).slice(0,6);
   if(imgs.length){y=chk(y,30);doc.setFontSize(8.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('Evidence Images',ML,y);y+=5;const colW=CW/3,imgW=colW-4;imgs.forEach((e,i)=>{try{const col=i%3,row=Math.floor(i/3),x=ML+col*colW,ey=y+row*38;doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.rect(x,ey,imgW,30,'S');doc.addImage(e.dataUrl||e.fileUrl,'JPEG',x,ey,imgW,30);doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text((e.title||'').slice(0,22),x,ey+33)}catch(err){}})}
   footer();
+  // Knowledge Vault, Mood & Sticky Notes
+  newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Knowledge Vault, Mood & Notes',ML,y);y+=9;y=secHead(`KNOWLEDGE VAULT (${D.vault.length})`,y);
+  if(D.vault.length){
+    doc.autoTable({head:[['Title','Section','Folder','Category','Tags']],body:D.vault.map(v=>[v.title||'—',(KV_SECTION_META[v.section]||{}).label||v.section||'—',v.folder||'—',v.category||'—',v.tags||'—']),startY:y,margin:{left:ML,right:MR,bottom:16},styles:tblS,headStyles:{fillColor:VIO,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});
+    stampAutoTablePages();y=doc.lastAutoTable.finalY+8;
+  } else { y=emptyLine(y,'No Knowledge Vault entries.') }
+  y=chk(y,20);y=secHead(`MOOD LOG (${D.mood.length})`,y);
+  if(D.mood.length){
+    doc.autoTable({head:[['Date','Mood','Note']],body:D.mood.map(m=>[m.date||'—',m.mood||'—',m.note||'—']),startY:y,margin:{left:ML,right:MR,bottom:16},styles:tblS,headStyles:{fillColor:AMBER,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});
+    stampAutoTablePages();y=doc.lastAutoTable.finalY+8;
+  } else { y=emptyLine(y,'No mood entries.') }
+  y=chk(y,20);
+  const activeStickies=(D.stickies||[]).filter(s=>!s.archived);
+  y=secHead(`STICKY NOTES (${activeStickies.length})`,y);
+  if(activeStickies.length){
+    doc.autoTable({head:[['Note','Pinned']],body:activeStickies.map(s=>[htmlToPlainText(s.text).slice(0,140)||'(empty)',s.pinned?'Yes':'No']),startY:y,margin:{left:ML,right:MR,bottom:16},styles:tblS,headStyles:{fillColor:PINK,textColor:WHITE,fontStyle:'bold'},alternateRowStyles:tblA});
+    stampAutoTablePages();y=doc.lastAutoTable.finalY+8;
+  } else { y=emptyLine(y,'No sticky notes.') }
+  footer();
   // Sign-off
   newPage();y=16;doc.setFontSize(14);doc.setTextColor(...INK);doc.setFont('helvetica','bold');doc.text('Summary & Sign-off',ML,y);y+=9;y=secHead('PERFORMANCE SUMMARY',y);
-  [['Score',score+'/100'],['Tasks',D.daily.length],['Completed',done],['Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%'],['Hours',totalH.toFixed(1)],['Achievements',D.achievements.length],['STAR Entries',D.star.length],['Evidence',D.evidence.length],['Meetings',D.meetings.length]].reduce((acc,m,i)=>{if(i%2===0)acc.push([m]);else acc[acc.length-1].push(m);return acc},[]).forEach(pair=>{y=chk(y,12);const hw=CW/2-3;pair.forEach(([label,val],col)=>{const x=ML+col*(hw+6);doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,10,1.5,1.5,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);const vc=label==='Score'?FUCH:['Completed','Rate'].includes(label)?GREEN:VIO;doc.setFontSize(10);doc.setTextColor(...vc);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+7.5,{align:'right'})});y+=13});
-  y+=6;y=secHead('DECLARATION & SIGN-OFF',y);
+  [['Score',score+'/100'],['Journal Entries',D.daily.length],['Completed',done],['Rate',D.daily.length?Math.round(done/D.daily.length*100)+'%':'0%'],['Hours',totalH.toFixed(1)],['Achievements',D.achievements.length],['STAR Entries',D.star.length],['Evidence',D.evidence.length],['Meetings',D.meetings.length],['Tasks',D.tasks.length],['Goals',D.goals.length],['Vault Entries',D.vault.length]].reduce((acc,m,i)=>{if(i%2===0)acc.push([m]);else acc[acc.length-1].push(m);return acc},[]).forEach(pair=>{y=chk(y,12);const hw=CW/2-3;pair.forEach(([label,val],col)=>{const x=ML+col*(hw+6);doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.2);doc.roundedRect(x,y,hw,10,1.5,1.5,'FD');doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(label,x+3,y+4.5);const vc=label==='Score'?FUCH:['Completed','Rate'].includes(label)?GREEN:VIO;doc.setFontSize(10);doc.setTextColor(...vc);doc.setFont('helvetica','bold');doc.text(String(val),x+hw-3,y+7.5,{align:'right'})});y+=13});
+  y+=6;y=chk(y,50);y=secHead('DECLARATION & SIGN-OFF',y);
   doc.setFontSize(8.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');
-  y=wrap(`I declare all information in this report is accurate. Compiled automatically from daily work logs. Period: ${year}.`,ML,y,CW,5);y+=8;
+  y=wrap(`I declare all information in this report is accurate and reflects a complete export of my logged data as of ${dateStr}. Period: ${year}.`,ML,y,CW,5);y+=8;
   [['Employee'],['Line Manager'],['HR Representative']].forEach(([title],i)=>{const sw=(CW-10)/3,sx=ML+i*(sw+5);doc.setFillColor(...PANEL);doc.setDrawColor(...LGRAY);doc.setLineWidth(0.3);doc.roundedRect(sx,y,sw,32,2,2,'FD');doc.setFontSize(7.5);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text(title,sx+sw/2,y+6,{align:'center'});doc.setDrawColor(...VIOL);doc.setLineWidth(0.4);doc.line(sx+6,y+22,sx+sw-6,y+22);doc.setFontSize(7);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text('Signature',sx+sw/2,y+19,{align:'center'});doc.text('Date: ___________',sx+sw/2,y+28,{align:'center'})});y+=38;
   doc.setFillColor(...PANEL2);doc.setDrawColor(...VIOL);doc.setLineWidth(0.3);doc.roundedRect(ML,y,CW,12,3,3,'FD');
   doc.setFontSize(9);doc.setTextColor(...VIO);doc.setFont('helvetica','bold');doc.text('✦ ElevaTrack — Track. Prove. Grow.  ·  made by Vinu',ML+CW/2,y+5.5,{align:'center'});
   doc.setFontSize(7.5);doc.setTextColor(...GRAY);doc.setFont('helvetica','normal');doc.text(`${dateStr}  ·  Score: ${score}/100`,ML+CW/2,y+9.5,{align:'center'});
   footer();
-  doc.save(`ElevaTrack_${pf.name?pf.name.replace(/\s/g,'_')+'_':''}${year}.pdf`);
-  toast('✦ PDF exported');
+  doc.save(`ElevaTrack_Full_${pf.name?pf.name.replace(/\s/g,'_')+'_':''}${year}.pdf`);
+  toast('✦ Full PDF exported');
 }
 
 
