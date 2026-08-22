@@ -913,6 +913,16 @@ tr:hover td{background:#8b5cf608}
 .att-salary-row .wj-val{font-weight:700}
 .att-salary-row.total{padding:14px 18px;background:var(--violet-xl)}
 .att-salary-row.total .wj-val{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:800;color:var(--violet-l)}
+/* ── PAY PERIODS ── */
+.pp-chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.pp-chip{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 14px;border-radius:12px;border:1.5px solid var(--border2);background:var(--s2);cursor:pointer;transition:all .15s}
+.pp-chip:hover{border-color:var(--border3)}
+.pp-chip.active{border-color:var(--violet-l);background:var(--violet-xl);box-shadow:0 0 0 1px var(--violet-l) inset}
+.pp-chip-label{font-size:12px;font-weight:700;color:var(--text)}
+.pp-chip-net{font-size:10.5px;color:var(--violet-l);font-weight:600}
+.pp-net-banner{background:linear-gradient(135deg,var(--violet-xl),#f3e8ff);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pp-net-banner b{color:var(--text)}
+.pp-net-banner span{margin-left:auto;font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:800;color:var(--violet-l)}
 
 /* Right-click context menu (desktop) */
 .att-context-menu{
@@ -1105,6 +1115,7 @@ tr:hover td{background:#8b5cf608}
     </button>
     <div class="sb-sublist" data-grp-list="career">
       <button class="sb-item" data-nav="achievements" onclick="nav('achievements')"><span class="si">🏆</span>Achievements & Evidence<span class="sb-badge" id="nb-ach">0</span></button>
+      <button class="sb-item" data-nav="documentation" onclick="nav('documentation')"><span class="si">📄</span>Documentation</button>
     </div>
 
     <button class="sb-group" data-tint="violet" data-grp="knowledge" onclick="toggleGroup('knowledge')">
@@ -1302,8 +1313,10 @@ tr:hover td{background:#8b5cf608}
       <div class="ff"><label>Status</label><select id="dl-status"><option>Completed</option><option>In Progress</option><option>Blocked</option><option>Deferred</option></select></div>
       <div class="ff full"><label>Business Impact</label><input id="dl-impact" placeholder="What value was created? e.g. Reduced firmware boot time by 30%"></div>
       <div class="ff full"><label>Problem Solved</label><input id="dl-problem" placeholder="What issue did you resolve?"></div>
+      <div class="ff full"><label>Solution / Action Taken</label><input id="dl-solution" placeholder="How did you resolve it? What steps did you take?"></div>
       <div class="ff"><label>Technologies Used</label><input id="dl-tech" placeholder="ESP32, FreeRTOS, UART..."></div>
       <div class="ff"><label>Technical Support?</label><select id="dl-support"><option>No</option><option>Yes</option></select></div>
+      <div class="ff full"><label>Key Learning</label><input id="dl-learning" placeholder="What did you learn from this?"></div>
       <div class="ff full"><label>Self Remarks</label><textarea id="dl-self" placeholder="Your reflection — what went well, what was hard?" style="min-height:60px"></textarea></div>
       <div class="ff full">
         <label>Journal Notes <span style="font-weight:400;color:var(--text4)">— rich text, autosaved with this entry</span></label>
@@ -1318,7 +1331,7 @@ tr:hover td{background:#8b5cf608}
     <div id="dl-edit-banner" style="display:none;font-size:11px;color:var(--violet-l);background:var(--violet-xl);border-radius:8px;padding:6px 10px;margin-top:8px">✏️ Editing an existing entry — Save Entry will update it.</div>
   </div>
   <div class="card">
-    <div class="card-hd"><div class="card-title">📋 All Work Entries</div><span id="daily-cnt" style="font-size:11px;color:var(--text3)">0 entries</span></div>
+    <div class="card-hd"><div class="card-title">📋 All Work Entries</div><div style="display:flex;align-items:center;gap:10px"><span id="daily-cnt" style="font-size:11px;color:var(--text3)">0 entries</span><button class="btn btn-ghost btn-sm" onclick="nav('reports');exportWorklogPDF()" title="Download a polished Worklog PDF of every entry">📋 Worklog PDF</button></div></div>
     <div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Task</th><th>Project</th><th>Category</th><th>Hrs</th><th>Priority</th><th>Status</th><th>Impact</th><th></th></tr></thead><tbody id="daily-body"></tbody></table></div>
   </div>
 </div>
@@ -1446,6 +1459,16 @@ tr:hover td{background:#8b5cf608}
   </div>
 </div>
 
+<!-- ═══ DOCUMENTATION ═══ -->
+<div id="page-documentation" class="page">
+  <div class="doc-intro card mb16">
+    <div class="card-body">
+      <p style="font-size:12.5px;color:var(--text2);line-height:1.7">A living, professional summary of your work and growth — the kind of writeup you'd hand to a manager, put in an appraisal, or paste into a resume. Each section below is its own rich-text field and autosaves as you type; come back and update it anytime.</p>
+    </div>
+  </div>
+  <div id="doc-sections"></div>
+</div>
+
 <!-- ═══ UTILITIES TAB BAR ═══ -->
 <div id="utilities-tabbar" class="ws-tabbar utilities-tabbar" style="display:none">
   <button class="ws-tab" data-ws-tab="companies" onclick="nav('companies')">🏢 Companies</button>
@@ -1517,6 +1540,17 @@ tr:hover td{background:#8b5cf608}
         <button class="btn btn-violet" onclick="exportPDF()">✦ Export Full PDF (everything logged)</button>
         <button class="btn btn-ghost" onclick="exportExcel()">📊 Export Excel Workbook</button>
       </div>
+    </div>
+  </div>
+  <div class="card mb16">
+    <div class="card-hd"><div class="card-title">📋 Worklog PDF</div><span style="font-size:11px;color:var(--text3)">One clean record per Work Journal entry</span></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px">A polished, print-ready worklog — Date, Project, Work Done, Technical Details, Problems, Solution, Learning, Impact, Notes and Hours for each entry. Leave the dates blank to include everything.</p>
+      <div class="fgrid" style="margin-bottom:12px">
+        <div class="ff"><label>From</label><input type="date" id="wl-from"></div>
+        <div class="ff"><label>To</label><input type="date" id="wl-to"></div>
+      </div>
+      <button class="btn btn-violet btn-sm" onclick="exportWorklogPDF()">📋 Download Worklog PDF</button>
     </div>
   </div>
   <div class="g2 mb16">
@@ -1619,6 +1653,18 @@ tr:hover td{background:#8b5cf608}
       <div class="card">
         <div class="card-hd"><div class="card-title">💰 Salary</div></div>
         <div class="card-body" id="att-salary-card" style="padding:0"></div>
+      </div>
+    </div>
+
+    <div class="card mb16">
+      <div class="card-hd">
+        <div class="card-title">💵 Pay Periods</div>
+        <button class="btn btn-violet btn-sm" onclick="newPayPeriod()">+ New Period</button>
+      </div>
+      <div class="card-body">
+        <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Keep independent records per month — e.g. August 2026 and September 2026 each with their own Salary, Present Days, Leave, Overtime, Deductions and Bonuses. Switching periods never overwrites another period's data.</p>
+        <div class="pp-chip-row" id="pp-chip-row"></div>
+        <div id="pp-form-wrap"></div>
       </div>
     </div>
 
@@ -1832,7 +1878,7 @@ const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 let D = {
   daily: [], achievements: [], evidence: [],
   star: [], plans: [], goals: [], mood: [],
-  tasks: [], meetings: [], stickies: [], vault: [],
+  tasks: [], meetings: [], stickies: [], vault: [], payPeriods: [],
   profile: { name:'', email:'', links:'' }
 };
 
@@ -1990,7 +2036,7 @@ function resetAppState() {
   D = {
     daily:[], achievements:[], evidence:[],
     star:[], plans:[], goals:[], mood:[],
-    tasks:[], meetings:[], stickies:[], vault:[],
+    tasks:[], meetings:[], stickies:[], vault:[], payPeriods:[],
     profile:{ name:'',email:'',links:'' }
   };
 }
@@ -2083,11 +2129,12 @@ const TABLE_MAP = {
   meetings:     'meetings',
   stickies:     'sticky_notes',
   vault:        'knowledge_vault',
+  payPeriods:   'pay_periods',
 };
 
 // Tables whose records belong to a specific employer. Personal tables
 // (plans, goals, mood, vault) follow the user across every company.
-const COMPANY_SCOPED = new Set(['daily','achievements','evidence','star','tasks','meetings']);
+const COMPANY_SCOPED = new Set(['daily','achievements','evidence','star','tasks','meetings','payPeriods']);
 
 // ── COMPANY STATE ──
 let companies = [];          // all companies this user has ever logged
@@ -2100,7 +2147,7 @@ function getActiveCompany() {
 
 // Map: table row → local D object (handle any column name differences)
 const ROW_TO_D = {
-  daily:        r => ({ id:r.id, date:r.date, task:r.task, project:r.project||'', client:r.client||'', hours:r.hours||'', cat:r.category||'', prio:r.priority||'Medium', status:r.status||'Completed', impact:r.impact||'', problem:r.problem_solved||'', tech:r.technologies||'', support:r.technical_support||'No', self:r.self_remarks||'', richNotes:r.rich_notes||'', created_at:r.created_at }),
+  daily:        r => ({ id:r.id, date:r.date, task:r.task, project:r.project||'', client:r.client||'', hours:r.hours||'', cat:r.category||'', prio:r.priority||'Medium', status:r.status||'Completed', impact:r.impact||'', problem:r.problem_solved||'', solution:r.solution||'', tech:r.technologies||'', support:r.technical_support||'No', learning:r.learning||'', self:r.self_remarks||'', richNotes:r.rich_notes||'', created_at:r.created_at }),
   achievements: r => ({ id:r.id, date:r.date, achievement:r.title, type:r.type||'Other', impact:r.impact||'', revenue:r.revenue_impact||'', proof:r.proof||'', notes:r.notes||'', created_at:r.created_at }),
   evidence:     r => ({ id:r.id, title:r.title, cat:r.category||'Other', project:r.project||'', date:r.date||'', notes:r.notes||'', fileName:r.file_name||'', fileUrl:r.file_url||'', dataUrl:r.data_url||'', created_at:r.created_at }),
   star:         r => ({ id:r.id, s:r.situation, t:r.task_desc, a:r.action_taken, r:r.result_impact, created_at:r.created_at }),
@@ -2111,11 +2158,12 @@ const ROW_TO_D = {
   meetings:     r => ({ id:r.id, date:r.date||'', attendees:r.attendees||'', agenda:r.agenda||'', discussion:r.discussion||'', action:r.action_items||'', followup:r.follow_up_date||'', status:r.status||'Open', created_at:r.created_at }),
   stickies:     r => ({ id:r.id, text:r.text||'', color:r.color||'lavender', pinned:!!r.pinned, archived:!!r.archived, x:r.pos_x??40, y:r.pos_y??40, w:r.w??200, h:r.h??170, created_at:r.created_at }),
   vault:        r => ({ id:r.id, section:r.section||'tech', title:r.title||'Untitled', folder:r.folder||'', category:r.category||'', tags:r.tags||'', language:r.language||'', content:r.content||'', favorite:!!r.favorite, pinned:!!r.pinned, archived:!!r.archived, created_at:r.created_at, updated_at:r.updated_at||r.created_at }),
+  payPeriods:   r => ({ id:r.id, label:r.label||'Untitled Period', periodStart:r.period_start||'', periodEnd:r.period_end||'', salary:r.salary||0, basic:r.basic_salary||0, workingDays:r.working_days||0, presentDays:r.present_days||0, leaveDays:r.leave_days||0, overtime:r.overtime||0, deductions:r.deductions||0, bonuses:r.bonuses||0, notes:r.notes||'', created_at:r.created_at, updated_at:r.updated_at||r.created_at }),
 };
 
 // Map: local D object → Supabase insert payload
 const D_TO_ROW = {
-  daily:        r => ({ date:r.date, task:r.task, project:r.project, client:r.client, hours:r.hours?Number(r.hours):null, category:r.cat, priority:r.prio, status:r.status, impact:r.impact, problem_solved:r.problem, technologies:r.tech, technical_support:r.support, self_remarks:r.self, rich_notes:r.richNotes||'' }),
+  daily:        r => ({ date:r.date, task:r.task, project:r.project, client:r.client, hours:r.hours?Number(r.hours):null, category:r.cat, priority:r.prio, status:r.status, impact:r.impact, problem_solved:r.problem, solution:r.solution||'', technologies:r.tech, technical_support:r.support, learning:r.learning||'', self_remarks:r.self, rich_notes:r.richNotes||'' }),
   achievements: r => ({ date:r.date, title:r.achievement, type:r.type, impact:r.impact, revenue_impact:r.revenue, proof:r.proof, notes:r.notes||'' }),
   evidence:     r => ({ title:r.title, category:r.cat, project:r.project, date:r.date, notes:r.notes, file_name:r.fileName, file_url:r.fileUrl||'', data_url:r.dataUrl||'' }),
   star:         r => ({ situation:r.s, task_desc:r.t, action_taken:r.a, result_impact:r.r }),
@@ -2126,6 +2174,7 @@ const D_TO_ROW = {
   meetings:     r => ({ date:r.date||null, attendees:r.attendees, agenda:r.agenda, discussion:r.discussion, action_items:r.action, follow_up_date:r.followup||null, status:r.status }),
   stickies:     r => ({ text:r.text, color:r.color, pinned:r.pinned, archived:r.archived, pos_x:r.x, pos_y:r.y, w:r.w, h:r.h }),
   vault:        r => ({ section:r.section, title:r.title, folder:r.folder, category:r.category, tags:r.tags, language:r.language, content:r.content, favorite:!!r.favorite, pinned:!!r.pinned, archived:!!r.archived, updated_at:r.updated_at||new Date().toISOString() }),
+  payPeriods:   r => ({ label:r.label, period_start:r.periodStart||null, period_end:r.periodEnd||null, salary:r.salary||0, basic_salary:r.basic||0, working_days:r.workingDays||0, present_days:r.presentDays||0, leave_days:r.leaveDays||0, overtime:r.overtime||0, deductions:r.deductions||0, bonuses:r.bonuses||0, notes:r.notes||'', updated_at:new Date().toISOString() }),
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -2177,6 +2226,15 @@ async function loadAllData() {
     console.error('✗ Profile load/create failed (non-fatal):', err.message);
     // Fall back to a minimal profile so the UI still has something to render
     D.profile = D.profile || { name:'', role:'', dept:'', company:'', empid:'', manager:'', doj:'', email: currentUser?.email || '', links:'' };
+  }
+
+  // Documentation is one record per user, isolated the same way as profile
+  try {
+    await loadDocumentation();
+    console.log('✓ Documentation loaded');
+  } catch (err) {
+    console.error('✗ Documentation load failed (non-fatal):', err.message);
+    D.documentation = D.documentation || DOC_EMPTY();
   }
 
   setSyncStatus('synced', '☁ Synced');
@@ -2322,7 +2380,7 @@ async function del(arr, id, cbName) {
     achievements:'renderAchievements', evidence:'renderEvidence',
     star:'renderStar', plans:'renderPlan', goals:'renderGoals', mood:'renderMood',
     tasks:'renderTasks', meetings:'renderMeetings', stickies:'renderStickies',
-    vault:'renderVault'
+    vault:'renderVault', payPeriods:'renderPayPeriods'
   };
   const fn = window[renderMap[arr] || cbName];
   await delItem(arr, id, fn);
@@ -2376,6 +2434,93 @@ function loadProfile() {
     if (el) el.value = pf[k] || '';
   });
   renderCompanyManager();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── SECTION 6.1: DOCUMENTATION (professional summary — one record per user) ──
+// ══════════════════════════════════════════════════════════════════
+const DOC_SECTIONS = [
+  { key:'impact',                 col:'impact',                 label:'My Impact',                                   icon:'🌟', placeholder:'Summarize the overall impact you\'ve had in your role...' },
+  { key:'contributions',          col:'contributions',          label:'Key Contributions',                           icon:'🛠',  placeholder:'List and describe your key contributions...' },
+  { key:'skills',                 col:'skills',                 label:'Technical Skills Developed',                  icon:'💡', placeholder:'Skills you\'ve grown, learned, or gained fluency in...' },
+  { key:'projects',                col:'projects',               label:'Projects / Features Worked On',               icon:'🚀', placeholder:'Projects and features you\'ve built or contributed to...' },
+  { key:'iotWork',                col:'iot_work',               label:'Industrial IoT / Embedded Systems Work',      icon:'📡', placeholder:'Embedded and IIoT-specific work — firmware, protocols, hardware, gateways...' },
+  { key:'problemsSolved',         col:'problems_solved',        label:'Major Problems Solved',                       icon:'🧩', placeholder:'Significant problems you diagnosed and resolved...' },
+  { key:'learningGrowth',         col:'learning_growth',        label:'Learning & Growth',                           icon:'📚', placeholder:'Courses, certifications, and things you\'ve learned...' },
+  { key:'achievementsMilestones', col:'achievements_milestones', label:'Achievements / Milestones',                   icon:'🏆', placeholder:'Key milestones, recognitions, and wins...' },
+  { key:'overallJourney',         col:'overall_journey',        label:'Overall Work Journey',                        icon:'🧭', placeholder:'The narrative of your career journey so far...' },
+];
+function DOC_EMPTY() {
+  const o = {}; DOC_SECTIONS.forEach(s => o[s.key] = ''); return o;
+}
+let _docSaveTimers = {};
+
+async function loadDocumentation() {
+  D.documentation = DOC_EMPTY();
+  if (!currentUser) return;
+  const { data, error } = await withTimeout(
+    _supa.from('documentation').select('*').eq('user_id', currentUser.id),
+    8000, 'loadDocumentation select'
+  );
+  if (error) throw error;
+  if (data && data.length) {
+    const r = data[0];
+    DOC_SECTIONS.forEach(s => { D.documentation[s.key] = r[s.col] || '' });
+  }
+}
+
+function renderDocumentation() {
+  DOC_SECTIONS.forEach(s => {
+    const ed = document.getElementById('doc-rich-' + s.key);
+    if (ed) { ed.innerHTML = D.documentation[s.key] || ''; rtUpdateStats(ed) }
+  });
+}
+
+function queueDocumentationSave(key) {
+  clearTimeout(_docSaveTimers[key]);
+  _docSaveTimers[key] = setTimeout(() => saveDocumentationSection(key), 900);
+}
+
+async function saveDocumentationSection(key) {
+  const section = DOC_SECTIONS.find(s => s.key === key); if (!section) return;
+  const ed = document.getElementById('doc-rich-' + key); if (!ed) return;
+  const html = ed.innerHTML;
+  D.documentation[key] = html;
+  if (!currentUser) { toast('⚠️ Not signed in — not saved', 'error'); return }
+  try {
+    const payload = { user_id: currentUser.id, [section.col]: html, updated_at: new Date().toISOString() };
+    const { error } = await withTimeout(
+      _supa.from('documentation').upsert(payload, { onConflict: 'user_id' }),
+      8000, 'saveDocumentationSection'
+    );
+    if (error) throw error;
+    setSyncStatus('synced', '☁ Saved');
+  } catch (err) {
+    console.error('✗ saveDocumentationSection failed:', err.message);
+    setSyncStatus('error', '⚠ Sync failed');
+    toast('⚠️ Documentation failed to save — check your connection', 'error');
+  }
+}
+
+// Flush every pending Documentation save immediately — used when navigating away
+// so a debounce timer can never be silently lost mid-edit.
+async function flushDocumentationSaves() {
+  const keys = Object.keys(_docSaveTimers);
+  for (const key of keys) {
+    if (_docSaveTimers[key]) { clearTimeout(_docSaveTimers[key]); _docSaveTimers[key] = null; await saveDocumentationSection(key) }
+  }
+}
+
+function buildDocumentationSections() {
+  const host = document.getElementById('doc-sections'); if (!host) return;
+  host.innerHTML = DOC_SECTIONS.map(s => `
+    <div class="card mb16">
+      <div class="card-hd"><div class="card-title">${s.icon} ${s.label}</div></div>
+      <div class="card-body" style="padding-top:0"><div id="doc-rich-host-${s.key}"></div></div>
+    </div>`).join('');
+  DOC_SECTIONS.forEach(s => {
+    rtMount('doc-rich-host-' + s.key, 'doc-rich-' + s.key, s.placeholder, { onInput: () => queueDocumentationSave(s.key) });
+  });
 }
 
 function updateSidebarProfile() {
@@ -2558,7 +2703,19 @@ function switchPlannerTab(tab, el) {
   document.getElementById('planner-' + tab).classList.add('active');
   if (el) el.classList.add('active');
   if (tab === 'attendance') {
-    loadAttendanceData().then(renderAttendance);
+    // If a settings save is pending (debounce hasn't fired yet), flush it FIRST so the
+    // reload below can't stomp the value the person just typed with stale server data.
+    flushPendingAttendanceSave().then(() => {
+      loadAttendanceData().then(renderAttendance);
+      loadPayPeriods().then(renderPayPeriods);
+    });
+  }
+}
+async function flushPendingAttendanceSave() {
+  if (_attSaveTimer) {
+    clearTimeout(_attSaveTimer);
+    _attSaveTimer = null;
+    await saveAttendanceSettings();
   }
 }
 
@@ -2579,6 +2736,160 @@ const ATT_STATUS_CLASS = {
 
 function attPrevMonth() { attDate.setMonth(attDate.getMonth() - 1); renderAttendance(); }
 function attNextMonth() { attDate.setMonth(attDate.getMonth() + 1); renderAttendance(); }
+
+// ══════════════════════════════════════════════════════════════════
+// ── PAY PERIODS — independent monthly salary/pay records ──
+// Separate from the day-by-day attendance calendar above: this lets you keep
+// e.g. "August 2026" and "September 2026" as two fully independent records
+// (Salary, Basic Salary, Present Days, Leave, Overtime, Deductions, Bonuses),
+// each saved to its own row so switching between them never mixes data up.
+// ══════════════════════════════════════════════════════════════════
+let activePayPeriodId = null;
+let _ppSaveTimer = null;
+
+async function loadPayPeriods() {
+  if (!currentUser) return;
+  try {
+    const rows = await dbLoad(TABLE_MAP.payPeriods, 'payPeriods');
+    D.payPeriods = (rows || []).map(ROW_TO_D.payPeriods);
+  } catch (err) {
+    console.error('loadPayPeriods failed:', err.message);
+  }
+}
+
+function ppNetPay(p) {
+  return (Number(p.salary)||0) - (Number(p.deductions)||0) + (Number(p.bonuses)||0) + (Number(p.overtime)||0);
+}
+function ppMoney(n) { return '₹' + (Number(n)||0).toLocaleString('en-IN'); }
+
+function renderPayPeriods() {
+  const chipRow = document.getElementById('pp-chip-row');
+  const formWrap = document.getElementById('pp-form-wrap');
+  if (!chipRow || !formWrap) return;
+  const periods = [...D.payPeriods].sort((a,b) => (b.periodStart||'').localeCompare(a.periodStart||'') || (b.created_at||'').localeCompare(a.created_at||''));
+  if (!periods.length) {
+    chipRow.innerHTML = `<div class="empty-td" style="padding:16px 4px">No pay periods yet — click "+ New Period" to add one (e.g. August 2026).</div>`;
+    formWrap.innerHTML = '';
+    activePayPeriodId = null;
+    return;
+  }
+  if (!activePayPeriodId || !periods.find(p => p.id === activePayPeriodId)) activePayPeriodId = periods[0].id;
+  chipRow.innerHTML = periods.map(p => `<button class="pp-chip ${p.id===activePayPeriodId?'active':''}" data-id="${p.id}" onclick="selectPayPeriod('${p.id}')">
+      <span class="pp-chip-label">${esc(p.label||'Untitled')}</span>
+      <span class="pp-chip-net">${ppMoney(ppNetPay(p))}</span>
+    </button>`).join('');
+  const p = periods.find(x => x.id === activePayPeriodId);
+  formWrap.innerHTML = p ? ppFormHtml(p) : '';
+}
+
+function ppFormHtml(p) {
+  return `
+    <div class="pp-net-banner">Net Pay for <b id="pp-net-label">${esc(p.label||'this period')}</b>: <span id="pp-net-amount">${ppMoney(ppNetPay(p))}</span></div>
+    <div class="fgrid">
+      <div class="ff"><label>Month</label><input type="month" id="pp-month" value="${(p.periodStart||'').slice(0,7)}" oninput="ppOnMonthChange()"></div>
+      <div class="ff s2"><label>Period Label</label><input id="pp-label" value="${esc(p.label)}" placeholder="e.g. August 2026" oninput="queuePayPeriodSave()"></div>
+      <div class="ff"><label>Salary (₹)</label><input type="number" id="pp-salary" value="${p.salary||0}" oninput="queuePayPeriodSave()"></div>
+      <div class="ff"><label>Basic Salary (₹)</label><input type="number" id="pp-basic" value="${p.basic||0}" oninput="queuePayPeriodSave()"></div>
+      <div class="ff"><label>Working Days</label><input type="number" id="pp-workingdays" value="${p.workingDays||0}" oninput="queuePayPeriodSave()"></div>
+      <div class="ff"><label>Present Days</label><input type="number" id="pp-presentdays" value="${p.presentDays||0}" oninput="queuePayPeriodSave()"></div>
+      <div class="ff"><label>Leave Days</label><input type="number" id="pp-leavedays" value="${p.leaveDays||0}" oninput="queuePayPeriodSave()"></div>
+      <div class="ff"><label>Overtime (₹)</label><input type="number" id="pp-overtime" value="${p.overtime||0}" oninput="queuePayPeriodSave()"></div>
+      <div class="ff"><label>Deductions (₹)</label><input type="number" id="pp-deductions" value="${p.deductions||0}" oninput="queuePayPeriodSave()"></div>
+      <div class="ff"><label>Bonuses (₹)</label><input type="number" id="pp-bonuses" value="${p.bonuses||0}" oninput="queuePayPeriodSave()"></div>
+      <div class="ff full"><label>Notes</label><input id="pp-notes" value="${esc(p.notes)}" placeholder="Anything else about this period..." oninput="queuePayPeriodSave()"></div>
+    </div>
+    <div class="btn-group" style="margin-top:12px">
+      <button class="btn btn-ghost btn-sm" onclick="deletePayPeriod('${p.id}')" style="color:var(--red)">🗑 Delete This Period</button>
+    </div>`;
+}
+
+function ppOnMonthChange() {
+  const monthVal = document.getElementById('pp-month').value; // YYYY-MM
+  if (monthVal) {
+    const [y,m] = monthVal.split('-');
+    const monthName = new Date(Number(y), Number(m)-1, 1).toLocaleDateString('en-US',{month:'long', year:'numeric'});
+    const labelEl = document.getElementById('pp-label');
+    // Only auto-fill the label if it's empty or was itself auto-generated, so we
+    // never clobber a label the person deliberately typed themselves.
+    if (labelEl && (!labelEl.value.trim() || labelEl.dataset.auto === '1')) {
+      labelEl.value = monthName;
+      labelEl.dataset.auto = '1';
+    }
+  }
+  queuePayPeriodSave();
+}
+
+// Mutates the in-memory record immediately (so the net-pay figure updates live)
+// and debounces the actual network save — but deliberately does NOT re-render
+// the whole form on every keystroke, since that would rebuild the inputs and
+// throw away focus/cursor position mid-typing.
+function queuePayPeriodSave() {
+  clearTimeout(_ppSaveTimer);
+  _ppSaveTimer = setTimeout(() => savePayPeriod(), 600);
+  const p = D.payPeriods.find(x => x.id === activePayPeriodId);
+  if (!p) return;
+  p.label = document.getElementById('pp-label').value;
+  const monthVal = document.getElementById('pp-month').value;
+  if (monthVal) p.periodStart = monthVal + '-01';
+  p.salary       = parseFloat(document.getElementById('pp-salary').value) || 0;
+  p.basic        = parseFloat(document.getElementById('pp-basic').value) || 0;
+  p.workingDays  = parseInt(document.getElementById('pp-workingdays').value) || 0;
+  p.presentDays  = parseInt(document.getElementById('pp-presentdays').value) || 0;
+  p.leaveDays    = parseInt(document.getElementById('pp-leavedays').value) || 0;
+  p.overtime     = parseFloat(document.getElementById('pp-overtime').value) || 0;
+  p.deductions   = parseFloat(document.getElementById('pp-deductions').value) || 0;
+  p.bonuses      = parseFloat(document.getElementById('pp-bonuses').value) || 0;
+  p.notes        = document.getElementById('pp-notes').value;
+  const net = ppNetPay(p);
+  const bannerAmt = document.getElementById('pp-net-amount'); if (bannerAmt) bannerAmt.textContent = ppMoney(net);
+  const bannerLbl = document.getElementById('pp-net-label'); if (bannerLbl) bannerLbl.textContent = p.label || 'this period';
+  const chip = document.querySelector(`.pp-chip[data-id="${p.id}"]`);
+  if (chip) {
+    const cl = chip.querySelector('.pp-chip-label'); if (cl) cl.textContent = p.label || 'Untitled';
+    const cn = chip.querySelector('.pp-chip-net'); if (cn) cn.textContent = ppMoney(net);
+  }
+}
+
+async function savePayPeriod(idOverride) {
+  const id = idOverride || activePayPeriodId;
+  const p = D.payPeriods.find(x => x.id === id); if (!p) return;
+  const dbUpdates = D_TO_ROW.payPeriods(p);
+  await updateItemMapped('payPeriods', id, {}, dbUpdates, null);
+}
+
+async function newPayPeriod() {
+  const now = new Date();
+  const monthStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const label = now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const localObj = {
+    id:'', label, periodStart: monthStr+'-01', periodEnd:'',
+    salary:0, basic:0, workingDays:0, presentDays:0, leaveDays:0,
+    overtime:0, deductions:0, bonuses:0, notes:'',
+    created_at:new Date().toISOString(), updated_at:new Date().toISOString()
+  };
+  await addItem('payPeriods', localObj, null);
+  activePayPeriodId = localObj.id;
+  renderPayPeriods();
+  toast('✦ New pay period created');
+}
+
+async function selectPayPeriod(id) {
+  if (id === activePayPeriodId) return;
+  const prevId = activePayPeriodId;
+  if (_ppSaveTimer) { clearTimeout(_ppSaveTimer); _ppSaveTimer = null; await savePayPeriod(prevId); }
+  activePayPeriodId = id;
+  renderPayPeriods();
+}
+
+async function deletePayPeriod(id) {
+  if (!confirm('Delete this pay period? This only removes this one period — every other period stays exactly as it is. This cannot be undone.')) return;
+  clearTimeout(_ppSaveTimer); _ppSaveTimer = null;
+  await delItem('payPeriods', id, null);
+  if (activePayPeriodId === id) activePayPeriodId = null;
+  renderPayPeriods();
+  toast('🗑 Pay period deleted');
+}
+
 
 // Load this user's attendance logs + settings for the active company from Supabase
 async function loadAttendanceData() {
@@ -2648,7 +2959,7 @@ function queueAttendanceSettingsSave() {
 }
 
 async function saveAttendanceSettings() {
-  if (!currentUser) return;
+  if (!currentUser) { toast('⚠️ Not signed in — settings not saved', 'error'); return; }
   try {
     const payload = {
       user_id: currentUser.id,
@@ -2672,6 +2983,7 @@ async function saveAttendanceSettings() {
   } catch (err) {
     console.error('✗ saveAttendanceSettings failed:', err.message);
     setSyncStatus('error', '⚠ Sync failed');
+    toast('⚠️ Attendance settings failed to save — check your connection', 'error');
   }
 }
 
@@ -3167,7 +3479,7 @@ async function migrateLocalData() {
 const NAV_GROUP = {
   quicklog:'workspace', planner:'workspace',
   tasks:'workspace', meetings:'workspace',
-  achievements:'career',
+  achievements:'career', documentation:'career',
   vault:'knowledge',
   reports:'utilities', goals:'utilities', mood:'utilities',
   companies:'utilities', stickies:'utilities'
@@ -3189,7 +3501,7 @@ function nav(id) {
     mood:'Mood Tracker', profile:'My Profile',
     tasks:'Task Manager', meetings:'Meeting Notes',
     companies:'Company Manager', stickies:'Sticky Notes',
-    vault:'Knowledge Vault'
+    vault:'Knowledge Vault', documentation:'Documentation'
   };
   document.getElementById('page-title').textContent = titles[id] || id;
   document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
@@ -3309,8 +3621,10 @@ async function saveDaily() {
     status:document.getElementById('dl-status').value,
     impact:document.getElementById('dl-impact').value,
     problem:document.getElementById('dl-problem').value,
+    solution:document.getElementById('dl-solution').value,
     tech:document.getElementById('dl-tech').value,
     support:document.getElementById('dl-support').value,
+    learning:document.getElementById('dl-learning').value,
     self:document.getElementById('dl-self').value,
     richNotes:document.getElementById('dl-rich').innerHTML
   };
@@ -3320,8 +3634,8 @@ async function saveDaily() {
       date:r.date, task:r.task, project:r.project, client:r.client,
       hours:r.hours ? Number(r.hours) : null,
       category:r.cat, priority:r.prio, status:r.status, impact:r.impact,
-      problem_solved:r.problem, technologies:r.tech, technical_support:r.support,
-      self_remarks:r.self, rich_notes:r.richNotes||''
+      problem_solved:r.problem, solution:r.solution, technologies:r.tech, technical_support:r.support,
+      learning:r.learning, self_remarks:r.self, rich_notes:r.richNotes||''
     };
     await updateItemMapped('daily', dailyEditingId, r, dbUpdates, renderDaily);
     toast('✓ Journal entry updated');
@@ -3344,8 +3658,10 @@ function openDailyEditor(id) {
   document.getElementById('dl-status').value = r.status||'Completed';
   document.getElementById('dl-impact').value = r.impact||'';
   document.getElementById('dl-problem').value = r.problem||'';
+  document.getElementById('dl-solution').value = r.solution||'';
   document.getElementById('dl-tech').value = r.tech||'';
   document.getElementById('dl-support').value = r.support||'No';
+  document.getElementById('dl-learning').value = r.learning||'';
   document.getElementById('dl-self').value = r.self||'';
   const rich = document.getElementById('dl-rich'); if (rich) { rich.innerHTML = r.richNotes||''; rtUpdateStats(rich) }
   document.getElementById('dl-submit-btn').textContent = '💾 Update Entry';
@@ -3362,7 +3678,7 @@ function cancelDailyEdit() {
   document.getElementById('dl-edit-banner').style.display = 'none';
 }
 function clearDaily() {
-  ['dl-task','dl-project','dl-client','dl-hours','dl-impact','dl-problem','dl-tech','dl-self']
+  ['dl-task','dl-project','dl-client','dl-hours','dl-impact','dl-problem','dl-solution','dl-tech','dl-learning','dl-self']
     .forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
   const rich = document.getElementById('dl-rich'); if (rich) rich.innerHTML = '';
 }
@@ -5170,6 +5486,102 @@ function exportPDF(){
   toast('✦ Full PDF exported');
 }
 
+// ══════════════════════════════════════════════════════════════════
+// ── DEDICATED WORKLOG PDF (polished, per-entry, proper pagination) ──
+// ══════════════════════════════════════════════════════════════════
+function exportWorklogPDF() {
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const PW=210, PH=297, ML=18, MR=18, CW=PW-ML-MR;
+  const VIO=[147,51,234], INK=[30,27,46], GRAY=[100,116,139], LGRAY=[226,232,240], PANEL=[250,247,255], WHITE=[255,255,255];
+  const pf = D.profile || {};
+  const dateStr = new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+
+  const fromVal = document.getElementById('wl-from')?.value || '';
+  const toVal   = document.getElementById('wl-to')?.value || '';
+  let entries = [...D.daily].sort((a,b) => (a.date||'').localeCompare(b.date||''));
+  if (fromVal) entries = entries.filter(e => (e.date||'') >= fromVal);
+  if (toVal)   entries = entries.filter(e => (e.date||'') <= toVal);
+
+  if (!entries.length) { toast('⚠️ No Work Journal entries in that range', 'error'); return; }
+
+  let pageNum = 0;
+  function drawChrome() {
+    doc.setFillColor(...WHITE); doc.rect(0,0,PW,PH,'F');
+    doc.setFillColor(...VIO); doc.rect(0,0,PW,2.5,'F');
+    doc.setDrawColor(...LGRAY); doc.setLineWidth(0.2); doc.line(ML,PH-12,PW-MR,PH-12);
+    doc.setFontSize(7); doc.setTextColor(...GRAY); doc.setFont('helvetica','normal');
+    doc.text('Worklog — Confidential', ML, PH-7);
+    doc.text(`Page ${pageNum}  ·  ${dateStr}`, PW-MR, PH-7, {align:'right'});
+  }
+  function newPage() { if (pageNum > 0) doc.addPage(); pageNum++; drawChrome(); }
+  function ensureSpace(y, needed) { if (y + needed > PH - 16) { newPage(); return 16 } return y; }
+
+  // Header
+  newPage();
+  let y = 20;
+  doc.setFontSize(22); doc.setTextColor(...INK); doc.setFont('helvetica','bold'); doc.text('Worklog', ML, y);
+  y += 8;
+  doc.setFontSize(10); doc.setTextColor(...VIO); doc.setFont('helvetica','normal');
+  doc.text(`${pf.name || '[Employee Name]'}${pf.role ? ' · '+pf.role : ''}${pf.company ? ' · '+pf.company : ''}`, ML, y);
+  y += 6;
+  doc.setFontSize(8.5); doc.setTextColor(...GRAY);
+  const rangeLabel = (fromVal || toVal) ? `${fromVal||'…'} to ${toVal||'…'}` : 'All entries';
+  doc.text(`Period: ${rangeLabel}   ·   ${entries.length} entr${entries.length===1?'y':'ies'}   ·   Generated ${dateStr}`, ML, y);
+  y += 10;
+  doc.setDrawColor(...LGRAY); doc.setLineWidth(0.3); doc.line(ML, y, PW-MR, y);
+  y += 10;
+
+  // Renders one labeled field, wrapping and flowing across page breaks automatically
+  // — this is what guarantees long worklog text never overlaps or gets clipped.
+  function drawField(label, value, yStart) {
+    let yy = yStart;
+    if (!value) return yy;
+    yy = ensureSpace(yy, 12);
+    doc.setFontSize(8); doc.setTextColor(...VIO); doc.setFont('helvetica','bold');
+    doc.text(label.toUpperCase(), ML, yy);
+    yy += 5;
+    doc.setFontSize(9.5); doc.setTextColor(...INK); doc.setFont('helvetica','normal');
+    const lines = doc.splitTextToSize(String(value), CW - 4);
+    for (const line of lines) {
+      yy = ensureSpace(yy, 6);
+      doc.text(line, ML, yy);
+      yy += 5;
+    }
+    return yy + 3;
+  }
+
+  entries.forEach((e, idx) => {
+    y = ensureSpace(y, 22);
+    doc.setFillColor(...PANEL); doc.roundedRect(ML, y, CW, 14, 2, 2, 'F');
+    doc.setFillColor(...VIO); doc.roundedRect(ML, y, 3, 14, 1, 1, 'F');
+    doc.setFontSize(11); doc.setTextColor(...INK); doc.setFont('helvetica','bold');
+    doc.text(e.date || '—', ML+8, y+6);
+    doc.setFontSize(8.5); doc.setTextColor(...GRAY); doc.setFont('helvetica','normal');
+    doc.text(`${e.project || e.cat || 'General'}${e.hours ? '  ·  ' + e.hours + 'h' : ''}`, ML+8, y+11);
+    y += 20;
+
+    y = drawField('Work Done', e.task, y);
+    y = drawField('Project / Work Area', e.project || e.cat, y);
+    y = drawField('Technical Details', e.tech, y);
+    y = drawField('Problems / Issues', e.problem, y);
+    y = drawField('Solution / Action Taken', e.solution, y);
+    y = drawField('Learning', e.learning, y);
+    y = drawField('Impact / Outcome', e.impact, y);
+    y = drawField('Additional Notes', e.self, y);
+    if (e.hours) y = drawField('Work Hours', e.hours + ' hours', y);
+
+    if (idx < entries.length - 1) {
+      y = ensureSpace(y, 10);
+      doc.setDrawColor(...LGRAY); doc.setLineWidth(0.2); doc.line(ML, y, PW-MR, y);
+      y += 8;
+    }
+  });
+
+  doc.save(`Worklog_${today()}.pdf`);
+  toast('📋 Worklog PDF downloaded');
+}
+
 
 // ══════════════════════════════════════════════════════════════════
 // ── SECTION 16: RENDER ALL ──
@@ -5178,8 +5590,8 @@ function exportPDF(){
 function renderAll() {
   renderDashboardWidgets();
   renderDaily(); renderAchievements(); renderEvidence();
-  renderStar(); renderMood(); renderGoals(); renderPlan(); renderVault();
-  renderDashboard(); updateScore(); updateAll(); updateSidebarProfile();
+  renderStar(); renderMood(); renderGoals(); renderPlan(); renderVault(); renderPayPeriods();
+  renderDashboard(); updateScore(); updateAll(); updateSidebarProfile(); renderDocumentation();
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -5197,6 +5609,7 @@ async function boot() {
   rtMount('mt-rich-host', 'mt-rich', 'Key points discussed...');
   rtMount('ac-rich-host', 'ac-rich', 'Full story, context, quotes from feedback...');
   rtMount('kv-rich-host', 'kv-rich', 'Write your note...', { compact:false, noFoot:true, onInput: kvOnRichInput });
+  buildDocumentationSections();
   document.getElementById('page-sub').textContent =
     new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   initAttendanceInputs();
