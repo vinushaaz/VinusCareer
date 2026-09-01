@@ -923,6 +923,27 @@ tr:hover td{background:#8b5cf608}
 .pp-net-banner{background:linear-gradient(135deg,var(--violet-xl),#f3e8ff);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .pp-net-banner b{color:var(--text)}
 .pp-net-banner span{margin-left:auto;font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:800;color:var(--violet-l)}
+.pp-net-banner>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pp-status-pill{margin-left:0!important;font-family:'Inter',sans-serif!important;font-size:10px!important;font-weight:700!important;padding:2px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px}
+.pp-status-draft{background:var(--amber-dim);color:var(--amber)}
+.pp-status-final{background:var(--green-dim);color:var(--green)}
+.pp-chip-status{margin-left:0!important;font-family:'Inter',sans-serif!important;font-size:9px!important;font-weight:700!important;padding:1px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px;width:fit-content}
+.pp-calc-summary{background:var(--s2);border-radius:12px;padding:10px 16px;margin-top:10px}
+.pp-calc-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:11.5px;color:var(--text2);border-bottom:1px solid var(--border)}
+.pp-calc-row:last-child{border-bottom:none}
+.pp-calc-row b{color:var(--text);font-weight:700}
+.pp-calc-row.pp-calc-total{padding-top:9px}
+.pp-calc-row.pp-calc-total b{color:var(--violet-l);font-size:14px;font-family:'Bricolage Grotesque',sans-serif}
+.calc-modal-inner{padding:18px 20px}
+.calc-step{font-size:11px;font-weight:700;color:var(--violet-l);text-transform:uppercase;letter-spacing:.4px;margin:16px 0 6px}
+.calc-step:first-child{margin-top:0}
+.calc-row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:6px 0;border-bottom:1px solid var(--border)}
+.calc-row-label{font-size:12px;font-weight:600;color:var(--text)}
+.calc-row-formula{grid-column:1;font-size:10.5px;color:var(--text4)}
+.calc-row-amt{grid-column:2;grid-row:1 / span 2;align-self:center;font-weight:700;font-size:13px;color:var(--text2);white-space:nowrap}
+.calc-row-final{background:var(--violet-xl);border-radius:10px;padding:12px;margin-top:6px;border-bottom:none}
+.calc-row-final .calc-row-label{font-size:13px;font-weight:800;color:var(--violet-l)}
+.calc-row-final .calc-row-amt{font-size:18px;color:var(--violet-l);font-family:'Bricolage Grotesque',sans-serif}
 
 /* Right-click context menu (desktop) */
 .att-context-menu{
@@ -1662,17 +1683,17 @@ tr:hover td{background:#8b5cf608}
         <button class="btn btn-violet btn-sm" onclick="newPayPeriod()">+ New Period</button>
       </div>
       <div class="card-body">
-        <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Keep independent records per month — e.g. August 2026 and September 2026 each with their own Salary, Present Days, Leave, Overtime, Deductions and Bonuses. Switching periods never overwrites another period's data.</p>
+        <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Each period is <b>calculated automatically from real attendance data</b> + your Payroll Settings — Present/Absent/Leave/Overtime are read live from the calendar above, not typed in. Finalize a period to freeze it permanently; finalized months are never recalculated or overwritten, even if attendance changes later.</p>
         <div class="pp-chip-row" id="pp-chip-row"></div>
         <div id="pp-form-wrap"></div>
       </div>
     </div>
 
     <div class="card mb16">
-      <div class="card-hd"><div class="card-title">⚙️ Settings</div></div>
+      <div class="card-hd"><div class="card-title">⚙️ Attendance Settings</div></div>
       <div class="card-body">
         <div class="fgrid">
-          <div class="ff"><label>Monthly Salary (₹)</label><input type="number" id="att-salary" value="20000"></div>
+          <div class="ff"><label>Monthly Salary / Basic (₹)</label><input type="number" id="att-salary" value="20000"></div>
           <div class="ff"><label>Working Days / Month</label><input type="number" id="att-workdays" value="27"></div>
           <div class="ff"><label>Paid Leaves / Month</label><input type="number" id="att-paidleaves" value="1" min="0" max="30"></div>
           <div class="ff"><label>Shift Start</label><input type="time" id="att-shiftstart" value="09:00"></div>
@@ -1684,6 +1705,57 @@ tr:hover td{background:#8b5cf608}
         <div style="font-size:10.5px;color:var(--text4);margin-top:8px">Saved per company — switch companies and each keeps its own settings.</div>
       </div>
     </div>
+
+    <div class="card mb16">
+      <div class="card-hd">
+        <div class="card-title">🧮 Payroll &amp; Statutory Settings</div>
+        <span style="font-size:10.5px;color:var(--text4)">Drives the real calculation engine below</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Salary Structure (% of Basic)</div>
+        <div class="fgrid mb12">
+          <div class="ff"><label>HRA %</label><input type="number" id="pc-hra-pct" value="0" min="0" max="100" step="0.5"></div>
+          <div class="ff"><label>Special Allowance %</label><input type="number" id="pc-allow-pct" value="0" min="0" max="100" step="0.5"></div>
+          <div class="ff"><label>Default Monthly Bonus (₹)</label><input type="number" id="pc-bonus-default" value="0" min="0"></div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">Provident Fund (PF)</div>
+        <div class="fgrid mb12">
+          <div class="ff"><label>PF Enabled</label><select id="pc-pf-enabled"><option value="0">No</option><option value="1">Yes</option></select></div>
+          <div class="ff"><label>Employee PF %</label><input type="number" id="pc-pf-emp-pct" value="12" min="0" max="100" step="0.1"></div>
+          <div class="ff"><label>Employer PF %</label><input type="number" id="pc-pf-empr-pct" value="12" min="0" max="100" step="0.1"></div>
+          <div class="ff"><label>PF Wage Ceiling (₹)</label><input type="number" id="pc-pf-ceiling" value="15000" min="0"></div>
+          <div class="ff"><label>EPS %</label><input type="number" id="pc-eps-pct" value="8.33" min="0" max="100" step="0.01"></div>
+          <div class="ff"><label>EDLI %</label><input type="number" id="pc-edli-pct" value="0.5" min="0" max="100" step="0.01"></div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">ESI</div>
+        <div class="fgrid mb12">
+          <div class="ff"><label>ESI Enabled</label><select id="pc-esi-enabled"><option value="0">No</option><option value="1">Yes</option></select></div>
+          <div class="ff"><label>Employee ESI %</label><input type="number" id="pc-esi-emp-pct" value="0.75" min="0" max="100" step="0.01"></div>
+          <div class="ff"><label>Employer ESI %</label><input type="number" id="pc-esi-empr-pct" value="3.25" min="0" max="100" step="0.01"></div>
+          <div class="ff"><label>ESI Wage Ceiling (₹)</label><input type="number" id="pc-esi-ceiling" value="21000" min="0"></div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">Taxes &amp; Other Deductions</div>
+        <div class="fgrid">
+          <div class="ff"><label>Professional Tax (₹/month)</label><input type="number" id="pc-prof-tax" value="0" min="0"></div>
+          <div class="ff"><label>TDS (₹/month)</label><input type="number" id="pc-tds" value="0" min="0"></div>
+        </div>
+        <div style="font-size:10.5px;color:var(--text4);margin-top:10px">These settings feed <b>calculatePayroll()</b> directly. Changing any value here recalculates the current (non-finalized) pay period automatically.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VIEW CALCULATION MODAL — full payroll waterfall breakdown ═══ -->
+<div id="calc-modal-overlay" class="jv-overlay att-bottom-sheet" onclick="if(event.target===this) closeCalcModal()">
+  <div class="jv-modal att-modal" style="max-width:520px">
+    <div class="jv-modal-hd">
+      <div class="jv-modal-title">🧮 Payroll Calculation</div>
+      <button class="jv-modal-close" onclick="closeCalcModal()">✕</button>
+    </div>
+    <div id="calc-modal-body" style="max-height:70vh;overflow-y:auto"></div>
   </div>
 </div>
 
@@ -2158,7 +2230,17 @@ const ROW_TO_D = {
   meetings:     r => ({ id:r.id, date:r.date||'', attendees:r.attendees||'', agenda:r.agenda||'', discussion:r.discussion||'', action:r.action_items||'', followup:r.follow_up_date||'', status:r.status||'Open', created_at:r.created_at }),
   stickies:     r => ({ id:r.id, text:r.text||'', color:r.color||'lavender', pinned:!!r.pinned, archived:!!r.archived, x:r.pos_x??40, y:r.pos_y??40, w:r.w??200, h:r.h??170, created_at:r.created_at }),
   vault:        r => ({ id:r.id, section:r.section||'tech', title:r.title||'Untitled', folder:r.folder||'', category:r.category||'', tags:r.tags||'', language:r.language||'', content:r.content||'', favorite:!!r.favorite, pinned:!!r.pinned, archived:!!r.archived, created_at:r.created_at, updated_at:r.updated_at||r.created_at }),
-  payPeriods:   r => ({ id:r.id, label:r.label||'Untitled Period', periodStart:r.period_start||'', periodEnd:r.period_end||'', salary:r.salary||0, basic:r.basic_salary||0, workingDays:r.working_days||0, presentDays:r.present_days||0, leaveDays:r.leave_days||0, overtime:r.overtime||0, deductions:r.deductions||0, bonuses:r.bonuses||0, notes:r.notes||'', created_at:r.created_at, updated_at:r.updated_at||r.created_at }),
+  payPeriods:   r => ({
+    id:r.id, label:r.label||'Untitled Period', periodStart:r.period_start||'', periodEnd:r.period_end||'',
+    // legacy manual-entry columns kept only as a fallback for rows saved before the calc engine existed
+    salary:r.salary||0, basic:r.basic_salary||0, workingDays:r.working_days||0, presentDays:r.present_days||0, leaveDays:r.leave_days||0, overtime:r.overtime||0, deductions:r.deductions||0, bonuses:r.bonuses||0,
+    status: r.status || 'draft',
+    bonus: r.bonus_override != null ? r.bonus_override : (r.payroll_snapshot ? r.payroll_snapshot.bonus : null),
+    loan: r.loan_amount || 0,
+    otherDeductions: r.other_deductions_amount || 0,
+    snapshot: r.payroll_snapshot || null,
+    notes:r.notes||'', created_at:r.created_at, updated_at:r.updated_at||r.created_at
+  }),
 };
 
 // Map: local D object → Supabase insert payload
@@ -2174,7 +2256,25 @@ const D_TO_ROW = {
   meetings:     r => ({ date:r.date||null, attendees:r.attendees, agenda:r.agenda, discussion:r.discussion, action_items:r.action, follow_up_date:r.followup||null, status:r.status }),
   stickies:     r => ({ text:r.text, color:r.color, pinned:r.pinned, archived:r.archived, pos_x:r.x, pos_y:r.y, w:r.w, h:r.h }),
   vault:        r => ({ section:r.section, title:r.title, folder:r.folder, category:r.category, tags:r.tags, language:r.language, content:r.content, favorite:!!r.favorite, pinned:!!r.pinned, archived:!!r.archived, updated_at:r.updated_at||new Date().toISOString() }),
-  payPeriods:   r => ({ label:r.label, period_start:r.periodStart||null, period_end:r.periodEnd||null, salary:r.salary||0, basic_salary:r.basic||0, working_days:r.workingDays||0, present_days:r.presentDays||0, leave_days:r.leaveDays||0, overtime:r.overtime||0, deductions:r.deductions||0, bonuses:r.bonuses||0, notes:r.notes||'', updated_at:new Date().toISOString() }),
+  payPeriods:   r => ({
+    label:r.label, period_start:r.periodStart||null, period_end:r.periodEnd||null,
+    // derived legacy columns, kept in sync so old dashboards/exports built on them still work
+    salary: r.snapshot ? r.snapshot.basic : (r.salary||0),
+    basic_salary: r.snapshot ? r.snapshot.proratedBasic : (r.basic||0),
+    working_days: r.snapshot ? r.snapshot.workingDays : (r.workingDays||0),
+    present_days: r.snapshot ? r.snapshot.presentDays : (r.presentDays||0),
+    leave_days: r.snapshot ? (r.snapshot.paidLeaveDays + r.snapshot.absentDays) : (r.leaveDays||0),
+    overtime: r.snapshot ? r.snapshot.otAmount : (r.overtime||0),
+    deductions: r.snapshot ? r.snapshot.totalDeductions : (r.deductions||0),
+    bonuses: r.snapshot ? r.snapshot.bonus : (r.bonuses||0),
+    notes:r.notes||'', updated_at:new Date().toISOString(),
+    // real calculation engine fields
+    status: r.status || 'draft',
+    bonus_override: r.bonus,
+    loan_amount: r.loan||0,
+    other_deductions_amount: r.otherDeductions||0,
+    payroll_snapshot: r.snapshot || null
+  }),
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -2722,7 +2822,14 @@ async function flushPendingAttendanceSave() {
 // ── ATTENDANCE STATE ──
 let attDate     = new Date();           // month currently displayed
 let attLogs     = {};                   // { 'YYYY-MM-DD': { status:'present'|'absent'|'half'|'holiday'|'paid', login:'HH:MM'|null, logout:'HH:MM'|null } }
-let attSettings = { salary: 20000, workdays: 27, paidLeaves: 1, hoursPerDay: 8, shiftStart: '09:00', shiftEnd: '18:00', graceMinutes: 15, otMultiplier: 1.5 };
+let attSettings = {
+  salary: 20000, workdays: 27, paidLeaves: 1, hoursPerDay: 8, shiftStart: '09:00', shiftEnd: '18:00', graceMinutes: 15, otMultiplier: 1.5,
+  // ── Payroll & statutory configuration (drives calculatePayroll() — nothing below is hardcoded business logic) ──
+  hraPct: 0, allowancePct: 0, bonusDefault: 0,
+  pfEnabled: false, pfEmployeePct: 12, pfEmployerPct: 12, pfWageCeiling: 15000, epsPct: 8.33, edliPct: 0.5,
+  esiEnabled: false, esiEmployeePct: 0.75, esiEmployerPct: 3.25, esiWageCeiling: 21000,
+  profTax: 0, tds: 0
+};
 let _attSaveTimer = null;
 
 const ATT_STATUS_COLORS = {
@@ -2737,12 +2844,166 @@ const ATT_STATUS_CLASS = {
 function attPrevMonth() { attDate.setMonth(attDate.getMonth() - 1); renderAttendance(); }
 function attNextMonth() { attDate.setMonth(attDate.getMonth() + 1); renderAttendance(); }
 
+// ══════════════════════════════════════════════════════════════════════════
+// ── REAL PAYROLL CALCULATION ENGINE ──
+// Every function below is a pure calculation over real attendance data
+// (attLogs) and configurable settings (attSettings) — nothing here is a
+// hardcoded or fake/demo number. calculatePayroll() is the orchestrator that
+// every pay period calls to (re)compute itself.
+//
+// ONE-TIME SUPABASE MIGRATION (run once in the SQL editor — the app degrades
+// gracefully and keeps working without it, but calculated payroll and the
+// Draft/Finalized lock won't persist across reloads until you run this):
+//
+//   alter table attendance_settings add column if not exists payroll_config jsonb;
+//   alter table pay_periods         add column if not exists status text default 'draft';
+//   alter table pay_periods         add column if not exists payroll_snapshot jsonb;
+//   alter table pay_periods         add column if not exists bonus_override numeric;
+//   alter table pay_periods         add column if not exists loan_amount numeric default 0;
+//   alter table pay_periods         add column if not exists other_deductions_amount numeric default 0;
+// ══════════════════════════════════════════════════════════════════════════
+
+// Real attendance summary for a given calendar month, read straight from attLogs.
+function calculateAttendance(year, month) {
+  const prefix = monthPrefix(year, month);
+  const entries = Object.entries(attLogs).filter(([d]) => d.startsWith(prefix));
+  const c = { present:0, absent:0, half:0, holiday:0, paid:0 };
+  entries.forEach(([, e]) => { if (c[e.status] !== undefined) c[e.status]++; });
+  const timed = entries.filter(([d,e]) => e.login && e.logout);
+  let otMinutes = 0, lateCount = 0;
+  const shiftMins = timeToMinutes(attSettings.shiftStart) ?? 540;
+  const grace = attSettings.graceMinutes ?? 15;
+  timed.forEach(([d]) => { const p = calcDayPay(d); if (p) otMinutes += p.otMins; });
+  timed.forEach(([,e]) => { if (timeToMinutes(e.login) > shiftMins + grace) lateCount++; });
+  return {
+    year, month, presentDays: c.present, absentDays: c.absent, halfDays: c.half,
+    holidayDays: c.holiday, paidLeaveDays: c.paid, otMinutes, lateCount,
+    markedDays: c.present + c.absent + c.half + c.holiday + c.paid
+  };
+}
+
+// Days that actually earn pay this period, straight from the real attendance marks above.
+function calculatePayableDays(att) {
+  return att.presentDays + att.halfDays * 0.5 + att.paidLeaveDays + att.holidayDays;
+}
+
+// Prorate a monthly amount by how much of the configured working days were actually payable.
+function calculateSalaryProration(monthlyAmount, workingDays, payableDays) {
+  const ratio = workingDays > 0 ? Math.min(1, payableDays / workingDays) : 0;
+  return { ratio, dailyRate: workingDays > 0 ? monthlyAmount / workingDays : 0, prorated: monthlyAmount * ratio };
+}
+
+// Real overtime for the month, summed from actual login/logout minutes via calcDayPay().
+function calculateOvertime(year, month) {
+  const prefix = monthPrefix(year, month);
+  let otMinutes = 0, otAmount = 0;
+  Object.entries(attLogs).forEach(([d, e]) => {
+    if (!d.startsWith(prefix) || !e.login || !e.logout) return;
+    const p = calcDayPay(d);
+    if (p) { otMinutes += p.otMins; otAmount += p.otPay; }
+  });
+  return { otMinutes, otHours: otMinutes / 60, otAmount };
+}
+
+function calculatePF(pfWage, settings) {
+  if (!settings.pfEnabled) return { pfWage: 0, employeePF: 0, employerPF: 0, eps: 0, edli: 0 };
+  const wage = Math.min(pfWage, settings.pfWageCeiling || pfWage);
+  return {
+    pfWage: wage,
+    employeePF: round2(wage * (settings.pfEmployeePct || 0) / 100),
+    employerPF: round2(wage * (settings.pfEmployerPct || 0) / 100),
+    eps: round2(wage * (settings.epsPct || 0) / 100),
+    edli: round2(wage * (settings.edliPct || 0) / 100)
+  };
+}
+
+function calculateESI(grossWage, settings) {
+  const eligible = !!settings.esiEnabled && grossWage > 0 && grossWage <= (settings.esiWageCeiling || Infinity);
+  return {
+    eligible,
+    employeeESI: eligible ? round2(grossWage * (settings.esiEmployeePct || 0) / 100) : 0,
+    employerESI: eligible ? round2(grossWage * (settings.esiEmployerPct || 0) / 100) : 0
+  };
+}
+
+function calculateGrossSalary(components) {
+  return round2(components.proratedBasic + components.proratedHRA + components.proratedAllowance + components.otAmount + components.bonus);
+}
+
+function calculateDeductions(d) {
+  const total = round2((d.employeePF||0) + (d.employeeESI||0) + (d.profTax||0) + (d.tds||0) + (d.loan||0) + (d.otherDeductions||0));
+  return { ...d, total };
+}
+
+function calculateNetSalary(grossSalary, totalDeductions) {
+  return round2(grossSalary - totalDeductions);
+}
+
+function round2(n) { return Math.round((Number(n)||0) * 100) / 100; }
+
+// ── THE ORCHESTRATOR — everything a pay period needs, computed fresh every time ──
+// `overrides` lets a period supply its own bonus/loan/otherDeductions (defaults come from settings).
+function calculatePayroll(year, month, overrides = {}) {
+  const settings = attSettings;
+  const att = calculateAttendance(year, month);
+  const payableDays = calculatePayableDays(att);
+  const workingDays = settings.workdays || 0;
+
+  const basicProration   = calculateSalaryProration(settings.salary || 0, workingDays, payableDays);
+  const hraFull          = (settings.salary || 0) * (settings.hraPct || 0) / 100;
+  const allowanceFull     = (settings.salary || 0) * (settings.allowancePct || 0) / 100;
+  const hraProration      = calculateSalaryProration(hraFull, workingDays, payableDays);
+  const allowanceProration= calculateSalaryProration(allowanceFull, workingDays, payableDays);
+
+  const ot = calculateOvertime(year, month);
+  const bonus = overrides.bonus != null ? Number(overrides.bonus) || 0 : (settings.bonusDefault || 0);
+
+  const proratedBasic = round2(basicProration.prorated);
+  const proratedHRA = round2(hraProration.prorated);
+  const proratedAllowance = round2(allowanceProration.prorated);
+  const otAmount = round2(ot.otAmount);
+  const lossOfPay = round2((settings.salary + hraFull + allowanceFull) - (proratedBasic + proratedHRA + proratedAllowance));
+
+  const grossSalary = calculateGrossSalary({ proratedBasic, proratedHRA, proratedAllowance, otAmount, bonus });
+
+  const pf = calculatePF(proratedBasic, settings);
+  const esi = calculateESI(grossSalary, settings);
+  const profTax = grossSalary > 0 ? (settings.profTax || 0) : 0;
+  const tds = settings.tds || 0;
+  const loan = overrides.loan != null ? Number(overrides.loan) || 0 : 0;
+  const otherDeductions = overrides.otherDeductions != null ? Number(overrides.otherDeductions) || 0 : 0;
+
+  const deductions = calculateDeductions({
+    employeePF: pf.employeePF, employeeESI: esi.employeeESI, profTax, tds, loan, otherDeductions
+  });
+  const netSalary = calculateNetSalary(grossSalary, deductions.total);
+
+  return {
+    year, month, workingDays,
+    presentDays: att.presentDays, absentDays: att.absentDays, halfDays: att.halfDays,
+    paidLeaveDays: att.paidLeaveDays, holidayDays: att.holidayDays, lateCount: att.lateCount,
+    payableDays, ratio: basicProration.ratio, dailyRate: round2(basicProration.dailyRate),
+    basic: settings.salary || 0, hra: hraFull, allowance: allowanceFull,
+    proratedBasic, proratedHRA, proratedAllowance, lossOfPay,
+    otMinutes: ot.otMinutes, otHours: round2(ot.otHours), otAmount,
+    bonus: round2(bonus),
+    grossSalary,
+    pfEnabled: !!settings.pfEnabled, pfWage: pf.pfWage, employeePF: pf.employeePF, employerPF: pf.employerPF, eps: pf.eps, edli: pf.edli,
+    esiEnabled: !!settings.esiEnabled, esiEligible: esi.eligible, employeeESI: esi.employeeESI, employerESI: esi.employerESI,
+    profTax, tds, loan, otherDeductions,
+    totalDeductions: deductions.total,
+    netSalary,
+    calculatedAt: new Date().toISOString()
+  };
+}
+
 // ══════════════════════════════════════════════════════════════════
-// ── PAY PERIODS — independent monthly salary/pay records ──
-// Separate from the day-by-day attendance calendar above: this lets you keep
-// e.g. "August 2026" and "September 2026" as two fully independent records
-// (Salary, Basic Salary, Present Days, Leave, Overtime, Deductions, Bonuses),
-// each saved to its own row so switching between them never mixes data up.
+// ── PAY PERIODS — independent monthly payroll records ──
+// Each period is calculated automatically from real attendance data + Payroll
+// Settings via calculatePayroll() above. A period is either:
+//   'draft'     — recalculates live every time attendance/settings change
+//   'finalized' — frozen forever; its snapshot is never recalculated or
+//                 overwritten, even if attendance for that month changes later
 // ══════════════════════════════════════════════════════════════════
 let activePayPeriodId = null;
 let _ppSaveTimer = null;
@@ -2752,15 +3013,34 @@ async function loadPayPeriods() {
   try {
     const rows = await dbLoad(TABLE_MAP.payPeriods, 'payPeriods');
     D.payPeriods = (rows || []).map(ROW_TO_D.payPeriods);
+    // Any draft period gets its live snapshot recomputed the moment data loads —
+    // finalized periods are left completely untouched.
+    D.payPeriods.forEach(p => { if (p.status !== 'finalized') p.snapshot = computeSnapshotForPeriod(p); });
   } catch (err) {
     console.error('loadPayPeriods failed:', err.message);
   }
 }
 
+// Runs calculatePayroll() for whatever month a period covers, using that period's
+// own bonus/loan/otherDeductions overrides.
+function computeSnapshotForPeriod(p) {
+  if (!p.periodStart) return null;
+  const [y, m] = p.periodStart.split('-').map(Number);
+  if (!y || !m) return null;
+  return calculatePayroll(y, m - 1, { bonus: p.bonus, loan: p.loan, otherDeductions: p.otherDeductions });
+}
+
 function ppNetPay(p) {
+  if (p.snapshot) return p.snapshot.netSalary;
+  // Legacy fallback for periods saved before the calculation engine existed
   return (Number(p.salary)||0) - (Number(p.deductions)||0) + (Number(p.bonuses)||0) + (Number(p.overtime)||0);
 }
-function ppMoney(n) { return '₹' + (Number(n)||0).toLocaleString('en-IN'); }
+function ppMoney(n) { const v = Number(n)||0; return (v<0?'-₹':'₹') + Math.abs(v).toLocaleString('en-IN', {maximumFractionDigits:2}); }
+
+const PP_STATUS_META = {
+  draft:     { label:'Draft',     cls:'pp-status-draft' },
+  finalized: { label:'Finalized', cls:'pp-status-final' }
+};
 
 function renderPayPeriods() {
   const chipRow = document.getElementById('pp-chip-row');
@@ -2768,14 +3048,16 @@ function renderPayPeriods() {
   if (!chipRow || !formWrap) return;
   const periods = [...D.payPeriods].sort((a,b) => (b.periodStart||'').localeCompare(a.periodStart||'') || (b.created_at||'').localeCompare(a.created_at||''));
   if (!periods.length) {
-    chipRow.innerHTML = `<div class="empty-td" style="padding:16px 4px">No pay periods yet — click "+ New Period" to add one (e.g. August 2026).</div>`;
+    chipRow.innerHTML = `<div class="empty-td" style="padding:16px 4px">No pay periods yet — click "+ New Period" to add one (e.g. August 2026). It will calculate itself automatically from your attendance calendar and Payroll Settings.</div>`;
     formWrap.innerHTML = '';
     activePayPeriodId = null;
     return;
   }
+  // Opening the page always lands on the most recent (current) period, unless the user has already picked one this session.
   if (!activePayPeriodId || !periods.find(p => p.id === activePayPeriodId)) activePayPeriodId = periods[0].id;
   chipRow.innerHTML = periods.map(p => `<button class="pp-chip ${p.id===activePayPeriodId?'active':''}" data-id="${p.id}" onclick="selectPayPeriod('${p.id}')">
       <span class="pp-chip-label">${esc(p.label||'Untitled')}</span>
+      <span class="pp-chip-status ${(PP_STATUS_META[p.status]||PP_STATUS_META.draft).cls}">${(PP_STATUS_META[p.status]||PP_STATUS_META.draft).label}</span>
       <span class="pp-chip-net">${ppMoney(ppNetPay(p))}</span>
     </button>`).join('');
   const p = periods.find(x => x.id === activePayPeriodId);
@@ -2783,24 +3065,52 @@ function renderPayPeriods() {
 }
 
 function ppFormHtml(p) {
+  const s = p.snapshot;
+  const finalized = p.status === 'finalized';
+  const statusMeta = PP_STATUS_META[p.status] || PP_STATUS_META.draft;
   return `
-    <div class="pp-net-banner">Net Pay for <b id="pp-net-label">${esc(p.label||'this period')}</b>: <span id="pp-net-amount">${ppMoney(ppNetPay(p))}</span></div>
-    <div class="fgrid">
-      <div class="ff"><label>Month</label><input type="month" id="pp-month" value="${(p.periodStart||'').slice(0,7)}" oninput="ppOnMonthChange()"></div>
-      <div class="ff s2"><label>Period Label</label><input id="pp-label" value="${esc(p.label)}" placeholder="e.g. August 2026" oninput="queuePayPeriodSave()"></div>
-      <div class="ff"><label>Salary (₹)</label><input type="number" id="pp-salary" value="${p.salary||0}" oninput="queuePayPeriodSave()"></div>
-      <div class="ff"><label>Basic Salary (₹)</label><input type="number" id="pp-basic" value="${p.basic||0}" oninput="queuePayPeriodSave()"></div>
-      <div class="ff"><label>Working Days</label><input type="number" id="pp-workingdays" value="${p.workingDays||0}" oninput="queuePayPeriodSave()"></div>
-      <div class="ff"><label>Present Days</label><input type="number" id="pp-presentdays" value="${p.presentDays||0}" oninput="queuePayPeriodSave()"></div>
-      <div class="ff"><label>Leave Days</label><input type="number" id="pp-leavedays" value="${p.leaveDays||0}" oninput="queuePayPeriodSave()"></div>
-      <div class="ff"><label>Overtime (₹)</label><input type="number" id="pp-overtime" value="${p.overtime||0}" oninput="queuePayPeriodSave()"></div>
-      <div class="ff"><label>Deductions (₹)</label><input type="number" id="pp-deductions" value="${p.deductions||0}" oninput="queuePayPeriodSave()"></div>
-      <div class="ff"><label>Bonuses (₹)</label><input type="number" id="pp-bonuses" value="${p.bonuses||0}" oninput="queuePayPeriodSave()"></div>
-      <div class="ff full"><label>Notes</label><input id="pp-notes" value="${esc(p.notes)}" placeholder="Anything else about this period..." oninput="queuePayPeriodSave()"></div>
+    <div class="pp-net-banner">
+      <div>Net Pay for <b id="pp-net-label">${esc(p.label||'this period')}</b>
+        <span class="pp-status-pill ${statusMeta.cls}">${statusMeta.label}</span>
+      </div>
+      <span id="pp-net-amount">${ppMoney(ppNetPay(p))}</span>
     </div>
+
+    <div class="fgrid">
+      <div class="ff"><label>Month</label><input type="month" id="pp-month" value="${(p.periodStart||'').slice(0,7)}" oninput="ppOnMonthChange()" ${finalized?'disabled':''}></div>
+      <div class="ff s2"><label>Period Label</label><input id="pp-label" value="${esc(p.label)}" placeholder="e.g. August 2026" oninput="queuePayPeriodSave()" ${finalized?'disabled':''}></div>
+    </div>
+
+    ${s ? `
+    <div class="pp-calc-summary">
+      <div class="pp-calc-row"><span>Payable Days</span><b>${s.payableDays} / ${s.workingDays}</b></div>
+      <div class="pp-calc-row"><span>Present / Absent / Half / Paid Leave / Holiday</span><b>${s.presentDays} / ${s.absentDays} / ${s.halfDays} / ${s.paidLeaveDays} / ${s.holidayDays}</b></div>
+      <div class="pp-calc-row"><span>Overtime</span><b>${fmtMins(s.otMinutes)} → ${ppMoney(s.otAmount)}</b></div>
+      <div class="pp-calc-row"><span>Gross Salary</span><b>${ppMoney(s.grossSalary)}</b></div>
+      <div class="pp-calc-row"><span>Total Deductions</span><b>${ppMoney(s.totalDeductions)}</b></div>
+      <div class="pp-calc-row pp-calc-total"><span>Net Salary</span><b>${ppMoney(s.netSalary)}</b></div>
+    </div>
+    <div class="btn-group" style="margin:10px 0 4px">
+      <button class="btn btn-ghost btn-sm" onclick="openCalcModal('${p.id}')">🧮 View Calculation</button>
+      ${!finalized ? `<button class="btn btn-ghost btn-sm" onclick="recalcPayPeriod('${p.id}', true)">↻ Recalculate from Attendance</button>` : ''}
+    </div>
+    ` : `<div class="empty-td" style="padding:10px 4px">Pick a month above — the calculation will run automatically.</div>`}
+
+    <div class="fgrid" style="margin-top:6px">
+      <div class="ff"><label>Bonus override (₹)</label><input type="number" id="pp-bonus" value="${p.bonus ?? ''}" placeholder="Default: ${attSettings.bonusDefault||0}" oninput="queuePayPeriodSave()" ${finalized?'disabled':''}></div>
+      <div class="ff"><label>Loan / Advance deduction (₹)</label><input type="number" id="pp-loan" value="${p.loan||0}" oninput="queuePayPeriodSave()" ${finalized?'disabled':''}></div>
+      <div class="ff"><label>Other Deductions (₹)</label><input type="number" id="pp-otherded" value="${p.otherDeductions||0}" oninput="queuePayPeriodSave()" ${finalized?'disabled':''}></div>
+      <div class="ff full"><label>Notes</label><input id="pp-notes" value="${esc(p.notes)}" placeholder="Anything else about this period..." oninput="queuePayPeriodSave()" ${finalized?'disabled':''}></div>
+    </div>
+
     <div class="btn-group" style="margin-top:12px">
+      ${finalized
+        ? `<button class="btn btn-ghost btn-sm" onclick="reopenPayPeriod('${p.id}')">🔓 Reopen Period</button>`
+        : `<button class="btn btn-violet btn-sm" onclick="finalizePayPeriod('${p.id}')">🔒 Finalize Period</button>`}
       <button class="btn btn-ghost btn-sm" onclick="deletePayPeriod('${p.id}')" style="color:var(--red)">🗑 Delete This Period</button>
-    </div>`;
+    </div>
+    ${finalized ? `<div style="font-size:10.5px;color:var(--text4);margin-top:8px">🔒 This period is finalized — its numbers are frozen and will never be recalculated automatically, even if attendance for ${esc(p.label)} changes later. Reopen it to edit or recalculate.</div>` : ''}
+  `;
 }
 
 function ppOnMonthChange() {
@@ -2816,7 +3126,10 @@ function ppOnMonthChange() {
       labelEl.dataset.auto = '1';
     }
   }
+  const p = D.payPeriods.find(x => x.id === activePayPeriodId);
+  if (p) p.periodStart = (monthVal || (p.periodStart||'').slice(0,7)) + '-01';
   queuePayPeriodSave();
+  recalcPayPeriod(activePayPeriodId, false); // month changed → this period now covers different attendance data
 }
 
 // Mutates the in-memory record immediately (so the net-pay figure updates live)
@@ -2828,18 +3141,21 @@ function queuePayPeriodSave() {
   _ppSaveTimer = setTimeout(() => savePayPeriod(), 600);
   const p = D.payPeriods.find(x => x.id === activePayPeriodId);
   if (!p) return;
+  if (p.status === 'finalized') return; // frozen — no further edits accepted
   p.label = document.getElementById('pp-label').value;
-  const monthVal = document.getElementById('pp-month').value;
-  if (monthVal) p.periodStart = monthVal + '-01';
-  p.salary       = parseFloat(document.getElementById('pp-salary').value) || 0;
-  p.basic        = parseFloat(document.getElementById('pp-basic').value) || 0;
-  p.workingDays  = parseInt(document.getElementById('pp-workingdays').value) || 0;
-  p.presentDays  = parseInt(document.getElementById('pp-presentdays').value) || 0;
-  p.leaveDays    = parseInt(document.getElementById('pp-leavedays').value) || 0;
-  p.overtime     = parseFloat(document.getElementById('pp-overtime').value) || 0;
-  p.deductions   = parseFloat(document.getElementById('pp-deductions').value) || 0;
-  p.bonuses      = parseFloat(document.getElementById('pp-bonuses').value) || 0;
-  p.notes        = document.getElementById('pp-notes').value;
+  const bonusEl = document.getElementById('pp-bonus');
+  p.bonus = bonusEl && bonusEl.value !== '' ? parseFloat(bonusEl.value) || 0 : null;
+  p.loan  = parseFloat(document.getElementById('pp-loan')?.value) || 0;
+  p.otherDeductions = parseFloat(document.getElementById('pp-otherded')?.value) || 0;
+  p.notes = document.getElementById('pp-notes')?.value || '';
+  // Overrides changed → recompute the snapshot with the new bonus/loan/deductions, live, no reload.
+  p.snapshot = computeSnapshotForPeriod(p);
+  refreshPPLiveUI(p);
+}
+
+// Updates just the numbers already on screen (net banner, chip amount, calc summary)
+// without rebuilding the whole form — keeps focus/cursor intact while typing.
+function refreshPPLiveUI(p) {
   const net = ppNetPay(p);
   const bannerAmt = document.getElementById('pp-net-amount'); if (bannerAmt) bannerAmt.textContent = ppMoney(net);
   const bannerLbl = document.getElementById('pp-net-label'); if (bannerLbl) bannerLbl.textContent = p.label || 'this period';
@@ -2848,13 +3164,81 @@ function queuePayPeriodSave() {
     const cl = chip.querySelector('.pp-chip-label'); if (cl) cl.textContent = p.label || 'Untitled';
     const cn = chip.querySelector('.pp-chip-net'); if (cn) cn.textContent = ppMoney(net);
   }
+  const summary = document.querySelector('.pp-calc-summary');
+  if (summary && p.snapshot) {
+    const s = p.snapshot;
+    summary.innerHTML = `
+      <div class="pp-calc-row"><span>Payable Days</span><b>${s.payableDays} / ${s.workingDays}</b></div>
+      <div class="pp-calc-row"><span>Present / Absent / Half / Paid Leave / Holiday</span><b>${s.presentDays} / ${s.absentDays} / ${s.halfDays} / ${s.paidLeaveDays} / ${s.holidayDays}</b></div>
+      <div class="pp-calc-row"><span>Overtime</span><b>${fmtMins(s.otMinutes)} → ${ppMoney(s.otAmount)}</b></div>
+      <div class="pp-calc-row"><span>Gross Salary</span><b>${ppMoney(s.grossSalary)}</b></div>
+      <div class="pp-calc-row"><span>Total Deductions</span><b>${ppMoney(s.totalDeductions)}</b></div>
+      <div class="pp-calc-row pp-calc-total"><span>Net Salary</span><b>${ppMoney(s.netSalary)}</b></div>
+    `;
+  }
 }
+
+// Recompute a period's snapshot from *current* attendance + settings. Finalized
+// periods refuse silently unless `force` is passed (used only by "Recalculate
+// from Attendance", which itself is hidden once a period is finalized).
+function recalcPayPeriod(id, force) {
+  const p = D.payPeriods.find(x => x.id === id);
+  if (!p) return;
+  if (p.status === 'finalized') return; // finalized periods are never recalculated — reopen the period first
+  p.snapshot = computeSnapshotForPeriod(p);
+  if (id === activePayPeriodId) { renderPayPeriods(); }
+  queuePayPeriodSaveSnapshotOnly(p);
+}
+
+// Whenever attendance is marked/edited or Payroll Settings change, any DRAFT period
+// whose month matches the currently displayed attendance month is recalculated live —
+// this is the "real-time recalculation" requirement, with zero page refresh.
+function recalcActivePayPeriodIfCurrentMonth() {
+  if (!D.payPeriods || !D.payPeriods.length) return;
+  const y = attDate.getFullYear(), m = attDate.getMonth();
+  const monthKey = `${y}-${String(m+1).padStart(2,'0')}`;
+  let touchedActive = false;
+  D.payPeriods.forEach(p => {
+    if (p.status === 'finalized') return; // never touch a finalized period
+    if ((p.periodStart||'').slice(0,7) !== monthKey) return;
+    p.snapshot = computeSnapshotForPeriod(p);
+    if (p.id === activePayPeriodId) touchedActive = true;
+    queuePayPeriodSaveSnapshotOnly(p);
+  });
+  if (touchedActive) renderPayPeriods();
+}
+
+let _ppSnapshotSaveTimer = null;
+function queuePayPeriodSaveSnapshotOnly(p) {
+  clearTimeout(_ppSnapshotSaveTimer);
+  _ppSnapshotSaveTimer = setTimeout(() => savePayPeriod(p.id), 500);
+}
+
+// Columns that only exist after the migration comment above has been run.
+// If Supabase rejects them, we strip them and retry so saves never hard-fail —
+// draft/finalized status and the calculated snapshot then simply stay local-only
+// for this session until the migration is applied.
+const PP_ENGINE_COLUMNS = ['status', 'payroll_snapshot', 'bonus_override', 'loan_amount', 'other_deductions_amount'];
+let _ppEngineColumnsMissing = false;
 
 async function savePayPeriod(idOverride) {
   const id = idOverride || activePayPeriodId;
   const p = D.payPeriods.find(x => x.id === id); if (!p) return;
-  const dbUpdates = D_TO_ROW.payPeriods(p);
-  await updateItemMapped('payPeriods', id, {}, dbUpdates, null);
+  let dbUpdates = D_TO_ROW.payPeriods(p);
+  if (_ppEngineColumnsMissing) { dbUpdates = { ...dbUpdates }; PP_ENGINE_COLUMNS.forEach(c => delete dbUpdates[c]); }
+  try {
+    await dbUpdate(TABLE_MAP.payPeriods, id, dbUpdates);
+    setSyncStatus('synced', '☁ Saved');
+  } catch (err) {
+    if (!_ppEngineColumnsMissing && PP_ENGINE_COLUMNS.some(c => (err.message||'').includes(c))) {
+      _ppEngineColumnsMissing = true;
+      console.warn('pay_periods is missing the calculation-engine columns — run the migration noted above calculateAttendance() to persist Draft/Finalized status and calculated snapshots.');
+      return savePayPeriod(id);
+    }
+    console.error('savePayPeriod failed:', err.message);
+    setSyncStatus('error', '⚠ Sync failed');
+    toast('⚠️ Pay period failed to save', 'error');
+  }
 }
 
 async function newPayPeriod() {
@@ -2863,14 +3247,33 @@ async function newPayPeriod() {
   const label = now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
   const localObj = {
     id:'', label, periodStart: monthStr+'-01', periodEnd:'',
-    salary:0, basic:0, workingDays:0, presentDays:0, leaveDays:0,
-    overtime:0, deductions:0, bonuses:0, notes:'',
+    status:'draft', bonus:null, loan:0, otherDeductions:0, notes:'',
+    snapshot:null,
     created_at:new Date().toISOString(), updated_at:new Date().toISOString()
   };
-  await addItem('payPeriods', localObj, null);
+  localObj.snapshot = computeSnapshotForPeriod(localObj);
+  if (!currentUser) { toast('Not signed in', 'error'); return; }
+  setSyncStatus('syncing', 'Saving...');
+  try {
+    let payload = D_TO_ROW.payPeriods(localObj);
+    if (_ppEngineColumnsMissing) { payload = { ...payload }; PP_ENGINE_COLUMNS.forEach(c => delete payload[c]); }
+    const saved = await dbInsert(TABLE_MAP.payPeriods, payload, 'payPeriods');
+    localObj.id = saved.id;
+    D.payPeriods.unshift(localObj);
+    setSyncStatus('synced', '☁ Saved');
+  } catch (err) {
+    if (!_ppEngineColumnsMissing && PP_ENGINE_COLUMNS.some(c => (err.message||'').includes(c))) {
+      _ppEngineColumnsMissing = true;
+      console.warn('pay_periods is missing the calculation-engine columns — run the migration noted above calculateAttendance() to persist Draft/Finalized status and calculated snapshots.');
+      return newPayPeriod();
+    }
+    setSyncStatus('error', '⚠ Save failed');
+    toast('Save failed — check connection', 'error');
+    return;
+  }
   activePayPeriodId = localObj.id;
   renderPayPeriods();
-  toast('✦ New pay period created');
+  toast('✦ New pay period created — calculated automatically from attendance');
 }
 
 async function selectPayPeriod(id) {
@@ -2882,13 +3285,90 @@ async function selectPayPeriod(id) {
 }
 
 async function deletePayPeriod(id) {
-  if (!confirm('Delete this pay period? This only removes this one period — every other period stays exactly as it is. This cannot be undone.')) return;
+  const p = D.payPeriods.find(x => x.id === id);
+  if (p && p.status === 'finalized') {
+    if (!confirm('This period is FINALIZED. Deleting it removes its permanent payroll record. Are you absolutely sure?')) return;
+  } else if (!confirm('Delete this pay period? This only removes this one period — every other period stays exactly as it is. This cannot be undone.')) return;
   clearTimeout(_ppSaveTimer); _ppSaveTimer = null;
   await delItem('payPeriods', id, null);
   if (activePayPeriodId === id) activePayPeriodId = null;
   renderPayPeriods();
   toast('🗑 Pay period deleted');
 }
+
+// ── FINALIZE / REOPEN — freeze or unfreeze a period's payroll snapshot ──
+async function finalizePayPeriod(id) {
+  const p = D.payPeriods.find(x => x.id === id); if (!p) return;
+  if (!confirm(`Finalize "${p.label}"? Its calculated payroll will be locked permanently — future attendance changes for this month will NEVER alter it again, unless you explicitly reopen it.`)) return;
+  p.snapshot = computeSnapshotForPeriod(p); // one last calculation, frozen forever
+  p.status = 'finalized';
+  p.finalizedAt = new Date().toISOString();
+  await savePayPeriod(id);
+  renderPayPeriods();
+  toast('🔒 Period finalized — payroll snapshot locked');
+}
+
+async function reopenPayPeriod(id) {
+  const p = D.payPeriods.find(x => x.id === id); if (!p) return;
+  if (!confirm(`Reopen "${p.label}"? This unlocks it for editing and recalculation — its frozen snapshot will be recalculated from current attendance the next time anything changes.`)) return;
+  p.status = 'draft';
+  p.snapshot = computeSnapshotForPeriod(p);
+  await savePayPeriod(id);
+  renderPayPeriods();
+  toast('🔓 Period reopened');
+}
+
+// ── VIEW CALCULATION — full payroll waterfall with real numbers + formulas ──
+function openCalcModal(id) {
+  const p = D.payPeriods.find(x => x.id === id); if (!p || !p.snapshot) return;
+  const s = p.snapshot;
+  const row = (label, formula, amount) => `
+    <div class="calc-row"><div class="calc-row-label">${label}</div><div class="calc-row-formula">${formula}</div><div class="calc-row-amt">${ppMoney(amount)}</div></div>`;
+  const step = (title) => `<div class="calc-step">${title}</div>`;
+  document.getElementById('calc-modal-body').innerHTML = `
+    <div class="calc-modal-inner">
+      ${step('1 · Attendance → Payable Days')}
+      ${row('Present + Half(0.5) + Paid Leave + Holiday', `${s.presentDays} + ${s.halfDays}×0.5 + ${s.paidLeaveDays} + ${s.holidayDays}`, s.payableDays)}
+      ${row('Working Days (configured)', '—', s.workingDays)}
+
+      ${step('2 · Salary Proration')}
+      ${row('Daily Rate', `Basic ₹${s.basic.toLocaleString('en-IN')} ÷ ${s.workingDays} days`, s.dailyRate)}
+      ${row('Prorated Basic', `Daily Rate × ${s.payableDays} payable days`, s.proratedBasic)}
+      ${s.hra ? row('Prorated HRA', `HRA ₹${s.hra.toLocaleString('en-IN')} × ${(s.ratio*100).toFixed(1)}%`, s.proratedHRA) : ''}
+      ${s.allowance ? row('Prorated Allowance', `Allowance ₹${s.allowance.toLocaleString('en-IN')} × ${(s.ratio*100).toFixed(1)}%`, s.proratedAllowance) : ''}
+      ${s.lossOfPay > 0 ? row('Loss of Pay (unpaid/absent days)', 'Full components − prorated components', -s.lossOfPay) : ''}
+
+      ${step('3 · Overtime')}
+      ${row('Overtime', `${fmtMins(s.otMinutes)} at OT rate`, s.otAmount)}
+
+      ${step('4 · Bonus')}
+      ${row('Bonus', 'From period override / default setting', s.bonus)}
+
+      ${step('5 · Gross Salary')}
+      ${row('Gross Salary', 'Prorated Basic + HRA + Allowance + Overtime + Bonus', s.grossSalary)}
+
+      ${step('6 · Provident Fund' + (s.pfEnabled ? '' : ' (disabled in settings)'))}
+      ${s.pfEnabled ? row(`Employee PF (on PF wage ₹${s.pfWage.toLocaleString('en-IN')})`, `PF Wage × Employee PF %`, s.employeePF) : ''}
+      ${s.pfEnabled ? row(`Employer PF (informational — not deducted)`, `PF Wage × Employer PF %`, s.employerPF) : ''}
+      ${s.pfEnabled ? row(`EPS / EDLI (informational — part of employer contribution)`, `EPS ₹${s.eps} · EDLI ₹${s.edli}`, s.eps + s.edli) : ''}
+
+      ${step('7 · Other Statutory Deductions')}
+      ${row(`ESI ${s.esiEnabled ? (s.esiEligible ? '(eligible)' : '(gross above ceiling — not applicable)') : '(disabled in settings)'}`, 'Gross × Employee ESI %', s.employeeESI)}
+      ${row('Professional Tax', 'Fixed per Payroll Settings', s.profTax)}
+      ${row('TDS', 'Fixed per Payroll Settings', s.tds)}
+
+      ${step('8 · Other Deductions')}
+      ${row('Loan / Advance', 'From period override', s.loan)}
+      ${row('Other Deductions', 'From period override', s.otherDeductions)}
+
+      ${step('9 · Net Salary')}
+      <div class="calc-row calc-row-final"><div class="calc-row-label">NET SALARY</div><div class="calc-row-formula">Gross Salary − Total Deductions (₹${s.totalDeductions.toLocaleString('en-IN')})</div><div class="calc-row-amt">${ppMoney(s.netSalary)}</div></div>
+
+      <div style="font-size:10.5px;color:var(--text4);margin-top:12px">Calculated ${new Date(s.calculatedAt).toLocaleString('en-IN')}${p.status==='finalized' ? ' · 🔒 frozen — this snapshot will not change' : ' · recalculates automatically as attendance/settings change'}</div>
+    </div>`;
+  document.getElementById('calc-modal-overlay').classList.add('show');
+}
+function closeCalcModal() { document.getElementById('calc-modal-overlay').classList.remove('show'); }
 
 
 // Load this user's attendance logs + settings for the active company from Supabase
@@ -2907,6 +3387,7 @@ async function loadAttendanceData() {
     setQuery = activeCompanyId ? setQuery.eq('company_id', activeCompanyId) : setQuery.is('company_id', null);
     const { data: settings, error: setErr } = await withTimeout(setQuery, 8000, 'loadAttendanceData settings');
     if (!setErr && settings && settings.length > 0) {
+      const pc = settings[0].payroll_config || {};
       attSettings = {
         salary: settings[0].monthly_salary ?? 20000,
         workdays: settings[0].working_days ?? 27,
@@ -2915,7 +3396,13 @@ async function loadAttendanceData() {
         shiftStart: (settings[0].shift_start || '09:00:00').slice(0,5),
         shiftEnd: (settings[0].shift_end || '18:00:00').slice(0,5),
         graceMinutes: settings[0].grace_minutes ?? 15,
-        otMultiplier: settings[0].ot_multiplier ?? 1.5
+        otMultiplier: settings[0].ot_multiplier ?? 1.5,
+        hraPct: pc.hraPct ?? 0, allowancePct: pc.allowancePct ?? 0, bonusDefault: pc.bonusDefault ?? 0,
+        pfEnabled: !!pc.pfEnabled, pfEmployeePct: pc.pfEmployeePct ?? 12, pfEmployerPct: pc.pfEmployerPct ?? 12,
+        pfWageCeiling: pc.pfWageCeiling ?? 15000, epsPct: pc.epsPct ?? 8.33, edliPct: pc.edliPct ?? 0.5,
+        esiEnabled: !!pc.esiEnabled, esiEmployeePct: pc.esiEmployeePct ?? 0.75, esiEmployerPct: pc.esiEmployerPct ?? 3.25,
+        esiWageCeiling: pc.esiWageCeiling ?? 21000,
+        profTax: pc.profTax ?? 0, tds: pc.tds ?? 0
       };
     }
     console.log(`✓ Attendance loaded: ${Object.keys(attLogs).length} days logged`);
@@ -2941,6 +3428,18 @@ async function loadAttendanceData() {
   if (seEl) seEl.value = attSettings.shiftEnd;
   if (gmEl) gmEl.value = attSettings.graceMinutes;
   if (otEl) otEl.value = attSettings.otMultiplier;
+
+  // Reflect payroll config fields
+  const map = {
+    'pc-hra-pct':'hraPct', 'pc-allow-pct':'allowancePct', 'pc-bonus-default':'bonusDefault',
+    'pc-pf-emp-pct':'pfEmployeePct', 'pc-pf-empr-pct':'pfEmployerPct', 'pc-pf-ceiling':'pfWageCeiling',
+    'pc-eps-pct':'epsPct', 'pc-edli-pct':'edliPct',
+    'pc-esi-emp-pct':'esiEmployeePct', 'pc-esi-empr-pct':'esiEmployerPct', 'pc-esi-ceiling':'esiWageCeiling',
+    'pc-prof-tax':'profTax', 'pc-tds':'tds'
+  };
+  Object.entries(map).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.value = attSettings[key]; });
+  const pfEnEl = document.getElementById('pc-pf-enabled'); if (pfEnEl) pfEnEl.value = attSettings.pfEnabled ? '1' : '0';
+  const esiEnEl = document.getElementById('pc-esi-enabled'); if (esiEnEl) esiEnEl.value = attSettings.esiEnabled ? '1' : '0';
 }
 
 // Debounced settings save — triggered on input change
@@ -2953,27 +3452,55 @@ function queueAttendanceSettingsSave() {
   attSettings.shiftEnd     = document.getElementById('att-shiftend').value || '18:00';
   attSettings.graceMinutes = parseInt(document.getElementById('att-gracemins').value) || 0;
   attSettings.otMultiplier = parseFloat(document.getElementById('att-otmult').value) || 1.5;
+
+  // Payroll & statutory config
+  attSettings.hraPct        = parseFloat(document.getElementById('pc-hra-pct')?.value) || 0;
+  attSettings.allowancePct  = parseFloat(document.getElementById('pc-allow-pct')?.value) || 0;
+  attSettings.bonusDefault  = parseFloat(document.getElementById('pc-bonus-default')?.value) || 0;
+  attSettings.pfEnabled     = document.getElementById('pc-pf-enabled')?.value === '1';
+  attSettings.pfEmployeePct = parseFloat(document.getElementById('pc-pf-emp-pct')?.value) || 0;
+  attSettings.pfEmployerPct = parseFloat(document.getElementById('pc-pf-empr-pct')?.value) || 0;
+  attSettings.pfWageCeiling = parseFloat(document.getElementById('pc-pf-ceiling')?.value) || 0;
+  attSettings.epsPct        = parseFloat(document.getElementById('pc-eps-pct')?.value) || 0;
+  attSettings.edliPct       = parseFloat(document.getElementById('pc-edli-pct')?.value) || 0;
+  attSettings.esiEnabled    = document.getElementById('pc-esi-enabled')?.value === '1';
+  attSettings.esiEmployeePct= parseFloat(document.getElementById('pc-esi-emp-pct')?.value) || 0;
+  attSettings.esiEmployerPct= parseFloat(document.getElementById('pc-esi-empr-pct')?.value) || 0;
+  attSettings.esiWageCeiling= parseFloat(document.getElementById('pc-esi-ceiling')?.value) || 0;
+  attSettings.profTax       = parseFloat(document.getElementById('pc-prof-tax')?.value) || 0;
+  attSettings.tds           = parseFloat(document.getElementById('pc-tds')?.value) || 0;
+
   clearTimeout(_attSaveTimer);
   _attSaveTimer = setTimeout(saveAttendanceSettings, 700);
   renderAttendanceOverview(); renderSimpleSalary(); // instant feedback even before save completes
+  recalcActivePayPeriodIfCurrentMonth(); // payroll settings changed → recalc the live (non-finalized) period
 }
 
+let _payrollConfigColumnMissing = false; // set true once we learn the DB lacks payroll_config, so we stop retrying it every save
 async function saveAttendanceSettings() {
   if (!currentUser) { toast('⚠️ Not signed in — settings not saved', 'error'); return; }
+  const basePayload = {
+    user_id: currentUser.id,
+    company_id: activeCompanyId || null,
+    monthly_salary: attSettings.salary,
+    working_days: attSettings.workdays,
+    paid_leaves: attSettings.paidLeaves,
+    hours_per_day: attSettings.hoursPerDay,
+    shift_start: attSettings.shiftStart,
+    shift_end: attSettings.shiftEnd,
+    grace_minutes: attSettings.graceMinutes,
+    ot_multiplier: attSettings.otMultiplier,
+    updated_at: new Date().toISOString()
+  };
+  const payrollConfig = {
+    hraPct: attSettings.hraPct, allowancePct: attSettings.allowancePct, bonusDefault: attSettings.bonusDefault,
+    pfEnabled: attSettings.pfEnabled, pfEmployeePct: attSettings.pfEmployeePct, pfEmployerPct: attSettings.pfEmployerPct,
+    pfWageCeiling: attSettings.pfWageCeiling, epsPct: attSettings.epsPct, edliPct: attSettings.edliPct,
+    esiEnabled: attSettings.esiEnabled, esiEmployeePct: attSettings.esiEmployeePct, esiEmployerPct: attSettings.esiEmployerPct,
+    esiWageCeiling: attSettings.esiWageCeiling, profTax: attSettings.profTax, tds: attSettings.tds
+  };
   try {
-    const payload = {
-      user_id: currentUser.id,
-      company_id: activeCompanyId || null,
-      monthly_salary: attSettings.salary,
-      working_days: attSettings.workdays,
-      paid_leaves: attSettings.paidLeaves,
-      hours_per_day: attSettings.hoursPerDay,
-      shift_start: attSettings.shiftStart,
-      shift_end: attSettings.shiftEnd,
-      grace_minutes: attSettings.graceMinutes,
-      ot_multiplier: attSettings.otMultiplier,
-      updated_at: new Date().toISOString()
-    };
+    const payload = _payrollConfigColumnMissing ? basePayload : { ...basePayload, payroll_config: payrollConfig };
     const { error } = await withTimeout(
       _supa.from('attendance_settings').upsert(payload, { onConflict: 'user_id,company_id' }),
       8000, 'saveAttendanceSettings'
@@ -2981,6 +3508,14 @@ async function saveAttendanceSettings() {
     if (error) throw error;
     setSyncStatus('synced', '☁ Saved');
   } catch (err) {
+    // Graceful degradation: if the `payroll_config` column doesn't exist yet in this
+    // Supabase project (migration not run), retry without it so attendance settings
+    // still save — payroll settings will then only persist for this browser session.
+    if (!_payrollConfigColumnMissing && /payroll_config/i.test(err.message || '')) {
+      _payrollConfigColumnMissing = true;
+      console.warn('payroll_config column missing on attendance_settings — run the migration in the docs comment above saveAttendanceSettings() to persist payroll settings.');
+      return saveAttendanceSettings();
+    }
     console.error('✗ saveAttendanceSettings failed:', err.message);
     setSyncStatus('error', '⚠ Sync failed');
     toast('⚠️ Attendance settings failed to save — check your connection', 'error');
@@ -3219,6 +3754,7 @@ function renderAttendance() {
   renderAttendanceOverview();
   renderAttAnalytics();
   renderSimpleSalary();
+  recalcActivePayPeriodIfCurrentMonth(); // real-time recalculation: any change to attendance flows straight into the matching draft pay period
 }
 
 
@@ -3386,10 +3922,15 @@ function renderAttendanceOverview() {
 
 // Wire up settings inputs to auto-save on change (event delegation, set up once at boot)
 function initAttendanceInputs() {
-  ['att-salary','att-workdays','att-paidleaves','att-hoursperday','att-shiftstart','att-shiftend','att-gracemins','att-otmult'].forEach(id => {
+  [
+    'att-salary','att-workdays','att-paidleaves','att-hoursperday','att-shiftstart','att-shiftend','att-gracemins','att-otmult',
+    'pc-hra-pct','pc-allow-pct','pc-bonus-default','pc-pf-enabled','pc-pf-emp-pct','pc-pf-empr-pct','pc-pf-ceiling','pc-eps-pct','pc-edli-pct',
+    'pc-esi-enabled','pc-esi-emp-pct','pc-esi-empr-pct','pc-esi-ceiling','pc-prof-tax','pc-tds'
+  ].forEach(id => {
     const el = document.getElementById(id);
     if (el && !el._wired) {
       el.addEventListener('input', queueAttendanceSettingsSave);
+      el.addEventListener('change', queueAttendanceSettingsSave);
       el._wired = true;
     }
   });
