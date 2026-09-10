@@ -710,6 +710,36 @@ tr:hover td{background:#8b5cf608}
 .kv-similar-item{font-size:12px;color:var(--violet-l);padding:7px 10px;background:var(--s2);border-radius:8px;margin-bottom:5px;cursor:pointer}
 .kv-similar-item:hover{background:var(--violet-xl)}
 @media(max-width:640px){ .kt-search-row{flex-direction:column;align-items:stretch} }
+
+/* ── Knowledge Vault sidebar (Phase: KV redesign) ── */
+.kt-layout{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}
+.kt-sidebar{position:sticky;top:12px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:14px;max-height:calc(100vh - 100px);overflow-y:auto}
+.kt-sidebar-label{font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.06em;margin:16px 0 6px;padding:0 4px}
+.kt-sidebar-label:first-of-type{margin-top:2px}
+.kt-sidebar-add-btn{border:none;background:var(--s2);color:var(--text3);width:18px;height:18px;border-radius:6px;font-size:12px;cursor:pointer;line-height:1}
+.kt-sidebar-add-btn:hover{background:var(--violet-xl);color:var(--violet-l)}
+.kt-sidebar-item{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:none;background:none;padding:7px 8px;border-radius:8px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:1px}
+.kt-sidebar-item:hover{background:var(--s2)}
+.kt-sidebar-item.active{background:var(--violet-xl);color:var(--violet-l);font-weight:600}
+.kt-folder-item{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;text-align:left;border:none;background:none;padding:6px 8px;border-radius:8px;font-size:11.5px;color:var(--text2);cursor:pointer}
+.kt-folder-item:hover{background:var(--s2)}
+.kt-folder-item.active{background:var(--violet-xl);color:var(--violet-l);font-weight:600}
+.kt-folder-count{font-size:9.5px;color:var(--text4)}
+.kt-main{min-width:0}
+.kt-summary-bar{display:flex;gap:0;align-items:center;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:10px 16px;font-size:11.5px;color:var(--text2);flex-wrap:wrap;gap:14px}
+.kt-summary-bar b{color:var(--text);font-weight:700}
+.kt-breadcrumb{font-size:11px;color:var(--text3);padding:2px 2px 2px}
+.kt-breadcrumb span{cursor:pointer}
+.kt-breadcrumb span:hover{color:var(--violet-l)}
+.kt-filter-row{display:flex;gap:8px}
+.kt-filter-row select{padding:6px 10px;border-radius:9px;border:1px solid var(--border2);font-size:11.5px;background:var(--s1);color:var(--text2)}
+.kt-card-folder{font-size:10px;color:var(--text4);margin-bottom:4px}
+@media(max-width:900px){
+  .kt-layout{grid-template-columns:1fr}
+  .kt-sidebar{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .kt-sidebar-label{width:100%}
+  .kt-sidebar-item,.kt-folder-item{width:auto}
+}
 @media(max-width:720px){
   .kv-body{grid-template-columns:1fr}
   .kv-sidebar{position:static}
@@ -939,6 +969,10 @@ tr:hover td{background:#8b5cf608}
 .att-day-card.att-holiday .att-day-num,.att-day-card.att-holiday .att-day-status{color:var(--violet-l)}
 .att-day-card.att-paid{background:#dbeafe;border-color:#93c5fd}
 .att-day-card.att-paid .att-day-num,.att-day-card.att-paid .att-day-status{color:var(--blue)}
+.att-day-card.att-lop{background:var(--red-dim);border-color:#fca5a5}
+.att-day-card.att-lop .att-day-num,.att-day-card.att-lop .att-day-status{color:var(--red)}
+.att-day-card.att-weekoff{background:var(--s2);border-color:var(--border)}
+.att-day-card.att-weekoff .att-day-num,.att-day-card.att-weekoff .att-day-status{color:var(--text4)}
 .att-day-card.att-weekend{background:transparent;border-color:transparent;cursor:default}
 .att-day-card.att-weekend .att-day-num{color:var(--text4)}
 .att-day-card.att-future{opacity:.4;cursor:default}
@@ -970,6 +1004,8 @@ tr:hover td{background:#8b5cf608}
 .att-salary-row.total .wj-val{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:800;color:var(--violet-l)}
 /* ── PAY PERIODS ── */
 .pp-chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.att-tip{cursor:help;color:var(--text4);font-size:11px;border-bottom:1px dotted var(--text4)}
+.att-profile-val{padding:8px 10px;background:var(--s2);border-radius:9px;font-size:12.5px;color:var(--text2);font-weight:600}
 .pp-chip{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 14px;border-radius:12px;border:1.5px solid var(--border2);background:var(--s2);cursor:pointer;transition:all .15s}
 .pp-chip:hover{border-color:var(--border3)}
 .pp-chip.active{border-color:var(--violet-l);background:var(--violet-xl);box-shadow:0 0 0 1px var(--violet-l) inset}
@@ -1292,49 +1328,59 @@ tr:hover td{background:#8b5cf608}
       <div id="wj-summary-details"></div>
     </div>
   </div>
-  <div class="quick-panel">
-    <div class="ql-title">⚡ Log Today's Work <span style="font-size:11px;font-weight:400;color:var(--text3)">— under 2 minutes</span></div>
-    <div class="fgrid">
-      <div class="ff"><label>Date</label><input type="date" id="dl-date"></div>
-      <div class="ff s2"><label>Task Title <span style="color:var(--red)">*</span></label><input id="dl-task" placeholder="What did you work on?"></div>
-      <div class="ff"><label>Company / Client</label><select id="dl-company"><option value="">— No company —</option></select></div>
-      <div class="ff"><label>Project</label><input id="dl-project" placeholder="Project name"></div>
-      <div class="ff"><label>Client Contact</label><input id="dl-client" placeholder="Client / stakeholder"></div>
-      <div class="ff"><label>Hours</label><input type="number" id="dl-hours" placeholder="2.5" min="0" step="0.5"></div>
-      <div class="ff"><label>Category</label>
-        <select id="dl-cat">
-          <option>Development</option><option>Firmware</option><option>Embedded</option>
-          <option>Testing</option><option>Debugging</option><option>IoT</option>
-          <option>Research</option><option>Learning</option><option>Documentation</option>
-          <option>Client Call</option><option>Technical Support</option><option>Meeting</option>
-          <option>Deployment</option><option>Maintenance</option><option>Innovation</option><option>Other</option>
-        </select>
-      </div>
-      <div class="ff"><label>Priority</label><select id="dl-prio"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
-      <div class="ff"><label>Status</label><select id="dl-status"><option>Completed</option><option>In Progress</option><option>Blocked</option><option>Deferred</option></select></div>
-      <div class="ff"><label>Tags</label><input id="dl-tags" placeholder="mqtt, modbus, rs485..."></div>
-      <div class="ff full"><label>Business Impact</label><input id="dl-impact" placeholder="What value was created? e.g. Reduced firmware boot time by 30%"></div>
-      <div class="ff full"><label>Problem Solved</label><input id="dl-problem" placeholder="What issue did you resolve?"></div>
-      <div class="ff full"><label>Solution / Action Taken</label><input id="dl-solution" placeholder="How did you resolve it? What steps did you take?"></div>
-      <div class="ff"><label>Technologies Used</label><input id="dl-tech" placeholder="ESP32, FreeRTOS, UART..."></div>
-      <div class="ff"><label>Technical Support?</label><select id="dl-support"><option>No</option><option>Yes</option></select></div>
-      <div class="ff full"><label>Key Learning</label><input id="dl-learning" placeholder="What did you learn from this?"></div>
-      <div class="ff full"><label>Self Remarks</label><textarea id="dl-self" placeholder="Your reflection — what went well, what was hard?" style="min-height:60px"></textarea></div>
-      <div class="ff full">
-        <label>Journal Notes <span style="font-weight:400;color:var(--text4)">— rich text, autosaved with this entry</span></label>
-        <div id="dl-rich-host"></div>
-      </div>
-    </div>
-    <div class="btn-group" style="margin-top:14px">
-      <button class="btn btn-violet" id="dl-submit-btn" onclick="saveDaily()">💾 Save Entry</button>
-      <button class="btn btn-ghost" onclick="clearDaily()">Clear</button>
-      <button class="btn btn-ghost" id="dl-cancel-btn" onclick="cancelDailyEdit()" style="display:none">✕ Cancel Edit</button>
-    </div>
-    <div id="dl-edit-banner" style="display:none;font-size:11px;color:var(--violet-l);background:var(--violet-xl);border-radius:8px;padding:6px 10px;margin-top:8px">✏️ Editing an existing entry — Save Entry will update it.</div>
-  </div>
   <div class="card">
-    <div class="card-hd"><div class="card-title">📓 Work Log</div><div style="display:flex;align-items:center;gap:10px"><span id="daily-cnt" style="font-size:11px;color:var(--text3)">0 entries</span><button class="btn btn-ghost btn-sm" onclick="nav('reports');exportWorklogPDF()" title="Download a polished Worklog PDF of every entry">📋 Worklog PDF</button></div></div>
+    <div class="card-hd"><div class="card-title">📓 Work Log</div><div style="display:flex;align-items:center;gap:10px"><span id="daily-cnt" style="font-size:11px;color:var(--text3)">0 entries</span><button class="btn btn-ghost btn-sm" onclick="nav('reports');exportWorklogPDF()" title="Download a polished Worklog PDF of every entry">📋 Worklog PDF</button><button class="btn btn-violet btn-sm" onclick="openDailyEditor()">+ Add Entry</button></div></div>
     <div id="daily-list" class="card-body" style="padding:0"></div>
+  </div>
+</div>
+
+<!-- Work Log — Entry Editor Modal -->
+<div id="wl-editor-overlay" class="kv-modal-overlay" style="display:none" onclick="if(event.target===this) closeDailyEditor()">
+  <div class="kv-modal" style="max-width:760px">
+    <div class="kv-modal-hd">
+      <div id="wl-modal-title" style="font-size:16px;font-weight:700">+ Add Work Log Entry</div>
+      <div class="kv-modal-hd-actions">
+        <button class="kv-modal-close" onclick="closeDailyEditor()">✕</button>
+      </div>
+    </div>
+    <div class="kv-modal-scroll">
+      <div class="fgrid" style="padding:14px 18px 0">
+        <div class="ff"><label>Date</label><input type="date" id="dl-date"></div>
+        <div class="ff s2"><label>Task Title <span style="color:var(--red)">*</span></label><input id="dl-task" placeholder="What did you work on?"></div>
+        <div class="ff"><label>Company / Client</label><select id="dl-company"><option value="">— No company —</option></select></div>
+        <div class="ff"><label>Project</label><input id="dl-project" placeholder="Project name"></div>
+        <div class="ff"><label>Client Contact</label><input id="dl-client" placeholder="Client / stakeholder"></div>
+        <div class="ff"><label>Hours</label><input type="number" id="dl-hours" placeholder="2.5" min="0" step="0.5"></div>
+        <div class="ff"><label>Category</label>
+          <select id="dl-cat">
+            <option>Development</option><option>Firmware</option><option>Embedded</option>
+            <option>Testing</option><option>Debugging</option><option>IoT</option>
+            <option>Research</option><option>Learning</option><option>Documentation</option>
+            <option>Client Call</option><option>Technical Support</option><option>Meeting</option>
+            <option>Deployment</option><option>Maintenance</option><option>Innovation</option><option>Other</option>
+          </select>
+        </div>
+        <div class="ff"><label>Priority</label><select id="dl-prio"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
+        <div class="ff"><label>Status</label><select id="dl-status"><option>Completed</option><option>In Progress</option><option>Blocked</option><option>Deferred</option></select></div>
+        <div class="ff"><label>Tags</label><input id="dl-tags" placeholder="mqtt, modbus, rs485..."></div>
+        <div class="ff full"><label>Business Impact</label><input id="dl-impact" placeholder="What value was created? e.g. Reduced firmware boot time by 30%"></div>
+        <div class="ff full"><label>Problem Solved</label><input id="dl-problem" placeholder="What issue did you resolve?"></div>
+        <div class="ff full"><label>Solution / Action Taken</label><input id="dl-solution" placeholder="How did you resolve it? What steps did you take?"></div>
+        <div class="ff"><label>Technologies Used</label><input id="dl-tech" placeholder="ESP32, FreeRTOS, UART..."></div>
+        <div class="ff"><label>Technical Support?</label><select id="dl-support"><option>No</option><option>Yes</option></select></div>
+        <div class="ff full"><label>Key Learning</label><input id="dl-learning" placeholder="What did you learn from this?"></div>
+        <div class="ff full"><label>Self Remarks</label><textarea id="dl-self" placeholder="Your reflection — what went well, what was hard?" style="min-height:60px"></textarea></div>
+      </div>
+      <div style="padding:12px 18px 0;font-size:11px;font-weight:600;color:var(--text3)">Journal Notes <span style="font-weight:400;color:var(--text4)">— rich text</span></div>
+      <div id="dl-rich-host" class="kv-rich-host"></div>
+    </div>
+    <div class="kv-modal-foot">
+      <div id="dl-edit-banner" style="display:none;font-size:10.5px;color:var(--violet-l)">✏️ Editing an existing entry</div>
+      <div class="btn-group">
+        <button class="btn btn-ghost btn-sm" id="dl-del-btn" onclick="deleteCurrentDailyEntry()" style="display:none">🗑 Delete</button>
+        <button class="btn btn-violet btn-sm" id="dl-submit-btn" onclick="saveDaily()">💾 Save Entry</button>
+      </div>
+    </div>
   </div>
 </div>
 <!-- ═══ TASK MANAGER (KANBAN) ═══ -->
@@ -1593,22 +1639,28 @@ tr:hover td{background:#8b5cf608}
     <div class="card mb16">
       <div class="card-hd">
         <div style="display:flex;align-items:center;gap:14px">
-          <button class="btn btn-ghost btn-sm" onclick="attPrevMonth()">‹</button>
+          <button class="btn btn-ghost btn-sm" onclick="attPrevMonth()">‹ Previous Month</button>
           <div class="card-title" id="att-month-label" style="margin:0">Month</div>
-          <button class="btn btn-ghost btn-sm" onclick="attNextMonth()">›</button>
+          <button class="btn btn-ghost btn-sm" onclick="attNextMonth()">Next Month ›</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="attGoToday()">Today</button>
+          <button class="btn btn-violet btn-sm" onclick="openNewMonthModal()">+ New Month</button>
         </div>
       </div>
       <div class="card-body">
-        <div class="att-click-hint">💡 Click any date. First click records <strong>login</strong> (marks Present), second click records <strong>logout</strong>. Click a completed day to view, edit, or delete it. Right-click for quick actions.</div>
+        <div id="att-month-empty-state" style="display:none"></div>
+        <div class="att-click-hint">💡 Click any date to mark attendance. Click a completed day to view, edit, or delete it. Right-click for quick actions.</div>
         <div class="cal-grid mb12" id="att-cal-headers"></div>
         <div class="att-day-grid" id="att-cal-grid"></div>
         <div class="att-legend">
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--green)"></div>Present</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--red)"></div>Absent</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--amber)"></div>Half day</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--violet)"></div>Holiday</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--blue)"></div>Paid leave</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--s3)"></div>Sunday (off)</div>
+          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--green)"></div>✓ Present</div>
+          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--red)"></div>✕ Absent</div>
+          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--blue)"></div>🏖 Paid Leave</div>
+          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--red)"></div>⚠ LOP</div>
+          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--amber)"></div>◷ Half Day</div>
+          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--violet)"></div>★ Holiday</div>
+          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--s3)"></div>○ Week Off</div>
         </div>
       </div>
     </div>
@@ -1626,43 +1678,49 @@ tr:hover td{background:#8b5cf608}
 
     <div class="card mb16">
       <div class="card-hd">
-        <div class="card-title">💵 Pay Periods</div>
-        <button class="btn btn-violet btn-sm" onclick="newPayPeriod()">+ New Period</button>
+        <div class="card-title">💵 Pay Period</div>
+        <button class="btn btn-ghost btn-sm" onclick="openNewMonthModal()">+ New Month</button>
       </div>
       <div class="card-body">
-        <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Each period is <b>calculated automatically from real attendance data</b> + your Payroll Settings — Present/Absent/Leave/Overtime are read live from the calendar above, not typed in. Finalize a period to freeze it permanently; finalized months are never recalculated or overwritten, even if attendance changes later.</p>
-        <div class="pp-chip-row" id="pp-chip-row"></div>
+        <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Calculated automatically from real attendance data + this month's own Payroll Settings — Present/Absent/LOP/Overtime are read live from the calendar above, not typed in. Finalize a month to lock it permanently; finalized months are never recalculated, even if attendance changes later.</p>
+        <div class="pp-chip-row" id="pp-chip-row" style="display:none"></div>
         <div id="pp-form-wrap"></div>
       </div>
     </div>
 
     <div class="card mb16">
-      <div class="card-hd"><div class="card-title">⚙️ Attendance Settings</div></div>
+      <div class="card-hd"><div class="card-title">🧑‍💼 Employee Salary Profile</div><button class="btn btn-ghost btn-sm" onclick="nav('companies')">Edit in Companies</button></div>
+      <div class="card-body" id="att-employee-profile"></div>
+    </div>
+
+    <div class="card mb16" id="att-settings-card">
+      <div class="card-hd"><div class="card-title">⚙️ Monthly Attendance Settings</div></div>
       <div class="card-body">
+        <p style="font-size:11px;color:var(--text3);margin-bottom:12px">These settings apply <b>only to <span id="att-settings-month-label">this month</span></b> — other months keep their own values unless you explicitly copy them.</p>
         <div class="fgrid">
           <div class="ff"><label>Monthly Salary / Basic (₹)</label><input type="number" id="att-salary" value="20000"></div>
           <div class="ff"><label>Working Days / Month</label><input type="number" id="att-workdays" value="27"></div>
           <div class="ff"><label>Paid Leaves / Month</label><input type="number" id="att-paidleaves" value="1" min="0" max="30"></div>
           <div class="ff"><label>Shift Start</label><input type="time" id="att-shiftstart" value="09:00"></div>
           <div class="ff"><label>Shift End</label><input type="time" id="att-shiftend" value="18:00"></div>
-          <div class="ff"><label>Grace Time (minutes)</label><input type="number" id="att-gracemins" value="15" min="0" max="120"></div>
+          <div class="ff"><label>Grace Time (minutes) <span class="att-tip" title="Extra minutes allowed after shift start before marking the employee late.">ⓘ</span></label><input type="number" id="att-gracemins" value="15" min="0" max="120"></div>
           <div class="ff"><label>Working Hours / Day</label><input type="number" id="att-hoursperday" value="8" min="1" max="24" step="0.5"></div>
-          <div class="ff"><label>OT Multiplier</label><input type="number" id="att-otmult" value="1.5" min="1" max="5" step="0.1"></div>
+          <div class="ff"><label>OT Multiplier <span class="att-tip" title="Multiplier used to calculate overtime pay.">ⓘ</span></label><input type="number" id="att-otmult" value="1.5" min="1" max="5" step="0.1"></div>
         </div>
-        <div style="font-size:10.5px;color:var(--text4);margin-top:8px">Saved per company — switch companies and each keeps its own settings.</div>
       </div>
     </div>
 
-    <div class="card mb16">
+    <div class="card mb16" id="payroll-settings-card">
       <div class="card-hd">
         <div class="card-title">🧮 Payroll &amp; Statutory Settings</div>
-        <span style="font-size:10.5px;color:var(--text4)">Drives the real calculation engine below</span>
+        <span style="font-size:10.5px;color:var(--text4)">Applies only to this month</span>
       </div>
       <div class="card-body">
         <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Salary Structure (% of Basic)</div>
         <div class="fgrid mb12">
           <div class="ff"><label>HRA %</label><input type="number" id="pc-hra-pct" value="0" min="0" max="100" step="0.5"></div>
-          <div class="ff"><label>Special Allowance %</label><input type="number" id="pc-allow-pct" value="0" min="0" max="100" step="0.5"></div>
+          <div class="ff"><label>Conveyance Allowance %</label><input type="number" id="pc-conveyance-pct" value="0" min="0" max="100" step="0.5"></div>
+          <div class="ff"><label>Other Allowances %</label><input type="number" id="pc-allow-pct" value="0" min="0" max="100" step="0.5"></div>
           <div class="ff"><label>Default Monthly Bonus (₹)</label><input type="number" id="pc-bonus-default" value="0" min="0"></div>
         </div>
 
@@ -1692,6 +1750,16 @@ tr:hover td{background:#8b5cf608}
         <div style="font-size:10.5px;color:var(--text4);margin-top:10px">These settings feed <b>calculatePayroll()</b> directly. Changing any value here recalculates the current (non-finalized) pay period automatically.</div>
       </div>
     </div>
+
+    <div class="card">
+      <div class="card-hd"><div class="card-title">📊 Monthly History</div></div>
+      <div class="card-body" style="padding:0">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Month</th><th>Attendance %</th><th>Present</th><th>Absent/LOP</th><th>Leave</th><th>Earnings</th><th>Deductions</th><th>Net Salary</th><th>Status</th></tr></thead>
+          <tbody id="att-history-body"></tbody>
+        </table></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1703,6 +1771,17 @@ tr:hover td{background:#8b5cf608}
       <button class="jv-modal-close" onclick="closeCalcModal()">✕</button>
     </div>
     <div id="calc-modal-body" style="max-height:70vh;overflow-y:auto"></div>
+  </div>
+</div>
+
+<!-- ═══ NEW MONTH MODAL ═══ -->
+<div id="nm-modal-overlay" class="jv-overlay att-bottom-sheet" onclick="if(event.target===this) closeNewMonthModal()">
+  <div class="jv-modal att-modal" style="max-width:420px">
+    <div class="jv-modal-hd">
+      <div class="jv-modal-title">🆕 Create New Month</div>
+      <button class="jv-modal-close" onclick="closeNewMonthModal()">✕</button>
+    </div>
+    <div id="nm-modal-body" style="padding:16px 20px"></div>
   </div>
 </div>
 
@@ -1745,38 +1824,61 @@ tr:hover td{background:#8b5cf608}
 
 <!-- ═══ KNOWLEDGE VAULT ═══ -->
 <div id="page-vault" class="page">
-  <div class="dash-hero mb16">
-    <div class="dash-hero-greeting">🧠 Knowledge Track</div>
-    <div class="dash-hero-sub">Your personal engineering memory</div>
-  </div>
+  <div class="kt-layout">
+    <!-- ═══ KNOWLEDGE VAULT SIDEBAR ═══ -->
+    <div class="kt-sidebar" id="kt-sidebar">
+      <button class="btn btn-violet btn-sm" style="width:100%;margin-bottom:14px" onclick="openVaultEditor()">+ New Knowledge</button>
 
-  <div class="kt-search-row mb16">
-    <input id="kv-search" class="kt-search-input" placeholder="🔍 Search your engineering memory..." oninput="renderVault()">
-    <button class="btn btn-violet btn-sm" onclick="openVaultEditor()">+ Add Troubleshooting Card</button>
-    <button class="btn btn-ghost btn-sm" onclick="startRevisionMode()">🔁 Revision Mode</button>
-  </div>
+      <div class="kt-sidebar-label">Smart Views</div>
+      <button class="kt-sidebar-item active" data-f="all" onclick="setVaultFilter('all',this)"><span>📚</span>All Knowledge</button>
+      <button class="kt-sidebar-item" data-f="troubleshooting" onclick="setVaultFilter('troubleshooting',this)"><span>🛠</span>Troubleshooting</button>
+      <button class="kt-sidebar-item" data-f="favorites" onclick="setVaultFilter('favorites',this)"><span>⭐</span>Favorites</button>
+      <button class="kt-sidebar-item" data-f="recurring" onclick="setVaultFilter('recurring',this)"><span>🔁</span>Recurring Issues</button>
+      <button class="kt-sidebar-item" data-f="recent" onclick="setVaultFilter('recent',this)"><span>🕐</span>Recently Added</button>
+      <button class="kt-sidebar-item" data-f="archived" onclick="setVaultFilter('archived',this)"><span>🗄</span>Archived</button>
 
-  <div class="gauto mb16" id="kv-stats-bar"></div>
-
-  <div class="kt-filter-row mb16">
-    <div class="kv-filter-group" id="kv-filter-row">
-      <button class="kv-filter-chip active" data-f="all" onclick="setVaultFilter('all',this)">All</button>
-      <button class="kv-filter-chip" data-f="troubleshooting" onclick="setVaultFilter('troubleshooting',this)">🔧 Troubleshooting</button>
-      <button class="kv-filter-chip" data-f="favorites" onclick="setVaultFilter('favorites',this)">⭐ Favorites</button>
-      <button class="kv-filter-chip" data-f="recurring" onclick="setVaultFilter('recurring',this)">🔁 Recurring</button>
-      <button class="kv-filter-chip" data-f="recent" onclick="setVaultFilter('recent',this)">🕐 Recently Added</button>
-      <button class="kv-filter-chip" data-f="archived" onclick="setVaultFilter('archived',this)">🗄 Archived</button>
+      <div class="kt-sidebar-label" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Folders</span>
+        <button class="kt-sidebar-add-btn" onclick="promptNewFolder()" title="New folder">+</button>
+      </div>
+      <div id="kt-folder-tree"></div>
     </div>
-    <select id="kv-type-select" onchange="renderVault()" title="Filter by note type">
-      <option value="all">All Types</option>
-      <option value="troubleshooting">🔧 Troubleshooting</option>
-      <option value="tech">📘 Tech Notes</option>
-      <option value="snippet">💻 Code Snippets</option>
-      <option value="cheatsheet">🔖 Cheat Sheets</option>
-    </select>
-  </div>
 
-  <div class="kv-grid" id="kv-grid"></div>
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <div class="kt-main">
+      <div class="dash-hero mb12">
+        <div class="dash-hero-greeting">🧠 Knowledge Track</div>
+        <div class="dash-hero-sub">Your personal engineering memory</div>
+      </div>
+
+      <div class="kt-search-row mb12">
+        <input id="kv-search" class="kt-search-input" placeholder="🔍 Search your engineering knowledge..." oninput="renderVault()">
+        <button class="btn btn-ghost btn-sm" onclick="startRevisionMode()">🔁 Revision Mode</button>
+      </div>
+
+      <div class="kt-summary-bar mb12" id="kv-stats-bar"></div>
+
+      <div id="kt-breadcrumb" class="kt-breadcrumb" style="display:none"></div>
+
+      <div class="kt-filter-row mb12">
+        <select id="kv-type-select" onchange="renderVault()" title="Filter by note type">
+          <option value="all">All Types</option>
+          <option value="troubleshooting">🔧 Troubleshooting</option>
+          <option value="tech">📘 Tech Notes</option>
+          <option value="snippet">💻 Code Snippets</option>
+          <option value="cheatsheet">🔖 Cheat Sheets</option>
+        </select>
+        <select id="kv-sort-select" onchange="renderVault()" title="Sort">
+          <option value="updated">Recently Updated</option>
+          <option value="added">Recently Added</option>
+          <option value="used">Most Used</option>
+          <option value="alpha">Alphabetical</option>
+        </select>
+      </div>
+
+      <div class="kv-grid" id="kv-grid"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Knowledge Track — Card Editor Modal -->
@@ -2341,6 +2443,7 @@ const ROW_TO_D = {
     loan: r.loan_amount || 0,
     otherDeductions: r.other_deductions_amount || 0,
     snapshot: r.payroll_snapshot || null,
+    settings: r.settings_snapshot || null,
     notes:r.notes||'', created_at:r.created_at, updated_at:r.updated_at||r.created_at
   }),
 };
@@ -2383,7 +2486,8 @@ const D_TO_ROW = {
     bonus_override: r.bonus,
     loan_amount: r.loan||0,
     other_deductions_amount: r.otherDeductions||0,
-    payroll_snapshot: r.snapshot || null
+    payroll_snapshot: r.snapshot || null,
+    settings_snapshot: r.settings || null
   }),
 };
 
@@ -2989,42 +3093,73 @@ function renderCompanyManager() {
 // pending settings save first so a stale reload can't clobber what was just typed.
 function initPlannerPage() {
   flushPendingAttendanceSave().then(() => {
-    loadAttendanceData().then(renderAttendance);
-    loadPayPeriods().then(renderPayPeriods);
+    Promise.all([loadAttendanceData(), loadPayPeriods()]).then(() => {
+      syncMonthContext();
+      renderAttendance();
+      renderPayPeriods();
+    });
   });
 }
 async function flushPendingAttendanceSave() {
   if (_attSaveTimer) {
     clearTimeout(_attSaveTimer);
     _attSaveTimer = null;
-    await saveAttendanceSettings();
+    await savePeriodSettings();
   }
 }
 
 // ── ATTENDANCE STATE ──
-let attDate     = new Date();           // month currently displayed
-let attLogs     = {};                   // { 'YYYY-MM-DD': { status:'present'|'absent'|'half'|'holiday'|'paid', login:'HH:MM'|null, logout:'HH:MM'|null } }
-let attSettings = {
+let attDate     = new Date();           // month currently displayed — the SINGLE source of truth for the whole Attendance & Payroll page
+let attLogs     = {};                   // { 'YYYY-MM-DD': { status:'present'|'absent'|'lop'|'half'|'holiday'|'paid'|'weekoff', login:'HH:MM'|null, logout:'HH:MM'|null } }
+
+// The system default used only when creating a brand-new "blank" month — never mutated directly.
+const DEFAULT_ATTENDANCE_SETTINGS = Object.freeze({
   salary: 20000, workdays: 27, paidLeaves: 1, hoursPerDay: 8, shiftStart: '09:00', shiftEnd: '18:00', graceMinutes: 15, otMultiplier: 1.5,
-  // ── Payroll & statutory configuration (drives calculatePayroll() — nothing below is hardcoded business logic) ──
-  hraPct: 0, allowancePct: 0, bonusDefault: 0,
+  hraPct: 0, conveyancePct: 0, otherAllowancePct: 0, bonusDefault: 0,
   pfEnabled: false, pfEmployeePct: 12, pfEmployerPct: 12, pfWageCeiling: 15000, epsPct: 8.33, edliPct: 0.5,
   esiEnabled: false, esiEmployeePct: 0.75, esiEmployerPct: 3.25, esiWageCeiling: 21000,
   profTax: 0, tds: 0
-};
+});
+// attSettings is now ALWAYS "the currently selected month's settings" — it is reassigned
+// wholesale by syncMonthContext() every time the month changes, sourced from that month's
+// own pay-period record (never a global cross-month value). See syncMonthContext() below.
+let attSettings = { ...DEFAULT_ATTENDANCE_SETTINGS };
+// One-time fallback: the OLD pre-month-scoping global settings row, if this account has one —
+// used only as the seed when creating the very first new-format month, so existing users don't
+// lose their configured salary. Never written to again.
+let legacyAttSettings = null;
 let _attSaveTimer = null;
 
 const ATT_STATUS_COLORS = {
   present: 'var(--green)', absent: 'var(--red)', half: 'var(--amber)',
-  holiday: 'var(--violet)', paid: 'var(--blue)'
+  holiday: 'var(--violet)', paid: 'var(--blue)', lop: 'var(--red)', weekoff: 'var(--text4)'
 };
 const ATT_STATUS_CLASS = {
   present: 'att-present', absent: 'att-absent', half: 'att-half',
-  holiday: 'att-holiday', paid: 'att-paid'
+  holiday: 'att-holiday', paid: 'att-paid', lop: 'att-lop', weekoff: 'att-weekoff'
 };
 
-function attPrevMonth() { attDate.setMonth(attDate.getMonth() - 1); renderAttendance(); }
-function attNextMonth() { attDate.setMonth(attDate.getMonth() + 1); renderAttendance(); }
+function attPrevMonth() { attDate.setMonth(attDate.getMonth() - 1); syncMonthContext(); renderAttendance(); }
+function attNextMonth() { attDate.setMonth(attDate.getMonth() + 1); syncMonthContext(); renderAttendance(); }
+function attGoToday()   { attDate = new Date(); syncMonthContext(); renderAttendance(); }
+
+// ══════════════════════════════════════════════════════════════════
+// THE MONTH-CONTEXT SWITCH — this is the single function that makes
+// "month is the primary context" real. Every time the displayed month
+// changes, this finds (or notes the absence of) that month's own pay
+// period and swaps `attSettings` + `activePayPeriodId` to match it.
+// Nothing here ever reads or writes a different month's data.
+// ══════════════════════════════════════════════════════════════════
+function syncMonthContext() {
+  const y = attDate.getFullYear(), m = attDate.getMonth();
+  const monthKey = `${y}-${String(m+1).padStart(2,'0')}`;
+  const period = (D.payPeriods||[]).find(p => (p.periodStart||'').slice(0,7) === monthKey);
+  activePayPeriodId = period ? period.id : null;
+  attSettings = period && period.settings
+    ? { ...DEFAULT_ATTENDANCE_SETTINGS, ...period.settings }
+    : { ...DEFAULT_ATTENDANCE_SETTINGS, ...(legacyAttSettings || {}) };
+  reflectAttSettingsIntoInputs();
+}
 
 // ══════════════════════════════════════════════════════════════════════════
 // ── REAL PAYROLL CALCULATION ENGINE ──
@@ -3043,30 +3178,36 @@ function attNextMonth() { attDate.setMonth(attDate.getMonth() + 1); renderAttend
 //   alter table pay_periods         add column if not exists bonus_override numeric;
 //   alter table pay_periods         add column if not exists loan_amount numeric default 0;
 //   alter table pay_periods         add column if not exists other_deductions_amount numeric default 0;
+//   alter table pay_periods         add column if not exists settings_snapshot jsonb;
 // ══════════════════════════════════════════════════════════════════════════
 
 // Real attendance summary for a given calendar month, read straight from attLogs.
-function calculateAttendance(year, month) {
+// `settings` is explicit (not implicitly global) so a bulk recompute of OTHER
+// months' periods never accidentally borrows whatever month is on screen.
+function calculateAttendance(year, month, settings) {
+  settings = settings || attSettings;
   const prefix = monthPrefix(year, month);
   const entries = Object.entries(attLogs).filter(([d]) => d.startsWith(prefix));
-  const c = { present:0, absent:0, half:0, holiday:0, paid:0 };
+  const c = { present:0, absent:0, half:0, holiday:0, paid:0, lop:0, weekoff:0 };
   entries.forEach(([, e]) => { if (c[e.status] !== undefined) c[e.status]++; });
   const timed = entries.filter(([d,e]) => e.login && e.logout);
   let otMinutes = 0, lateCount = 0;
-  const shiftMins = timeToMinutes(attSettings.shiftStart) ?? 540;
-  const grace = attSettings.graceMinutes ?? 15;
-  timed.forEach(([d]) => { const p = calcDayPay(d); if (p) otMinutes += p.otMins; });
+  const shiftMins = timeToMinutes(settings.shiftStart) ?? 540;
+  const grace = settings.graceMinutes ?? 15;
+  timed.forEach(([d]) => { const p = calcDayPay(d, settings); if (p) otMinutes += p.otMins; });
   timed.forEach(([,e]) => { if (timeToMinutes(e.login) > shiftMins + grace) lateCount++; });
   return {
     year, month, presentDays: c.present, absentDays: c.absent, halfDays: c.half,
-    holidayDays: c.holiday, paidLeaveDays: c.paid, otMinutes, lateCount,
-    markedDays: c.present + c.absent + c.half + c.holiday + c.paid
+    holidayDays: c.holiday, paidLeaveDays: c.paid, lopDays: c.lop, weekOffDays: c.weekoff,
+    otMinutes, lateCount,
+    markedDays: c.present + c.absent + c.half + c.holiday + c.paid + c.lop + c.weekoff
   };
 }
 
 // Days that actually earn pay this period, straight from the real attendance marks above.
+// LOP ("Loss of Pay") and Absent both reduce pay; Week Off behaves like Holiday (non-working, still paid).
 function calculatePayableDays(att) {
-  return att.presentDays + att.halfDays * 0.5 + att.paidLeaveDays + att.holidayDays;
+  return att.presentDays + att.halfDays * 0.5 + att.paidLeaveDays + att.holidayDays + att.weekOffDays;
 }
 
 // Prorate a monthly amount by how much of the configured working days were actually payable.
@@ -3076,12 +3217,13 @@ function calculateSalaryProration(monthlyAmount, workingDays, payableDays) {
 }
 
 // Real overtime for the month, summed from actual login/logout minutes via calcDayPay().
-function calculateOvertime(year, month) {
+function calculateOvertime(year, month, settings) {
+  settings = settings || attSettings;
   const prefix = monthPrefix(year, month);
   let otMinutes = 0, otAmount = 0;
   Object.entries(attLogs).forEach(([d, e]) => {
     if (!d.startsWith(prefix) || !e.login || !e.logout) return;
-    const p = calcDayPay(d);
+    const p = calcDayPay(d, settings);
     if (p) { otMinutes += p.otMins; otAmount += p.otPay; }
   });
   return { otMinutes, otHours: otMinutes / 60, otAmount };
@@ -3125,28 +3267,31 @@ function round2(n) { return Math.round((Number(n)||0) * 100) / 100; }
 
 // ── THE ORCHESTRATOR — everything a pay period needs, computed fresh every time ──
 // `overrides` lets a period supply its own bonus/loan/otherDeductions (defaults come from settings).
-function calculatePayroll(year, month, overrides = {}) {
-  const settings = attSettings;
-  const att = calculateAttendance(year, month);
+function calculatePayroll(year, month, overrides = {}, settingsOverride) {
+  const settings = settingsOverride || attSettings;
+  const att = calculateAttendance(year, month, settings);
   const payableDays = calculatePayableDays(att);
   const workingDays = settings.workdays || 0;
 
   const basicProration   = calculateSalaryProration(settings.salary || 0, workingDays, payableDays);
-  const hraFull          = (settings.salary || 0) * (settings.hraPct || 0) / 100;
-  const allowanceFull     = (settings.salary || 0) * (settings.allowancePct || 0) / 100;
-  const hraProration      = calculateSalaryProration(hraFull, workingDays, payableDays);
-  const allowanceProration= calculateSalaryProration(allowanceFull, workingDays, payableDays);
+  const hraFull           = (settings.salary || 0) * (settings.hraPct || 0) / 100;
+  const conveyanceFull    = (settings.salary || 0) * (settings.conveyancePct || 0) / 100;
+  const otherAllowFull    = (settings.salary || 0) * (settings.otherAllowancePct ?? settings.allowancePct ?? 0) / 100;
+  const hraProration       = calculateSalaryProration(hraFull, workingDays, payableDays);
+  const conveyanceProration= calculateSalaryProration(conveyanceFull, workingDays, payableDays);
+  const otherAllowProration= calculateSalaryProration(otherAllowFull, workingDays, payableDays);
 
-  const ot = calculateOvertime(year, month);
+  const ot = calculateOvertime(year, month, settings);
   const bonus = overrides.bonus != null ? Number(overrides.bonus) || 0 : (settings.bonusDefault || 0);
 
   const proratedBasic = round2(basicProration.prorated);
   const proratedHRA = round2(hraProration.prorated);
-  const proratedAllowance = round2(allowanceProration.prorated);
+  const proratedConveyance = round2(conveyanceProration.prorated);
+  const proratedOtherAllowance = round2(otherAllowProration.prorated);
   const otAmount = round2(ot.otAmount);
-  const lossOfPay = round2((settings.salary + hraFull + allowanceFull) - (proratedBasic + proratedHRA + proratedAllowance));
+  const lossOfPay = round2((settings.salary + hraFull + conveyanceFull + otherAllowFull) - (proratedBasic + proratedHRA + proratedConveyance + proratedOtherAllowance));
 
-  const grossSalary = calculateGrossSalary({ proratedBasic, proratedHRA, proratedAllowance, otAmount, bonus });
+  const grossSalary = calculateGrossSalary({ proratedBasic, proratedHRA, proratedAllowance: proratedConveyance + proratedOtherAllowance, otAmount, bonus });
 
   const pf = calculatePF(proratedBasic, settings);
   const esi = calculateESI(grossSalary, settings);
@@ -3163,10 +3308,10 @@ function calculatePayroll(year, month, overrides = {}) {
   return {
     year, month, workingDays,
     presentDays: att.presentDays, absentDays: att.absentDays, halfDays: att.halfDays,
-    paidLeaveDays: att.paidLeaveDays, holidayDays: att.holidayDays, lateCount: att.lateCount,
-    payableDays, ratio: basicProration.ratio, dailyRate: round2(basicProration.dailyRate),
-    basic: settings.salary || 0, hra: hraFull, allowance: allowanceFull,
-    proratedBasic, proratedHRA, proratedAllowance, lossOfPay,
+    paidLeaveDays: att.paidLeaveDays, holidayDays: att.holidayDays, lopDays: att.lopDays, weekOffDays: att.weekOffDays, lateCount: att.lateCount,
+    payableDays, totalDays: workingDays, ratio: basicProration.ratio, dailyRate: round2(basicProration.dailyRate),
+    basic: settings.salary || 0, hra: hraFull, conveyance: conveyanceFull, otherAllowance: otherAllowFull,
+    proratedBasic, proratedHRA, proratedConveyance, proratedOtherAllowance, lossOfPay,
     otMinutes: ot.otMinutes, otHours: round2(ot.otHours), otAmount,
     bonus: round2(bonus),
     grossSalary,
@@ -3203,13 +3348,15 @@ async function loadPayPeriods() {
   }
 }
 
-// Runs calculatePayroll() for whatever month a period covers, using that period's
-// own bonus/loan/otherDeductions overrides.
+// Runs calculatePayroll() for whatever month a period covers, using THAT PERIOD'S
+// OWN settings (never whatever month happens to be on screen) and its own
+// bonus/loan/otherDeductions overrides.
 function computeSnapshotForPeriod(p) {
   if (!p.periodStart) return null;
   const [y, m] = p.periodStart.split('-').map(Number);
   if (!y || !m) return null;
-  return calculatePayroll(y, m - 1, { bonus: p.bonus, loan: p.loan, otherDeductions: p.otherDeductions });
+  const settings = { ...DEFAULT_ATTENDANCE_SETTINGS, ...(p.settings || {}) };
+  return calculatePayroll(y, m - 1, { bonus: p.bonus, loan: p.loan, otherDeductions: p.otherDeductions }, settings);
 }
 
 function ppNetPay(p) {
@@ -3221,29 +3368,26 @@ function ppMoney(n) { const v = Number(n)||0; return (v<0?'-₹':'₹') + Math.a
 
 const PP_STATUS_META = {
   draft:     { label:'Draft',     cls:'pp-status-draft' },
+  open:      { label:'Open',      cls:'pp-status-draft' },
   finalized: { label:'Finalized', cls:'pp-status-final' }
 };
 
 function renderPayPeriods() {
-  const chipRow = document.getElementById('pp-chip-row');
   const formWrap = document.getElementById('pp-form-wrap');
-  if (!chipRow || !formWrap) return;
-  const periods = [...D.payPeriods].sort((a,b) => (b.periodStart||'').localeCompare(a.periodStart||'') || (b.created_at||'').localeCompare(a.created_at||''));
-  if (!periods.length) {
-    chipRow.innerHTML = `<div class="empty-td" style="padding:16px 4px">No pay periods yet — click "+ New Period" to add one (e.g. August 2026). It will calculate itself automatically from your attendance calendar and Payroll Settings.</div>`;
-    formWrap.innerHTML = '';
-    activePayPeriodId = null;
+  if (!formWrap) return;
+  // activePayPeriodId is owned by syncMonthContext() now — it always mirrors the
+  // currently displayed month (attDate), never "whichever period is most recent".
+  const p = D.payPeriods.find(x => x.id === activePayPeriodId);
+  if (!p) {
+    const monthLabel = attDate.toLocaleDateString('en', { month: 'long', year: 'numeric' });
+    formWrap.innerHTML = `<div class="empty-td" style="padding:20px 4px">
+      🆕 No payroll recorded yet for <b>${monthLabel}</b>.<br>
+      <span style="font-size:11px">Your salary will be calculated from Attendance, Salary Settings, Overtime, Bonus and Deductions once this month is created.</span><br>
+      <button class="btn btn-violet btn-sm" style="margin-top:10px" onclick="openNewMonthModal()">+ Create This Month</button>
+    </div>`;
     return;
   }
-  // Opening the page always lands on the most recent (current) period, unless the user has already picked one this session.
-  if (!activePayPeriodId || !periods.find(p => p.id === activePayPeriodId)) activePayPeriodId = periods[0].id;
-  chipRow.innerHTML = periods.map(p => `<button class="pp-chip ${p.id===activePayPeriodId?'active':''}" data-id="${p.id}" onclick="selectPayPeriod('${p.id}')">
-      <span class="pp-chip-label">${esc(p.label||'Untitled')}</span>
-      <span class="pp-chip-status ${(PP_STATUS_META[p.status]||PP_STATUS_META.draft).cls}">${(PP_STATUS_META[p.status]||PP_STATUS_META.draft).label}</span>
-      <span class="pp-chip-net">${ppMoney(ppNetPay(p))}</span>
-    </button>`).join('');
-  const p = periods.find(x => x.id === activePayPeriodId);
-  formWrap.innerHTML = p ? ppFormHtml(p) : '';
+  formWrap.innerHTML = ppFormHtml(p);
 }
 
 function ppFormHtml(p) {
@@ -3400,7 +3544,7 @@ function queuePayPeriodSaveSnapshotOnly(p) {
 // If Supabase rejects them, we strip them and retry so saves never hard-fail —
 // draft/finalized status and the calculated snapshot then simply stay local-only
 // for this session until the migration is applied.
-const PP_ENGINE_COLUMNS = ['status', 'payroll_snapshot', 'bonus_override', 'loan_amount', 'other_deductions_amount'];
+const PP_ENGINE_COLUMNS = ['status', 'payroll_snapshot', 'bonus_override', 'loan_amount', 'other_deductions_amount', 'settings_snapshot'];
 let _ppEngineColumnsMissing = false;
 
 async function savePayPeriod(idOverride) {
@@ -3421,6 +3565,91 @@ async function savePayPeriod(idOverride) {
     setSyncStatus('error', '⚠ Sync failed');
     toast('⚠️ Pay period failed to save', 'error');
   }
+}
+
+// ── "+ NEW MONTH" — the explicit action that creates a month's record.
+// Blank = system defaults. Copy = clones the most recent existing period's
+// SETTINGS ONLY (never attendance, never salary, never pay-period state).
+function openNewMonthModal() {
+  const now = new Date();
+  const sorted = [...D.payPeriods].sort((a,b) => (b.periodStart||'').localeCompare(a.periodStart||''));
+  let defaultMonth;
+  if (sorted.length) {
+    const [y,m] = sorted[0].periodStart.split('-').map(Number);
+    defaultMonth = new Date(y, m, 1); // month after the latest existing period
+  } else {
+    defaultMonth = now;
+  }
+  const monthVal = `${defaultMonth.getFullYear()}-${String(defaultMonth.getMonth()+1).padStart(2,'0')}`;
+  const hasPrevious = sorted.length > 0;
+  document.getElementById('nm-modal-body').innerHTML = `
+    <div class="ff mb12"><label>Month</label><input type="month" id="nm-month" value="${monthVal}"></div>
+    <div class="ff">
+      <label style="margin-bottom:8px">Options</label>
+      <label class="att-status-option checked" style="margin-bottom:8px" onclick="document.querySelectorAll('#nm-modal-body .att-status-option').forEach(o=>o.classList.remove('checked'));this.classList.add('checked')">
+        <input type="radio" name="nm-mode" value="blank" checked>
+        <span>Start completely blank <span style="font-weight:400;color:var(--text4)">— recommended</span></span>
+      </label>
+      <label class="att-status-option" onclick="document.querySelectorAll('#nm-modal-body .att-status-option').forEach(o=>o.classList.remove('checked'));this.classList.add('checked')" ${hasPrevious?'':'style="opacity:.4;pointer-events:none"'}>
+        <input type="radio" name="nm-mode" value="copy" ${hasPrevious?'':'disabled'}>
+        <span>Copy previous month's settings only <span style="font-weight:400;color:var(--text4)">— ${hasPrevious?'not attendance or salary':'no previous month yet'}</span></span>
+      </label>
+    </div>
+    <button class="btn btn-violet" style="width:100%;margin-top:14px" onclick="createNewMonth()">Create Month</button>
+  `;
+  document.getElementById('nm-modal-overlay').classList.add('show');
+}
+function closeNewMonthModal() { document.getElementById('nm-modal-overlay').classList.remove('show'); }
+
+async function createNewMonth() {
+  const monthVal = document.getElementById('nm-month').value;
+  if (!monthVal) { toast('⚠️ Pick a month', 'error'); return; }
+  const mode = document.querySelector('input[name="nm-mode"]:checked').value;
+  if (D.payPeriods.some(p => (p.periodStart||'').slice(0,7) === monthVal)) {
+    toast('⚠️ That month already has a record — open it instead', 'error');
+    return;
+  }
+  const [y, m] = monthVal.split('-').map(Number);
+  const label = new Date(y, m-1, 1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  let settings;
+  if (mode === 'copy') {
+    const sorted = [...D.payPeriods].filter(p => (p.periodStart||'') < monthVal+'-01').sort((a,b) => (b.periodStart||'').localeCompare(a.periodStart||''));
+    settings = sorted.length && sorted[0].settings ? { ...sorted[0].settings } : { ...DEFAULT_ATTENDANCE_SETTINGS };
+  } else {
+    settings = legacyAttSettings ? { ...DEFAULT_ATTENDANCE_SETTINGS, ...legacyAttSettings } : { ...DEFAULT_ATTENDANCE_SETTINGS };
+  }
+  const localObj = {
+    id:'', label, periodStart: monthVal+'-01', periodEnd:'',
+    status:'draft', bonus:null, loan:0, otherDeductions:0, notes:'',
+    settings, snapshot:null,
+    created_at:new Date().toISOString(), updated_at:new Date().toISOString()
+  };
+  localObj.snapshot = computeSnapshotForPeriod(localObj);
+  if (!currentUser) { toast('Not signed in', 'error'); return; }
+  setSyncStatus('syncing', 'Saving...');
+  try {
+    let payload = D_TO_ROW.payPeriods(localObj);
+    if (_ppEngineColumnsMissing) { payload = { ...payload }; PP_ENGINE_COLUMNS.forEach(c => delete payload[c]); }
+    const saved = await dbInsert(TABLE_MAP.payPeriods, payload, 'payPeriods');
+    localObj.id = saved.id;
+    D.payPeriods.unshift(localObj);
+    setSyncStatus('synced', '☁ Saved');
+  } catch (err) {
+    if (!_ppEngineColumnsMissing && PP_ENGINE_COLUMNS.some(c => (err.message||'').includes(c))) {
+      _ppEngineColumnsMissing = true;
+      console.warn('pay_periods is missing the calculation-engine columns — run the migration noted above calculateAttendance() to persist Draft/Finalized status and calculated snapshots.');
+      return createNewMonth();
+    }
+    setSyncStatus('error', '⚠ Save failed');
+    toast('Save failed — check connection', 'error');
+    return;
+  }
+  closeNewMonthModal();
+  attDate = new Date(y, m-1, 1);
+  syncMonthContext();
+  renderAttendance();
+  renderPayPeriods();
+  toast(`✦ ${label} created — starting empty`);
 }
 
 async function newPayPeriod() {
@@ -3517,7 +3746,8 @@ function openCalcModal(id) {
       ${row('Daily Rate', `Basic ₹${s.basic.toLocaleString('en-IN')} ÷ ${s.workingDays} days`, s.dailyRate)}
       ${row('Prorated Basic', `Daily Rate × ${s.payableDays} payable days`, s.proratedBasic)}
       ${s.hra ? row('Prorated HRA', `HRA ₹${s.hra.toLocaleString('en-IN')} × ${(s.ratio*100).toFixed(1)}%`, s.proratedHRA) : ''}
-      ${s.allowance ? row('Prorated Allowance', `Allowance ₹${s.allowance.toLocaleString('en-IN')} × ${(s.ratio*100).toFixed(1)}%`, s.proratedAllowance) : ''}
+      ${s.conveyance ? row('Prorated Conveyance Allowance', `Conveyance ₹${s.conveyance.toLocaleString('en-IN')} × ${(s.ratio*100).toFixed(1)}%`, s.proratedConveyance) : ''}
+      ${s.otherAllowance ? row('Prorated Other Allowances', `Other Allowances ₹${s.otherAllowance.toLocaleString('en-IN')} × ${(s.ratio*100).toFixed(1)}%`, s.proratedOtherAllowance) : ''}
       ${s.lossOfPay > 0 ? row('Loss of Pay (unpaid/absent days)', 'Full components − prorated components', -s.lossOfPay) : ''}
 
       ${step('3 · Overtime')}
@@ -3565,12 +3795,14 @@ async function loadAttendanceData() {
     attLogs = {};
     (logs || []).forEach(l => { attLogs[l.date] = { status: l.status, login: l.login_time || null, logout: l.logout_time || null, notes: l.notes || '' }; });
 
+    // Legacy (pre-month-scoping) global settings row — read once as a fallback
+    // seed for the very first new-format month. Never written to again.
     let setQuery = _supa.from('attendance_settings').select('*').eq('user_id', currentUser.id);
     setQuery = activeCompanyId ? setQuery.eq('company_id', activeCompanyId) : setQuery.is('company_id', null);
     const { data: settings, error: setErr } = await withTimeout(setQuery, 8000, 'loadAttendanceData settings');
     if (!setErr && settings && settings.length > 0) {
       const pc = settings[0].payroll_config || {};
-      attSettings = {
+      legacyAttSettings = {
         salary: settings[0].monthly_salary ?? 20000,
         workdays: settings[0].working_days ?? 27,
         paidLeaves: settings[0].paid_leaves ?? 1,
@@ -3579,7 +3811,7 @@ async function loadAttendanceData() {
         shiftEnd: (settings[0].shift_end || '18:00:00').slice(0,5),
         graceMinutes: settings[0].grace_minutes ?? 15,
         otMultiplier: settings[0].ot_multiplier ?? 1.5,
-        hraPct: pc.hraPct ?? 0, allowancePct: pc.allowancePct ?? 0, bonusDefault: pc.bonusDefault ?? 0,
+        hraPct: pc.hraPct ?? 0, conveyancePct: pc.conveyancePct ?? 0, otherAllowancePct: pc.otherAllowancePct ?? pc.allowancePct ?? 0, bonusDefault: pc.bonusDefault ?? 0,
         pfEnabled: !!pc.pfEnabled, pfEmployeePct: pc.pfEmployeePct ?? 12, pfEmployerPct: pc.pfEmployerPct ?? 12,
         pfWageCeiling: pc.pfWageCeiling ?? 15000, epsPct: pc.epsPct ?? 8.33, edliPct: pc.edliPct ?? 0.5,
         esiEnabled: !!pc.esiEnabled, esiEmployeePct: pc.esiEmployeePct ?? 0.75, esiEmployerPct: pc.esiEmployerPct ?? 3.25,
@@ -3592,8 +3824,12 @@ async function loadAttendanceData() {
     console.error('✗ loadAttendanceData failed:', err.message);
     // Non-fatal — calendar just renders empty, user can still mark new days
   }
+}
 
-  // Reflect loaded settings into the input fields
+// Pushes the current `attSettings` object into the Settings-panel input fields.
+// Called every time the month changes (syncMonthContext) so the form always
+// shows exactly the selected month's own values — never a stale prior month's.
+function reflectAttSettingsIntoInputs() {
   const sEl = document.getElementById('att-salary');
   const wEl = document.getElementById('att-workdays');
   const pEl = document.getElementById('att-paidleaves');
@@ -3611,9 +3847,8 @@ async function loadAttendanceData() {
   if (gmEl) gmEl.value = attSettings.graceMinutes;
   if (otEl) otEl.value = attSettings.otMultiplier;
 
-  // Reflect payroll config fields
   const map = {
-    'pc-hra-pct':'hraPct', 'pc-allow-pct':'allowancePct', 'pc-bonus-default':'bonusDefault',
+    'pc-hra-pct':'hraPct', 'pc-conveyance-pct':'conveyancePct', 'pc-allow-pct':'otherAllowancePct', 'pc-bonus-default':'bonusDefault',
     'pc-pf-emp-pct':'pfEmployeePct', 'pc-pf-empr-pct':'pfEmployerPct', 'pc-pf-ceiling':'pfWageCeiling',
     'pc-eps-pct':'epsPct', 'pc-edli-pct':'edliPct',
     'pc-esi-emp-pct':'esiEmployeePct', 'pc-esi-empr-pct':'esiEmployerPct', 'pc-esi-ceiling':'esiWageCeiling',
@@ -3622,10 +3857,17 @@ async function loadAttendanceData() {
   Object.entries(map).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.value = attSettings[key]; });
   const pfEnEl = document.getElementById('pc-pf-enabled'); if (pfEnEl) pfEnEl.value = attSettings.pfEnabled ? '1' : '0';
   const esiEnEl = document.getElementById('pc-esi-enabled'); if (esiEnEl) esiEnEl.value = attSettings.esiEnabled ? '1' : '0';
+
+  // Settings only make sense once a month actually has its own record — disable while none exists.
+  const hasPeriod = !!activePayPeriodId;
+  document.querySelectorAll('#att-settings-card input, #att-settings-card select, #payroll-settings-card input, #payroll-settings-card select')
+    .forEach(el => { el.disabled = !hasPeriod; });
 }
 
-// Debounced settings save — triggered on input change
+// Debounced settings save — triggered on input change. Writes straight into the
+// CURRENTLY SELECTED month's own pay-period row — never a shared/global table.
 function queueAttendanceSettingsSave() {
+  if (!activePayPeriodId) return; // no month record yet — inputs are disabled, nothing to save
   attSettings.salary       = parseFloat(document.getElementById('att-salary').value) || 0;
   attSettings.workdays     = parseInt(document.getElementById('att-workdays').value) || 0;
   attSettings.paidLeaves   = parseInt(document.getElementById('att-paidleaves').value) || 0;
@@ -3636,8 +3878,9 @@ function queueAttendanceSettingsSave() {
   attSettings.otMultiplier = parseFloat(document.getElementById('att-otmult').value) || 1.5;
 
   // Payroll & statutory config
-  attSettings.hraPct        = parseFloat(document.getElementById('pc-hra-pct')?.value) || 0;
-  attSettings.allowancePct  = parseFloat(document.getElementById('pc-allow-pct')?.value) || 0;
+  attSettings.hraPct            = parseFloat(document.getElementById('pc-hra-pct')?.value) || 0;
+  attSettings.conveyancePct     = parseFloat(document.getElementById('pc-conveyance-pct')?.value) || 0;
+  attSettings.otherAllowancePct = parseFloat(document.getElementById('pc-allow-pct')?.value) || 0;
   attSettings.bonusDefault  = parseFloat(document.getElementById('pc-bonus-default')?.value) || 0;
   attSettings.pfEnabled     = document.getElementById('pc-pf-enabled')?.value === '1';
   attSettings.pfEmployeePct = parseFloat(document.getElementById('pc-pf-emp-pct')?.value) || 0;
@@ -3653,55 +3896,21 @@ function queueAttendanceSettingsSave() {
   attSettings.tds           = parseFloat(document.getElementById('pc-tds')?.value) || 0;
 
   clearTimeout(_attSaveTimer);
-  _attSaveTimer = setTimeout(saveAttendanceSettings, 700);
+  _attSaveTimer = setTimeout(savePeriodSettings, 700);
   renderAttendanceOverview(); renderSimpleSalary(); // instant feedback even before save completes
   recalcActivePayPeriodIfCurrentMonth(); // payroll settings changed → recalc the live (non-finalized) period
 }
 
-let _payrollConfigColumnMissing = false; // set true once we learn the DB lacks payroll_config, so we stop retrying it every save
-async function saveAttendanceSettings() {
-  if (!currentUser) { toast('⚠️ Not signed in — settings not saved', 'error'); return; }
-  const basePayload = {
-    user_id: currentUser.id,
-    company_id: activeCompanyId || null,
-    monthly_salary: attSettings.salary,
-    working_days: attSettings.workdays,
-    paid_leaves: attSettings.paidLeaves,
-    hours_per_day: attSettings.hoursPerDay,
-    shift_start: attSettings.shiftStart,
-    shift_end: attSettings.shiftEnd,
-    grace_minutes: attSettings.graceMinutes,
-    ot_multiplier: attSettings.otMultiplier,
-    updated_at: new Date().toISOString()
-  };
-  const payrollConfig = {
-    hraPct: attSettings.hraPct, allowancePct: attSettings.allowancePct, bonusDefault: attSettings.bonusDefault,
-    pfEnabled: attSettings.pfEnabled, pfEmployeePct: attSettings.pfEmployeePct, pfEmployerPct: attSettings.pfEmployerPct,
-    pfWageCeiling: attSettings.pfWageCeiling, epsPct: attSettings.epsPct, edliPct: attSettings.edliPct,
-    esiEnabled: attSettings.esiEnabled, esiEmployeePct: attSettings.esiEmployeePct, esiEmployerPct: attSettings.esiEmployerPct,
-    esiWageCeiling: attSettings.esiWageCeiling, profTax: attSettings.profTax, tds: attSettings.tds
-  };
-  try {
-    const payload = _payrollConfigColumnMissing ? basePayload : { ...basePayload, payroll_config: payrollConfig };
-    const { error } = await withTimeout(
-      _supa.from('attendance_settings').upsert(payload, { onConflict: 'user_id,company_id' }),
-      8000, 'saveAttendanceSettings'
-    );
-    if (error) throw error;
-    setSyncStatus('synced', '☁ Saved');
-  } catch (err) {
-    // Graceful degradation: if the `payroll_config` column doesn't exist yet in this
-    // Supabase project (migration not run), retry without it so attendance settings
-    // still save — payroll settings will then only persist for this browser session.
-    if (!_payrollConfigColumnMissing && /payroll_config/i.test(err.message || '')) {
-      _payrollConfigColumnMissing = true;
-      console.warn('payroll_config column missing on attendance_settings — run the migration in the docs comment above saveAttendanceSettings() to persist payroll settings.');
-      return saveAttendanceSettings();
-    }
-    console.error('✗ saveAttendanceSettings failed:', err.message);
-    setSyncStatus('error', '⚠ Sync failed');
-    toast('⚠️ Attendance settings failed to save — check your connection', 'error');
-  }
+// Persists `attSettings` into the active month's own pay-period row (settings_snapshot),
+// and auto-promotes a brand-new period from 'draft' to 'open' the first time it's edited.
+async function savePeriodSettings() {
+  const p = D.payPeriods.find(x => x.id === activePayPeriodId);
+  if (!p || !currentUser) return;
+  p.settings = { ...attSettings };
+  if (p.status === 'draft') p.status = 'open';
+  p.snapshot = computeSnapshotForPeriod(p);
+  await savePayPeriod(p.id);
+  setSyncStatus('synced', '☁ Saved');
 }
 
 // Click a calendar day → mark/unmark it with the currently selected status
@@ -3716,8 +3925,10 @@ const ATT_STATUS_META = {
   present: { label:'Present',    icon:'✅', color:'var(--green)' },
   half:    { label:'Half Day',   icon:'🌗', color:'var(--amber)' },
   absent:  { label:'Absent',     icon:'❌', color:'var(--red)'   },
-  holiday: { label:'Holiday',    icon:'🎉', color:'var(--violet)'},
-  paid:    { label:'Paid Leave', icon:'💙', color:'var(--blue)'  },
+  lop:     { label:'LOP',        icon:'⚠️', color:'var(--red)'   },
+  paid:    { label:'Paid Leave', icon:'🏖', color:'var(--blue)'  },
+  holiday: { label:'Holiday',    icon:'⭐', color:'var(--violet)'},
+  weekoff: { label:'Week Off',   icon:'⭕', color:'var(--text4)' },
 };
 let attModalDate = null;
 let attModalPendingStatus = null;
@@ -3885,6 +4096,8 @@ function renderAttendance() {
   const y = attDate.getFullYear(), m = attDate.getMonth();
   const monthLabel = document.getElementById('att-month-label');
   if (monthLabel) monthLabel.textContent = new Date(y, m, 1).toLocaleDateString('en', { month: 'long', year: 'numeric' });
+  const settingsMonthLabel = document.getElementById('att-settings-month-label');
+  if (settingsMonthLabel) settingsMonthLabel.textContent = new Date(y, m, 1).toLocaleDateString('en', { month: 'long', year: 'numeric' });
 
   // Headers
   const hd = document.getElementById('att-cal-headers');
@@ -3936,7 +4149,56 @@ function renderAttendance() {
   renderAttendanceOverview();
   renderAttAnalytics();
   renderSimpleSalary();
+  renderEmployeeProfile();
+  renderMonthlyHistory();
   recalcActivePayPeriodIfCurrentMonth(); // real-time recalculation: any change to attendance flows straight into the matching draft pay period
+}
+
+// Read-only — pulled from the active Company + Profile, never duplicated/re-entered here.
+function renderEmployeeProfile() {
+  const el = document.getElementById('att-employee-profile'); if (!el) return;
+  const c = getActiveCompany();
+  const name = D.profile?.name || 'Your Name';
+  el.innerHTML = `
+    <div class="fgrid">
+      <div class="ff"><label>Employee Name</label><div class="att-profile-val">${esc(name)}</div></div>
+      <div class="ff"><label>Employee ID</label><div class="att-profile-val">${esc(c?.employee_id)||'—'}</div></div>
+      <div class="ff"><label>Designation</label><div class="att-profile-val">${esc(c?.role)||'—'}</div></div>
+      <div class="ff"><label>Company</label><div class="att-profile-val">${esc(c?.name)||'—'}</div></div>
+    </div>`;
+}
+
+// Every finalized/open/draft month, one row each, sorted newest first — click to jump straight there.
+function renderMonthlyHistory() {
+  const body = document.getElementById('att-history-body'); if (!body) return;
+  const periods = [...D.payPeriods].sort((a,b) => (b.periodStart||'').localeCompare(a.periodStart||''));
+  if (!periods.length) { body.innerHTML = `<tr><td colspan="9" class="empty-td">No months recorded yet.</td></tr>`; return; }
+  body.innerHTML = periods.map(p => {
+    const s = p.snapshot;
+    const meta = PP_STATUS_META[p.status] || PP_STATUS_META.draft;
+    const attPct = s && s.workingDays ? Math.round((s.payableDays / s.workingDays) * 100) : 0;
+    const isCurrent = (p.periodStart||'').slice(0,7) === `${attDate.getFullYear()}-${String(attDate.getMonth()+1).padStart(2,'0')}`;
+    return `<tr style="cursor:pointer;${isCurrent?'background:var(--violet-xl)':''}" onclick="jumpToHistoryMonth('${p.periodStart}')">
+      <td><b>${esc(p.label)}</b></td>
+      <td>${s ? attPct+'%' : '—'}</td>
+      <td>${s ? s.presentDays : '—'}</td>
+      <td>${s ? (s.absentDays + (s.lopDays||0)) : '—'}</td>
+      <td>${s ? s.paidLeaveDays : '—'}</td>
+      <td>${s ? ppMoney(s.grossSalary) : '—'}</td>
+      <td>${s ? ppMoney(s.totalDeductions) : '—'}</td>
+      <td><b>${s ? ppMoney(s.netSalary) : '—'}</b></td>
+      <td><span class="pp-status-pill ${meta.cls}">${meta.label}</span></td>
+    </tr>`;
+  }).join('');
+}
+function jumpToHistoryMonth(periodStart) {
+  if (!periodStart) return;
+  const [y,m] = periodStart.split('-').map(Number);
+  attDate = new Date(y, m-1, 1);
+  syncMonthContext();
+  renderAttendance();
+  renderPayPeriods();
+  document.getElementById('att-month-label')?.scrollIntoView({behavior:'smooth', block:'center'});
 }
 
 
@@ -3959,16 +4221,17 @@ function monthPrefix(y,m) { return `${y}-${String(m+1).padStart(2,'0')}-`; }
 // ── MINUTE-PRECISION WORKED-TIME CALC ──
 // Computes worked/late/OT minutes for a single day from its login/logout times.
 // Returns null if no times recorded.
-function calcDayPay(dateStr) {
+function calcDayPay(dateStr, settings) {
+  settings = settings || attSettings;
   const entry = attLogs[dateStr];
   if (!entry || !entry.login || !entry.logout) return null;
 
   const loginMins = timeToMinutes(entry.login);
   const logoutMins = timeToMinutes(entry.logout);
-  const shiftStartMins = timeToMinutes(attSettings.shiftStart) ?? 540;
-  const shiftEndMins = timeToMinutes(attSettings.shiftEnd) ?? 1080;
-  const grace = attSettings.graceMinutes ?? 15;
-  const expectedMins = (attSettings.hoursPerDay || 8) * 60;
+  const shiftStartMins = timeToMinutes(settings.shiftStart) ?? 540;
+  const shiftEndMins = timeToMinutes(settings.shiftEnd) ?? 1080;
+  const grace = settings.graceMinutes ?? 15;
+  const expectedMins = (settings.hoursPerDay || 8) * 60;
 
   let workedMins = logoutMins - loginMins;
   if (workedMins < 0) workedMins += 1440; // crossed midnight guard
@@ -3977,9 +4240,9 @@ function calcDayPay(dateStr) {
   const earlyMins = Math.max(0, shiftEndMins - logoutMins);
   const otMins = Math.max(0, workedMins - expectedMins);
 
-  const dailySalary = attSettings.workdays > 0 ? attSettings.salary / attSettings.workdays : 0;
+  const dailySalary = settings.workdays > 0 ? settings.salary / settings.workdays : 0;
   const minuteSalary = expectedMins > 0 ? dailySalary / expectedMins : 0;
-  const otPay = minuteSalary * (attSettings.otMultiplier ?? 1.5) * otMins;
+  const otPay = minuteSalary * (settings.otMultiplier ?? 1.5) * otMins;
   const earned = (entry.status === 'half' ? dailySalary * 0.5 : dailySalary) + otPay;
 
   return { workedMins, lateMins, earlyMins, otMins, dailySalary, minuteSalary, otPay, earned };
@@ -4106,7 +4369,7 @@ function renderAttendanceOverview() {
 function initAttendanceInputs() {
   [
     'att-salary','att-workdays','att-paidleaves','att-hoursperday','att-shiftstart','att-shiftend','att-gracemins','att-otmult',
-    'pc-hra-pct','pc-allow-pct','pc-bonus-default','pc-pf-enabled','pc-pf-emp-pct','pc-pf-empr-pct','pc-pf-ceiling','pc-eps-pct','pc-edli-pct',
+    'pc-hra-pct','pc-conveyance-pct','pc-allow-pct','pc-bonus-default','pc-pf-enabled','pc-pf-emp-pct','pc-pf-empr-pct','pc-pf-ceiling','pc-eps-pct','pc-edli-pct',
     'pc-esi-enabled','pc-esi-emp-pct','pc-esi-empr-pct','pc-esi-ceiling','pc-prof-tax','pc-tds'
   ].forEach(id => {
     const el = document.getElementById(id);
@@ -4292,9 +4555,11 @@ function refreshDailyCompanyOptions() {
   sel.value = cur && companies.some(c => c.id === cur) ? cur : (activeCompanyId || '');
 }
 async function saveDaily() {
+  const task = document.getElementById('dl-task').value.trim();
+  if (!task) { toast('⚠️ Task title required', 'error'); return; }
   const r = {
     date:document.getElementById('dl-date').value||today(),
-    task:document.getElementById('dl-task').value,
+    task,
     companyId:document.getElementById('dl-company').value,
     project:document.getElementById('dl-project').value,
     client:document.getElementById('dl-client').value,
@@ -4312,7 +4577,6 @@ async function saveDaily() {
     self:document.getElementById('dl-self').value,
     richNotes:document.getElementById('dl-rich').innerHTML
   };
-  if (!r.task) { toast('⚠️ Task title required', 'error'); return; }
   if (dailyEditingId) {
     const dbUpdates = {
       date:r.date, task:r.task, project:r.project, client:r.client,
@@ -4324,53 +4588,55 @@ async function saveDaily() {
     };
     await updateItemMapped('daily', dailyEditingId, r, dbUpdates, renderDaily);
     toast('✓ Work log entry updated');
-    cancelDailyEdit();
   } else {
     await addItem('daily', { id:'', ...r }, renderDaily);
-    clearDaily();
     toast('✓ Work logged');
   }
+  closeDailyEditor();
 }
+
+// Opens the Work Log entry modal. Pass an id to edit that entry, or call with
+// no argument to add a new one. This is the single entry point for both —
+// so "Add Entry" and the ✏️ edit button on every row behave identically.
 function openDailyEditor(id) {
-  const r = D.daily.find(x => x.id === id); if (!r) return;
-  dailyEditingId = id;
-  document.getElementById('dl-date').value = r.date||today();
-  document.getElementById('dl-task').value = r.task||'';
+  const isNew = !id;
+  const r = isNew ? null : D.daily.find(x => x.id === id);
+  if (!isNew && !r) return;
+  dailyEditingId = isNew ? null : id;
+  document.getElementById('dl-date').value = r ? (r.date||today()) : today();
+  document.getElementById('dl-task').value = r ? r.task||'' : '';
   refreshDailyCompanyOptions();
-  document.getElementById('dl-company').value = r.companyId||'';
-  document.getElementById('dl-project').value = r.project||'';
-  document.getElementById('dl-client').value = r.client||'';
-  document.getElementById('dl-hours').value = r.hours||'';
-  document.getElementById('dl-cat').value = r.cat||'Development';
-  document.getElementById('dl-prio').value = r.prio||'Medium';
-  document.getElementById('dl-status').value = r.status||'Completed';
-  document.getElementById('dl-tags').value = r.tags||'';
-  document.getElementById('dl-impact').value = r.impact||'';
-  document.getElementById('dl-problem').value = r.problem||'';
-  document.getElementById('dl-solution').value = r.solution||'';
-  document.getElementById('dl-tech').value = r.tech||'';
-  document.getElementById('dl-support').value = r.support||'No';
-  document.getElementById('dl-learning').value = r.learning||'';
-  document.getElementById('dl-self').value = r.self||'';
-  const rich = document.getElementById('dl-rich'); if (rich) { rich.innerHTML = r.richNotes||''; rtUpdateStats(rich) }
-  document.getElementById('dl-submit-btn').textContent = '💾 Update Entry';
-  document.getElementById('dl-cancel-btn').style.display = '';
-  document.getElementById('dl-edit-banner').style.display = '';
-  document.getElementById('dl-task').scrollIntoView({ behavior:'smooth', block:'center' });
+  document.getElementById('dl-company').value = r ? r.companyId||'' : (activeCompanyId||'');
+  document.getElementById('dl-project').value = r ? r.project||'' : '';
+  document.getElementById('dl-client').value = r ? r.client||'' : '';
+  document.getElementById('dl-hours').value = r ? r.hours||'' : '';
+  document.getElementById('dl-cat').value = r ? r.cat||'Development' : 'Development';
+  document.getElementById('dl-prio').value = r ? r.prio||'Medium' : 'Medium';
+  document.getElementById('dl-status').value = r ? r.status||'Completed' : 'Completed';
+  document.getElementById('dl-tags').value = r ? r.tags||'' : '';
+  document.getElementById('dl-impact').value = r ? r.impact||'' : '';
+  document.getElementById('dl-problem').value = r ? r.problem||'' : '';
+  document.getElementById('dl-solution').value = r ? r.solution||'' : '';
+  document.getElementById('dl-tech').value = r ? r.tech||'' : '';
+  document.getElementById('dl-support').value = r ? r.support||'No' : 'No';
+  document.getElementById('dl-learning').value = r ? r.learning||'' : '';
+  document.getElementById('dl-self').value = r ? r.self||'' : '';
+  const rich = document.getElementById('dl-rich'); if (rich) { rich.innerHTML = r ? r.richNotes||'' : ''; rtUpdateStats(rich) }
+  document.getElementById('wl-modal-title').textContent = isNew ? '+ Add Work Log Entry' : '✏️ Edit Work Log Entry';
+  document.getElementById('dl-submit-btn').textContent = isNew ? '💾 Save Entry' : '💾 Update Entry';
+  document.getElementById('dl-edit-banner').style.display = isNew ? 'none' : '';
+  document.getElementById('dl-del-btn').style.display = isNew ? 'none' : '';
+  document.getElementById('wl-editor-overlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('dl-task').focus(), 50);
 }
-function cancelDailyEdit() {
+function closeDailyEditor() {
   dailyEditingId = null;
-  clearDaily();
-  document.getElementById('dl-date').value = today();
-  document.getElementById('dl-submit-btn').textContent = '💾 Save Entry';
-  document.getElementById('dl-cancel-btn').style.display = 'none';
-  document.getElementById('dl-edit-banner').style.display = 'none';
+  document.getElementById('wl-editor-overlay').style.display = 'none';
 }
-function clearDaily() {
-  ['dl-task','dl-project','dl-client','dl-hours','dl-impact','dl-problem','dl-solution','dl-tech','dl-learning','dl-self','dl-tags']
-    .forEach(id => { const el=document.getElementById(id); if(el) el.value='' });
-  refreshDailyCompanyOptions();
-  const rich = document.getElementById('dl-rich'); if (rich) rich.innerHTML = '';
+async function deleteCurrentDailyEntry() {
+  if (!dailyEditingId) return;
+  await del('daily', dailyEditingId, 'renderDaily');
+  closeDailyEditor();
 }
 function companyNameFor(id) { const c = companies.find(x => x.id === id); return c ? c.name : ''; }
 
@@ -5335,15 +5601,32 @@ const KV_STATUS_META = {
   known_issue:   { label:'Known Issue',   icon:'🔵' },
 };
 let vaultFilter = 'all'; // all | troubleshooting | favorites | recurring | recent | archived
+let vaultFolderFilter = null; // e.g. 'Industrial IoT' or 'Industrial IoT/Modbus' — null = no folder filter
 let vaultEditingId = null;
 let vaultEditorFlags = { favorite:false, pinned:false, archived:false };
 let vaultAutosaveTimer = null;
 
 function setVaultFilter(f, btn) {
   vaultFilter = f;
-  document.querySelectorAll('#kv-filter-row .kv-filter-chip').forEach(b => b.classList.remove('active'));
+  vaultFolderFilter = null; // smart views and folders are mutually exclusive lenses
+  document.querySelectorAll('.kt-sidebar-item').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.kt-folder-item').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   renderVault();
+}
+function setVaultFolderFilter(path) {
+  vaultFolderFilter = path;
+  vaultFilter = 'all';
+  document.querySelectorAll('.kt-sidebar-item').forEach(b => b.classList.remove('active'));
+  renderVault();
+}
+function promptNewFolder() {
+  const name = prompt('New folder name (use "Parent/Child" to nest it):', '');
+  if (!name || !name.trim()) return;
+  vaultFolderFilter = null;
+  openVaultEditor();
+  document.getElementById('kv-e-folder').value = name.trim();
+  toast('📁 Folder set — save this card to create it');
 }
 
 function kvWordStats(content) {
@@ -5356,12 +5639,17 @@ function kvWordStats(content) {
 function vaultFilteredList() {
   const q = (document.getElementById('kv-search')?.value || '').toLowerCase().trim();
   const type = document.getElementById('kv-type-select')?.value || 'all';
+  const sort = document.getElementById('kv-sort-select')?.value || 'updated';
   let list = (D.vault || []).filter(v => {
     if (vaultFilter === 'archived') { if (!v.archived) return false }
     else if (v.archived) return false;
     if (vaultFilter === 'troubleshooting' && v.section !== 'troubleshooting') return false;
     if (vaultFilter === 'favorites' && !v.favorite) return false;
     if (vaultFilter === 'recurring' && !(v.times_used > 0)) return false;
+    if (vaultFolderFilter) {
+      const f = v.folder || '';
+      if (f !== vaultFolderFilter && !f.startsWith(vaultFolderFilter + '/')) return false;
+    }
     if (type !== 'all' && v.section !== type) return false;
     if (q) {
       const hay = `${v.title} ${v.content} ${v.tags} ${v.folder} ${v.category} ${v.problem} ${v.symptoms} ${v.root_cause} ${v.solution} ${v.memory_shortcut} ${v.device_model} ${v.protocol} ${v.client_project}`.toLowerCase();
@@ -5369,32 +5657,72 @@ function vaultFilteredList() {
     }
     return true;
   });
-  if (vaultFilter === 'recent') {
-    list = [...list].sort((a,b) => (b.created_at||'').localeCompare(a.created_at||''));
-  } else {
-    list = [...list].sort((a,b) => (b.pinned - a.pinned) || (b.favorite - a.favorite) || ((b.updated_at||b.created_at||'').localeCompare(a.updated_at||a.created_at||'')));
-  }
-  return list;
+  const sorters = {
+    updated: (a,b) => (b.pinned - a.pinned) || (b.favorite - a.favorite) || ((b.updated_at||b.created_at||'').localeCompare(a.updated_at||a.created_at||'')),
+    added:   (a,b) => (b.created_at||'').localeCompare(a.created_at||''),
+    used:    (a,b) => (b.times_used||0) - (a.times_used||0),
+    alpha:   (a,b) => (a.title||'').localeCompare(b.title||''),
+  };
+  const sortFn = vaultFilter === 'recent' ? sorters.added : (sorters[sort] || sorters.updated);
+  return [...list].sort(sortFn);
+}
+
+// Builds the nested folder tree in the sidebar from whatever "Folder" values
+// already exist on vault entries — folders are just a "/"-separated string on
+// each card, not a separate table, so this always reflects real data exactly.
+function renderFolderTree() {
+  const el = document.getElementById('kt-folder-tree'); if (!el) return;
+  const counts = {};
+  (D.vault||[]).filter(v => !v.archived && v.folder).forEach(v => {
+    const parts = v.folder.split('/').map(p=>p.trim()).filter(Boolean);
+    let path = '';
+    parts.forEach(part => { path = path ? path+'/'+part : part; counts[path] = (counts[path]||0) + 1; });
+  });
+  const paths = Object.keys(counts).sort();
+  if (!paths.length) { el.innerHTML = `<div style="font-size:10.5px;color:var(--text4);padding:4px 8px">No folders yet</div>`; return; }
+  el.innerHTML = paths.map(path => {
+    const depth = path.split('/').length - 1;
+    const name = path.split('/').pop();
+    return `<button class="kt-folder-item ${vaultFolderFilter===path?'active':''}" style="padding-left:${8+depth*14}px" onclick="setVaultFolderFilter('${path.replace(/'/g,"\\'")}')">
+      <span>📁 ${esc(name)}</span><span class="kt-folder-count">${counts[path]}</span>
+    </button>`;
+  }).join('');
 }
 
 function renderVault() {
   const grid = document.getElementById('kv-grid'); if (!grid) return;
+  renderFolderTree();
   const list = vaultFilteredList();
+
+  // Compact one-line summary bar instead of 4 separate KPI cards
   const statsBar = document.getElementById('kv-stats-bar');
   if (statsBar) {
     const all = (D.vault||[]).filter(v=>!v.archived);
-    const stats = [
-      { i:'🧠', l:'Total Knowledge', v:all.length, cls:'kv' },
-      { i:'🔧', l:'Troubleshooting', v:all.filter(v=>v.section==='troubleshooting').length, cls:'kb' },
-      { i:'🔁', l:'Recurring Issues', v:all.filter(v=>v.times_used>0).length, cls:'ka' },
-      { i:'⭐', l:'Favorites', v:all.filter(v=>v.favorite).length, cls:'kg' },
-    ];
-    statsBar.innerHTML = stats.map(k => `<div class="kpi kpi-glow ${k.cls}"><div class="kpi-ico">${k.i}</div><div class="kpi-val">${k.v}</div><div class="kpi-lbl">${k.l}</div></div>`).join('');
+    const ts = all.filter(v=>v.section==='troubleshooting').length;
+    const code = all.filter(v=>v.section==='snippet').length;
+    const notes = all.filter(v=>v.section==='tech'||v.section==='cheatsheet').length;
+    statsBar.innerHTML = `<span><b>${all.length}</b> Knowledge Items</span><span>🛠 <b>${ts}</b> Troubleshooting</span><span>💻 <b>${code}</b> Code</span><span>📘 <b>${notes}</b> Notes</span><span>🔁 <b>${all.filter(v=>v.times_used>0).length}</b> Recurring</span><span>⭐ <b>${all.filter(v=>v.favorite).length}</b> Favorites</span>`;
   }
+
+  // Folder breadcrumb, shown only when a folder is selected
+  const crumb = document.getElementById('kt-breadcrumb');
+  if (crumb) {
+    if (vaultFolderFilter) {
+      const parts = vaultFolderFilter.split('/');
+      let path = '';
+      const links = parts.map((p,i) => { path = path ? path+'/'+p : p; return `<span onclick="setVaultFolderFilter('${path.replace(/'/g,"\\'")}')">${esc(p)}</span>`; });
+      crumb.innerHTML = `<span onclick="setVaultFilter('all')" style="cursor:pointer">Knowledge Vault</span> → ${links.join(' → ')}`;
+      crumb.style.display = '';
+    } else {
+      crumb.style.display = 'none';
+    }
+  }
+
   if (!list.length) {
     const empty = (D.vault||[]).length === 0;
     grid.innerHTML = `<div class="empty-td" style="grid-column:1/-1">
       ${empty ? `🧠 Your engineering brain is empty... for now.<br>Start recording the problems you solve.<br><div class="btn-group" style="justify-content:center;margin-top:10px"><button class="btn btn-violet btn-sm" onclick="openVaultEditor()">+ Add Your First Troubleshooting Card</button><button class="btn btn-ghost btn-sm" onclick="seedSampleKnowledgeCards()">✦ Load 5 Example Cards</button></div>`
+              : vaultFolderFilter ? `📁 No knowledge here yet.<br><button class="btn btn-violet btn-sm" style="margin-top:8px" onclick="promptNewFolder()">+ Add Knowledge to this Folder</button>`
               : `No cards match this filter.`}
     </div>`;
     return;
@@ -5415,6 +5743,7 @@ function renderVault() {
           <button class="kv-card-icon-btn ${v.favorite?'on':''}" onclick="event.stopPropagation();toggleVaultFlag('${v.id}','favorite')" title="Favorite">⭐</button>
         </div>
       </div>
+      ${v.folder ? `<div class="kt-card-folder">📁 ${esc(v.folder.split('/').join(' / '))}</div>` : ''}
       <div class="kv-card-badges">
         <span class="kv-badge ${meta.cls}">${meta.icon} ${meta.label}</span>
         ${v.category ? `<span class="kv-badge folder">${esc(v.category)}</span>` : ''}
@@ -6003,10 +6332,11 @@ function buildSearchIndex() {
 function getQuickActions() {
   return [
     { type:'Action', icon:'📓', title:'+ Add Work Log',  action:() => nav('quicklog') },
-    { type:'Action', icon:'🧠', title:'+ Add Knowledge',  action:() => nav('vault') },
+    { type:'Action', icon:'🛠', title:'+ Add Troubleshooting Card',  action:() => { nav('vault'); openVaultEditor(); } },
+    { type:'Action', icon:'📁', title:'+ New Folder',  action:() => { nav('vault'); promptNewFolder(); } },
+    { type:'Action', icon:'🔁', title:'Revision Mode',  action:() => { nav('vault'); startRevisionMode(); } },
     { type:'Action', icon:'🏢', title:'+ Add Company',    action:() => nav('companies') },
-    { type:'Action', icon:'💰', title:'Open Salary',      action:() => nav('planner') },
-    { type:'Action', icon:'📅', title:'Open Attendance',  action:() => nav('planner') },
+    { type:'Action', icon:'💰', title:'Open Salary / Attendance',      action:() => nav('planner') },
   ];
 }
 let gsearchIndex = [];
