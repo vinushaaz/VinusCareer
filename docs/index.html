@@ -662,7 +662,7 @@ tr:hover td{background:#8b5cf608}
 .kv-card-foot{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;color:var(--text4);margin-top:2px}
 .kv-card.archived{opacity:.55}
 /* ── Editor modal ── */
-.kv-modal-overlay{position:fixed;inset:0;background:rgba(20,15,35,.55);backdrop-filter:blur(2px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.kv-modal-overlay{position:fixed;inset:0;background:rgba(20,15,35,.55);backdrop-filter:blur(2px);z-index:250;display:flex;align-items:center;justify-content:center;padding:20px}
 .kv-modal{background:var(--s1);border-radius:var(--r3);width:100%;max-width:720px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden}
 .kv-modal-hd{display:flex;align-items:center;gap:10px;padding:16px 18px 10px}
 .kv-title-input{flex:1;font-size:17px;font-weight:700;border:none;background:none;color:var(--text);padding:4px 0}
@@ -1645,7 +1645,6 @@ tr:hover td{background:#8b5cf608}
         </div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-ghost btn-sm" onclick="attGoToday()">Today</button>
-          <button class="btn btn-violet btn-sm" onclick="openNewMonthModal()">+ New Month</button>
         </div>
       </div>
       <div class="card-body">
@@ -1665,100 +1664,9 @@ tr:hover td{background:#8b5cf608}
       </div>
     </div>
 
-    <div class="g2 mb16">
-      <div class="card">
-        <div class="card-hd"><div class="card-title">📈 Attendance Analytics</div></div>
-        <div class="card-body"><div class="gauto" id="att-analytics-kpis"></div></div>
-      </div>
-      <div class="card">
-        <div class="card-hd"><div class="card-title">💰 Salary</div></div>
-        <div class="card-body" id="att-salary-card" style="padding:0"></div>
-      </div>
-    </div>
-
     <div class="card mb16">
-      <div class="card-hd">
-        <div class="card-title">💵 Pay Period</div>
-        <button class="btn btn-ghost btn-sm" onclick="openNewMonthModal()">+ New Month</button>
-      </div>
-      <div class="card-body">
-        <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Calculated automatically from real attendance data + this month's own Payroll Settings — Present/Absent/LOP/Overtime are read live from the calendar above, not typed in. Finalize a month to lock it permanently; finalized months are never recalculated, even if attendance changes later.</p>
-        <div class="pp-chip-row" id="pp-chip-row" style="display:none"></div>
-        <div id="pp-form-wrap"></div>
-      </div>
-    </div>
-
-    <div class="card mb16">
-      <div class="card-hd"><div class="card-title">🧑‍💼 Employee Salary Profile</div><button class="btn btn-ghost btn-sm" onclick="nav('companies')">Edit in Companies</button></div>
-      <div class="card-body" id="att-employee-profile"></div>
-    </div>
-
-    <div class="card mb16" id="att-settings-card">
-      <div class="card-hd"><div class="card-title">⚙️ Monthly Attendance Settings</div></div>
-      <div class="card-body">
-        <p style="font-size:11px;color:var(--text3);margin-bottom:12px">These settings apply <b>only to <span id="att-settings-month-label">this month</span></b> — other months keep their own values unless you explicitly copy them.</p>
-        <div class="fgrid">
-          <div class="ff"><label>Monthly Salary / Basic (₹)</label><input type="number" id="att-salary" value="20000"></div>
-          <div class="ff"><label>Working Days / Month</label><input type="number" id="att-workdays" value="27"></div>
-          <div class="ff"><label>Paid Leaves / Month</label><input type="number" id="att-paidleaves" value="1" min="0" max="30"></div>
-          <div class="ff"><label>Shift Start</label><input type="time" id="att-shiftstart" value="09:00"></div>
-          <div class="ff"><label>Shift End</label><input type="time" id="att-shiftend" value="18:00"></div>
-          <div class="ff"><label>Grace Time (minutes) <span class="att-tip" title="Extra minutes allowed after shift start before marking the employee late.">ⓘ</span></label><input type="number" id="att-gracemins" value="15" min="0" max="120"></div>
-          <div class="ff"><label>Working Hours / Day</label><input type="number" id="att-hoursperday" value="8" min="1" max="24" step="0.5"></div>
-          <div class="ff"><label>OT Multiplier <span class="att-tip" title="Multiplier used to calculate overtime pay.">ⓘ</span></label><input type="number" id="att-otmult" value="1.5" min="1" max="5" step="0.1"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mb16" id="payroll-settings-card">
-      <div class="card-hd">
-        <div class="card-title">🧮 Payroll &amp; Statutory Settings</div>
-        <span style="font-size:10.5px;color:var(--text4)">Applies only to this month</span>
-      </div>
-      <div class="card-body">
-        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Salary Structure (% of Basic)</div>
-        <div class="fgrid mb12">
-          <div class="ff"><label>HRA %</label><input type="number" id="pc-hra-pct" value="0" min="0" max="100" step="0.5"></div>
-          <div class="ff"><label>Conveyance Allowance %</label><input type="number" id="pc-conveyance-pct" value="0" min="0" max="100" step="0.5"></div>
-          <div class="ff"><label>Other Allowances %</label><input type="number" id="pc-allow-pct" value="0" min="0" max="100" step="0.5"></div>
-          <div class="ff"><label>Default Monthly Bonus (₹)</label><input type="number" id="pc-bonus-default" value="0" min="0"></div>
-        </div>
-
-        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">Provident Fund (PF)</div>
-        <div class="fgrid mb12">
-          <div class="ff"><label>PF Enabled</label><select id="pc-pf-enabled"><option value="0">No</option><option value="1">Yes</option></select></div>
-          <div class="ff"><label>Employee PF %</label><input type="number" id="pc-pf-emp-pct" value="12" min="0" max="100" step="0.1"></div>
-          <div class="ff"><label>Employer PF %</label><input type="number" id="pc-pf-empr-pct" value="12" min="0" max="100" step="0.1"></div>
-          <div class="ff"><label>PF Wage Ceiling (₹)</label><input type="number" id="pc-pf-ceiling" value="15000" min="0"></div>
-          <div class="ff"><label>EPS %</label><input type="number" id="pc-eps-pct" value="8.33" min="0" max="100" step="0.01"></div>
-          <div class="ff"><label>EDLI %</label><input type="number" id="pc-edli-pct" value="0.5" min="0" max="100" step="0.01"></div>
-        </div>
-
-        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">ESI</div>
-        <div class="fgrid mb12">
-          <div class="ff"><label>ESI Enabled</label><select id="pc-esi-enabled"><option value="0">No</option><option value="1">Yes</option></select></div>
-          <div class="ff"><label>Employee ESI %</label><input type="number" id="pc-esi-emp-pct" value="0.75" min="0" max="100" step="0.01"></div>
-          <div class="ff"><label>Employer ESI %</label><input type="number" id="pc-esi-empr-pct" value="3.25" min="0" max="100" step="0.01"></div>
-          <div class="ff"><label>ESI Wage Ceiling (₹)</label><input type="number" id="pc-esi-ceiling" value="21000" min="0"></div>
-        </div>
-
-        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">Taxes &amp; Other Deductions</div>
-        <div class="fgrid">
-          <div class="ff"><label>Professional Tax (₹/month)</label><input type="number" id="pc-prof-tax" value="0" min="0"></div>
-          <div class="ff"><label>TDS (₹/month)</label><input type="number" id="pc-tds" value="0" min="0"></div>
-        </div>
-        <div style="font-size:10.5px;color:var(--text4);margin-top:10px">These settings feed <b>calculatePayroll()</b> directly. Changing any value here recalculates the current (non-finalized) pay period automatically.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-hd"><div class="card-title">📊 Monthly History</div></div>
-      <div class="card-body" style="padding:0">
-        <div class="tbl-wrap"><table>
-          <thead><tr><th>Month</th><th>Attendance %</th><th>Present</th><th>Absent/LOP</th><th>Leave</th><th>Earnings</th><th>Deductions</th><th>Net Salary</th><th>Status</th></tr></thead>
-          <tbody id="att-history-body"></tbody>
-        </table></div>
-      </div>
+      <div class="card-hd"><div class="card-title">📈 Attendance Analytics</div></div>
+      <div class="card-body"><div class="gauto" id="att-analytics-kpis"></div></div>
     </div>
   </div>
 </div>
@@ -3062,7 +2970,7 @@ function renderCompanyManager() {
         </div>` : ''}
 
         ${editing ? `
-        <div class="form-section" style="background:var(--s2);border-radius:var(--r2);padding:14px;margin:0 14px 14px">
+        <div class="form-section open" style="background:var(--s2);border-radius:var(--r2);padding:14px;margin:0 14px 14px">
           <div class="fgrid">
             <div class="ff"><label>Job Title / Role</label><input id="cmpe-role-${c.id}" value="${esc(c.role)}"></div>
             <div class="ff"><label>Department</label><input id="cmpe-dept-${c.id}" value="${esc(c.department)}"></div>
@@ -5735,7 +5643,7 @@ function renderVault() {
     const previewText = isTS
       ? (v.memory_shortcut || v.problem || '—')
       : (isHtmlContent(v.content) ? htmlToPlainText(v.content) : (v.content||'').replace(/```[\s\S]*?```/g,'[code]').replace(/[#*`>-]/g,'')).slice(0,200);
-    return `<div class="kv-card ${v.pinned?'pinned':''} ${v.archived?'archived':''}" onclick="${isTS ? `openRecallView('${v.id}')` : `openVaultEditor('${v.id}')`}">
+    return `<div class="kv-card ${v.pinned?'pinned':''} ${v.archived?'archived':''}" onclick="${isTS ? `openRecallView('${v.id}')` : `openKnowledgeView('${v.id}')`}">
       <div class="kv-card-top">
         <div class="kv-card-title">${esc(v.title)}</div>
         <div class="kv-card-icons">
@@ -5960,7 +5868,32 @@ let recallRevealed = false;
 function openKnowledgeCard(id) {
   const v = D.vault.find(x => x.id === id); if (!v) return;
   nav('vault');
-  if (v.section === 'troubleshooting') openRecallView(id); else openVaultEditor(id);
+  if (v.section === 'troubleshooting') openRecallView(id); else openKnowledgeView(id);
+}
+
+// Read-only view for non-troubleshooting cards (Tech Note / Snippet / Cheat Sheet) —
+// reuses the same modal shell as Recall Mode, minus the reveal mechanic. Editing
+// only ever happens via the explicit ✏️ Edit button, never from a single click.
+function openKnowledgeView(id) {
+  const v = D.vault.find(x => x.id === id); if (!v) return;
+  recallCardId = id;
+  recallRevealed = true; // no reveal step for plain notes — content shows immediately
+  document.getElementById('kv-recall-title').textContent = v.title || 'Untitled';
+  document.getElementById('kv-recall-fav-btn').classList.toggle('on', !!v.favorite);
+  const meta = KV_SECTION_META[v.section] || KV_SECTION_META.tech;
+  const tags = (v.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
+  document.getElementById('kv-recall-body').innerHTML = `
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+      <span class="kv-badge ${meta.cls}">${meta.icon} ${meta.label}</span>
+      ${v.folder ? `<span class="kv-badge folder">📁 ${esc(v.folder.split('/').join(' / '))}</span>` : ''}
+      ${v.category ? `<span class="kv-badge folder">${esc(v.category)}</span>` : ''}
+    </div>
+    <div class="recall-block-body">${isHtmlContent(v.content) ? v.content : esc(v.content||'').replace(/\n/g,'<br>') || '<i style="color:var(--text4)">No content yet.</i>'}</div>
+    ${tags.length ? `<div style="margin-top:16px;display:flex;gap:5px;flex-wrap:wrap">${tags.map(t=>`<span class="kv-tag-chip">#${esc(t)}</span>`).join('')}</div>` : ''}
+    <div style="font-size:10.5px;color:var(--text4);margin-top:16px">Last updated ${(v.updated_at||v.created_at||'').split('T')[0]}</div>
+    <div id="kv-similar-wrap" style="margin-top:16px"></div>
+  `;
+  document.getElementById('kv-recall-overlay').style.display = 'flex';
 }
 
 function openRecallView(id) {
