@@ -1006,6 +1006,28 @@ tr:hover td{background:#8b5cf608}
 .pp-chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .att-tip{cursor:help;color:var(--text4);font-size:11px;border-bottom:1px dotted var(--text4)}
 .att-profile-val{padding:8px 10px;background:var(--s2);border-radius:9px;font-size:12.5px;color:var(--text2);font-weight:600}
+.sr-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.sr-row:last-child{border-bottom:none}
+.sr-amount{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;color:var(--violet-l);min-width:90px}
+.sr-range{flex:1;font-size:12px;color:var(--text3)}
+.pp-flow{display:flex;align-items:stretch;gap:6px;flex-wrap:wrap}
+.pp-flow-card{flex:1;min-width:120px;background:var(--s2);border-radius:12px;padding:12px 14px;text-align:center}
+.pp-flow-card.add .pp-flow-amt{color:var(--green)}
+.pp-flow-card.sub .pp-flow-amt{color:var(--red)}
+.pp-flow-card.total{background:var(--violet-xl)}
+.pp-flow-card.total .pp-flow-amt{color:var(--violet-l);font-size:17px}
+.pp-flow-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.pp-flow-amt{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;color:var(--text);margin:3px 0}
+.pp-flow-formula{font-size:9.5px;color:var(--text4)}
+.pp-flow-arrow{display:flex;align-items:center;color:var(--text4);font-size:16px;padding:0 2px}
+@media(max-width:700px){ .pp-flow-arrow{display:none} .pp-flow{flex-direction:column} }
+.pp-breakdown-section{margin-bottom:14px}
+.pp-breakdown-hd{font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.pp-breakdown-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12.5px;color:var(--text2)}
+.pp-breakdown-row b{color:var(--text)}
+.pp-breakdown-net{background:var(--violet-xl);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.pp-breakdown-net-lbl{font-size:12px;font-weight:700;color:var(--violet-l);text-transform:uppercase;letter-spacing:.04em}
+.pp-breakdown-net-amt{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--violet-l)}
 .pp-chip{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 14px;border-radius:12px;border:1.5px solid var(--border2);background:var(--s2);cursor:pointer;transition:all .15s}
 .pp-chip:hover{border-color:var(--border3)}
 .pp-chip.active{border-color:var(--violet-l);background:var(--violet-xl);box-shadow:0 0 0 1px var(--violet-l) inset}
@@ -1017,7 +1039,9 @@ tr:hover td{background:#8b5cf608}
 .pp-net-banner>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .pp-status-pill{margin-left:0!important;font-family:'Inter',sans-serif!important;font-size:10px!important;font-weight:700!important;padding:2px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px}
 .pp-status-draft{background:var(--amber-dim);color:var(--amber)}
+.pp-status-calc{background:var(--blue-dim,#dbeafe);color:var(--blue)}
 .pp-status-final{background:var(--green-dim);color:var(--green)}
+.pp-status-paid{background:var(--violet-xl);color:var(--violet-l)}
 .pp-chip-status{margin-left:0!important;font-family:'Inter',sans-serif!important;font-size:9px!important;font-weight:700!important;padding:1px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px;width:fit-content}
 .pp-calc-summary{background:var(--s2);border-radius:12px;padding:10px 16px;margin-top:10px}
 .pp-calc-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:11.5px;color:var(--text2);border-bottom:1px solid var(--border)}
@@ -1645,6 +1669,7 @@ tr:hover td{background:#8b5cf608}
         </div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-ghost btn-sm" onclick="attGoToday()">Today</button>
+          <button class="btn btn-violet btn-sm" onclick="openNewMonthModal()">+ New Month</button>
         </div>
       </div>
       <div class="card-body">
@@ -1667,6 +1692,116 @@ tr:hover td{background:#8b5cf608}
     <div class="card mb16">
       <div class="card-hd"><div class="card-title">📈 Attendance Analytics</div></div>
       <div class="card-body"><div class="gauto" id="att-analytics-kpis"></div></div>
+    </div>
+
+    <div class="card mb16">
+      <div class="card-hd"><div class="card-title">🧮 Payroll Calculation</div><button class="btn btn-ghost btn-sm" onclick="openCalcModal(activePayPeriodId)" id="pp-viewcalc-btn" style="display:none">🔍 Full Audit</button></div>
+      <div class="card-body" id="pp-calc-flow"></div>
+    </div>
+
+    <div class="card mb16">
+      <div class="card-hd"><div class="card-title">💰 Salary Breakdown</div></div>
+      <div class="card-body" id="pp-breakdown"></div>
+    </div>
+
+    <div class="card mb16">
+      <div class="card-hd">
+        <div class="card-title">💵 Pay Period</div>
+        <button class="btn btn-ghost btn-sm" onclick="openNewMonthModal()">+ New Month</button>
+      </div>
+      <div class="card-body">
+        <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Calculated automatically from real attendance data + Salary History + this month's own Payroll Settings. Finalize a month to lock it permanently; finalized/paid months are never recalculated, even if attendance or salary revisions change later.</p>
+        <div id="pp-form-wrap"></div>
+      </div>
+    </div>
+
+    <div class="card mb16">
+      <div class="card-hd"><div class="card-title">📊 Salary History</div><button class="btn btn-violet btn-sm" onclick="openSalaryRevisionModal()">+ Salary Revision</button></div>
+      <div class="card-body" id="salary-history-list"></div>
+    </div>
+
+    <div class="card mb16" id="att-settings-card">
+      <div class="card-hd"><div class="card-title">⚙️ Monthly Attendance Settings</div></div>
+      <div class="card-body">
+        <p style="font-size:11px;color:var(--text3);margin-bottom:12px">These settings apply <b>only to <span id="att-settings-month-label">this month</span></b> — other months keep their own values unless you explicitly copy them. Basic Salary is not set here — it's controlled by <b>Salary History</b> above.</p>
+        <div class="fgrid">
+          <div class="ff"><label>Basic Salary (₹) <span class="att-tip" title="Driven by Salary History — add a Salary Revision to change it.">ⓘ</span></label><div class="att-profile-val" id="att-salary-readonly">₹0</div></div>
+          <div class="ff"><label>Working Days / Month</label><input type="number" id="att-workdays" value="27"></div>
+          <div class="ff"><label>Paid Leaves / Month</label><input type="number" id="att-paidleaves" value="1" min="0" max="30"></div>
+          <div class="ff"><label>Shift Start</label><input type="time" id="att-shiftstart" value="09:00"></div>
+          <div class="ff"><label>Shift End</label><input type="time" id="att-shiftend" value="18:00"></div>
+          <div class="ff"><label>Grace Time (minutes) <span class="att-tip" title="Extra minutes allowed after shift start before marking the employee late.">ⓘ</span></label><input type="number" id="att-gracemins" value="15" min="0" max="120"></div>
+          <div class="ff"><label>Working Hours / Day</label><input type="number" id="att-hoursperday" value="8" min="1" max="24" step="0.5"></div>
+          <div class="ff"><label>LOP Calculation Method <span class="att-tip" title="How the daily rate is worked out for LOP/proration: divide the salary by Working Days, actual Calendar Days in the month, or a Fixed 30.">ⓘ</span></label>
+            <select id="att-lopmethod"><option value="workingDays">Working Days</option><option value="calendarDays">Calendar Days</option><option value="fixed30">Fixed 30 Days</option></select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb16" id="payroll-settings-card">
+      <div class="card-hd">
+        <div class="card-title">🧮 Payroll &amp; Statutory Settings</div>
+        <span style="font-size:10.5px;color:var(--text4)">Applies only to this month</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Salary Structure (% of Basic)</div>
+        <div class="fgrid mb12">
+          <div class="ff"><label>HRA %</label><input type="number" id="pc-hra-pct" value="0" min="0" max="100" step="0.5"></div>
+          <div class="ff"><label>Conveyance Allowance %</label><input type="number" id="pc-conveyance-pct" value="0" min="0" max="100" step="0.5"></div>
+          <div class="ff"><label>Other Allowances %</label><input type="number" id="pc-allow-pct" value="0" min="0" max="100" step="0.5"></div>
+          <div class="ff"><label>Default Monthly Bonus (₹)</label><input type="number" id="pc-bonus-default" value="0" min="0"></div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">Overtime</div>
+        <div class="fgrid mb12">
+          <div class="ff"><label>OT Calculation</label><select id="pc-ot-mode"><option value="multiplier">Multiplier of daily rate</option><option value="fixed">Fixed ₹/hour</option></select></div>
+          <div class="ff"><label>OT Multiplier <span class="att-tip" title="Multiplier used to calculate overtime pay.">ⓘ</span></label><input type="number" id="att-otmult" value="1.5" min="1" max="5" step="0.1"></div>
+          <div class="ff"><label>Fixed OT Rate (₹/hour)</label><input type="number" id="pc-ot-fixed" value="0" min="0"></div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">Provident Fund (PF)</div>
+        <div class="fgrid mb12">
+          <div class="ff"><label>PF Enabled</label><select id="pc-pf-enabled"><option value="0">No</option><option value="1">Yes</option></select></div>
+          <div class="ff"><label>Employee PF %</label><input type="number" id="pc-pf-emp-pct" value="12" min="0" max="100" step="0.1"></div>
+          <div class="ff"><label>Employer PF %</label><input type="number" id="pc-pf-empr-pct" value="12" min="0" max="100" step="0.1"></div>
+          <div class="ff"><label>PF Wage Ceiling (₹)</label><input type="number" id="pc-pf-ceiling" value="15000" min="0"></div>
+          <div class="ff"><label>EPS %</label><input type="number" id="pc-eps-pct" value="8.33" min="0" max="100" step="0.01"></div>
+          <div class="ff"><label>EDLI %</label><input type="number" id="pc-edli-pct" value="0.5" min="0" max="100" step="0.01"></div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">ESI</div>
+        <div class="fgrid mb12">
+          <div class="ff"><label>ESI Enabled</label><select id="pc-esi-enabled"><option value="0">No</option><option value="1">Yes</option></select></div>
+          <div class="ff"><label>Employee ESI %</label><input type="number" id="pc-esi-emp-pct" value="0.75" min="0" max="100" step="0.01"></div>
+          <div class="ff"><label>Employer ESI %</label><input type="number" id="pc-esi-empr-pct" value="3.25" min="0" max="100" step="0.01"></div>
+          <div class="ff"><label>ESI Wage Ceiling (₹)</label><input type="number" id="pc-esi-ceiling" value="21000" min="0"></div>
+        </div>
+
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 8px">Taxes &amp; Other Deductions</div>
+        <div class="fgrid">
+          <div class="ff"><label>Professional Tax (₹/month)</label><input type="number" id="pc-prof-tax" value="0" min="0"></div>
+          <div class="ff"><label>TDS (₹/month)</label><input type="number" id="pc-tds" value="0" min="0"></div>
+        </div>
+        <div style="font-size:10.5px;color:var(--text4);margin-top:10px">These settings feed <b>calculatePayroll()</b> directly. Changing any value here recalculates the current (non-finalized/paid) pay period automatically.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SALARY REVISION MODAL ═══ -->
+<div id="sr-modal-overlay" class="jv-overlay att-bottom-sheet" onclick="if(event.target===this) closeSalaryRevisionModal()">
+  <div class="jv-modal att-modal" style="max-width:420px">
+    <div class="jv-modal-hd">
+      <div class="jv-modal-title">💹 Salary Revision</div>
+      <button class="jv-modal-close" onclick="closeSalaryRevisionModal()">✕</button>
+    </div>
+    <div style="padding:16px 20px">
+      <div class="ff mb12"><label>Current Salary</label><div class="att-profile-val" id="sr-current-salary">₹0</div></div>
+      <div class="ff mb12"><label>New Basic Salary (₹)</label><input type="number" id="sr-amount" min="0" placeholder="e.g. 25000"></div>
+      <div class="ff mb12"><label>Effective From</label><input type="month" id="sr-effective"></div>
+      <div class="ff mb12"><label>Reason</label><input id="sr-reason" placeholder="e.g. Annual Increment"></div>
+      <button class="btn btn-violet" style="width:100%" onclick="addSalaryRevision()">💾 Save Revision</button>
     </div>
   </div>
 </div>
@@ -1998,7 +2133,7 @@ const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 let D = {
   daily: [], achievements: [], evidence: [],
   star: [], plans: [], goals: [], mood: [],
-  tasks: [], meetings: [], stickies: [], vault: [], payPeriods: [],
+  tasks: [], meetings: [], stickies: [], vault: [], payPeriods: [], salaryRevisions: [],
   profile: { name:'', email:'', links:'' }
 };
 
@@ -2156,7 +2291,7 @@ function resetAppState() {
   D = {
     daily:[], achievements:[], evidence:[],
     star:[], plans:[], goals:[], mood:[],
-    tasks:[], meetings:[], stickies:[], vault:[], payPeriods:[],
+    tasks:[], meetings:[], stickies:[], vault:[], payPeriods:[], salaryRevisions:[],
     profile:{ name:'',email:'',links:'' }
   };
 }
@@ -2278,11 +2413,12 @@ const TABLE_MAP = {
   stickies:     'sticky_notes',
   vault:        'knowledge_vault',
   payPeriods:   'pay_periods',
+  salaryRevisions: 'salary_revisions',
 };
 
 // Tables whose records belong to a specific employer. Personal tables
 // (plans, goals, mood, vault) follow the user across every company.
-const COMPANY_SCOPED = new Set(['achievements','evidence','star','tasks','meetings','payPeriods']);
+const COMPANY_SCOPED = new Set(['achievements','evidence','star','tasks','meetings','payPeriods','salaryRevisions']);
 
 // ── COMPANY STATE ──
 let companies = [];          // all companies this user has ever logged
@@ -2302,6 +2438,7 @@ function getActiveCompany() {
 // ── Companies migration (optional, same graceful degradation as above):
 //      alter table companies add column if not exists projects text;
 //      alter table companies add column if not exists contacts text;
+//      alter table companies add column if not exists date_left date;
 // ── Knowledge Track migration (optional, same graceful degradation as above):
 //      alter table knowledge_vault add column if not exists problem text;
 //      alter table knowledge_vault add column if not exists symptoms text;
@@ -2354,6 +2491,7 @@ const ROW_TO_D = {
     settings: r.settings_snapshot || null,
     notes:r.notes||'', created_at:r.created_at, updated_at:r.updated_at||r.created_at
   }),
+  salaryRevisions: r => ({ id:r.id, effectiveFrom:r.effective_from||'', basicSalary:r.basic_salary||0, reason:r.reason||'', created_at:r.created_at }),
 };
 
 // Map: local D object → Supabase insert payload
@@ -2397,6 +2535,7 @@ const D_TO_ROW = {
     payroll_snapshot: r.snapshot || null,
     settings_snapshot: r.settings || null
   }),
+  salaryRevisions: r => ({ effective_from:r.effectiveFrom, basic_salary:r.basicSalary, reason:r.reason||'' }),
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -2847,6 +2986,8 @@ async function saveCompanyDetails(id) {
     role:            document.getElementById('cmpe-role-'+id).value,
     department:      document.getElementById('cmpe-dept-'+id).value,
     manager_name:    document.getElementById('cmpe-manager-'+id).value,
+    date_of_joining: document.getElementById('cmpe-doj-'+id).value || null,
+    date_left:       document.getElementById('cmpe-dateleft-'+id).value || null,
     projects:        document.getElementById('cmpe-projects-'+id).value.trim(),
     contacts:        document.getElementById('cmpe-contacts-'+id).value.trim(),
   };
@@ -2945,9 +3086,9 @@ function renderCompanyManager() {
         <div class="company-card-main" onclick="switchCompany('${c.id}')">
           <div class="company-card-icon">${c.is_current?'🏢':'📁'}</div>
           <div class="company-card-info">
-            <div class="company-card-name">${esc(c.name)} ${c.id===activeCompanyId?'<span class="badge bv">Active</span>':''}</div>
+            <div class="company-card-name">${esc(c.name)} ${c.id===activeCompanyId?'<span class="badge bv">Active</span>':''} ${c.date_left?'<span class="badge bn">Past</span>':''}</div>
             <div class="company-card-meta">${esc(c.role)||'No role set'}${c.department?' · '+esc(c.department):''}</div>
-            <div class="company-card-meta">${c.date_of_joining?'Joined '+c.date_of_joining:''}</div>
+            <div class="company-card-meta">${c.date_of_joining?'Joined '+c.date_of_joining:''}${c.date_left?' · Left '+c.date_left:''}</div>
           </div>
           <div style="display:flex;gap:14px;font-size:10.5px;color:var(--text3);flex-shrink:0;padding-right:6px">
             <span>📓 ${work.length}</span>
@@ -2975,6 +3116,8 @@ function renderCompanyManager() {
             <div class="ff"><label>Job Title / Role</label><input id="cmpe-role-${c.id}" value="${esc(c.role)}"></div>
             <div class="ff"><label>Department</label><input id="cmpe-dept-${c.id}" value="${esc(c.department)}"></div>
             <div class="ff"><label>Manager Name</label><input id="cmpe-manager-${c.id}" value="${esc(c.manager_name)}"></div>
+            <div class="ff"><label>Date of Joining</label><input type="date" id="cmpe-doj-${c.id}" value="${c.date_of_joining||''}"></div>
+            <div class="ff"><label>Date Left <span style="font-weight:400;color:var(--text4)">— leave blank if still working here</span></label><input type="date" id="cmpe-dateleft-${c.id}" value="${c.date_left||''}"></div>
             <div class="ff full"><label>Projects</label><input id="cmpe-projects-${c.id}" value="${esc(c.projects)}" placeholder="Comma separated"></div>
             <div class="ff full"><label>Key Contacts</label><input id="cmpe-contacts-${c.id}" value="${esc(c.contacts)}"></div>
           </div>
@@ -3023,6 +3166,8 @@ let attLogs     = {};                   // { 'YYYY-MM-DD': { status:'present'|'a
 // The system default used only when creating a brand-new "blank" month — never mutated directly.
 const DEFAULT_ATTENDANCE_SETTINGS = Object.freeze({
   salary: 20000, workdays: 27, paidLeaves: 1, hoursPerDay: 8, shiftStart: '09:00', shiftEnd: '18:00', graceMinutes: 15, otMultiplier: 1.5,
+  otMode: 'multiplier', otFixedRate: 0,
+  lopMethod: 'workingDays', // 'workingDays' | 'calendarDays' | 'fixed30'
   hraPct: 0, conveyancePct: 0, otherAllowancePct: 0, bonusDefault: 0,
   pfEnabled: false, pfEmployeePct: 12, pfEmployerPct: 12, pfWageCeiling: 15000, epsPct: 8.33, edliPct: 0.5,
   esiEnabled: false, esiEmployeePct: 0.75, esiEmployerPct: 3.25, esiWageCeiling: 21000,
@@ -3066,7 +3211,99 @@ function syncMonthContext() {
   attSettings = period && period.settings
     ? { ...DEFAULT_ATTENDANCE_SETTINGS, ...period.settings }
     : { ...DEFAULT_ATTENDANCE_SETTINGS, ...(legacyAttSettings || {}) };
+  // Basic Salary is never freely typed per month — it's always derived from Salary
+  // History (see getSalaryForMonth), UNLESS this month is locked (finalized/paid),
+  // in which case its frozen historical value is preserved forever.
+  if (!period || !isPeriodLocked(period)) {
+    attSettings.salary = getSalaryForMonth(y, m);
+  }
   reflectAttSettingsIntoInputs();
+}
+
+function isPeriodLocked(p) { return p && (p.status === 'finalized' || p.status === 'paid'); }
+
+// ── SALARY HISTORY — "current salary is not historical salary" (spec section 17) ──
+// Finds whichever salary revision was in effect for a given month: the most
+// recent revision whose effectiveFrom is <= that month. Never uses "today's"
+// salary for a past month.
+function getSalaryForMonth(year, month0) {
+  const monthKey = `${year}-${String(month0+1).padStart(2,'0')}`;
+  const applicable = (D.salaryRevisions||[])
+    .filter(r => (r.effectiveFrom||'').slice(0,7) <= monthKey)
+    .sort((a,b) => (b.effectiveFrom||'').localeCompare(a.effectiveFrom||''));
+  if (applicable.length) return applicable[0].basicSalary;
+  return legacyAttSettings ? legacyAttSettings.salary : DEFAULT_ATTENDANCE_SETTINGS.salary;
+}
+
+// Sorted newest-first, each annotated with the month range it actually covered —
+// e.g. "₹25,000 · Sep 2026 → Present" or "₹20,000 · Jun 2026 → Aug 2026".
+function getSalaryHistoryRanges() {
+  const sorted = [...(D.salaryRevisions||[])].sort((a,b) => (a.effectiveFrom||'').localeCompare(b.effectiveFrom||''));
+  return sorted.map((r, i) => {
+    const next = sorted[i+1];
+    const from = r.effectiveFrom;
+    const to = next ? addMonthsToDateStr(next.effectiveFrom, -1) : null; // ends the month before the next revision starts
+    return { ...r, rangeFrom: from, rangeTo: to };
+  }).reverse(); // newest first for display
+}
+function addMonthsToDateStr(dateStr, delta) {
+  const [y,m] = dateStr.split('-').map(Number);
+  const d = new Date(y, m-1+delta, 1);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`;
+}
+function monthLabel(dateStr) {
+  if (!dateStr) return '';
+  const [y,m] = dateStr.split('-').map(Number);
+  return new Date(y, m-1, 1).toLocaleDateString('en', { month:'short', year:'numeric' });
+}
+
+async function addSalaryRevision() {
+  const monthVal = document.getElementById('sr-effective').value; // YYYY-MM
+  const amount = parseFloat(document.getElementById('sr-amount').value);
+  const reason = document.getElementById('sr-reason').value.trim();
+  if (!monthVal) { toast('⚠️ Pick an effective month', 'error'); return; }
+  if (!amount || amount <= 0) { toast('⚠️ Enter a valid salary amount', 'error'); return; }
+  const localObj = { id:'', effectiveFrom: monthVal+'-01', basicSalary: amount, reason, created_at: new Date().toISOString() };
+  await addItem('salaryRevisions', localObj, null);
+  toast('✦ Salary revision saved');
+  closeSalaryRevisionModal();
+  // Recalculate every NON-LOCKED period so this revision immediately reflects in
+  // any month it applies to — finalized/paid months are never touched.
+  D.payPeriods.forEach(p => { if (!isPeriodLocked(p)) { p.snapshot = computeSnapshotForPeriod(p); savePayPeriod(p.id); } });
+  syncMonthContext();
+  renderAttendance();
+  renderPayPeriods();
+  renderSalaryHistory();
+}
+async function deleteSalaryRevision(id) {
+  if (!confirm('Delete this salary revision? Months that used it for their live calculation will fall back to the next applicable revision.')) return;
+  await del('salaryRevisions', id, null);
+  D.payPeriods.forEach(p => { if (!isPeriodLocked(p)) { p.snapshot = computeSnapshotForPeriod(p); savePayPeriod(p.id); } });
+  syncMonthContext();
+  renderAttendance();
+  renderPayPeriods();
+  renderSalaryHistory();
+}
+function openSalaryRevisionModal() {
+  const now = attDate;
+  document.getElementById('sr-effective').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('sr-amount').value = '';
+  document.getElementById('sr-reason').value = '';
+  document.getElementById('sr-current-salary').textContent = ppMoney(getSalaryForMonth(now.getFullYear(), now.getMonth()));
+  document.getElementById('sr-modal-overlay').classList.add('show');
+}
+function closeSalaryRevisionModal() { document.getElementById('sr-modal-overlay').classList.remove('show'); }
+
+function renderSalaryHistory() {
+  const el = document.getElementById('salary-history-list'); if (!el) return;
+  const ranges = getSalaryHistoryRanges();
+  if (!ranges.length) { el.innerHTML = `<div class="empty-td">No salary revisions yet. The salary configured in Attendance Settings applies to every month until you add one.</div>`; return; }
+  el.innerHTML = ranges.map((r,i) => `
+    <div class="sr-row">
+      <div class="sr-amount">${ppMoney(r.basicSalary)}</div>
+      <div class="sr-range">${monthLabel(r.rangeFrom)} → ${r.rangeTo ? monthLabel(r.rangeTo) : 'Present'}${r.reason ? ` · ${esc(r.reason)}` : ''}</div>
+      <button class="kv-card-icon-btn" onclick="deleteSalaryRevision('${r.id}')" title="Delete this revision">🗑</button>
+    </div>`).join('');
 }
 
 // ══════════════════════════════════════════════════════════════════════════
@@ -3087,6 +3324,21 @@ function syncMonthContext() {
 //   alter table pay_periods         add column if not exists loan_amount numeric default 0;
 //   alter table pay_periods         add column if not exists other_deductions_amount numeric default 0;
 //   alter table pay_periods         add column if not exists settings_snapshot jsonb;
+//
+//   create table if not exists salary_revisions (
+//     id uuid primary key default gen_random_uuid(),
+//     user_id uuid not null references auth.users(id) on delete cascade,
+//     company_id uuid references companies(id) on delete set null,
+//     effective_from date not null,
+//     basic_salary numeric not null default 0,
+//     reason text default '',
+//     created_at timestamptz not null default now()
+//   );
+//   alter table salary_revisions enable row level security;
+//   create policy "salary_revisions_select_own" on salary_revisions for select using (auth.uid() = user_id);
+//   create policy "salary_revisions_insert_own" on salary_revisions for insert with check (auth.uid() = user_id);
+//   create policy "salary_revisions_update_own" on salary_revisions for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+//   create policy "salary_revisions_delete_own" on salary_revisions for delete using (auth.uid() = user_id);
 // ══════════════════════════════════════════════════════════════════════════
 
 // Real attendance summary for a given calendar month, read straight from attLogs.
@@ -3122,6 +3374,15 @@ function calculatePayableDays(att) {
 function calculateSalaryProration(monthlyAmount, workingDays, payableDays) {
   const ratio = workingDays > 0 ? Math.min(1, payableDays / workingDays) : 0;
   return { ratio, dailyRate: workingDays > 0 ? monthlyAmount / workingDays : 0, prorated: monthlyAmount * ratio };
+}
+
+// The divisor used for daily-rate / LOP math — configurable per spec section 6,
+// because different employers compute "per day" salary differently.
+function getLopDivisor(settings, year, month) {
+  const method = settings.lopMethod || 'workingDays';
+  if (method === 'calendarDays') return new Date(year, month + 1, 0).getDate(); // actual days in that month
+  if (method === 'fixed30') return 30;
+  return settings.workdays || 27; // 'workingDays' (default) — the configured Working Days / Month
 }
 
 // Real overtime for the month, summed from actual login/logout minutes via calcDayPay().
@@ -3179,7 +3440,7 @@ function calculatePayroll(year, month, overrides = {}, settingsOverride) {
   const settings = settingsOverride || attSettings;
   const att = calculateAttendance(year, month, settings);
   const payableDays = calculatePayableDays(att);
-  const workingDays = settings.workdays || 0;
+  const workingDays = getLopDivisor(settings, year, month);
 
   const basicProration   = calculateSalaryProration(settings.salary || 0, workingDays, payableDays);
   const hraFull           = (settings.salary || 0) * (settings.hraPct || 0) / 100;
@@ -3198,6 +3459,9 @@ function calculatePayroll(year, month, overrides = {}, settingsOverride) {
   const proratedOtherAllowance = round2(otherAllowProration.prorated);
   const otAmount = round2(ot.otAmount);
   const lossOfPay = round2((settings.salary + hraFull + conveyanceFull + otherAllowFull) - (proratedBasic + proratedHRA + proratedConveyance + proratedOtherAllowance));
+  // Dedicated LOP-only figure (spec section 6): dailyRate × LOP days specifically,
+  // shown as its own audited line distinct from the broader loss-of-pay total above.
+  const lopDeductionAmount = round2(basicProration.dailyRate * (att.lopDays || 0));
 
   const grossSalary = calculateGrossSalary({ proratedBasic, proratedHRA, proratedAllowance: proratedConveyance + proratedOtherAllowance, otAmount, bonus });
 
@@ -3218,6 +3482,7 @@ function calculatePayroll(year, month, overrides = {}, settingsOverride) {
     presentDays: att.presentDays, absentDays: att.absentDays, halfDays: att.halfDays,
     paidLeaveDays: att.paidLeaveDays, holidayDays: att.holidayDays, lopDays: att.lopDays, weekOffDays: att.weekOffDays, lateCount: att.lateCount,
     payableDays, totalDays: workingDays, ratio: basicProration.ratio, dailyRate: round2(basicProration.dailyRate),
+    lopMethod: settings.lopMethod || 'workingDays', lopDeductionAmount,
     basic: settings.salary || 0, hra: hraFull, conveyance: conveyanceFull, otherAllowance: otherAllowFull,
     proratedBasic, proratedHRA, proratedConveyance, proratedOtherAllowance, lossOfPay,
     otMinutes: ot.otMinutes, otHours: round2(ot.otHours), otAmount,
@@ -3258,12 +3523,14 @@ async function loadPayPeriods() {
 
 // Runs calculatePayroll() for whatever month a period covers, using THAT PERIOD'S
 // OWN settings (never whatever month happens to be on screen) and its own
-// bonus/loan/otherDeductions overrides.
+// bonus/loan/otherDeductions overrides. Basic Salary always comes from Salary
+// History for that specific month UNLESS the period is locked (finalized/paid).
 function computeSnapshotForPeriod(p) {
   if (!p.periodStart) return null;
   const [y, m] = p.periodStart.split('-').map(Number);
   if (!y || !m) return null;
   const settings = { ...DEFAULT_ATTENDANCE_SETTINGS, ...(p.settings || {}) };
+  if (!isPeriodLocked(p)) settings.salary = getSalaryForMonth(y, m - 1);
   return calculatePayroll(y, m - 1, { bonus: p.bonus, loan: p.loan, otherDeductions: p.otherDeductions }, settings);
 }
 
@@ -3275,9 +3542,10 @@ function ppNetPay(p) {
 function ppMoney(n) { const v = Number(n)||0; return (v<0?'-₹':'₹') + Math.abs(v).toLocaleString('en-IN', {maximumFractionDigits:2}); }
 
 const PP_STATUS_META = {
-  draft:     { label:'Draft',     cls:'pp-status-draft' },
-  open:      { label:'Open',      cls:'pp-status-draft' },
-  finalized: { label:'Finalized', cls:'pp-status-final' }
+  draft:      { label:'Draft',      cls:'pp-status-draft' },
+  calculated: { label:'Calculated', cls:'pp-status-calc' },
+  finalized:  { label:'Finalized',  cls:'pp-status-final' },
+  paid:       { label:'Paid',       cls:'pp-status-paid' }
 };
 
 function renderPayPeriods() {
@@ -3290,17 +3558,19 @@ function renderPayPeriods() {
     const monthLabel = attDate.toLocaleDateString('en', { month: 'long', year: 'numeric' });
     formWrap.innerHTML = `<div class="empty-td" style="padding:20px 4px">
       🆕 No payroll recorded yet for <b>${monthLabel}</b>.<br>
-      <span style="font-size:11px">Your salary will be calculated from Attendance, Salary Settings, Overtime, Bonus and Deductions once this month is created.</span><br>
+      <span style="font-size:11px">Your salary will be calculated from Attendance, Salary History, Overtime, Bonus and Deductions once this month is created.</span><br>
       <button class="btn btn-violet btn-sm" style="margin-top:10px" onclick="openNewMonthModal()">+ Create This Month</button>
     </div>`;
-    return;
+  } else {
+    formWrap.innerHTML = ppFormHtml(p);
   }
-  formWrap.innerHTML = ppFormHtml(p);
+  renderPayrollCalcFlow();
+  renderSalaryBreakdown();
 }
 
 function ppFormHtml(p) {
   const s = p.snapshot;
-  const finalized = p.status === 'finalized';
+  const finalized = isPeriodLocked(p);
   const statusMeta = PP_STATUS_META[p.status] || PP_STATUS_META.draft;
   return `
     <div class="pp-net-banner">
@@ -3315,20 +3585,7 @@ function ppFormHtml(p) {
       <div class="ff s2"><label>Period Label</label><input id="pp-label" value="${esc(p.label)}" placeholder="e.g. August 2026" oninput="queuePayPeriodSave()" ${finalized?'disabled':''}></div>
     </div>
 
-    ${s ? `
-    <div class="pp-calc-summary">
-      <div class="pp-calc-row"><span>Payable Days</span><b>${s.payableDays} / ${s.workingDays}</b></div>
-      <div class="pp-calc-row"><span>Present / Absent / Half / Paid Leave / Holiday</span><b>${s.presentDays} / ${s.absentDays} / ${s.halfDays} / ${s.paidLeaveDays} / ${s.holidayDays}</b></div>
-      <div class="pp-calc-row"><span>Overtime</span><b>${fmtMins(s.otMinutes)} → ${ppMoney(s.otAmount)}</b></div>
-      <div class="pp-calc-row"><span>Gross Salary</span><b>${ppMoney(s.grossSalary)}</b></div>
-      <div class="pp-calc-row"><span>Total Deductions</span><b>${ppMoney(s.totalDeductions)}</b></div>
-      <div class="pp-calc-row pp-calc-total"><span>Net Salary</span><b>${ppMoney(s.netSalary)}</b></div>
-    </div>
-    <div class="btn-group" style="margin:10px 0 4px">
-      <button class="btn btn-ghost btn-sm" onclick="openCalcModal('${p.id}')">🧮 View Calculation</button>
-      ${!finalized ? `<button class="btn btn-ghost btn-sm" onclick="recalcPayPeriod('${p.id}', true)">↻ Recalculate from Attendance</button>` : ''}
-    </div>
-    ` : `<div class="empty-td" style="padding:10px 4px">Pick a month above — the calculation will run automatically.</div>`}
+    ${!s ? `<div class="empty-td" style="padding:10px 4px">Pick a month above — the calculation will run automatically.</div>` : ''}
 
     <div class="fgrid" style="margin-top:6px">
       <div class="ff"><label>Bonus override (₹)</label><input type="number" id="pp-bonus" value="${p.bonus ?? ''}" placeholder="Default: ${attSettings.bonusDefault||0}" oninput="queuePayPeriodSave()" ${finalized?'disabled':''}></div>
@@ -3338,13 +3595,85 @@ function ppFormHtml(p) {
     </div>
 
     <div class="btn-group" style="margin-top:12px">
-      ${finalized
-        ? `<button class="btn btn-ghost btn-sm" onclick="reopenPayPeriod('${p.id}')">🔓 Reopen Period</button>`
-        : `<button class="btn btn-violet btn-sm" onclick="finalizePayPeriod('${p.id}')">🔒 Finalize Period</button>`}
+      ${s ? `<button class="btn btn-ghost btn-sm" onclick="openCalcModal('${p.id}')">🧮 View Calculation</button>` : ''}
+      ${!finalized && s ? `<button class="btn btn-ghost btn-sm" onclick="recalcPayPeriod('${p.id}', true)">↻ Recalculate</button>` : ''}
+      ${p.status === 'finalized'
+        ? `<button class="btn btn-violet btn-sm" onclick="markPeriodAsPaid('${p.id}')">💸 Mark as Paid</button>
+           <button class="btn btn-ghost btn-sm" onclick="reopenPayPeriod('${p.id}')">🔓 Reopen</button>`
+        : p.status === 'paid'
+        ? `<button class="btn btn-ghost btn-sm" onclick="unmarkPeriodAsPaid('${p.id}')">↩ Undo Paid</button>`
+        : `<button class="btn btn-violet btn-sm" onclick="finalizePayPeriod('${p.id}')" ${!s?'disabled':''}>🔒 Finalize Period</button>`}
       <button class="btn btn-ghost btn-sm" onclick="deletePayPeriod('${p.id}')" style="color:var(--red)">🗑 Delete This Period</button>
     </div>
-    ${finalized ? `<div style="font-size:10.5px;color:var(--text4);margin-top:8px">🔒 This period is finalized — its numbers are frozen and will never be recalculated automatically, even if attendance for ${esc(p.label)} changes later. Reopen it to edit or recalculate.</div>` : ''}
+    ${p.status==='finalized' ? `<div style="font-size:10.5px;color:var(--text4);margin-top:8px">🔒 This period is finalized — its numbers are frozen and will never be recalculated automatically, even if attendance or salary changes later. Reopen it to edit or recalculate.</div>` : ''}
+    ${p.status==='paid' ? `<div style="font-size:10.5px;color:var(--text4);margin-top:8px">💸 This period is marked Paid — locked exactly as it was when finalized.</div>` : ''}
   `;
+}
+
+// ── PAYROLL CALCULATION BAR — horizontal flow: Basic → OT → Gross → PF → LOP → Net ──
+function renderPayrollCalcFlow() {
+  const el = document.getElementById('pp-calc-flow'); if (!el) return;
+  const btn = document.getElementById('pp-viewcalc-btn');
+  const p = D.payPeriods.find(x => x.id === activePayPeriodId);
+  const s = p && p.snapshot;
+  if (btn) { btn.style.display = s ? '' : 'none'; btn.setAttribute('onclick', `openCalcModal('${activePayPeriodId}')`); }
+  if (!s) { el.innerHTML = `<div class="empty-td">No calculation yet for ${attDate.toLocaleDateString('en',{month:'long',year:'numeric'})} — create this month to see the payroll flow.</div>`; return; }
+  const card = (cls, label, amt, formula) => `<div class="pp-flow-card ${cls}"><div class="pp-flow-lbl">${label}</div><div class="pp-flow-amt">${ppMoney(amt)}</div>${formula?`<div class="pp-flow-formula">${formula}</div>`:''}</div>`;
+  const arrow = `<div class="pp-flow-arrow">→</div>`;
+  el.innerHTML = `<div class="pp-flow">
+    ${card('', 'Basic Salary', s.proratedBasic, `₹${s.basic.toLocaleString('en-IN')} ÷ ${s.workingDays}d × ${s.payableDays}d`)}
+    ${arrow}
+    ${card('add', '+ Overtime', s.otAmount, fmtMins(s.otMinutes))}
+    ${arrow}
+    ${card('total', 'Gross Earnings', s.grossSalary)}
+    ${arrow}
+    ${card('sub', '− PF', s.employeePF, s.pfEnabled ? `${attSettings.pfEmployeePct}% of ₹${s.pfWage.toLocaleString('en-IN')}` : 'disabled')}
+    ${arrow}
+    ${card('sub', '− LOP', s.lopDeductionAmount, `₹${s.dailyRate.toLocaleString('en-IN')} × ${s.lopDays||0} day(s)`)}
+    ${arrow}
+    ${card('total', 'Net Salary', s.netSalary)}
+  </div>`;
+}
+
+// ── SALARY BREAKDOWN CARD — Earnings / Deductions / Net Salary ──
+function renderSalaryBreakdown() {
+  const el = document.getElementById('pp-breakdown'); if (!el) return;
+  const p = D.payPeriods.find(x => x.id === activePayPeriodId);
+  const s = p && p.snapshot;
+  if (!s) { el.innerHTML = `<div class="empty-td">No calculation yet.</div>`; return; }
+  el.innerHTML = `
+    <div class="pp-breakdown-section">
+      <div class="pp-breakdown-hd">Earnings</div>
+      <div class="pp-breakdown-row"><span>Basic Salary</span><b>${ppMoney(s.proratedBasic)}</b></div>
+      ${s.hra ? `<div class="pp-breakdown-row"><span>HRA</span><b>${ppMoney(s.proratedHRA)}</b></div>` : ''}
+      ${s.conveyance ? `<div class="pp-breakdown-row"><span>Conveyance Allowance</span><b>${ppMoney(s.proratedConveyance)}</b></div>` : ''}
+      ${s.otherAllowance ? `<div class="pp-breakdown-row"><span>Other Allowances</span><b>${ppMoney(s.proratedOtherAllowance)}</b></div>` : ''}
+      <div class="pp-breakdown-row"><span>Overtime</span><b>${ppMoney(s.otAmount)}</b></div>
+      <div class="pp-breakdown-row"><span>Bonus</span><b>${ppMoney(s.bonus)}</b></div>
+      <div class="pp-breakdown-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:6px"><span><b>Gross Salary</b></span><b>${ppMoney(s.grossSalary)}</b></div>
+    </div>
+    <div class="pp-breakdown-section">
+      <div class="pp-breakdown-hd">Deductions</div>
+      <div class="pp-breakdown-row"><span>Employee PF ${s.pfEnabled?'':'(disabled)'} <span class="att-tip" onclick="toggleCalcAudit('pf')" title="Click for formula">▼</span></span><b>${ppMoney(s.employeePF)}</b></div>
+      <div id="pp-audit-pf" style="display:none;font-size:10.5px;color:var(--text4);padding:2px 0 4px">PF Eligible Salary ₹${s.pfWage.toLocaleString('en-IN')} × Employee PF ${attSettings.pfEmployeePct||0}% = ${ppMoney(s.employeePF)}</div>
+      <div class="pp-breakdown-row"><span>LOP Deduction <span class="att-tip" onclick="toggleCalcAudit('lop')" title="Click for formula">▼</span></span><b>${ppMoney(s.lopDeductionAmount)}</b></div>
+      <div id="pp-audit-lop" style="display:none;font-size:10.5px;color:var(--text4);padding:2px 0 4px">Basic ₹${s.basic.toLocaleString('en-IN')} ÷ ${s.workingDays} ${s.lopMethod==='calendarDays'?'calendar':s.lopMethod==='fixed30'?'fixed':'working'} days × ${s.lopDays||0} LOP day(s) = ${ppMoney(s.lopDeductionAmount)}</div>
+      <div class="pp-breakdown-row"><span>ESI ${s.esiEnabled?'':'(disabled)'}</span><b>${ppMoney(s.employeeESI)}</b></div>
+      <div class="pp-breakdown-row"><span>Professional Tax</span><b>${ppMoney(s.profTax)}</b></div>
+      <div class="pp-breakdown-row"><span>TDS</span><b>${ppMoney(s.tds)}</b></div>
+      <div class="pp-breakdown-row"><span>Loan / Advance</span><b>${ppMoney(s.loan)}</b></div>
+      <div class="pp-breakdown-row"><span>Other Deduction</span><b>${ppMoney(s.otherDeductions)}</b></div>
+      <div class="pp-breakdown-row" style="border-top:1px solid var(--border);margin-top:4px;padding-top:6px"><span><b>Total Deductions</b></span><b>${ppMoney(s.totalDeductions)}</b></div>
+    </div>
+    <div class="pp-breakdown-net">
+      <span class="pp-breakdown-net-lbl">Net Salary</span>
+      <span class="pp-breakdown-net-amt">${ppMoney(s.netSalary)}</span>
+    </div>
+  `;
+}
+function toggleCalcAudit(key) {
+  const el = document.getElementById('pp-audit-'+key);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 function ppOnMonthChange() {
@@ -3375,7 +3704,8 @@ function queuePayPeriodSave() {
   _ppSaveTimer = setTimeout(() => savePayPeriod(), 600);
   const p = D.payPeriods.find(x => x.id === activePayPeriodId);
   if (!p) return;
-  if (p.status === 'finalized') return; // frozen — no further edits accepted
+  if (isPeriodLocked(p)) return; // frozen — no further edits accepted
+  if (p.status === 'draft') p.status = 'calculated';
   p.label = document.getElementById('pp-label').value;
   const bonusEl = document.getElementById('pp-bonus');
   p.bonus = bonusEl && bonusEl.value !== '' ? parseFloat(bonusEl.value) || 0 : null;
@@ -3393,23 +3723,8 @@ function refreshPPLiveUI(p) {
   const net = ppNetPay(p);
   const bannerAmt = document.getElementById('pp-net-amount'); if (bannerAmt) bannerAmt.textContent = ppMoney(net);
   const bannerLbl = document.getElementById('pp-net-label'); if (bannerLbl) bannerLbl.textContent = p.label || 'this period';
-  const chip = document.querySelector(`.pp-chip[data-id="${p.id}"]`);
-  if (chip) {
-    const cl = chip.querySelector('.pp-chip-label'); if (cl) cl.textContent = p.label || 'Untitled';
-    const cn = chip.querySelector('.pp-chip-net'); if (cn) cn.textContent = ppMoney(net);
-  }
-  const summary = document.querySelector('.pp-calc-summary');
-  if (summary && p.snapshot) {
-    const s = p.snapshot;
-    summary.innerHTML = `
-      <div class="pp-calc-row"><span>Payable Days</span><b>${s.payableDays} / ${s.workingDays}</b></div>
-      <div class="pp-calc-row"><span>Present / Absent / Half / Paid Leave / Holiday</span><b>${s.presentDays} / ${s.absentDays} / ${s.halfDays} / ${s.paidLeaveDays} / ${s.holidayDays}</b></div>
-      <div class="pp-calc-row"><span>Overtime</span><b>${fmtMins(s.otMinutes)} → ${ppMoney(s.otAmount)}</b></div>
-      <div class="pp-calc-row"><span>Gross Salary</span><b>${ppMoney(s.grossSalary)}</b></div>
-      <div class="pp-calc-row"><span>Total Deductions</span><b>${ppMoney(s.totalDeductions)}</b></div>
-      <div class="pp-calc-row pp-calc-total"><span>Net Salary</span><b>${ppMoney(s.netSalary)}</b></div>
-    `;
-  }
+  renderPayrollCalcFlow();
+  renderSalaryBreakdown();
 }
 
 // Recompute a period's snapshot from *current* attendance + settings. Finalized
@@ -3418,7 +3733,8 @@ function refreshPPLiveUI(p) {
 function recalcPayPeriod(id, force) {
   const p = D.payPeriods.find(x => x.id === id);
   if (!p) return;
-  if (p.status === 'finalized') return; // finalized periods are never recalculated — reopen the period first
+  if (isPeriodLocked(p)) return; // finalized/paid periods are never recalculated — reopen first
+  if (p.status === 'draft') p.status = 'calculated';
   p.snapshot = computeSnapshotForPeriod(p);
   if (id === activePayPeriodId) { renderPayPeriods(); }
   queuePayPeriodSaveSnapshotOnly(p);
@@ -3433,8 +3749,9 @@ function recalcActivePayPeriodIfCurrentMonth() {
   const monthKey = `${y}-${String(m+1).padStart(2,'0')}`;
   let touchedActive = false;
   D.payPeriods.forEach(p => {
-    if (p.status === 'finalized') return; // never touch a finalized period
+    if (isPeriodLocked(p)) return; // never touch a finalized/paid period
     if ((p.periodStart||'').slice(0,7) !== monthKey) return;
+    if (p.status === 'draft') p.status = 'calculated';
     p.snapshot = computeSnapshotForPeriod(p);
     if (p.id === activePayPeriodId) touchedActive = true;
     queuePayPeriodSaveSnapshotOnly(p);
@@ -3605,8 +3922,8 @@ async function selectPayPeriod(id) {
 
 async function deletePayPeriod(id) {
   const p = D.payPeriods.find(x => x.id === id);
-  if (p && p.status === 'finalized') {
-    if (!confirm('This period is FINALIZED. Deleting it removes its permanent payroll record. Are you absolutely sure?')) return;
+  if (p && isPeriodLocked(p)) {
+    if (!confirm(`This period is ${PP_STATUS_META[p.status].label.toUpperCase()}. Deleting it removes its permanent payroll record. Are you absolutely sure?`)) return;
   } else if (!confirm('Delete this pay period? This only removes this one period — every other period stays exactly as it is. This cannot be undone.')) return;
   clearTimeout(_ppSaveTimer); _ppSaveTimer = null;
   await delItem('payPeriods', id, null);
@@ -3615,11 +3932,15 @@ async function deletePayPeriod(id) {
   toast('🗑 Pay period deleted');
 }
 
-// ── FINALIZE / REOPEN — freeze or unfreeze a period's payroll snapshot ──
+// ── FINALIZE / REOPEN / MARK AS PAID — lock or unlock a period's payroll snapshot ──
 async function finalizePayPeriod(id) {
   const p = D.payPeriods.find(x => x.id === id); if (!p) return;
-  if (!confirm(`Finalize "${p.label}"? Its calculated payroll will be locked permanently — future attendance changes for this month will NEVER alter it again, unless you explicitly reopen it.`)) return;
+  if (!confirm(`Finalize "${p.label}"? Its calculated payroll will be locked permanently — future attendance or salary changes will NEVER alter it again, unless you explicitly reopen it.`)) return;
   p.snapshot = computeSnapshotForPeriod(p); // one last calculation, frozen forever
+  // Freeze the exact salary that was actually used into `settings` too, so the
+  // Settings panel for this now-locked month stays consistent with its snapshot
+  // even if Salary History is edited afterward.
+  if (p.snapshot) p.settings = { ...(p.settings || DEFAULT_ATTENDANCE_SETTINGS), salary: p.snapshot.basic };
   p.status = 'finalized';
   p.finalizedAt = new Date().toISOString();
   await savePayPeriod(id);
@@ -3629,12 +3950,31 @@ async function finalizePayPeriod(id) {
 
 async function reopenPayPeriod(id) {
   const p = D.payPeriods.find(x => x.id === id); if (!p) return;
-  if (!confirm(`Reopen "${p.label}"? This unlocks it for editing and recalculation — its frozen snapshot will be recalculated from current attendance the next time anything changes.`)) return;
-  p.status = 'draft';
+  if (!confirm(`Reopen "${p.label}"? This unlocks it for editing and recalculation — its snapshot will be recalculated from current attendance and salary history the next time anything changes.`)) return;
+  p.status = 'calculated';
   p.snapshot = computeSnapshotForPeriod(p);
   await savePayPeriod(id);
   renderPayPeriods();
   toast('🔓 Period reopened');
+}
+
+async function markPeriodAsPaid(id) {
+  const p = D.payPeriods.find(x => x.id === id); if (!p) return;
+  if (!confirm(`Mark "${p.label}" as Paid? This records that the salary was actually disbursed. The payroll stays locked exactly as it was when finalized.`)) return;
+  p.status = 'paid';
+  p.paidAt = new Date().toISOString();
+  await savePayPeriod(id);
+  renderPayPeriods();
+  toast('💸 Marked as Paid');
+}
+
+async function unmarkPeriodAsPaid(id) {
+  const p = D.payPeriods.find(x => x.id === id); if (!p) return;
+  if (!confirm(`Undo "Paid" for "${p.label}"? It returns to Finalized (still locked, just not marked as disbursed).`)) return;
+  p.status = 'finalized';
+  await savePayPeriod(id);
+  renderPayPeriods();
+  toast('↩ Reverted to Finalized');
 }
 
 // ── VIEW CALCULATION — full payroll waterfall with real numbers + formulas ──
@@ -3657,6 +3997,7 @@ function openCalcModal(id) {
       ${s.conveyance ? row('Prorated Conveyance Allowance', `Conveyance ₹${s.conveyance.toLocaleString('en-IN')} × ${(s.ratio*100).toFixed(1)}%`, s.proratedConveyance) : ''}
       ${s.otherAllowance ? row('Prorated Other Allowances', `Other Allowances ₹${s.otherAllowance.toLocaleString('en-IN')} × ${(s.ratio*100).toFixed(1)}%`, s.proratedOtherAllowance) : ''}
       ${s.lossOfPay > 0 ? row('Loss of Pay (unpaid/absent days)', 'Full components − prorated components', -s.lossOfPay) : ''}
+      ${s.lopDeductionAmount > 0 ? row('LOP Deduction (audited)', `Daily Rate ₹${s.dailyRate.toLocaleString('en-IN')} × ${s.lopDays||0} LOP day(s) [${s.lopMethod||'workingDays'}]`, -s.lopDeductionAmount) : ''}
 
       ${step('3 · Overtime')}
       ${row('Overtime', `${fmtMins(s.otMinutes)} at OT rate`, s.otAmount)}
@@ -3684,7 +4025,7 @@ function openCalcModal(id) {
       ${step('9 · Net Salary')}
       <div class="calc-row calc-row-final"><div class="calc-row-label">NET SALARY</div><div class="calc-row-formula">Gross Salary − Total Deductions (₹${s.totalDeductions.toLocaleString('en-IN')})</div><div class="calc-row-amt">${ppMoney(s.netSalary)}</div></div>
 
-      <div style="font-size:10.5px;color:var(--text4);margin-top:12px">Calculated ${new Date(s.calculatedAt).toLocaleString('en-IN')}${p.status==='finalized' ? ' · 🔒 frozen — this snapshot will not change' : ' · recalculates automatically as attendance/settings change'}</div>
+      <div style="font-size:10.5px;color:var(--text4);margin-top:12px">Calculated ${new Date(s.calculatedAt).toLocaleString('en-IN')}${isPeriodLocked(p) ? ' · 🔒 frozen — this snapshot will not change' : ' · recalculates automatically as attendance/settings change'}</div>
     </div>`;
   document.getElementById('calc-modal-overlay').classList.add('show');
 }
@@ -3738,7 +4079,7 @@ async function loadAttendanceData() {
 // Called every time the month changes (syncMonthContext) so the form always
 // shows exactly the selected month's own values — never a stale prior month's.
 function reflectAttSettingsIntoInputs() {
-  const sEl = document.getElementById('att-salary');
+  const sEl = document.getElementById('att-salary-readonly');
   const wEl = document.getElementById('att-workdays');
   const pEl = document.getElementById('att-paidleaves');
   const hpdEl = document.getElementById('att-hoursperday');
@@ -3746,7 +4087,8 @@ function reflectAttSettingsIntoInputs() {
   const seEl = document.getElementById('att-shiftend');
   const gmEl = document.getElementById('att-gracemins');
   const otEl = document.getElementById('att-otmult');
-  if (sEl) sEl.value = attSettings.salary;
+  const lopEl = document.getElementById('att-lopmethod');
+  if (sEl) sEl.textContent = ppMoney(attSettings.salary);
   if (wEl) wEl.value = attSettings.workdays;
   if (pEl) pEl.value = attSettings.paidLeaves;
   if (hpdEl) hpdEl.value = attSettings.hoursPerDay;
@@ -3754,29 +4096,33 @@ function reflectAttSettingsIntoInputs() {
   if (seEl) seEl.value = attSettings.shiftEnd;
   if (gmEl) gmEl.value = attSettings.graceMinutes;
   if (otEl) otEl.value = attSettings.otMultiplier;
+  if (lopEl) lopEl.value = attSettings.lopMethod || 'workingDays';
 
   const map = {
     'pc-hra-pct':'hraPct', 'pc-conveyance-pct':'conveyancePct', 'pc-allow-pct':'otherAllowancePct', 'pc-bonus-default':'bonusDefault',
     'pc-pf-emp-pct':'pfEmployeePct', 'pc-pf-empr-pct':'pfEmployerPct', 'pc-pf-ceiling':'pfWageCeiling',
     'pc-eps-pct':'epsPct', 'pc-edli-pct':'edliPct',
     'pc-esi-emp-pct':'esiEmployeePct', 'pc-esi-empr-pct':'esiEmployerPct', 'pc-esi-ceiling':'esiWageCeiling',
-    'pc-prof-tax':'profTax', 'pc-tds':'tds'
+    'pc-prof-tax':'profTax', 'pc-tds':'tds', 'pc-ot-fixed':'otFixedRate'
   };
   Object.entries(map).forEach(([id, key]) => { const el = document.getElementById(id); if (el) el.value = attSettings[key]; });
   const pfEnEl = document.getElementById('pc-pf-enabled'); if (pfEnEl) pfEnEl.value = attSettings.pfEnabled ? '1' : '0';
   const esiEnEl = document.getElementById('pc-esi-enabled'); if (esiEnEl) esiEnEl.value = attSettings.esiEnabled ? '1' : '0';
+  const otModeEl = document.getElementById('pc-ot-mode'); if (otModeEl) otModeEl.value = attSettings.otMode || 'multiplier';
 
   // Settings only make sense once a month actually has its own record — disable while none exists.
-  const hasPeriod = !!activePayPeriodId;
+  // Finalized/Paid months are also locked from further editing.
+  const p = D.payPeriods.find(x => x.id === activePayPeriodId);
+  const editable = !!activePayPeriodId && !isPeriodLocked(p);
   document.querySelectorAll('#att-settings-card input, #att-settings-card select, #payroll-settings-card input, #payroll-settings-card select')
-    .forEach(el => { el.disabled = !hasPeriod; });
+    .forEach(el => { el.disabled = !editable; });
 }
 
 // Debounced settings save — triggered on input change. Writes straight into the
 // CURRENTLY SELECTED month's own pay-period row — never a shared/global table.
 function queueAttendanceSettingsSave() {
-  if (!activePayPeriodId) return; // no month record yet — inputs are disabled, nothing to save
-  attSettings.salary       = parseFloat(document.getElementById('att-salary').value) || 0;
+  const lockedCheck = D.payPeriods.find(x => x.id === activePayPeriodId);
+  if (!activePayPeriodId || isPeriodLocked(lockedCheck)) return; // no month record yet, or locked — nothing to save
   attSettings.workdays     = parseInt(document.getElementById('att-workdays').value) || 0;
   attSettings.paidLeaves   = parseInt(document.getElementById('att-paidleaves').value) || 0;
   attSettings.hoursPerDay  = parseFloat(document.getElementById('att-hoursperday').value) || 8;
@@ -3784,12 +4130,15 @@ function queueAttendanceSettingsSave() {
   attSettings.shiftEnd     = document.getElementById('att-shiftend').value || '18:00';
   attSettings.graceMinutes = parseInt(document.getElementById('att-gracemins').value) || 0;
   attSettings.otMultiplier = parseFloat(document.getElementById('att-otmult').value) || 1.5;
+  attSettings.lopMethod    = document.getElementById('att-lopmethod')?.value || 'workingDays';
 
   // Payroll & statutory config
   attSettings.hraPct            = parseFloat(document.getElementById('pc-hra-pct')?.value) || 0;
   attSettings.conveyancePct     = parseFloat(document.getElementById('pc-conveyance-pct')?.value) || 0;
   attSettings.otherAllowancePct = parseFloat(document.getElementById('pc-allow-pct')?.value) || 0;
   attSettings.bonusDefault  = parseFloat(document.getElementById('pc-bonus-default')?.value) || 0;
+  attSettings.otMode        = document.getElementById('pc-ot-mode')?.value || 'multiplier';
+  attSettings.otFixedRate   = parseFloat(document.getElementById('pc-ot-fixed')?.value) || 0;
   attSettings.pfEnabled     = document.getElementById('pc-pf-enabled')?.value === '1';
   attSettings.pfEmployeePct = parseFloat(document.getElementById('pc-pf-emp-pct')?.value) || 0;
   attSettings.pfEmployerPct = parseFloat(document.getElementById('pc-pf-empr-pct')?.value) || 0;
@@ -4059,6 +4408,8 @@ function renderAttendance() {
   renderSimpleSalary();
   renderEmployeeProfile();
   renderMonthlyHistory();
+  renderSalaryHistory();
+  renderPayPeriods();
   recalcActivePayPeriodIfCurrentMonth(); // real-time recalculation: any change to attendance flows straight into the matching draft pay period
 }
 
@@ -4150,7 +4501,11 @@ function calcDayPay(dateStr, settings) {
 
   const dailySalary = settings.workdays > 0 ? settings.salary / settings.workdays : 0;
   const minuteSalary = expectedMins > 0 ? dailySalary / expectedMins : 0;
-  const otPay = minuteSalary * (settings.otMultiplier ?? 1.5) * otMins;
+  // OT pay: either a flat configured ₹/hour rate, or the multiplier-based rate
+  // derived from the daily salary (default) — both are fully configurable, never hardcoded.
+  const otPay = settings.otMode === 'fixed'
+    ? (settings.otFixedRate || 0) * (otMins / 60)
+    : minuteSalary * (settings.otMultiplier ?? 1.5) * otMins;
   const earned = (entry.status === 'half' ? dailySalary * 0.5 : dailySalary) + otPay;
 
   return { workedMins, lateMins, earlyMins, otMins, dailySalary, minuteSalary, otPay, earned };
@@ -4263,6 +4618,9 @@ function renderAttendanceOverview() {
   const paidUsedThisMonth = Object.entries(attLogs).filter(([d,e]) => d.startsWith(prefix) && e.status === 'paid').length;
   const remainingPaidLeaves = Math.max(0, (attSettings.paidLeaves||0) - paidUsedThisMonth);
 
+  const activePeriod = D.payPeriods.find(x => x.id === activePayPeriodId);
+  const s = activePeriod && activePeriod.snapshot;
+
   el.innerHTML = [
     { i:'📊', l:'Attendance', v:attPct+'%', cls:'kg' },
     { i:'⏱', l:'Worked', v:workedHoursTotal.toFixed(0)+' hrs', cls:'kb' },
@@ -4270,14 +4628,20 @@ function renderAttendanceOverview() {
     { i:'⏰', l:'Late', v:lateDays+' days', cls:'ka' },
     { i:'❌', l:'Absent', v:c.absent+' day'+(c.absent===1?'':'s'), cls:'kr' },
     { i:'💙', l:'Remaining Paid Leaves', v:remainingPaidLeaves, cls:'kb' },
+    { i:'💰', l:'Basic Salary', v:ppMoney(getSalaryForMonth(y,m)), cls:'kv' },
+    { i:'🧮', l:'Gross Salary', v:s?ppMoney(s.grossSalary):'—', cls:'kb' },
+    { i:'📉', l:'Total Deductions', v:s?ppMoney(s.totalDeductions):'—', cls:'kr' },
+    { i:'✅', l:'Net Salary', v:s?ppMoney(s.netSalary):'—', cls:'kg' },
+    { i:'🏦', l:'Employee PF', v:s?ppMoney(s.employeePF):'—', cls:'ka' },
+    { i:'⚠️', l:'LOP Deduction', v:s?ppMoney(s.lopDeductionAmount):'—', cls:'kr' },
   ].map(k => `<div class="att-overview-card ${k.cls}"><div class="att-overview-ico">${k.i}</div><div class="att-overview-val">${k.v}</div><div class="att-overview-lbl">${k.l}</div></div>`).join('');
 }
 
 // Wire up settings inputs to auto-save on change (event delegation, set up once at boot)
 function initAttendanceInputs() {
   [
-    'att-salary','att-workdays','att-paidleaves','att-hoursperday','att-shiftstart','att-shiftend','att-gracemins','att-otmult',
-    'pc-hra-pct','pc-conveyance-pct','pc-allow-pct','pc-bonus-default','pc-pf-enabled','pc-pf-emp-pct','pc-pf-empr-pct','pc-pf-ceiling','pc-eps-pct','pc-edli-pct',
+    'att-workdays','att-paidleaves','att-hoursperday','att-shiftstart','att-shiftend','att-gracemins','att-otmult','att-lopmethod',
+    'pc-hra-pct','pc-conveyance-pct','pc-allow-pct','pc-bonus-default','pc-ot-mode','pc-ot-fixed','pc-pf-enabled','pc-pf-emp-pct','pc-pf-empr-pct','pc-pf-ceiling','pc-eps-pct','pc-edli-pct',
     'pc-esi-enabled','pc-esi-emp-pct','pc-esi-empr-pct','pc-esi-ceiling','pc-prof-tax','pc-tds'
   ].forEach(id => {
     const el = document.getElementById(id);
@@ -4543,8 +4907,14 @@ function closeDailyEditor() {
 }
 async function deleteCurrentDailyEntry() {
   if (!dailyEditingId) return;
+  if (!confirm('Delete this work log entry? This cannot be undone.')) return;
   await del('daily', dailyEditingId, 'renderDaily');
   closeDailyEditor();
+}
+// Delete straight from the list row (no need to open the editor first)
+async function deleteDailyEntry(id) {
+  if (!confirm('Delete this work log entry? This cannot be undone.')) return;
+  await del('daily', id, 'renderDaily');
 }
 function companyNameFor(id) { const c = companies.find(x => x.id === id); return c ? c.name : ''; }
 
@@ -4574,9 +4944,8 @@ function renderDaily() {
           ${r.linkedKnowledgeId ? `<div style="margin-top:5px"><span class="badge bg" style="cursor:pointer" onclick="event.stopPropagation();openKnowledgeCard('${r.linkedKnowledgeId}')">🔗 Linked Knowledge Card</span></div>` : ''}
         </div>
         <div class="wl-entry-actions">
-          ${!r.linkedKnowledgeId ? `<button class="btn btn-ghost btn-sm" onclick="saveWorkLogAsKnowledge('${r.id}')" title="Save this as a Knowledge Track card">🧠 Save as Knowledge</button>` : ''}
           <button onclick="openDailyEditor('${r.id}')" title="Edit entry" style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:12px">✏️</button>
-          ${delBtn('daily',r.id,'renderDaily')}
+          <button onclick="deleteDailyEntry('${r.id}')" title="Delete entry" style="background:var(--red-dim);color:var(--red);border:none;border-radius:5px;padding:3px 8px;font-size:11px;cursor:pointer">✕</button>
         </div>
       </div>`;
     }).join('');
