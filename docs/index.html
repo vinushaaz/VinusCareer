@@ -329,12 +329,154 @@ input,select,textarea,button{font-family:'Inter',sans-serif}
 .att-heat-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9.5px;color:var(--text3);cursor:default}
 /* ── DASHBOARD WIDGET SYSTEM ── */
 .dash-toolbar{display:flex;justify-content:flex-end;margin-bottom:12px}
-.wl-date-group{margin-bottom:4px}
-.wl-date-hd{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;padding:14px 18px 8px;background:var(--s1)}
-.wl-entry{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 18px;border-bottom:1px solid var(--border)}
-.wl-entry:last-child{border-bottom:none}
-.wl-entry-main{flex:1;min-width:0;cursor:pointer}
-.wl-entry-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;padding-top:1px}
+/* ── WORK LOG · Notion-style engineering journal (page-scoped, wx- prefix) ── */
+.wx-k-dev{--tc:#475569;--tb:#eceff6}
+.wx-k-test{--tc:var(--green);--tb:var(--green-dim)}
+.wx-k-bug{--tc:var(--red);--tb:var(--red-dim)}
+.wx-k-learn{--tc:var(--blue);--tb:#e1eaff}
+.wx-k-doc{--tc:var(--amber);--tb:var(--amber-dim)}
+.wx-k-users{--tc:#b8552d;--tb:var(--peach-dim)}
+.wx-k-cal,.wx-k-other{--tc:var(--text2);--tb:var(--s2)}
+.wx-tg0{--tc:#7c3aed;--tb:#f1e8ff}
+.wx-tg1{--tc:#2563eb;--tb:#e1eaff}
+.wx-tg2{--tc:#0f766e;--tb:#d9f3ee}
+.wx-tg3{--tc:#b45309;--tb:#fdefd2}
+.wx-tg4{--tc:#be185d;--tb:#fde4ef}
+.wx-tg5{--tc:#b8552d;--tb:var(--peach-dim)}
+.wx-head{display:flex;align-items:center;gap:14px 16px;flex-wrap:wrap;padding:2px 0 18px;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.wx-brand{display:flex;align-items:center;gap:14px;min-width:0;margin-right:auto}
+.wx-logo{width:46px;height:46px;border-radius:14px;background:var(--violet-xl);color:var(--violet-l);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wx-brand h1{font-family:'Bricolage Grotesque',sans-serif;font-size:25px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.wx-brand p{font-size:13px;color:var(--text3);margin-top:4px}
+.wx-head-r{display:flex;align-items:center;gap:12px;flex:1 1 480px;justify-content:flex-end;min-width:0}
+.wx-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font:600 13.5px 'Inter',sans-serif;border-radius:12px;padding:0 20px;height:42px;white-space:nowrap;transition:box-shadow .15s,transform .15s,background .15s}
+.wx-btn-primary{background:linear-gradient(135deg,var(--violet),var(--fuchsia));color:#fff;box-shadow:0 6px 16px -6px #8b5cf6a0}
+.wx-btn-primary:hover{box-shadow:0 8px 20px -6px #8b5cf6c0;transform:translateY(-1px)}
+.wx-btn-soft{background:var(--s2);color:var(--text2)}
+.wx-btn-soft:hover{background:var(--s3);color:var(--text)}
+.wx-btn-danger{background:none;color:var(--red);padding:0 12px}
+.wx-btn-danger:hover{background:var(--red-dim)}
+.wx-search{position:relative;flex:1 1 240px;max-width:470px}
+.wx-search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+.wx-search input{width:100%;height:42px;border:1px solid var(--border2);border-radius:12px;background:var(--s1);padding:0 14px 0 42px;font:400 13.5px 'Inter',sans-serif;color:var(--text);outline:none;box-shadow:var(--shadow-soft);transition:border-color .15s,box-shadow .15s}
+.wx-search input:focus{border-color:#a78bfa;box-shadow:0 0 0 3px #8b5cf61f}
+.wx-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.wx-pill{border:none;background:var(--s2);color:var(--text2);font:500 13.5px 'Inter',sans-serif;padding:9px 20px;border-radius:12px;cursor:pointer;transition:background .15s,color .15s}
+.wx-pill:hover{background:var(--s3)}
+.wx-pill.on{background:#e9defe;color:var(--violet-l);font-weight:600}
+.wx-filters-r{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:12px;color:var(--text3)}
+.wx-link{border:none;background:none;color:var(--text3);font:500 12px 'Inter',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:4px 2px;border-radius:6px}
+.wx-link:hover{color:var(--violet-l)}
+.wx-day{margin-bottom:22px}
+.wx-day-hd{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+.wx-day-hd h3{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.wx-today{font-size:12px;font-weight:600;color:var(--violet-l);background:#ece3ff;padding:4px 12px;border-radius:999px}
+.wx-card{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:14px;padding:16px 18px;background:var(--s1);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-soft);margin-bottom:12px;cursor:pointer;transition:box-shadow .15s,border-color .15s;outline:none}
+.wx-card:hover,.wx-card:focus-visible{box-shadow:var(--shadow-lift);border-color:#8b5cf635}
+.wx-ico{width:44px;height:44px;border-radius:50%;background:var(--tb);color:var(--tc);display:flex;align-items:center;justify-content:center}
+.wx-main{min-width:0}
+.wx-time{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--text3);margin-bottom:2px}
+.wx-title{font-size:15.5px;font-weight:700;letter-spacing:-.005em;line-height:1.35;overflow-wrap:anywhere}
+.wx-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.wx-desc{font-size:13.5px;color:var(--text2);line-height:1.55;margin-top:9px;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.wx-viewnotes{border:none;background:none;color:var(--violet-l);font:600 12px 'Inter',sans-serif;cursor:pointer;padding:3px 0;margin-top:2px}
+.wx-viewnotes:hover{text-decoration:underline}
+.wx-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.wx-tag{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:500;padding:4px 12px;border-radius:9px;color:var(--tc);background:var(--tb);line-height:1.4}
+.wx-tag.wx-kc{--tc:var(--text2);--tb:var(--s2);cursor:pointer}
+.wx-tag.wx-kc:hover{color:var(--violet-l)}
+.wx-side{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.wx-acts{display:flex;gap:4px}
+.wx-ib{width:32px;height:32px;border-radius:9px;border:none;background:none;cursor:pointer;color:var(--text3);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s,color .12s}
+.wx-ib:hover{background:var(--s2);color:var(--violet-l)}
+.wx-ib.del{color:#e5484d}
+.wx-ib.del:hover{background:var(--red-dim);color:var(--red)}
+.wx-type-sel{appearance:none;-webkit-appearance:none;border:none;border-radius:10px;padding:7px 28px 7px 14px;font:600 12.5px 'Inter',sans-serif;color:var(--tc);background-color:var(--tb);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6478' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;cursor:pointer;max-width:170px;min-height:0;outline:none}
+.wx-type-sel:focus-visible{box-shadow:0 0 0 3px #8b5cf62e}
+.wx-empty{text-align:center;padding:56px 20px;color:var(--text3);font-size:13.5px;background:var(--s1);border:1px dashed var(--border2);border-radius:16px}
+.wx-empty strong{display:block;font-size:15px;color:var(--text);margin-bottom:6px}
+.wx-empty .wx-btn{margin-top:16px}
+.wx-layout{display:block}
+.wx-scrim{display:none}
+.wx-drawer{display:none;flex-direction:column;background:var(--s1);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lift);overflow:hidden}
+#page-quicklog.wx-open .wx-drawer{display:flex}
+@media(min-width:1280px){
+  #page-quicklog.wx-open .wx-layout{display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:22px;align-items:start}
+  .wx-drawer{position:sticky;top:66px;max-height:calc(100vh - 176px);z-index:5}
+}
+@media(max-width:1279px){
+  #page-quicklog.wx-open .wx-scrim{display:block;position:fixed;inset:0;background:#28203a3d;backdrop-filter:blur(1.5px);z-index:440}
+  .wx-drawer{position:fixed;top:64px;right:12px;bottom:12px;width:min(460px,calc(100vw - 24px));z-index:450}
+}
+@media(max-width:768px){
+  .wx-drawer{top:0;right:0;bottom:0;left:0;width:auto;border-radius:0;border:none}
+  .wx-brand h1{font-size:22px}
+  .wx-head-r{flex:1 1 100%;flex-wrap:wrap;justify-content:stretch}
+  .wx-search{order:3;flex:1 1 100%;max-width:none}
+  .wx-head-r .wx-btn{flex:1}
+}
+@media(max-width:560px){
+  .wx-card{grid-template-columns:40px minmax(0,1fr);padding:14px}
+  .wx-ico{width:40px;height:40px}
+  .wx-side{grid-column:1/-1;flex-direction:row-reverse;justify-content:space-between;align-items:center}
+  .wx-filters-r{margin-left:0;width:100%;justify-content:space-between}
+}
+.wx-dr-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:20px 22px 12px}
+.wx-dr-head h2{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.01em}
+.wx-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:0 22px 4px;padding:4px;background:var(--s2);border-radius:12px}
+.wx-seg button{border:none;background:none;height:38px;border-radius:9px;font:500 13.5px 'Inter',sans-serif;color:var(--text2);cursor:pointer;transition:background .15s,color .15s}
+.wx-seg button.on{background:#ece3ff;color:var(--violet-l);font-weight:600;box-shadow:inset 0 0 0 1px #c4b5fd}
+.wx-dr-body{flex:1;min-height:0;overflow-y:auto;padding:14px 22px 10px;display:flex;flex-direction:column;gap:18px}
+.wx-sec{order:var(--q,0);min-width:0}
+.wx-dr-body[data-mode=detailed] .wx-sec{order:var(--d,0)}
+.wx-dr-body[data-mode=quick] .wx-d-only{display:none}
+.wx-dr-body[data-mode=detailed] .wx-q-only{display:none}
+.wx-dr-body[data-mode=quick] .wx-title-sec{display:none}
+.wx-dr-body[data-mode=quick].wx-manual .wx-title-sec{display:block}
+.wx-lab{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;text-transform:none;letter-spacing:normal}
+.wx-lab small{font-weight:400;color:var(--text3);font-size:13px;margin-left:4px}
+.wx-lab label{font:inherit;color:inherit;text-transform:none;letter-spacing:normal;margin:0;display:inline}
+.wx-in{width:100%;height:44px;border:1px solid var(--border2);border-radius:12px;background-color:var(--s1);padding:0 14px;font:400 14px 'Inter',sans-serif;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s}
+.wx-in:focus{border-color:#a78bfa;box-shadow:0 0 0 3px #8b5cf61f}
+select.wx-in{appearance:none;-webkit-appearance:none;padding-right:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6478' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;cursor:pointer}
+textarea.wx-in{height:auto;min-height:66px;padding:11px 14px;line-height:1.5;resize:vertical}
+.wx-row{display:flex;gap:12px}
+.wx-row>*{flex:1;min-width:0}
+.wx-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wx-iconfield{position:relative}
+.wx-iconfield>svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;z-index:1}
+.wx-iconfield .wx-in{padding-left:42px}
+.wx-iconfield input[type=date]{position:relative}
+.wx-iconfield input[type=date]::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.wx-today-pill{font-size:11.5px;font-weight:600;color:var(--violet-l);background:#ece3ff;padding:2px 9px;border-radius:999px}
+.wx-types{display:flex;flex-wrap:wrap;gap:8px}
+.wx-chip{display:inline-flex;align-items:center;gap:7px;border:none;cursor:pointer;height:40px;padding:0 13px;border-radius:12px;font:500 13px 'Inter',sans-serif;color:var(--tc);background:var(--tb);transition:box-shadow .15s,background .15s}
+.wx-chip:hover{box-shadow:inset 0 0 0 1px #8b5cf640}
+.wx-chip.on{background:#efe7ff;color:#6d28d9;font-weight:600;box-shadow:inset 0 0 0 1.5px #a78bfa,0 0 0 3px #8b5cf61f}
+.wx-rich.rt-wrap .rt-toolbar{background:var(--s2)}
+.wx-rich .rt-editor{min-height:170px;max-height:min(46vh,440px);padding:14px;font-size:14px;line-height:1.6}
+.wx-dr-body[data-mode=quick] .wx-rich .rt-toolbar,.wx-dr-body[data-mode=quick] .wx-rich .rt-foot{display:none}
+.wx-dr-body[data-mode=quick] .wx-rich .rt-editor{border:1px solid var(--border2);border-radius:12px;min-height:190px}
+.wx-dr-body[data-mode=quick] .wx-rich .rt-editor:focus{border-color:#a78bfa;box-shadow:0 0 0 3px #8b5cf61f}
+.wx-dr-body[data-mode=detailed] .wx-rich .rt-editor{min-height:220px}
+.wx-help{font-size:11.5px;color:var(--text4);margin-top:8px}
+.wx-help kbd,.wx-hint kbd{font:600 10.5px 'Inter',sans-serif;background:var(--s2);border:1px solid var(--border2);border-radius:5px;padding:1px 5px;color:var(--text3)}
+.wx-tagbox{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.wx-chips-inline{display:contents}
+.wx-tagbox .wx-tag{padding:6px 8px 6px 12px;font-size:13px}
+.wx-tag-x{border:none;background:none;color:inherit;cursor:pointer;display:inline-flex;padding:2px;border-radius:50%;opacity:.8}
+.wx-tag-x:hover{opacity:1;background:#00000012}
+.wx-tag-in{border:1px dashed var(--border2);background:var(--s1);border-radius:9px;height:34px;padding:0 12px;width:112px;font:500 13px 'Inter',sans-serif;color:var(--text);outline:none;transition:width .15s,border-color .15s}
+.wx-tag-in::placeholder{color:var(--text3)}
+.wx-tag-in::-webkit-calendar-picker-indicator{display:none!important}
+.wx-tag-in:focus{width:160px;border-style:solid;border-color:#a78bfa}
+.wx-dr-foot{display:flex;align-items:center;gap:10px;padding:14px 22px 20px}
+.wx-hint{margin-right:auto;font-size:11.5px;color:var(--text4);white-space:nowrap}
+.wx-drawer.is-edit .wx-hint{display:none}
+.wx-drawer.is-edit .wx-dr-foot{justify-content:flex-end}
+.wx-drawer.is-edit #dl-del-btn{margin-right:auto}
+.wx-edit-note{font-size:11.5px;font-weight:600;color:var(--violet-l);background:#ece3ff;padding:3px 10px;border-radius:999px;margin-right:auto;margin-left:10px}
+@media(max-width:560px){.wx-hint{display:none}.wx-dr-foot{justify-content:flex-end}.wx-grid2{grid-template-columns:1fr}}
 .dash-hero{padding:4px 2px 2px}
 .dash-hero-greeting{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.01em}
 .dash-hero-sub{font-size:13px;color:var(--text3);margin-top:2px}
@@ -1336,77 +1478,110 @@ tr:hover td{background:#8b5cf608}
   </div>
 </div>
 
-<!-- ═══ QUICK LOG ═══ -->
+<!-- ═══ WORK LOG (Notion-style engineering journal) ═══ -->
 <div id="page-quicklog" class="page">
-  <div class="card mb16">
-    <div class="card-hd">
-      <div class="card-title">📊 Work Journal Summary</div>
-      <div class="wj-period-tabs">
-        <button class="wj-period-btn active" data-period="today" onclick="setJournalPeriod('today',this)">Today</button>
-        <button class="wj-period-btn" data-period="week" onclick="setJournalPeriod('week',this)">This Week</button>
-        <button class="wj-period-btn" data-period="month" onclick="setJournalPeriod('month',this)">This Month</button>
+  <div class="wx-head">
+    <div class="wx-brand">
+      <div class="wx-logo"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></div>
+      <div><h1>Work Log</h1><p>Daily log of my engineering work</p></div>
+    </div>
+    <div class="wx-head-r">
+      <button type="button" class="wx-btn wx-btn-primary" onclick="openDailyEditor()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Add Entry</button>
+      <div class="wx-search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="wx-search" type="search" placeholder="Search entries..." autocomplete="off" oninput="wxSetQuery(this.value)"></div>
+    </div>
+  </div>
+  <div class="wx-layout">
+    <section class="wx-listcol">
+      <div class="wx-filters" id="wx-filters">
+        <button type="button" class="wx-pill on" onclick="wxSetFilter('all',this)">All</button>
+        <button type="button" class="wx-pill" onclick="wxSetFilter('today',this)">Today</button>
+        <button type="button" class="wx-pill" onclick="wxSetFilter('week',this)">This Week</button>
+        <button type="button" class="wx-pill" onclick="wxSetFilter('month',this)">This Month</button>
+        <div class="wx-filters-r"><span id="daily-cnt">0 entries</span><button type="button" class="wx-link" onclick="nav('reports');exportWorklogPDF()" title="Download a polished Worklog PDF of every entry"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg> Worklog PDF</button></div>
       </div>
-    </div>
-    <div class="card-body">
-      <div class="gauto mb12" id="wj-summary-kpis"></div>
-      <div id="wj-summary-details"></div>
-    </div>
+      <div id="daily-list"></div>
+    </section>
+
+    <aside id="wl-editor-overlay" class="wx-drawer" role="dialog" aria-labelledby="wl-modal-title" onkeydown="wxDrawerKey(event)" oninput="wxMarkDirty()">
+      <div class="wx-dr-head">
+        <h2 id="wl-modal-title">Add Work Entry</h2>
+        <div id="dl-edit-banner" class="wx-edit-note" style="display:none">Editing</div>
+        <button type="button" class="wx-ib" onclick="wxRequestClose()" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+      </div>
+      <div class="wx-seg" role="tablist">
+        <button type="button" id="wx-tab-quick" class="on" role="tab" aria-selected="true" onclick="wxSetMode('quick')">Quick Entry</button>
+        <button type="button" id="wx-tab-detailed" role="tab" aria-selected="false" onclick="wxSetMode('detailed')">Detailed Entry</button>
+      </div>
+      <div id="wx-body" class="wx-dr-body" data-mode="quick">
+        <div class="wx-sec wx-title-sec" style="--q:0;--d:1">
+          <label class="wx-lab" for="dl-task"><span>Title <small>(required in Detailed)</small></span></label>
+          <input id="dl-task" class="wx-in" placeholder="What did you work on?" oninput="wxTitleTouched()">
+        </div>
+        <div class="wx-sec" style="--q:1;--d:2">
+          <div class="wx-row">
+            <div>
+              <div class="wx-lab"><label for="dl-date">Date</label><span id="wx-date-hint"></span></div>
+              <div class="wx-iconfield"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg><input type="date" id="dl-date" class="wx-in" onchange="wxDateHint()"></div>
+            </div>
+            <div class="wx-d-only"><label class="wx-lab" for="dl-hours">Hours</label><input type="number" id="dl-hours" class="wx-in" placeholder="2.5" min="0" step="0.5"></div>
+          </div>
+        </div>
+        <div class="wx-sec" style="--q:2;--d:3">
+          <label class="wx-lab" for="dl-company"><span>Project / Company <small>(optional)</small></span></label>
+          <div class="wx-iconfield"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg><select id="dl-company" class="wx-in"><option value="">— No company —</option></select></div>
+          <div class="wx-row wx-d-only" style="margin-top:12px">
+            <div><label class="wx-lab" for="dl-project">Project</label><input id="dl-project" class="wx-in" placeholder="Project name"></div>
+            <div><label class="wx-lab" for="dl-client">Client Contact</label><input id="dl-client" class="wx-in" placeholder="Client / stakeholder"></div>
+          </div>
+        </div>
+        <div class="wx-sec wx-q-only" style="--q:3">
+          <div class="wx-lab">Type</div>
+          <div id="wx-types" class="wx-types" onclick="wxTypeClick(event)"></div>
+        </div>
+        <div class="wx-sec wx-d-only" style="--d:4">
+          <div class="wx-grid2">
+            <div><label class="wx-lab" for="dl-cat">Category</label><select id="dl-cat" class="wx-in" onchange="wxRenderTypes()"><option>Development</option><option>Firmware</option><option>Embedded</option><option>Testing</option><option>Troubleshooting</option><option>Debugging</option><option>IoT</option><option>Research</option><option>Learning</option><option>Documentation</option><option>Client Support</option><option>Client Call</option><option>Technical Support</option><option>Meeting</option><option>Deployment</option><option>Maintenance</option><option>Innovation</option><option>Other</option></select></div>
+            <div><label class="wx-lab" for="dl-prio">Priority</label><select id="dl-prio" class="wx-in"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
+            <div><label class="wx-lab" for="dl-status">Status</label><select id="dl-status" class="wx-in"><option>Completed</option><option>In Progress</option><option>Blocked</option><option>Deferred</option></select></div>
+            <div><label class="wx-lab" for="dl-support">Technical Support?</label><select id="dl-support" class="wx-in"><option>No</option><option>Yes</option></select></div>
+          </div>
+        </div>
+        <div class="wx-sec" style="--q:4;--d:9">
+          <div class="wx-lab"><span>Work Details <small>— rich notes</small></span></div>
+          <div id="dl-rich-host" class="wx-rich"></div>
+          <div class="wx-help wx-q-only">The first line becomes the entry title.</div>
+        </div>
+        <div class="wx-sec" style="--q:5;--d:5">
+          <div class="wx-lab"><span>Tags <small>(optional)</small></span></div>
+          <div class="wx-tagbox" onclick="wxTagClick(event)">
+            <span id="wx-tag-chips" class="wx-chips-inline"></span>
+            <input id="wx-tag-in" class="wx-tag-in" list="wx-tag-list" placeholder="+ Add tag" maxlength="40" autocomplete="off" onkeydown="wxTagKey(event)" onblur="wxTagBlur(this)">
+          </div>
+          <input type="hidden" id="dl-tags">
+          <datalist id="wx-tag-list"></datalist>
+        </div>
+        <div class="wx-sec wx-d-only" style="--d:6">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div><label class="wx-lab" for="dl-impact">Business Impact</label><textarea id="dl-impact" class="wx-in" rows="2" placeholder="What value was created? e.g. Reduced firmware boot time by 30%"></textarea></div>
+            <div><label class="wx-lab" for="dl-problem">Problem Solved</label><textarea id="dl-problem" class="wx-in" rows="2" placeholder="What issue did you resolve?"></textarea></div>
+            <div><label class="wx-lab" for="dl-solution">Solution / Action Taken</label><textarea id="dl-solution" class="wx-in" rows="2" placeholder="How did you resolve it? What steps did you take?"></textarea></div>
+            <div><label class="wx-lab" for="dl-tech">Technologies Used</label><input id="dl-tech" class="wx-in" placeholder="ESP32, FreeRTOS, UART..."></div>
+            <div><label class="wx-lab" for="dl-learning">Key Learning</label><textarea id="dl-learning" class="wx-in" rows="2" placeholder="What did you learn from this?"></textarea></div>
+            <div><label class="wx-lab" for="dl-self">Self Remarks</label><textarea id="dl-self" class="wx-in" rows="2" placeholder="Your reflection — what went well, what was hard?"></textarea></div>
+          </div>
+        </div>
+      </div>
+      <div class="wx-dr-foot">
+        <span class="wx-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> to save</span>
+        <button type="button" class="wx-btn wx-btn-danger" id="dl-del-btn" onclick="deleteCurrentDailyEntry()" style="display:none">Delete</button>
+        <button type="button" class="wx-btn wx-btn-soft" onclick="wxRequestClose()">Cancel</button>
+        <button type="button" class="wx-btn wx-btn-primary" id="dl-submit-btn" onclick="saveDaily()">Save Entry</button>
+      </div>
+    </aside>
   </div>
-  <div class="card">
-    <div class="card-hd"><div class="card-title">📓 Work Log</div><div style="display:flex;align-items:center;gap:10px"><span id="daily-cnt" style="font-size:11px;color:var(--text3)">0 entries</span><button class="btn btn-ghost btn-sm" onclick="nav('reports');exportWorklogPDF()" title="Download a polished Worklog PDF of every entry">📋 Worklog PDF</button><button class="btn btn-violet btn-sm" onclick="openDailyEditor()">+ Add Entry</button></div></div>
-    <div id="daily-list" class="card-body" style="padding:0"></div>
-  </div>
+  <div id="wx-scrim" class="wx-scrim" onclick="wxRequestClose()"></div>
 </div>
 
-<!-- Work Log — Entry Editor Modal -->
-<div id="wl-editor-overlay" class="kv-modal-overlay" style="display:none" onclick="if(event.target===this) closeDailyEditor()">
-  <div class="kv-modal" style="max-width:760px">
-    <div class="kv-modal-hd">
-      <div id="wl-modal-title" style="font-size:16px;font-weight:700">+ Add Work Log Entry</div>
-      <div class="kv-modal-hd-actions">
-        <button class="kv-modal-close" onclick="closeDailyEditor()">✕</button>
-      </div>
-    </div>
-    <div class="kv-modal-scroll">
-      <div class="fgrid" style="padding:14px 18px 0">
-        <div class="ff"><label>Date</label><input type="date" id="dl-date"></div>
-        <div class="ff s2"><label>Task Title <span style="color:var(--red)">*</span></label><input id="dl-task" placeholder="What did you work on?"></div>
-        <div class="ff"><label>Company / Client</label><select id="dl-company"><option value="">— No company —</option></select></div>
-        <div class="ff"><label>Project</label><input id="dl-project" placeholder="Project name"></div>
-        <div class="ff"><label>Client Contact</label><input id="dl-client" placeholder="Client / stakeholder"></div>
-        <div class="ff"><label>Hours</label><input type="number" id="dl-hours" placeholder="2.5" min="0" step="0.5"></div>
-        <div class="ff"><label>Category</label>
-          <select id="dl-cat">
-            <option>Development</option><option>Firmware</option><option>Embedded</option>
-            <option>Testing</option><option>Debugging</option><option>IoT</option>
-            <option>Research</option><option>Learning</option><option>Documentation</option>
-            <option>Client Call</option><option>Technical Support</option><option>Meeting</option>
-            <option>Deployment</option><option>Maintenance</option><option>Innovation</option><option>Other</option>
-          </select>
-        </div>
-        <div class="ff"><label>Priority</label><select id="dl-prio"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
-        <div class="ff"><label>Status</label><select id="dl-status"><option>Completed</option><option>In Progress</option><option>Blocked</option><option>Deferred</option></select></div>
-        <div class="ff"><label>Tags</label><input id="dl-tags" placeholder="mqtt, modbus, rs485..."></div>
-        <div class="ff full"><label>Business Impact</label><input id="dl-impact" placeholder="What value was created? e.g. Reduced firmware boot time by 30%"></div>
-        <div class="ff full"><label>Problem Solved</label><input id="dl-problem" placeholder="What issue did you resolve?"></div>
-        <div class="ff full"><label>Solution / Action Taken</label><input id="dl-solution" placeholder="How did you resolve it? What steps did you take?"></div>
-        <div class="ff"><label>Technologies Used</label><input id="dl-tech" placeholder="ESP32, FreeRTOS, UART..."></div>
-        <div class="ff"><label>Technical Support?</label><select id="dl-support"><option>No</option><option>Yes</option></select></div>
-        <div class="ff full"><label>Key Learning</label><input id="dl-learning" placeholder="What did you learn from this?"></div>
-        <div class="ff full"><label>Self Remarks</label><textarea id="dl-self" placeholder="Your reflection — what went well, what was hard?" style="min-height:60px"></textarea></div>
-      </div>
-      <div style="padding:12px 18px 0;font-size:11px;font-weight:600;color:var(--text3)">Journal Notes <span style="font-weight:400;color:var(--text4)">— rich text</span></div>
-      <div id="dl-rich-host" class="kv-rich-host"></div>
-    </div>
-    <div class="kv-modal-foot">
-      <div id="dl-edit-banner" style="display:none;font-size:10.5px;color:var(--violet-l)">✏️ Editing an existing entry</div>
-      <div class="btn-group">
-        <button class="btn btn-ghost btn-sm" id="dl-del-btn" onclick="deleteCurrentDailyEntry()" style="display:none">🗑 Delete</button>
-        <button class="btn btn-violet btn-sm" id="dl-submit-btn" onclick="saveDaily()">💾 Save Entry</button>
-      </div>
-    </div>
-  </div>
-</div>
 <!-- ═══ TASK MANAGER (KANBAN) ═══ -->
 <div id="page-tasks" class="page">
   <div class="card mb16">
@@ -4820,15 +4995,199 @@ function delBtn(arr,id,cb) { return`<button style="background:var(--red-dim);col
 
 // ── DAILY (WORK LOG) ──
 let dailyEditingId = null;
+
+// ---------- Work Log UI helpers (presentation only — the data model is unchanged) ----------
+const WX_IC = {
+  dev:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  test:'<path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/>',
+  bug:'<path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/><path d="M12 20v-9"/><path d="M6.53 9C4.6 8.8 3 7.1 3 5"/><path d="M6 13H2"/><path d="M3 21c0-2.1 1.7-3.9 3.8-4"/><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/><path d="M22 13h-4"/><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/>',
+  learn:'<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  doc:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+  users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>',
+  other:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/>',
+  x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
+};
+function wxSvg(name, size) {
+  return `<svg width="${size||16}" height="${size||16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${WX_IC[name]||WX_IC.other}</svg>`;
+}
+const WX_TYPES = [['Development','dev'],['Testing','test'],['Troubleshooting','bug'],['Learning','learn'],['Documentation','doc'],['Client Support','users'],['Meeting','cal']];
+// Older categories keep working — they just borrow the closest type's colour/icon.
+const WX_LEGACY = { Firmware:'dev', Embedded:'dev', IoT:'dev', Deployment:'dev', Maintenance:'dev', Innovation:'dev', 'Deep Work':'dev', Debugging:'bug', Research:'learn', 'Client Call':'users', 'Technical Support':'users' };
+function wxKey(cat) { const t = WX_TYPES.find(x => x[0] === cat); return t ? t[1] : (WX_LEGACY[cat] || 'other'); }
+const WX_TAGWORD = { development:'dev', testing:'test', troubleshooting:'bug', learning:'learn', documentation:'doc', meeting:'cal' };
+function wxHash(s) { let h = 0; for (const c of String(s).toLowerCase()) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
+function wxTagCls(t) { const k = WX_TAGWORD[String(t).toLowerCase()]; return k ? 'wx-k-' + k : 'wx-tg' + (wxHash(t) % 6); }
+function wxEsc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+const _wxPlainCache = new Map();
+function wxPlain(html) {
+  if (!html) return '';
+  let v = _wxPlainCache.get(html); if (v !== undefined) return v;
+  const t = document.createElement('template');   // inert: nothing in it loads or runs
+  t.innerHTML = String(html).replace(/<(p|div|li|h[1-6]|pre|tr|blockquote)\b[^>]*>|<br\s*\/?>/gi, m => '\n' + m);
+  v = (t.content.textContent || '').replace(/\u00a0/g, ' ').replace(/[ \t]+\n/g, '\n').replace(/\n{2,}/g, '\n').trim();
+  if (_wxPlainCache.size > 800) _wxPlainCache.clear();
+  _wxPlainCache.set(html, v); return v;
+}
+// Quick Entry has no title box: the first line / first sentence of Work Details becomes the title.
+function wxDeriveTitle(plain) {
+  const first = (plain || '').split('\n').map(s => s.trim()).find(Boolean) || '';
+  if (!first) return '';
+  if (first.length <= 90) return first.replace(/[\s.:;,\-–—]+$/, '') || first;
+  const m = first.match(/^(.{15,110}?[.!?])(?:\s|$)/);
+  if (m) return m[1].replace(/[.!?]+$/, '').trim();
+  const cut = first.slice(0, 85), sp = cut.lastIndexOf(' ');
+  return (sp > 40 ? cut.slice(0, sp) : cut).trim() + '…';
+}
+function wxDesc(r) {
+  const plain = wxPlain(r.richNotes);
+  if (plain) {
+    let d = plain; const t = (r.task || '').trim();
+    if (t && !t.endsWith('…') && d.toLowerCase().startsWith(t.toLowerCase())) d = d.slice(t.length).replace(/^[\s.!?:;,\-–—]+/, '');
+    return { text: d.trim(), plain };
+  }
+  return { text: String(r.impact || r.problem || r.solution || r.learning || r.self || '').trim(), plain: '' };
+}
+const WX_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const WX_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function wxParse(s) { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+function wxFmt(dt) { return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`; }
+function wxLong(s) { if (!/^\d{4}-\d{2}-\d{2}/.test(s||'')) return 'No date'; const d = wxParse(s.slice(0,10)); return `${WX_DAYS[d.getDay()]}, ${d.getDate()} ${WX_MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
+function wxRange(f) {
+  if (f === 'all') return null;
+  const t = today(); if (f === 'today') return [t, t];
+  const d = wxParse(t);
+  if (f === 'week') { const s = new Date(d); s.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const e = new Date(s); e.setDate(s.getDate() + 6); return [wxFmt(s), wxFmt(e)]; }
+  return [wxFmt(new Date(d.getFullYear(), d.getMonth(), 1)), wxFmt(new Date(d.getFullYear(), d.getMonth() + 1, 0))];
+}
+function wxTime(r) {
+  if (!r.created_at) return ''; const d = new Date(r.created_at); if (isNaN(d)) return '';
+  let h = d.getHours(); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+  return `${String(h).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} ${ap}`;
+}
+
+// ---------- filters + search ----------
+let wxFilter = 'all', wxQuery = '', _wxSearchT = null;
+function wxSetFilter(f, btn) {
+  wxFilter = f;
+  document.querySelectorAll('#wx-filters .wx-pill').forEach(b => b.classList.toggle('on', b === btn));
+  renderDaily();
+}
+function wxSetQuery(v) { wxQuery = (v || '').trim().toLowerCase(); clearTimeout(_wxSearchT); _wxSearchT = setTimeout(renderDaily, 120); }
+function wxClearFilters() {
+  wxFilter = 'all'; wxQuery = '';
+  const s = document.getElementById('wx-search'); if (s) s.value = '';
+  document.querySelectorAll('#wx-filters .wx-pill').forEach((b, i) => b.classList.toggle('on', i === 0));
+  renderDaily();
+}
+
+// ---------- drawer state ----------
+let wxMode = 'quick', wxManual = false, wxDirty = false, wxBusy = false, wxTags = [];
+function wxMarkDirty() { wxDirty = true; }
+function wxBody() { return document.getElementById('wx-body'); }
+function wxSetMode(m) {
+  wxMode = m;
+  const b = wxBody(); if (b) b.dataset.mode = m;
+  [['quick','wx-tab-quick'],['detailed','wx-tab-detailed']].forEach(([k, id]) => {
+    const el = document.getElementById(id); if (!el) return;
+    el.classList.toggle('on', k === m); el.setAttribute('aria-selected', k === m);
+  });
+}
+function wxEnsureOption(sel, val) {
+  if (sel && val && ![...sel.options].some(o => o.value === val)) { const o = document.createElement('option'); o.value = o.textContent = val; sel.appendChild(o); }
+}
+function wxRenderTypes() {
+  const host = document.getElementById('wx-types'); if (!host) return;
+  const cur = document.getElementById('dl-cat').value;
+  const list = WX_TYPES.slice(); if (cur && !list.some(t => t[0] === cur)) list.push([cur, wxKey(cur)]);
+  host.innerHTML = list.map(([n, k]) => `<button type="button" class="wx-chip wx-k-${k}${n === cur ? ' on' : ''}" data-type="${wxEsc(n)}" aria-pressed="${n === cur}">${wxSvg(k, 16)}<span>${wxEsc(n)}</span></button>`).join('');
+}
+function wxTypeClick(e) {
+  const b = e.target.closest('[data-type]'); if (!b) return;
+  const sel = document.getElementById('dl-cat'); wxEnsureOption(sel, b.dataset.type); sel.value = b.dataset.type;
+  wxMarkDirty(); wxRenderTypes();
+}
+function wxDateHint() {
+  const el = document.getElementById('wx-date-hint'); if (!el) return;
+  const v = document.getElementById('dl-date').value;
+  el.innerHTML = v === today() ? '<span class="wx-today-pill">Today</span>' : '<button type="button" class="wx-link" onclick="wxSetToday()">Set to today</button>';
+}
+function wxSetToday() { document.getElementById('dl-date').value = today(); wxMarkDirty(); wxDateHint(); }
+function wxTitleTouched() {
+  wxManual = !!document.getElementById('dl-task').value.trim();
+  if (wxManual) wxBody().classList.add('wx-manual');
+}
+// tags: chips in the UI, comma-separated string in #dl-tags (same format the app already stores)
+function wxTagNorm(t) { return String(t || '').trim().replace(/^#+/, '').trim(); }
+function wxTagsRender() {
+  const box = document.getElementById('wx-tag-chips'); if (!box) return;
+  box.innerHTML = wxTags.map((t, i) => `<span class="wx-tag ${wxTagCls(t)}">${wxEsc(t)}<button type="button" class="wx-tag-x" data-i="${i}" aria-label="Remove tag ${wxEsc(t)}">${wxSvg('x', 12)}</button></span>`).join('');
+  document.getElementById('dl-tags').value = wxTags.join(', ');
+}
+function wxTagsSet(arr) {
+  wxTags = [];
+  (arr || []).forEach(p => { const t = wxTagNorm(p); if (t && !wxTags.some(x => x.toLowerCase() === t.toLowerCase())) wxTags.push(t); });
+  wxTagsRender();
+}
+function wxTagAdd(raw) {
+  let added = false;
+  String(raw || '').split(',').forEach(p => { const t = wxTagNorm(p); if (t && !wxTags.some(x => x.toLowerCase() === t.toLowerCase())) { wxTags.push(t); added = true; } });
+  if (added) { wxTagsRender(); wxMarkDirty(); }
+}
+function wxTagKey(e) {
+  const inp = e.target;
+  if (e.key === 'Enter' && !(e.ctrlKey || e.metaKey)) { e.preventDefault(); wxTagAdd(inp.value); inp.value = ''; }
+  else if (e.key === ',') { e.preventDefault(); wxTagAdd(inp.value); inp.value = ''; }
+  else if (e.key === 'Backspace' && !inp.value && wxTags.length) { wxTags.pop(); wxTagsRender(); wxMarkDirty(); }
+  else if (e.key === 'Escape') { inp.value = ''; inp.blur(); e.stopPropagation(); }
+}
+function wxTagBlur(inp) { wxTagAdd(inp.value); inp.value = ''; }
+function wxTagClick(e) {
+  const x = e.target.closest('.wx-tag-x');
+  if (x) { wxTags.splice(+x.dataset.i, 1); wxTagsRender(); wxMarkDirty(); return; }
+  if (e.target.classList.contains('wx-tagbox')) document.getElementById('wx-tag-in').focus();
+}
+function wxFillTagSuggestions() {
+  const dl = document.getElementById('wx-tag-list'); if (!dl) return;
+  const c = {}; D.daily.forEach(r => (r.tags || '').split(',').forEach(t => { t = wxTagNorm(t); if (t) c[t] = (c[t] || 0) + 1; }));
+  dl.innerHTML = Object.entries(c).sort((a, b) => b[1] - a[1]).slice(0, 40).map(([t]) => `<option value="${wxEsc(t)}"></option>`).join('');
+}
+function wxDrawerKey(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); saveDaily(); return; }
+  if (e.key === 'Escape' && e.target.tagName !== 'SELECT' && !document.querySelector('.rt-wrap.fullscreen')) { e.preventDefault(); wxRequestClose(); }
+}
+function wxRequestClose() {
+  if (wxDirty && !confirm('Discard this entry? Your changes have not been saved.')) return;
+  closeDailyEditor();
+}
+function wxHasAdvanced(r) {
+  return !!(r.project || r.client || r.hours || r.impact || r.problem || r.solution || r.tech || r.learning || r.self ||
+    r.support === 'Yes' || (r.prio && r.prio !== 'Medium') || (r.status && r.status !== 'Completed'));
+}
+
+// ---------- save / open / close / delete (existing entry points, same DB mapping) ----------
 function refreshDailyCompanyOptions() {
   const sel = document.getElementById('dl-company'); if (!sel) return;
   const cur = sel.value;
   sel.innerHTML = '<option value="">— No company —</option>' + companies.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
-  sel.value = cur && companies.some(c => c.id === cur) ? cur : (activeCompanyId || '');
+  const keep = cur && companies.some(c => c.id === cur);
+  const drawerOpen = document.getElementById('page-quicklog')?.classList.contains('wx-open');
+  sel.value = keep ? cur : (drawerOpen ? '' : (activeCompanyId || ''));
 }
 async function saveDaily() {
-  const task = document.getElementById('dl-task').value.trim();
-  if (!task) { toast('⚠️ Task title required', 'error'); return; }
+  if (wxBusy) return;
+  const ti = document.getElementById('wx-tag-in'); if (ti && ti.value.trim()) { wxTagAdd(ti.value); ti.value = ''; }
+  const ed = document.getElementById('dl-rich');
+  const rawRich = ed ? ed.innerHTML : '';
+  const plain = wxPlain(rawRich);
+  const richNotes = (plain || /<img\b/i.test(rawRich)) ? rawRich : '';
+  let task = document.getElementById('dl-task').value.trim();
+  if (!wxManual || !task) { const auto = wxDeriveTitle(plain); if (auto) task = auto; }
+  if (!task) { toast('⚠️ Write some work details (or a title) first', 'error'); if (ed) ed.focus(); return; }
+  document.getElementById('dl-task').value = task;
   const r = {
     date:document.getElementById('dl-date').value||today(),
     task,
@@ -4847,33 +5206,39 @@ async function saveDaily() {
     support:document.getElementById('dl-support').value,
     learning:document.getElementById('dl-learning').value,
     self:document.getElementById('dl-self').value,
-    richNotes:document.getElementById('dl-rich').innerHTML
+    richNotes
   };
-  if (dailyEditingId) {
-    const dbUpdates = {
-      date:r.date, task:r.task, project:r.project, client:r.client,
-      hours:r.hours ? Number(r.hours) : null,
-      category:r.cat, priority:r.prio, status:r.status, impact:r.impact,
-      problem_solved:r.problem, solution:r.solution, technologies:r.tech, technical_support:r.support,
-      learning:r.learning, self_remarks:r.self, rich_notes:r.richNotes||'',
-      company_id:r.companyId||null, tags:r.tags||''
-    };
-    await updateItemMapped('daily', dailyEditingId, r, dbUpdates, renderDaily);
-    toast('✓ Work log entry updated');
-  } else {
-    await addItem('daily', { id:'', ...r }, renderDaily);
-    toast('✓ Work logged');
-  }
-  closeDailyEditor();
+  wxBusy = true;
+  try {
+    if (dailyEditingId) {
+      const dbUpdates = {
+        date:r.date, task:r.task, project:r.project, client:r.client,
+        hours:r.hours ? Number(r.hours) : null,
+        category:r.cat, priority:r.prio, status:r.status, impact:r.impact,
+        problem_solved:r.problem, solution:r.solution, technologies:r.tech, technical_support:r.support,
+        learning:r.learning, self_remarks:r.self, rich_notes:r.richNotes||'',
+        company_id:r.companyId||null, tags:r.tags||''
+      };
+      await updateItemMapped('daily', dailyEditingId, r, dbUpdates, renderDaily);
+      const item = D.daily.find(x => x.id === dailyEditingId);
+      if (item && Object.keys(r).every(k => item[k] === r[k])) { toast('✓ Work log entry updated'); closeDailyEditor(); }
+    } else {
+      const obj = { id:'', ...r, created_at:new Date().toISOString() };
+      await addItem('daily', obj, renderDaily);
+      if (obj.id) { toast('✓ Work logged'); closeDailyEditor(); }   // on failure the drawer stays open so nothing typed is lost
+    }
+  } finally { wxBusy = false; }
 }
 
-// Opens the Work Log entry modal. Pass an id to edit that entry, or call with
-// no argument to add a new one. This is the single entry point for both —
-// so "Add Entry" and the ✏️ edit button on every row behave identically.
+// Opens the Work Log drawer. Pass an id to edit that entry, or call with no argument to add a new one.
+// This is the single entry point for both — "Add Entry", the card click and the ✏️ button all use it.
 function openDailyEditor(id) {
   const isNew = !id;
   const r = isNew ? null : D.daily.find(x => x.id === id);
   if (!isNew && !r) return;
+  const pg = document.getElementById('page-quicklog');
+  if (pg && !pg.classList.contains('active')) nav('quicklog');
+  if (pg && pg.classList.contains('wx-open') && wxDirty && !confirm('Discard the entry you are writing?')) return;
   dailyEditingId = isNew ? null : id;
   document.getElementById('dl-date').value = r ? (r.date||today()) : today();
   document.getElementById('dl-task').value = r ? r.task||'' : '';
@@ -4882,10 +5247,12 @@ function openDailyEditor(id) {
   document.getElementById('dl-project').value = r ? r.project||'' : '';
   document.getElementById('dl-client').value = r ? r.client||'' : '';
   document.getElementById('dl-hours').value = r ? r.hours||'' : '';
-  document.getElementById('dl-cat').value = r ? r.cat||'Development' : 'Development';
-  document.getElementById('dl-prio').value = r ? r.prio||'Medium' : 'Medium';
-  document.getElementById('dl-status').value = r ? r.status||'Completed' : 'Completed';
-  document.getElementById('dl-tags').value = r ? r.tags||'' : '';
+  const cat = document.getElementById('dl-cat'), prio = document.getElementById('dl-prio'), stat = document.getElementById('dl-status');
+  [[cat, r ? r.cat : ''],[prio, r ? r.prio : ''],[stat, r ? r.status : '']].forEach(([s, v]) => wxEnsureOption(s, v));
+  cat.value = r ? r.cat||'Development' : 'Development';
+  prio.value = r ? r.prio||'Medium' : 'Medium';
+  stat.value = r ? r.status||'Completed' : 'Completed';
+  wxTagsSet(r ? (r.tags||'').split(',') : []);
   document.getElementById('dl-impact').value = r ? r.impact||'' : '';
   document.getElementById('dl-problem').value = r ? r.problem||'' : '';
   document.getElementById('dl-solution').value = r ? r.solution||'' : '';
@@ -4893,17 +5260,30 @@ function openDailyEditor(id) {
   document.getElementById('dl-support').value = r ? r.support||'No' : 'No';
   document.getElementById('dl-learning').value = r ? r.learning||'' : '';
   document.getElementById('dl-self').value = r ? r.self||'' : '';
-  const rich = document.getElementById('dl-rich'); if (rich) { rich.innerHTML = r ? r.richNotes||'' : ''; rtUpdateStats(rich) }
-  document.getElementById('wl-modal-title').textContent = isNew ? '+ Add Work Log Entry' : '✏️ Edit Work Log Entry';
-  document.getElementById('dl-submit-btn').textContent = isNew ? '💾 Save Entry' : '💾 Update Entry';
+  const rich = document.getElementById('dl-rich');
+  if (rich) { rich.innerHTML = r ? r.richNotes||'' : ''; rich.setAttribute('data-placeholder', 'Write naturally — what you did, what you found, what is next…'); rtUpdateStats(rich) }
+  // title is "automatic" unless it differs from what Work Details would produce (e.g. older entries)
+  wxManual = !!(r && (r.task||'').trim() && (r.task||'').trim() !== wxDeriveTitle(wxPlain(r.richNotes)));
+  wxBody().classList.toggle('wx-manual', wxManual);
+  wxSetMode(!isNew && wxHasAdvanced(r) ? 'detailed' : 'quick');
+  wxRenderTypes(); wxDateHint(); wxFillTagSuggestions();
+  document.getElementById('wl-modal-title').textContent = isNew ? 'Add Work Entry' : 'Edit Work Entry';
+  document.getElementById('dl-submit-btn').textContent = isNew ? 'Save Entry' : 'Update Entry';
   document.getElementById('dl-edit-banner').style.display = isNew ? 'none' : '';
   document.getElementById('dl-del-btn').style.display = isNew ? 'none' : '';
-  document.getElementById('wl-editor-overlay').style.display = 'flex';
-  setTimeout(() => document.getElementById('dl-task').focus(), 50);
+  document.getElementById('wl-editor-overlay').classList.toggle('is-edit', !isNew);
+  if (pg) pg.classList.add('wx-open');
+  wxDirty = false;
+  setTimeout(() => {
+    const bd = wxBody(); if (bd) bd.scrollTop = 0;
+    if (!rich) return; rich.focus({ preventScroll:true });
+    const rg = document.createRange(); rg.selectNodeContents(rich); rg.collapse(false);
+    const sl = window.getSelection(); sl.removeAllRanges(); sl.addRange(rg);
+  }, 60);
 }
 function closeDailyEditor() {
-  dailyEditingId = null;
-  document.getElementById('wl-editor-overlay').style.display = 'none';
+  dailyEditingId = null; wxDirty = false;
+  const pg = document.getElementById('page-quicklog'); if (pg) pg.classList.remove('wx-open');
 }
 async function deleteCurrentDailyEntry() {
   if (!dailyEditingId) return;
@@ -4915,43 +5295,88 @@ async function deleteCurrentDailyEntry() {
 async function deleteDailyEntry(id) {
   if (!confirm('Delete this work log entry? This cannot be undone.')) return;
   await del('daily', id, 'renderDaily');
+  if (dailyEditingId === id) closeDailyEditor();
 }
 function companyNameFor(id) { const c = companies.find(x => x.id === id); return c ? c.name : ''; }
+async function wxChangeType(id, val) {
+  const r = D.daily.find(x => x.id === id);
+  if (r && r.cat !== val) await updateItemMapped('daily', id, { cat:val }, { category:val }, renderDaily);
+  renderDaily();
+}
+function wxListClick(e) {
+  const card = e.target.closest('.wx-card'); if (!card) return;
+  const id = card.dataset.id, act = e.target.closest('[data-act]');
+  if (act) {
+    const a = act.dataset.act; if (a === 'type') return;
+    e.stopPropagation();
+    if (a === 'edit') openDailyEditor(id);
+    else if (a === 'del') deleteDailyEntry(id);
+    else if (a === 'notes') openJournalView(id);
+    else if (a === 'kc') openKnowledgeCard(act.dataset.kc);
+    return;
+  }
+  openDailyEditor(id);
+}
 
 function renderDaily() {
   refreshDailyCompanyOptions();
   const list = document.getElementById('daily-list'); if (!list) return;
-  document.getElementById('daily-cnt').textContent = D.daily.length+' entries';
-  if (!D.daily.length) { list.innerHTML = `<div class="empty-td">📓 No work logged yet.<br><span style="font-size:11px">Use the form above to log your first entry.</span></div>`; return }
+  if (!list.dataset.wx) {
+    list.dataset.wx = '1';
+    list.addEventListener('click', wxListClick);
+    list.addEventListener('change', e => { const s = e.target.closest('select[data-act="type"]'); if (s) wxChangeType(s.closest('.wx-card').dataset.id, s.value); });
+    list.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('wx-card')) openDailyEditor(e.target.dataset.id); });
+  }
+  const total = D.daily.length;
+  const rng = wxRange(wxFilter);
+  const terms = wxQuery ? wxQuery.replace(/#/g, '').split(/\s+/).filter(Boolean) : [];
+  let rows = [...D.daily];
+  if (rng) rows = rows.filter(r => { const d = (r.date||'').slice(0,10); return d >= rng[0] && d <= rng[1]; });
+  if (terms.length) rows = rows.filter(r => {
+    const hay = [r.task, r.project, r.client, companyNameFor(r.companyId), r.cat, r.tags, r.tech, r.impact, r.problem, r.solution, r.learning, r.self, r.status, wxPlain(r.richNotes)].join(' ').toLowerCase();
+    return terms.every(t => hay.includes(t));
+  });
+  const cnt = document.getElementById('daily-cnt');
+  if (cnt) cnt.textContent = rows.length === total ? `${total} ${total === 1 ? 'entry' : 'entries'}` : `${rows.length} of ${total} entries`;
+  if (!total) { list.innerHTML = `<div class="wx-empty"><strong>No work logged yet</strong>Write a few lines about what you worked on today — it takes seconds.<br><button class="wx-btn wx-btn-primary" onclick="openDailyEditor()">+ Add Entry</button></div>`; return; }
+  if (!rows.length) { list.innerHTML = `<div class="wx-empty"><strong>No matching entries</strong>Try a different search or period.<br><button class="wx-btn wx-btn-soft" style="margin-top:16px" onclick="wxClearFilters()">Clear filters</button></div>`; return; }
 
-  const sorted = [...D.daily].sort((a,b) => (b.date||'').localeCompare(a.date||'') || (b.created_at||'').localeCompare(a.created_at||''));
+  const sorted = rows.sort((a,b) => (b.date||'').localeCompare(a.date||'') || (b.created_at||'').localeCompare(a.created_at||''));
   const groups = {}; const order = [];
-  sorted.forEach(r => { const d = r.date||'—'; if (!groups[d]) { groups[d]=[]; order.push(d) } groups[d].push(r) });
+  sorted.forEach(r => { const d = (r.date||'').slice(0,10) || '—'; if (!groups[d]) { groups[d] = []; order.push(d) } groups[d].push(r) });
+  const todayStr = today();
 
   list.innerHTML = order.map(d => {
-    const label = d==='—' ? 'No date' : new Date(d+'T00:00:00').toLocaleDateString('en-IN', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
-    const rows = groups[d].map(r => {
-      const coName = companyNameFor(r.companyId);
-      const tags = (r.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
-      return `<div class="wl-entry">
-        <div class="wl-entry-main" onclick="openDailyEditor('${r.id}')">
-          ${coName ? `<span class="badge bv" style="margin-right:6px">🏢 ${esc(coName)}</span>` : ''}
-          <strong style="font-size:12.5px">${esc(r.task)}</strong>
-          ${r.richNotes ? ` <button onclick='event.stopPropagation();openJournalView(${JSON.stringify(r.id)})' title="View journal notes" style="border:none;background:none;cursor:pointer;color:var(--violet-l);font-size:11px">📝</button>` : ''}
-          <div style="font-size:11px;color:var(--text3);margin-top:3px">${esc(r.project)||'—'} · <span class="badge bv" style="padding:1px 6px">${esc(r.cat)}</span> ${statusBadge(r.status)} ${r.hours?`· ${r.hours}h`:''}</div>
-          ${r.impact ? `<div style="font-size:11px;color:var(--text2);margin-top:3px">💡 ${esc(r.impact)}</div>` : ''}
-          ${tags.length ? `<div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">${tags.map(t=>`<span style="font-size:9.5px;background:var(--s2);color:var(--text3);padding:1px 7px;border-radius:20px">#${esc(t)}</span>`).join('')}</div>` : ''}
-          ${r.linkedKnowledgeId ? `<div style="margin-top:5px"><span class="badge bg" style="cursor:pointer" onclick="event.stopPropagation();openKnowledgeCard('${r.linkedKnowledgeId}')">🔗 Linked Knowledge Card</span></div>` : ''}
+    const cards = groups[d].map(r => {
+      const k = wxKey(r.cat), time = wxTime(r), desc = wxDesc(r);
+      const co = companyNameFor(r.companyId);
+      const sub = [co, r.project].filter(Boolean).join(' · ') || r.client || '';
+      const tags = (r.tags||'').split(',').map(t => t.trim().replace(/^#+/, '')).filter(Boolean);
+      const meta = [time ? `<span>${time}</span>` : '', r.hours ? `<span>${time ? '· ' : ''}${wxEsc(r.hours)}h</span>` : '', (r.status && r.status !== 'Completed') ? statusBadge(r.status) : ''].join('');
+      const opts = WX_TYPES.map(t => t[0]); if (r.cat && !opts.includes(r.cat)) opts.push(r.cat);
+      const typeOpts = (r.cat ? '' : '<option value="" selected>No type</option>') + opts.map(o => `<option value="${wxEsc(o)}"${o === r.cat ? ' selected' : ''}>${wxEsc(o)}</option>`).join('');
+      const needsView = desc.plain.length > 200 || /<(img|ul|ol|pre|table|h[1-3]|blockquote|a)\b/i.test(r.richNotes || '');
+      return `<div class="wx-card wx-k-${k}" data-id="${wxEsc(r.id)}" tabindex="0">
+        <div class="wx-ico">${wxSvg(k, 20)}</div>
+        <div class="wx-main">
+          ${meta ? `<div class="wx-time">${meta}</div>` : ''}
+          <div class="wx-title">${wxEsc(r.task)}</div>
+          ${sub ? `<div class="wx-sub">${wxEsc(sub)}</div>` : ''}
+          ${desc.text ? `<div class="wx-desc">${wxEsc(desc.text)}</div>` : ''}
+          ${needsView ? `<button type="button" class="wx-viewnotes" data-act="notes">View notes</button>` : ''}
+          ${(tags.length || r.linkedKnowledgeId) ? `<div class="wx-tags">${tags.map(t => `<span class="wx-tag ${wxTagCls(t)}">${wxEsc(t)}</span>`).join('')}${r.linkedKnowledgeId ? `<span class="wx-tag wx-kc" data-act="kc" data-kc="${wxEsc(r.linkedKnowledgeId)}">↗ Knowledge card</span>` : ''}</div>` : ''}
         </div>
-        <div class="wl-entry-actions">
-          <button onclick="openDailyEditor('${r.id}')" title="Edit entry" style="border:none;background:none;cursor:pointer;color:var(--text3);font-size:12px">✏️</button>
-          <button onclick="deleteDailyEntry('${r.id}')" title="Delete entry" style="background:var(--red-dim);color:var(--red);border:none;border-radius:5px;padding:3px 8px;font-size:11px;cursor:pointer">✕</button>
+        <div class="wx-side">
+          <div class="wx-acts">
+            <button type="button" class="wx-ib" data-act="edit" title="Edit entry" aria-label="Edit entry">${wxSvg('edit', 16)}</button>
+            <button type="button" class="wx-ib del" data-act="del" title="Delete entry" aria-label="Delete entry">${wxSvg('trash', 16)}</button>
+          </div>
+          <select class="wx-type-sel" data-act="type" aria-label="Change type">${typeOpts}</select>
         </div>
       </div>`;
     }).join('');
-    return `<div class="wl-date-group"><div class="wl-date-hd">${label}</div>${rows}</div>`;
+    return `<div class="wx-day"><div class="wx-day-hd"><h3>${wxLong(d)}</h3>${d === todayStr ? '<span class="wx-today">Today</span>' : ''}</div>${cards}</div>`;
   }).join('');
-  renderJournalSummary();
 }
 
 // ── WORK LOG → KNOWLEDGE TRACK ──
