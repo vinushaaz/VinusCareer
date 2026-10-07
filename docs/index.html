@@ -886,6 +886,190 @@ tr:hover td{background:#8b5cf608}
   .kv-body{grid-template-columns:1fr}
   .kv-sidebar{position:static}
 }
+/* ══ KNOWLEDGE TRACK — pastel notebook redesign (kx-*) ══ */
+.kx-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px;align-items:start}
+.kx-side{position:sticky;top:12px;background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:12px;box-shadow:var(--shadow-soft);max-height:calc(100vh - 100px);overflow-y:auto}
+.kx-sl-hd{font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.08em;padding:4px 8px 8px}
+.kx-si{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;text-align:left;cursor:pointer;color:var(--text2);border-radius:10px;font:500 12.5px 'Inter',sans-serif;padding:8px 10px;transition:background .15s}
+.kx-si:hover{background:var(--s2)}
+.kx-si.active{background:var(--violet-xl);color:var(--violet-l);font-weight:600}
+.kx-si i{font-style:normal;width:18px;text-align:center;font-size:14px;flex-shrink:0}
+.kx-si span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kx-si b{font-size:10.5px;font-weight:600;color:var(--text4)}
+.kx-si.active b{color:var(--violet-l)}
+.kx-fo-i{padding-top:7px;padding-bottom:7px;font-size:12px}
+.kx-none{font-size:11px;color:var(--text4);padding:4px 10px}
+.kx-newfolder{width:100%;margin-top:8px;border:1px dashed var(--border2);background:none;border-radius:10px;padding:8px;font:500 12px 'Inter',sans-serif;color:var(--text3);cursor:pointer}
+.kx-newfolder:hover{color:var(--violet-l);border-color:var(--border3);background:var(--violet-xl)}
+.kx-main{min-width:0}
+.kx-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.kx-ttl{display:flex;align-items:center;gap:12px}
+.kx-brain{font-size:34px;line-height:1}
+.kx-h1{font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:27px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.kx-sub{font-size:13px;color:var(--text3);margin-top:3px}
+.kx-actions{display:flex;gap:12px;align-items:center;flex:1;justify-content:flex-end;min-width:260px}
+.kx-search{flex:1;max-width:340px;min-width:160px;height:44px;border-radius:14px;border:1px solid var(--border2);background:var(--s1);padding:0 16px;font-size:13px;box-shadow:var(--shadow-soft)}
+.kx-primary{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:44px;padding:0 22px;border:none;border-radius:14px;cursor:pointer;color:#fff;font:600 13.5px 'Inter',sans-serif;white-space:nowrap;background:linear-gradient(135deg,var(--violet),var(--fuchsia));box-shadow:0 8px 20px -8px #8b5cf6b0;transition:transform .15s,box-shadow .15s}
+.kx-primary:hover{transform:translateY(-1px);box-shadow:0 12px 24px -8px #8b5cf6c0}
+.kx-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.kx-chips button{height:38px;padding:0 15px;border-radius:12px;border:1px solid var(--border);background:var(--s1);color:var(--text2);font:500 12.5px 'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.kx-chips button:hover{background:var(--s3)}
+.kx-chips button.on{background:var(--violet-xl);color:var(--violet-l);border-color:var(--border3);font-weight:600}
+.kx-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.kx-sels{display:flex;gap:8px;flex-wrap:wrap}
+.kx-sels select{height:38px;border-radius:11px;border:1px solid var(--border);background:var(--s1);padding:0 12px;font:500 12.5px 'Inter',sans-serif;color:var(--text2);max-width:190px}
+.kx-views{display:flex;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:3px;gap:2px}
+.kx-views button{height:32px;padding:0 13px;border:none;border-radius:9px;background:none;color:var(--text2);font:500 12.5px 'Inter',sans-serif;cursor:pointer}
+.kx-views button:hover{background:var(--s2)}
+.kx-views button.on{background:var(--violet-xl);color:var(--violet-l);font-weight:600}
+.kx-crumb{font-size:12px;color:var(--text3);margin:-4px 2px 14px;display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.kx-crumb span{cursor:pointer}.kx-crumb span:hover{color:var(--violet-l)}
+.kx-crumb em{font-style:normal;font-weight:600;color:var(--text2)}
+.kx-crumb button{border:none;background:var(--s2);color:var(--text3);border-radius:8px;padding:2px 8px;font-size:11px;cursor:pointer;margin-left:6px}
+.kx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;align-items:start}
+.kx-grid.list{grid-template-columns:1fr;gap:10px}
+.kx-empty{grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--text3);font-size:13px;line-height:1.7;background:var(--s1);border:1px dashed var(--border2);border-radius:18px}
+/* type palette */
+.kxt-troubleshooting{--tc:#c2413f;--tb:#fff1f0;--tb2:#fddcd9}
+.kxt-tech{--tc:#2f7db3;--tb:#eef6fc;--tb2:#d4e8f6}
+.kxt-snippet{--tc:#3f8a4b;--tb:#eef7ef;--tb2:#d3ebd6}
+.kxt-cheatsheet{--tc:#c4701f;--tb:#fff5e8;--tb2:#fbe3c3}
+.kxt-note{--tc:#7c3aed;--tb:#f5efff;--tb2:#e6d9fd}
+.kxt-reference{--tc:#1f8a8a;--tb:#e9f7f6;--tb2:#c9ebe8}
+.kv-badge.section-note{background:#f5efff;color:#7c3aed}.kv-badge.section-reference{background:#e9f7f6;color:#1f8a8a}
+/* cards */
+.kx-card{background:var(--s1);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-soft);cursor:pointer;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s,border-color .15s;outline:none}
+.kx-card:hover,.kx-card:focus-visible{transform:translateY(-2px);box-shadow:var(--shadow-lift);border-color:var(--tb2)}
+.kx-card.arch{opacity:.6}
+.kx-hd{display:flex;align-items:center;gap:6px;padding:11px 12px 11px 16px;background:linear-gradient(180deg,var(--tb),#fff)}
+.kx-ty{flex:1;min-width:0;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--tc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kx-mini{font-size:10px;font-weight:600;color:var(--text3);background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:1px 6px;white-space:nowrap}
+.kx-star{border:none;background:none;cursor:pointer;font-size:19px;line-height:1;color:var(--text4);padding:2px 4px;border-radius:8px}
+.kx-star:hover{color:#f5b301;background:#fff8e1}.kx-star.on{color:#f5b301}
+.kx-bd{padding:2px 16px 14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.kx-t{font-size:15px;font-weight:600;line-height:1.3;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.kx-d{font-size:12.5px;line-height:1.5;color:var(--text2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.kx-call{background:var(--tb);border-radius:12px;padding:9px 12px;font-size:12px;line-height:1.45;color:var(--text)}
+.kx-call b{display:block;font-size:11.5px;color:var(--tc);margin-bottom:2px}
+.kx-code{margin:0;background:#2a2740;color:#d9d4f2;border-radius:10px;padding:10px 12px;font:10.5px/1.5 'SF Mono',Menlo,Consolas,monospace;white-space:pre;overflow:hidden;text-overflow:ellipsis}
+.kx-tags{display:flex;gap:6px;flex-wrap:wrap}
+.kx-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;white-space:nowrap}
+.kx-tag button{border:none;background:none;color:inherit;cursor:pointer;font-size:13px;line-height:1;padding:0;opacity:.6}
+.g0{background:#f1e9ff;color:#6d3fd0}.g1{background:#e6f1fb;color:#2f6f9e}.g2{background:#e5f4e7;color:#3a7d46}.g3{background:#fdeedb;color:#b0661a}.g4{background:#fde7ea;color:#b23a56}
+.kx-ft{display:flex;align-items:center;gap:10px;padding:0 10px 12px 16px;font-size:11px;color:var(--text3)}
+.kx-ft>span:first-child{flex:1;white-space:nowrap}
+.kx-fo{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text4)}
+.kx-more{border:none;background:none;cursor:pointer;color:var(--text3);font-size:18px;line-height:1;padding:2px 8px;border-radius:8px}
+.kx-more:hover{background:var(--s2);color:var(--text)}
+.kx-grid.list .kx-card{flex-direction:row;align-items:center;border-radius:14px}
+.kx-grid.list .kx-hd{width:180px;flex-shrink:0;align-self:stretch;background:var(--tb);flex-wrap:wrap;align-content:center}
+.kx-grid.list .kx-bd{padding:10px 14px;gap:4px;min-width:0}
+.kx-grid.list .kx-t,.kx-grid.list .kx-d{-webkit-line-clamp:1}
+.kx-grid.list .kx-call,.kx-grid.list .kx-code{display:none}
+.kx-grid.list .kx-ft{padding:0 10px 0 0}
+.kx-menu{position:fixed;z-index:700;min-width:170px;background:var(--s1);border:1px solid var(--border2);border-radius:12px;box-shadow:var(--shadow-lift);padding:5px}
+.kx-menu button{display:block;width:100%;text-align:left;border:none;background:none;padding:8px 11px;border-radius:8px;font:500 12.5px 'Inter',sans-serif;color:var(--text2);cursor:pointer}
+.kx-menu button:hover{background:var(--violet-xl);color:var(--violet-l)}.kx-menu button.danger{color:var(--red)}.kx-menu button.danger:hover{background:var(--red-dim);color:var(--red)}
+/* drawer */
+.kv-modal-overlay.kx-ov{align-items:stretch;justify-content:flex-end;padding:0;background:rgba(40,32,58,.3);opacity:0;transition:opacity .2s}
+.kx-ov.open{opacity:1}
+.kx-dr{width:min(540px,100vw);height:100%;background:var(--s1);display:flex;flex-direction:column;border-radius:20px 0 0 20px;box-shadow:-20px 0 50px -22px #28203a66;transform:translateX(28px);transition:transform .22s ease}
+.kx-ov.open .kx-dr{transform:none}
+.kx-dr-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 22px 12px;font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:20px;font-weight:700}
+.kx-x{border:none;background:none;font-size:17px;color:var(--text3);cursor:pointer;width:34px;height:34px;border-radius:10px}.kx-x:hover{background:var(--s2)}
+.kx-modes{display:flex;gap:4px;background:var(--s2);border-radius:12px;padding:3px;margin:0 22px 8px}
+.kx-modes button{flex:1;height:36px;border:none;border-radius:10px;background:none;font:500 13px 'Inter',sans-serif;color:var(--text2);cursor:pointer}
+.kx-modes button.on{background:var(--violet-xl);color:var(--violet-l);font-weight:600}
+.kx-dr-body{flex:1;overflow-y:auto;padding:10px 22px 18px;display:flex;flex-direction:column;gap:16px}
+.kx-f{display:flex;flex-direction:column}
+.kx-l{font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--text);margin-bottom:7px}
+.kx-l i{font-style:normal;font-weight:400;color:var(--text3)}.kx-l.s{font-size:12px;margin-bottom:5px}
+.kx-between{display:flex;justify-content:space-between;align-items:baseline}
+.kx-stats{font-size:10.5px;font-weight:400;color:var(--text4)}
+.kx-in{width:100%;height:44px;border-radius:12px;border:1px solid var(--border2);background:var(--s1);padding:0 14px;font-size:13px}
+.kx-in.s{height:38px;font-size:12.5px}
+textarea.kx-ta{height:auto;min-height:62px;padding:10px 14px;line-height:1.5;resize:vertical}
+.kx-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kx-tile{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 6px;border-radius:14px;border:1.5px solid transparent;background:var(--tb);color:var(--tc);font:600 12px 'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.kx-tile span{font-size:20px}
+.kx-tile:hover{border-color:var(--tb2)}
+.kx-tile.on{border-color:var(--violet);box-shadow:0 0 0 3px #8b5cf61f}
+.kx-tagbox{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:44px;border:1px solid var(--border2);border-radius:12px;padding:6px 10px;cursor:text;background:var(--s1)}
+.kx-tagbox input{flex:1;min-width:140px;border:none;background:none;padding:4px;box-shadow:none;font-size:13px}
+#kx-tag-chips{display:contents}
+.kx-sug{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.kx-sug button{border:1px solid var(--border2);background:none;border-radius:8px;padding:3px 10px;font:500 11.5px 'Inter',sans-serif;color:var(--text3);cursor:pointer}
+.kx-sug button:hover{background:var(--violet-xl);color:var(--violet-l);border-color:var(--border3)}
+.kx-det,.kx-ts,.kx-lang,.kx-tip{display:none}
+.kx-dr[data-mode=detailed] .kx-det{display:flex;flex-direction:column;gap:16px}
+.kx-dr[data-mode=detailed][data-type=troubleshooting] .kx-ts{display:flex;flex-direction:column;gap:12px}
+.kx-dr[data-mode=detailed][data-type=snippet] .kx-lang,.kx-dr[data-mode=detailed][data-type=cheatsheet] .kx-lang{display:flex}
+.kx-dr[data-mode=quick][data-type=troubleshooting] .kx-tip{display:block}
+.kx-tip{font-size:12px;color:var(--text3);background:var(--s2);border-radius:10px;padding:9px 12px}
+.kx-tip button{border:none;background:none;color:var(--violet-l);font-weight:600;cursor:pointer;font-size:12px}
+.kx-sec{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text4);margin-top:4px}
+.kx-g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.kx-sc .kx-in{background:var(--violet-xl);border-color:var(--border3)}
+.kx-opts{flex-direction:row!important;gap:18px!important}
+.kx-opts label{font-size:12.5px;text-transform:none;letter-spacing:0;color:var(--text2);display:flex;gap:6px;align-items:center;cursor:pointer}
+.kx-dr .kv-rich-host{padding:0}
+.kx-dr .kv-rich-host .rt-editor{min-height:220px;max-height:380px}
+.kx-dr-ft{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:14px 22px;border-top:1px solid var(--border);background:var(--s1)}
+.kx-fav{flex:1;display:flex;align-items:center;gap:8px;font-size:12.5px;text-transform:none;letter-spacing:0;color:var(--text2);cursor:pointer;min-width:150px}
+.kx-fav input,.kx-opts input{width:16px;height:16px;accent-color:var(--violet);padding:0}
+@media(max-width:960px){
+  .kx-layout{grid-template-columns:1fr}
+  .kx-side{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+  .kx-side .kx-si{width:auto}.kx-sl-hd,#kt-folder-tree{width:100%}.kx-newfolder{width:auto;margin:0}
+}
+@media(max-width:560px){
+  .kx-dr{border-radius:0}.kx-g2{grid-template-columns:1fr}.kx-tiles{grid-template-columns:repeat(2,1fr)}
+  .kx-grid.list .kx-card{flex-direction:column;align-items:stretch}.kx-grid.list .kx-hd{width:auto}
+}
+/* ══ COMPANIES — career history + application tracker (cx-*) ══ */
+.cx-tabs{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.cx-tabs button{height:48px;padding:0 24px;border-radius:14px;border:1px solid var(--border);background:var(--violet-xl);color:var(--violet-l);font:600 13.5px 'Inter',sans-serif;cursor:pointer;transition:all .15s}
+.cx-tabs button.on{background:linear-gradient(135deg,var(--violet),var(--fuchsia));color:#fff;border-color:transparent;box-shadow:0 8px 20px -8px #8b5cf6b0}
+.cx-sec{margin:4px 2px 12px}.cx-sec h3{font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:18px;font-weight:700}.cx-sec p{font-size:12.5px;color:var(--text3);margin-top:2px}
+.cx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:18px;align-items:start;margin-bottom:26px}
+.cx-card{background:var(--s1);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-soft);padding:18px;display:flex;flex-direction:column;gap:12px}
+.cx-card.act{border-color:var(--border3)}
+.cx-row{display:flex;gap:14px;align-items:flex-start}
+.cx-av{width:52px;height:52px;border-radius:14px;background:var(--violet-xl);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;font-weight:700;color:var(--violet-l)}
+.cx-nm{font-size:16px;font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cx-sub2{font-size:13px;color:var(--text);margin-top:2px}.cx-meta{font-size:11.5px;color:var(--text3);margin-top:3px;display:flex;gap:12px;flex-wrap:wrap}
+.cx-desc{font-size:12.5px;color:var(--text2);line-height:1.55}
+.cx-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cx-stat{border-radius:12px;padding:9px 10px;font-size:10.5px;color:var(--text2);line-height:1.3}.cx-stat b{display:block;font-size:15px;color:var(--text)}
+.cx-s0{background:#f5efff}.cx-s1{background:#eef6fc}.cx-s2{background:#fff5e8}.cx-s3{background:#eef7ef}
+.cx-rw h4{font-size:12.5px;font-weight:700;margin-bottom:6px}
+.cx-rw div{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--text2);padding:3px 0;cursor:pointer}.cx-rw div:hover span:first-child{color:var(--violet-l)}.cx-rw span:last-child{color:var(--text4);white-space:nowrap}
+.cx-btns{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:12px}
+.cx-b{height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--border2);background:var(--s1);font:500 12.5px 'Inter',sans-serif;color:var(--text);cursor:pointer}
+.cx-b:hover{border-color:var(--border3);color:var(--violet-l)}.cx-b.v{background:var(--violet-xl);color:var(--violet-l);border-color:var(--border3)}.cx-b.p{background:#eef6fc;color:#2f6f9e}.cx-b.r{margin-left:auto}
+.cx-pill{font-size:10.5px;font-weight:600;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.cx-p-cur{background:var(--green-dim);color:var(--green)}.cx-p-past{background:var(--s3);color:var(--text2)}
+.cx-st-applied{background:#e6f1fb;color:#2f6f9e}.cx-st-shortlisted{background:#e3f5f3;color:#1f8a8a}.cx-st-test{background:#fff1da;color:#b0661a}
+.cx-st-interview{background:#f1e9ff;color:#6d3fd0}.cx-st-hr{background:#fde8f6;color:#a1308a}.cx-st-offer{background:var(--green-dim);color:var(--green)}.cx-st-rejected{background:var(--red-dim);color:var(--red)}
+.cx-pg{display:flex}
+.cx-ps{flex:1;text-align:center;position:relative;font-size:10px;color:var(--text3);padding-top:0}
+.cx-ps::before{content:'';position:absolute;top:9px;left:-50%;width:100%;height:2px;background:var(--s3)}.cx-ps:first-child::before{display:none}
+.cx-ps.done::before{background:var(--violet)}
+.cx-dot{position:relative;z-index:1;width:20px;height:20px;border-radius:50%;margin:0 auto 4px;background:var(--s1);border:2px solid var(--s3);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;border:none;padding:0;box-shadow:inset 0 0 0 2px var(--s3)}
+.cx-ps.done .cx-dot{background:var(--violet);box-shadow:none}.cx-ps.rej .cx-dot{background:var(--red);box-shadow:none}
+.cx-ps.cur{color:var(--text);font-weight:600}.cx-ps small{display:block;color:var(--text4);font-size:9.5px;font-weight:400}
+button.cx-dot{cursor:default}.cx-pg.click button.cx-dot{cursor:pointer}
+.cx-chip2{display:flex;gap:10px;align-items:center;background:var(--s2);border-radius:12px;padding:9px 12px;font-size:12px;color:var(--text2);min-width:0}
+.cx-chip2 span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cx-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--text3)}
+.cx-dtl{background:var(--s2);border-radius:12px;padding:12px;font-size:12px;color:var(--text2);display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}.cx-dtl b{display:block;font-size:10px;color:var(--text4);text-transform:uppercase;letter-spacing:.06em}
+.cx-edit{background:var(--s2);border-radius:14px;padding:14px}
+.cx-stars button{border:none;background:none;font-size:22px;cursor:pointer;color:var(--text4);padding:0 2px}.cx-stars button.on{color:#f5b301}
+.cx-dh{display:flex;gap:14px;align-items:center;padding:20px 22px 8px}.cx-dh .cx-nm{font-size:19px}
+.cx-doc{display:flex;gap:12px;align-items:center;border:1px solid var(--border2);border-radius:14px;padding:12px 14px;font-size:12.5px}
+.cx-doc small{display:block;color:var(--text3);font-size:11px}
+.cx-note{font-size:12px;color:var(--text3);margin-right:auto}
+@media(max-width:560px){.cx-grid{grid-template-columns:1fr}.cx-stats{grid-template-columns:repeat(2,1fr)}}
 /* ── GOALS ── */
 .goal-item{
   display:flex;align-items:flex-start;gap:10px;
@@ -1718,26 +1902,27 @@ tr:hover td{background:#8b5cf608}
 
 <!-- ═══ COMPANY MANAGER ═══ -->
 <div id="page-companies" class="page">
-  <div class="card mb16">
-    <div class="card-hd"><div class="card-title">🏢 Companies</div><button class="btn btn-ghost btn-sm" onclick="toggleFS('cmp-fs')">+ Add Company</button></div>
-    <div class="card-body">
-      <p style="font-size:11.5px;color:var(--text3);margin-bottom:14px;line-height:1.6">Changed jobs? Add your new company below — your work history from previous companies stays intact and you can switch back anytime to view it.</p>
-      <div id="cmp-fs" class="form-section mb16" style="background:var(--s2);border-radius:var(--r2);padding:16px">
-        <div class="fgrid">
-          <div class="ff"><label>Company Name *</label><input id="cmp-name" placeholder="e.g. Wiman Company"></div>
-          <div class="ff"><label>Job Title / Role</label><input id="cmp-role" placeholder="e.g. Embedded Systems Engineer"></div>
-          <div class="ff"><label>Department</label><input id="cmp-dept" placeholder="e.g. Firmware / IoT"></div>
-          <div class="ff"><label>Employee ID</label><input id="cmp-empid" placeholder="EMP-001"></div>
-          <div class="ff"><label>Manager Name</label><input id="cmp-manager" placeholder="Your manager's name"></div>
-          <div class="ff"><label>Date of Joining</label><input type="date" id="cmp-doj"></div>
-          <div class="ff full"><label>Projects</label><input id="cmp-projects" placeholder="Gateway, MQTT, Zoho IoT (comma separated)"></div>
-          <div class="ff full"><label>Key Contacts</label><input id="cmp-contacts" placeholder="Jane Doe (Manager), John Smith (Client PM)"></div>
-        </div>
-        <div class="btn-group" style="margin-top:12px"><button class="btn btn-violet btn-sm" onclick="addCompany()">💾 Save & Switch to This Company</button></div>
-      </div>
-      <div id="company-list" style="display:flex;flex-direction:column;gap:10px"></div>
+  <div class="kx-head">
+    <div class="kx-ttl"><span class="kx-brain">🏢</span><div><div class="kx-h1">Companies</div><div class="kx-sub">Manage your career journey — current work, past experience and job applications</div></div></div>
+    <div class="kx-actions">
+      <input id="cx-search" class="kx-search" placeholder="🔍  Search companies..." oninput="renderCompanyManager()" autocomplete="off">
+      <button class="kx-primary" onclick="cxOpenAdd()">+ Add Entry</button>
     </div>
   </div>
+  <div class="cx-tabs">
+    <button id="cx-t-work" onclick="cxTab('work')">💼 My Work (Current / Past)</button>
+    <button id="cx-t-applied" onclick="cxTab('applied')">📩 Applied Companies</button>
+  </div>
+  <div id="cx-work"><div id="company-list"></div></div>
+  <div id="cx-applied" style="display:none">
+    <div class="kx-chips" id="cx-chips"></div>
+    <div id="cx-apps" class="cx-grid"></div>
+  </div>
+</div>
+
+<!-- Companies — right-side drawer (application detail / add entry) -->
+<div id="cx-ov" class="kv-modal-overlay kx-ov" style="display:none" onclick="if(event.target===this) cxClose()">
+  <aside class="kx-dr" id="cx-dr"></aside>
 </div>
 
 <!-- ═══ SALARY CALCULATOR ═══ -->
@@ -2040,156 +2225,115 @@ tr:hover td{background:#8b5cf608}
   </div>
 </div>
 
-<!-- ═══ KNOWLEDGE VAULT ═══ -->
+<!-- ═══ KNOWLEDGE TRACK ═══ -->
 <div id="page-vault" class="page">
-  <div class="kt-layout">
-    <!-- ═══ KNOWLEDGE VAULT SIDEBAR ═══ -->
-    <div class="kt-sidebar" id="kt-sidebar">
-      <button class="btn btn-violet btn-sm" style="width:100%;margin-bottom:14px" onclick="openVaultEditor()">+ New Knowledge</button>
-
-      <div class="kt-sidebar-label">Smart Views</div>
-      <button class="kt-sidebar-item active" data-f="all" onclick="setVaultFilter('all',this)"><span>📚</span>All Knowledge</button>
-      <button class="kt-sidebar-item" data-f="troubleshooting" onclick="setVaultFilter('troubleshooting',this)"><span>🛠</span>Troubleshooting</button>
-      <button class="kt-sidebar-item" data-f="favorites" onclick="setVaultFilter('favorites',this)"><span>⭐</span>Favorites</button>
-      <button class="kt-sidebar-item" data-f="recurring" onclick="setVaultFilter('recurring',this)"><span>🔁</span>Recurring Issues</button>
-      <button class="kt-sidebar-item" data-f="recent" onclick="setVaultFilter('recent',this)"><span>🕐</span>Recently Added</button>
-      <button class="kt-sidebar-item" data-f="archived" onclick="setVaultFilter('archived',this)"><span>🗄</span>Archived</button>
-
-      <div class="kt-sidebar-label" style="display:flex;align-items:center;justify-content:space-between">
-        <span>Folders</span>
-        <button class="kt-sidebar-add-btn" onclick="promptNewFolder()" title="New folder">+</button>
-      </div>
+  <div class="kx-layout">
+    <aside class="kx-side" id="kt-sidebar">
+      <div class="kx-sl-hd">Knowledge Track</div>
+      <button class="kx-si active" data-f="all" onclick="setVaultFilter('all')"><i>📚</i><span>All Knowledge</span><b id="kx-c-all"></b></button>
+      <button class="kx-si" data-f="troubleshooting" onclick="setVaultFilter('troubleshooting')"><i>🛠</i><span>Troubleshooting</span><b id="kx-c-troubleshooting"></b></button>
+      <button class="kx-si" data-f="favorites" onclick="setVaultFilter('favorites')"><i>⭐</i><span>Favorites</span><b id="kx-c-favorites"></b></button>
+      <button class="kx-si" data-f="recurring" onclick="setVaultFilter('recurring')"><i>🔁</i><span>Recurring Issues</span><b id="kx-c-recurring"></b></button>
+      <button class="kx-si" data-f="recent" onclick="setVaultFilter('recent')"><i>🕐</i><span>Recently Added</span><b></b></button>
+      <button class="kx-si" data-f="archived" onclick="setVaultFilter('archived')"><i>🗄</i><span>Archived</span><b id="kx-c-archived"></b></button>
+      <div class="kx-sl-hd" style="margin-top:14px">Folders</div>
       <div id="kt-folder-tree"></div>
-    </div>
+      <button class="kx-newfolder" onclick="promptNewFolder()">+ New Folder</button>
+    </aside>
 
-    <!-- ═══ MAIN CONTENT ═══ -->
-    <div class="kt-main">
-      <div class="dash-hero mb12">
-        <div class="dash-hero-greeting">🧠 Knowledge Track</div>
-        <div class="dash-hero-sub">Your personal engineering memory</div>
+    <div class="kx-main">
+      <div class="kx-head">
+        <div class="kx-ttl"><span class="kx-brain">🧠</span><div><div class="kx-h1">Knowledge Track</div><div class="kx-sub">Your personal engineering memory</div></div></div>
+        <div class="kx-actions">
+          <input id="kv-search" class="kx-search" placeholder="🔍  Search knowledge..." oninput="renderVault()" autocomplete="off">
+          <button class="kx-primary" onclick="openVaultEditor()">+ New Knowledge</button>
+        </div>
       </div>
-
-      <div class="kt-search-row mb12">
-        <input id="kv-search" class="kt-search-input" placeholder="🔍 Search your engineering knowledge..." oninput="renderVault()">
-        <button class="btn btn-ghost btn-sm" onclick="startRevisionMode()">🔁 Revision Mode</button>
+      <div class="kx-chips" id="kx-chips"></div>
+      <div class="kx-bar">
+        <div class="kx-sels">
+          <select id="kv-folder-select" onchange="kxPickFolder(this.value)"><option value="">All Folders</option></select>
+          <select id="kv-tag-select" onchange="renderVault()"><option value="">All Tags</option></select>
+          <select id="kv-sort-select" onchange="renderVault()" title="Sort">
+            <option value="updated">Recently Updated</option><option value="added">Recently Added</option><option value="used">Most Used</option><option value="alpha">Alphabetical</option>
+          </select>
+        </div>
+        <div class="kx-views">
+          <button id="kx-v-cards" onclick="kxSetView('cards')">▦ Cards</button>
+          <button id="kx-v-list" onclick="kxSetView('list')">☰ List</button>
+          <button onclick="startRevisionMode()" title="Revision Mode — flashcard recall">🧠 Recall</button>
+        </div>
       </div>
-
-      <div class="kt-summary-bar mb12" id="kv-stats-bar"></div>
-
-      <div id="kt-breadcrumb" class="kt-breadcrumb" style="display:none"></div>
-
-      <div class="kt-filter-row mb12">
-        <select id="kv-type-select" onchange="renderVault()" title="Filter by note type">
-          <option value="all">All Types</option>
-          <option value="troubleshooting">🔧 Troubleshooting</option>
-          <option value="tech">📘 Tech Notes</option>
-          <option value="snippet">💻 Code Snippets</option>
-          <option value="cheatsheet">🔖 Cheat Sheets</option>
-        </select>
-        <select id="kv-sort-select" onchange="renderVault()" title="Sort">
-          <option value="updated">Recently Updated</option>
-          <option value="added">Recently Added</option>
-          <option value="used">Most Used</option>
-          <option value="alpha">Alphabetical</option>
-        </select>
-      </div>
-
-      <div class="kv-grid" id="kv-grid"></div>
+      <div id="kt-breadcrumb" class="kx-crumb" style="display:none"></div>
+      <div id="kv-grid" class="kx-grid"></div>
     </div>
   </div>
 </div>
 
-<!-- Knowledge Track — Card Editor Modal -->
-<div id="kv-editor-overlay" class="kv-modal-overlay" style="display:none" onclick="if(event.target===this) closeVaultEditor()">
-  <div class="kv-modal">
-    <div class="kv-modal-hd">
-      <input id="kv-e-title" class="kv-title-input" placeholder="Issue title...">
-      <div class="kv-modal-hd-actions">
-        <button class="kv-icon-btn" id="kv-e-fav-btn" title="Favorite" onclick="toggleEditorFlag('favorite')">⭐</button>
-        <button class="kv-icon-btn" id="kv-e-pin-btn" title="Pin" onclick="toggleEditorFlag('pinned')">📌</button>
-        <button class="kv-icon-btn" id="kv-e-arc-btn" title="Archive" onclick="toggleEditorFlag('archived')">🗄</button>
-        <button class="kv-modal-close" onclick="closeVaultEditor()">✕</button>
-      </div>
+<!-- Knowledge Track — New / Edit drawer -->
+<div id="kv-editor-overlay" class="kv-modal-overlay kx-ov" style="display:none" onclick="if(event.target===this) closeVaultEditor()">
+  <aside class="kx-dr" id="kx-dr" data-mode="quick" data-type="tech">
+    <div class="kx-dr-hd"><div id="kx-dr-title">New Knowledge</div><button class="kx-x" onclick="closeVaultEditor()" aria-label="Close">✕</button></div>
+    <div class="kx-modes">
+      <button type="button" id="kx-m-quick" class="on" onclick="kxSetMode('quick')">Quick Entry</button>
+      <button type="button" id="kx-m-detailed" onclick="kxSetMode('detailed')">Detailed Entry</button>
     </div>
-    <div class="kv-modal-scroll">
-      <div class="kv-modal-meta">
-        <select id="kv-e-section" onchange="onVaultSectionChange()">
-          <option value="troubleshooting">🔧 Troubleshooting</option>
-          <option value="tech">📘 Tech Note</option>
-          <option value="snippet">💻 Code Snippet</option>
-          <option value="cheatsheet">🔖 Cheat Sheet</option>
-        </select>
-        <input id="kv-e-category" list="kv-category-datalist" placeholder="Category (e.g. MQTT, Modbus, RS485)">
-        <datalist id="kv-category-datalist">
-          <option value="MQTT"><option value="Modbus"><option value="RS485"><option value="TLS/SSL">
-          <option value="Firmware"><option value="Hardware"><option value="Networking">
-          <option value="DevOps"><option value="Cloud"><option value="RTOS"><option value="General">
-        </datalist>
-        <input id="kv-e-folder" list="kv-folder-datalist" placeholder="Folder (optional)">
-        <datalist id="kv-folder-datalist"></datalist>
-        <input id="kv-e-language" placeholder="Language (e.g. c, python, bash)" style="display:none">
-        <input id="kv-e-tags" placeholder="tags, comma, separated">
-      </div>
-      <div class="kv-quick-tags" id="kv-quick-tags"></div>
+    <div class="kx-dr-body" id="kx-dr-body">
+      <div class="kx-f"><div class="kx-l">What are you saving?</div><div class="kx-tiles" id="kx-tiles"></div>
+        <select id="kv-e-section" onchange="onVaultSectionChange()" style="display:none">
+          <option value="troubleshooting">Troubleshooting</option><option value="tech">Tech Note</option><option value="snippet">Code</option>
+          <option value="cheatsheet">Cheat Sheet</option><option value="note">Note</option><option value="reference">Reference</option>
+        </select></div>
+      <div class="kx-f"><label class="kx-l" for="kv-e-title">Title</label><input id="kv-e-title" class="kx-in" placeholder="e.g. MQTT Client ID Conflict"></div>
+      <div class="kx-f"><label class="kx-l" for="kv-e-folder">Folder <i>(optional)</i></label><input id="kv-e-folder" class="kx-in" list="kv-folder-datalist" placeholder="Select or type a folder (Parent/Child to nest)"><datalist id="kv-folder-datalist"></datalist></div>
+      <div class="kx-f"><div class="kx-l">Tags <i>(optional)</i></div>
+        <div class="kx-tagbox" onclick="document.getElementById('kv-tag-input').focus()"><span id="kx-tag-chips"></span><input id="kv-tag-input" placeholder="Type a tag and press Enter..." onkeydown="kxTagKey(event)" onblur="kxTagCommit()"></div>
+        <input type="hidden" id="kv-e-tags"><div class="kx-sug" id="kv-quick-tags"></div></div>
 
-      <div id="kv-troubleshoot-fields">
-        <div class="fgrid" style="padding:0 18px">
-          <div class="ff"><label>Client / Project</label><input id="kv-e-client" placeholder="GSS, SAR, X1LLP..."></div>
-          <div class="ff"><label>Device / Gateway</label><input id="kv-e-device" placeholder="e.g. ESP32 Gateway"></div>
-          <div class="ff"><label>Firmware Version</label><input id="kv-e-firmware" placeholder="e.g. v2.3.1"></div>
-          <div class="ff"><label>Protocol</label><input id="kv-e-protocol" placeholder="MQTT, Modbus RTU..."></div>
-          <div class="ff"><label>Status</label>
-            <select id="kv-e-status">
-              <option value="solved">🟢 Solved</option>
-              <option value="investigating">🟡 Investigating</option>
-              <option value="unresolved">🔴 Unresolved</option>
-              <option value="known_issue">🔵 Known Issue</option>
-            </select>
-          </div>
-          <div class="ff"><label>Priority</label><select id="kv-e-priority"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></div>
-          <div class="ff"><label>Date Solved</label><input type="date" id="kv-e-datesolved"></div>
-        </div>
-        <div style="padding:12px 18px 0">
-          <div class="ff full"><label>Problem</label><textarea id="kv-e-problem" placeholder="What was the issue? What was the device/system trying to do?" style="min-height:50px"></textarea></div>
-        </div>
-        <div style="padding:10px 18px 0">
-          <div class="ff full"><label>Symptoms</label><textarea id="kv-e-symptoms" placeholder="What did you actually observe? Error messages, behavior..." style="min-height:50px"></textarea></div>
-        </div>
-        <div style="padding:10px 18px 0">
-          <div class="ff full"><label>🧠 Memory Shortcut <span style="font-weight:400;color:var(--text4)">— the one-line hint your future self needs</span></label><input id="kv-e-shortcut" placeholder='e.g. "Duplicate MQTT connection → check Client ID uniqueness first."' style="font-weight:600"></div>
-        </div>
-        <div style="padding:10px 18px 0">
-          <div class="ff full"><label>Root Cause</label><textarea id="kv-e-rootcause" placeholder="What was actually causing it?" style="min-height:50px"></textarea></div>
-        </div>
-        <div style="padding:10px 18px 0">
-          <div class="ff full"><label>Solution</label><textarea id="kv-e-solution" placeholder="What fixed it, step by step?" style="min-height:50px"></textarea></div>
-        </div>
-        <div style="padding:10px 18px 0">
-          <div class="ff full"><label>Verification</label><textarea id="kv-e-verification" placeholder="How did you confirm it was fixed?" style="min-height:40px"></textarea></div>
-        </div>
-        <div style="padding:10px 18px 0">
-          <div class="ff full"><label>Important Checks</label><textarea id="kv-e-checks" placeholder="1. Check X&#10;2. Check Y&#10;3. Check Z" style="min-height:50px"></textarea></div>
-        </div>
-        <div style="padding:10px 18px 0">
-          <div class="ff full"><label>Why This Happens</label><textarea id="kv-e-why" placeholder="The underlying technical reason" style="min-height:40px"></textarea></div>
-        </div>
-        <div style="padding:10px 18px 0">
-          <div class="ff full"><label>What I Learned</label><textarea id="kv-e-learned" placeholder="The takeaway for next time" style="min-height:40px"></textarea></div>
-        </div>
+      <div class="kx-det">
+        <div class="kx-f"><label class="kx-l" for="kv-e-category">Category</label><input id="kv-e-category" class="kx-in" list="kv-category-datalist" placeholder="e.g. MQTT, Modbus, RS485">
+          <datalist id="kv-category-datalist"><option value="MQTT"><option value="Modbus"><option value="RS485"><option value="TLS/SSL"><option value="Firmware"><option value="Hardware"><option value="Networking"><option value="DevOps"><option value="Cloud"><option value="RTOS"><option value="General"></datalist></div>
+        <div class="kx-f kx-lang"><label class="kx-l" for="kv-e-language">Language</label><input id="kv-e-language" class="kx-in" placeholder="e.g. c, python, bash"></div>
       </div>
 
-      <div id="kv-e-notes-label" style="padding:12px 18px 0;font-size:11px;font-weight:600;color:var(--text3)">Additional Notes</div>
-      <div id="kv-rich-host" class="kv-rich-host"></div>
-    </div>
-    <div class="kv-modal-foot">
-      <div class="kv-stats-inline" id="kv-e-stats">0 words · &lt;1 min read</div>
-      <div class="btn-group">
-        <button class="btn btn-ghost btn-sm" id="kv-e-dup-btn" onclick="duplicateCurrentVaultEntry()" style="display:none">⧉ Duplicate</button>
-        <button class="btn btn-ghost btn-sm" id="kv-e-del-btn" onclick="deleteCurrentVaultEntry()" style="display:none">🗑 Delete</button>
-        <button class="btn btn-violet btn-sm" onclick="saveVaultEntry()">💾 Save Card</button>
+      <div class="kx-ts" id="kv-troubleshoot-fields">
+        <div class="kx-sec">Context</div>
+        <div class="kx-g2">
+          <div class="kx-f"><label class="kx-l s">Client / Project</label><input id="kv-e-client" class="kx-in s" placeholder="GSS, SAR, X1LLP..."></div>
+          <div class="kx-f"><label class="kx-l s">Device / Gateway</label><input id="kv-e-device" class="kx-in s" placeholder="e.g. ESP32 Gateway"></div>
+          <div class="kx-f"><label class="kx-l s">Firmware Version</label><input id="kv-e-firmware" class="kx-in s" placeholder="e.g. v2.3.1"></div>
+          <div class="kx-f"><label class="kx-l s">Protocol</label><input id="kv-e-protocol" class="kx-in s" placeholder="MQTT, Modbus RTU..."></div>
+          <div class="kx-f"><label class="kx-l s">Status</label><select id="kv-e-status" class="kx-in s"><option value="solved">🟢 Solved</option><option value="investigating">🟡 Investigating</option><option value="unresolved">🔴 Unresolved</option><option value="known_issue">🔵 Known Issue</option></select></div>
+          <div class="kx-f"><label class="kx-l s">Priority</label><select id="kv-e-priority" class="kx-in s"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></div>
+          <div class="kx-f"><label class="kx-l s">Date Solved</label><input type="date" id="kv-e-datesolved" class="kx-in s"></div>
+        </div>
+        <div class="kx-sec">Troubleshooting</div>
+        <div class="kx-f"><label class="kx-l s">Problem</label><textarea id="kv-e-problem" class="kx-in kx-ta" placeholder="What was the issue? What was the device/system trying to do?"></textarea></div>
+        <div class="kx-f"><label class="kx-l s">Symptoms</label><textarea id="kv-e-symptoms" class="kx-in kx-ta" placeholder="What did you actually observe? Error messages, behavior..."></textarea></div>
+        <div class="kx-f kx-sc"><label class="kx-l s">🧠 Memory Shortcut <i>— the one-line hint your future self needs</i></label><input id="kv-e-shortcut" class="kx-in" placeholder='e.g. "Same ID → same MQTT identity."' style="font-weight:600"></div>
+        <div class="kx-f"><label class="kx-l s">Root Cause</label><textarea id="kv-e-rootcause" class="kx-in kx-ta" placeholder="What was actually causing it?"></textarea></div>
+        <div class="kx-f"><label class="kx-l s">Solution</label><textarea id="kv-e-solution" class="kx-in kx-ta" placeholder="What fixed it, step by step?"></textarea></div>
+        <div class="kx-f"><label class="kx-l s">Verification</label><textarea id="kv-e-verification" class="kx-in kx-ta" placeholder="How did you confirm it was fixed?"></textarea></div>
+        <div class="kx-f"><label class="kx-l s">Important Checks</label><textarea id="kv-e-checks" class="kx-in kx-ta" placeholder="1. Check X&#10;2. Check Y"></textarea></div>
+        <div class="kx-f"><label class="kx-l s">Why This Happens</label><textarea id="kv-e-why" class="kx-in kx-ta" placeholder="The underlying technical reason"></textarea></div>
+        <div class="kx-f"><label class="kx-l s">What I Learned</label><textarea id="kv-e-learned" class="kx-in kx-ta" placeholder="The takeaway for next time"></textarea></div>
+      </div>
+
+      <div class="kx-f"><div class="kx-l kx-between"><span id="kv-e-notes-label">Write your knowledge...</span><span class="kx-stats" id="kv-e-stats">0 words · &lt;1 min read</span></div>
+        <div id="kv-rich-host" class="kv-rich-host"></div></div>
+      <div class="kx-tip" id="kx-tip">💡 Need Problem, Root Cause, Solution…? <button type="button" onclick="kxSetMode('detailed')">Switch to Detailed Entry</button></div>
+      <div class="kx-det kx-opts">
+        <label><input type="checkbox" id="kv-e-pin-cb" onchange="kxFlag('pinned',this.checked)"> 📌 Pin to top</label>
+        <label><input type="checkbox" id="kv-e-arc-cb" onchange="kxFlag('archived',this.checked)"> 🗄 Archive</label>
       </div>
     </div>
-  </div>
+    <div class="kx-dr-ft">
+      <label class="kx-fav"><input type="checkbox" id="kv-e-fav-cb" onchange="kxFlag('favorite',this.checked)"> ⭐ Add to Favorites</label>
+      <button class="btn btn-ghost btn-sm" id="kv-e-dup-btn" onclick="duplicateCurrentVaultEntry()" style="display:none">⧉ Duplicate</button>
+      <button class="btn btn-danger btn-sm" id="kv-e-del-btn" onclick="deleteCurrentVaultEntry()" style="display:none">🗑 Delete</button>
+      <button class="kx-primary" onclick="saveVaultEntry()">Save Knowledge</button>
+    </div>
+  </aside>
 </div>
 
 <!-- Knowledge Track — Flashcard Recall Modal -->
@@ -2308,7 +2452,7 @@ const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 let D = {
   daily: [], achievements: [], evidence: [],
   star: [], plans: [], goals: [], mood: [],
-  tasks: [], meetings: [], stickies: [], vault: [], payPeriods: [], salaryRevisions: [],
+  tasks: [], meetings: [], stickies: [], vault: [], payPeriods: [], salaryRevisions: [], applications: [],
   profile: { name:'', email:'', links:'' }
 };
 
@@ -2466,7 +2610,7 @@ function resetAppState() {
   D = {
     daily:[], achievements:[], evidence:[],
     star:[], plans:[], goals:[], mood:[],
-    tasks:[], meetings:[], stickies:[], vault:[], payPeriods:[], salaryRevisions:[],
+    tasks:[], meetings:[], stickies:[], vault:[], payPeriods:[], salaryRevisions:[], applications:[],
     profile:{ name:'',email:'',links:'' }
   };
 }
@@ -2574,6 +2718,19 @@ async function dbDelete(table, id) {
   if (error) { console.error(`dbDelete ${table}:`, error.message); throw error; }
 }
 
+/* ── MIGRATION (run once in Supabase SQL editor) ──
+create table if not exists job_applications (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  company text, position text, location text, applied_date date, job_type text default 'Full Time',
+  status text default 'applied', interview_date date, result_date date, rating int default 0,
+  tags text default '', notes text default '', progress jsonb default '{}', resume jsonb, interview jsonb default '{}',
+  created_at timestamptz default now()
+);
+alter table job_applications enable row level security;
+create policy "own applications" on job_applications for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+alter table companies add column if not exists location text, add column if not exists description text;
+*/
 // Map: D key → Supabase table name
 const TABLE_MAP = {
   daily:        'daily_logs',
@@ -2589,6 +2746,7 @@ const TABLE_MAP = {
   vault:        'knowledge_vault',
   payPeriods:   'pay_periods',
   salaryRevisions: 'salary_revisions',
+  applications: 'job_applications', // Companies → Applied Companies tracker (see migration SQL below)
 };
 
 // Tables whose records belong to a specific employer. Personal tables
@@ -2634,6 +2792,7 @@ function getActiveCompany() {
 //      alter table knowledge_vault add column if not exists times_used integer default 0;
 //      alter table knowledge_vault add column if not exists last_used timestamptz;
 const ROW_TO_D = {
+  applications: r => ({ id:r.id, company:r.company||'', position:r.position||'', location:r.location||'', applied_date:r.applied_date||'', job_type:r.job_type||'Full Time', status:r.status||'applied', interview_date:r.interview_date||'', result_date:r.result_date||'', rating:r.rating||0, tags:r.tags||'', notes:r.notes||'', progress:r.progress||{}, resume:r.resume||null, interview:r.interview||{}, created_at:r.created_at }),
   daily:        r => ({ id:r.id, date:r.date, task:r.task, project:r.project||'', client:r.client||'', hours:r.hours||'', cat:r.category||'', prio:r.priority||'Medium', status:r.status||'Completed', impact:r.impact||'', problem:r.problem_solved||'', solution:r.solution||'', tech:r.technologies||'', support:r.technical_support||'No', learning:r.learning||'', self:r.self_remarks||'', richNotes:r.rich_notes||'', companyId:r.company_id||'', tags:r.tags||'', linkedKnowledgeId:r.linked_knowledge_id||'', created_at:r.created_at }),
   achievements: r => ({ id:r.id, date:r.date, achievement:r.title, type:r.type||'Other', impact:r.impact||'', revenue:r.revenue_impact||'', proof:r.proof||'', notes:r.notes||'', created_at:r.created_at }),
   evidence:     r => ({ id:r.id, title:r.title, cat:r.category||'Other', project:r.project||'', date:r.date||'', notes:r.notes||'', fileName:r.file_name||'', fileUrl:r.file_url||'', dataUrl:r.data_url||'', created_at:r.created_at }),
@@ -2671,6 +2830,7 @@ const ROW_TO_D = {
 
 // Map: local D object → Supabase insert payload
 const D_TO_ROW = {
+  applications: r => ({ company:r.company, position:r.position, location:r.location, applied_date:r.applied_date||null, job_type:r.job_type, status:r.status, interview_date:r.interview_date||null, result_date:r.result_date||null, rating:r.rating||0, tags:r.tags||'', notes:r.notes||'', progress:r.progress||{}, resume:r.resume||null, interview:r.interview||{} }),
   daily:        r => ({ date:r.date, task:r.task, project:r.project, client:r.client, hours:r.hours?Number(r.hours):null, category:r.cat, priority:r.prio, status:r.status, impact:r.impact, problem_solved:r.problem, solution:r.solution||'', technologies:r.tech, technical_support:r.support, learning:r.learning||'', self_remarks:r.self, rich_notes:r.richNotes||'', company_id:r.companyId||null, tags:r.tags||'', linked_knowledge_id:r.linkedKnowledgeId||null }),
   achievements: r => ({ date:r.date, title:r.achievement, type:r.type, impact:r.impact, revenue_impact:r.revenue, proof:r.proof, notes:r.notes||'' }),
   evidence:     r => ({ title:r.title, category:r.cat, project:r.project, date:r.date, notes:r.notes, file_name:r.fileName, file_url:r.fileUrl||'', data_url:r.dataUrl||'' }),
@@ -3157,14 +3317,17 @@ function toggleCompanyEdit(id) {
 }
 async function saveCompanyDetails(id) {
   const c = companies.find(x => x.id === id); if (!c) return;
+  const g = k => document.getElementById(k + id)?.value;
   const updates = {
-    role:            document.getElementById('cmpe-role-'+id).value,
-    department:      document.getElementById('cmpe-dept-'+id).value,
-    manager_name:    document.getElementById('cmpe-manager-'+id).value,
-    date_of_joining: document.getElementById('cmpe-doj-'+id).value || null,
-    date_left:       document.getElementById('cmpe-dateleft-'+id).value || null,
-    projects:        document.getElementById('cmpe-projects-'+id).value.trim(),
-    contacts:        document.getElementById('cmpe-contacts-'+id).value.trim(),
+    role:            g('cmpe-role-'),
+    department:      g('cmpe-dept-'),
+    manager_name:    g('cmpe-manager-'),
+    date_of_joining: g('cmpe-doj-') || null,
+    date_left:       g('cmpe-dateleft-') || null,
+    projects:        (g('cmpe-projects-')||'').trim(),
+    contacts:        (g('cmpe-contacts-')||'').trim(),
+    location:        (g('cmpe-loc-')||'').trim(),
+    description:     (g('cmpe-desc-')||'').trim(),
   };
   await dbUpdate('companies', id, updates);
   Object.assign(c, updates);
@@ -3243,72 +3406,199 @@ function companyKnowledgeCards(companyId) {
   return ids.map(id => D.vault.find(v => v.id === id)).filter(Boolean);
 }
 
+// ── COMPANIES PAGE: career history + application tracker ──
+const CX_STAGES = [['applied','Applied'],['shortlisted','Shortlisted'],['test','Test'],['interview','Interview'],['hr','HR'],['offer','Offer']];
+const CX_STATUS = { applied:'Applied', shortlisted:'Shortlisted', test:'Test', interview:'Interview', hr:'HR', offer:'Offer', rejected:'Rejected' };
+const CX_FILTERS = [['all','All',null],['applied','Applied',['applied','shortlisted','test']],['interview','Interview',['interview','hr']],['offer','Offer',['offer']],['rejected','Rejected',['rejected']]];
+let cxTabNow = 'work', cxFilterNow = 'all', cxDetailId = null, cxApp = null, cxDTab = 'overview', cxNewResume = null, cxAddMode = 'app';
+const cxA = s => esc(s).replace(/"/g,'&quot;');
+const cxQs = s => String(s||'').toLowerCase();
+const cxFmt = (d, short) => { if (!d) return '—'; const t = new Date(d+(String(d).length<=10?'T00:00:00':'')); return isNaN(t) ? d : t.toLocaleDateString('en-GB', short ? {month:'short',year:'numeric'} : {day:'2-digit',month:'short',year:'numeric'}); };
+const cxSize = n => n > 1048576 ? (n/1048576).toFixed(1)+' MB' : Math.max(1,Math.round(n/1024))+' KB';
+const cxHue = t => 'g' + ([...String(t)].reduce((a,c) => a + c.charCodeAt(0), 0) % 5);
+function cxTab(t) { cxTabNow = t; renderCompanyManager(); }
+function cxFilterSet(f) { cxFilterNow = f; renderCompanyManager(); }
+
+function cxWorkCard(c) {
+  const work = companyWorkLogEntries(c.id), knowledge = companyKnowledgeCards(c.id);
+  const projects = (c.projects||'').split(',').map(p => p.trim()).filter(Boolean);
+  const techs = new Set(work.flatMap(r => (r.tech||'').split(',').map(t => t.trim().toLowerCase()).filter(Boolean)));
+  const past = !!c.date_left, editing = companyEditingId === c.id, detail = cxDetailId === c.id;
+  const stat = (i, n, l) => `<div class="cx-stat cx-s${i}"><b>${n}</b>${l}</div>`;
+  const g = (v) => cxA(v||'');
+  return `<div class="cx-card ${c.id===activeCompanyId?'act':''}">
+    <div class="cx-row"><div class="cx-av">🏢</div><div style="flex:1;min-width:0">
+      <div class="cx-nm">${esc(c.name)}<span class="cx-pill ${past?'cx-p-past':'cx-p-cur'}">${past?'Past':'Current'}</span>${c.id===activeCompanyId?'<span class="cx-pill" style="background:var(--violet-xl);color:var(--violet-l)">Active</span>':''}</div>
+      <div class="cx-sub2">${esc(c.role)||'No role set'}${c.department?' · '+esc(c.department):''}</div>
+      <div class="cx-meta"><span>📅 ${cxFmt(c.date_of_joining,1)} – ${past?cxFmt(c.date_left,1):'Present'}</span>${c.location?`<span>📍 ${esc(c.location)}</span>`:''}</div></div></div>
+    ${c.description?`<div class="cx-desc">${esc(c.description)}</div>`:''}
+    <div class="cx-stats">${stat(0,work.length,'Work Logs')}${stat(1,projects.length,'Projects')}${stat(2,knowledge.length,'Knowledge')}${stat(3,techs.size,'Technologies')}</div>
+    ${work.length?`<div class="cx-rw"><h4>Recent Work</h4>${work.slice(0,3).map(r => `<div onclick="nav('quicklog');openDailyEditor('${r.id}')"><span>${esc(r.task)}</span><span>${cxFmt(r.date)}</span></div>`).join('')}</div>`:''}
+    ${detail?`<div class="cx-dtl"><div><b>Employee ID</b>${esc(c.employee_id)||'—'}</div><div><b>Manager</b>${esc(c.manager_name)||'—'}</div><div><b>Department</b>${esc(c.department)||'—'}</div><div><b>Contacts</b>${esc(c.contacts)||'—'}</div>
+      <div style="grid-column:1/-1"><b>Projects</b>${projects.map(p => `<span class="kv-badge folder" style="margin:2px 4px 0 0">${esc(p)}</span>`).join('')||'—'}</div></div>`:''}
+    ${editing?`<div class="cx-edit"><div class="fgrid">
+      <div class="ff"><label>Job Title / Role</label><input id="cmpe-role-${c.id}" value="${g(c.role)}"></div>
+      <div class="ff"><label>Department</label><input id="cmpe-dept-${c.id}" value="${g(c.department)}"></div>
+      <div class="ff"><label>Manager Name</label><input id="cmpe-manager-${c.id}" value="${g(c.manager_name)}"></div>
+      <div class="ff"><label>Location</label><input id="cmpe-loc-${c.id}" value="${g(c.location)}" placeholder="e.g. Chennai"></div>
+      <div class="ff"><label>Date of Joining</label><input type="date" id="cmpe-doj-${c.id}" value="${c.date_of_joining||''}"></div>
+      <div class="ff"><label>Date Left <span style="font-weight:400;color:var(--text4)">— blank if still here</span></label><input type="date" id="cmpe-dateleft-${c.id}" value="${c.date_left||''}"></div>
+      <div class="ff full"><label>Short Description</label><input id="cmpe-desc-${c.id}" value="${g(c.description)}" placeholder="What you do / did here"></div>
+      <div class="ff full"><label>Projects</label><input id="cmpe-projects-${c.id}" value="${g(c.projects)}" placeholder="Comma separated"></div>
+      <div class="ff full"><label>Key Contacts</label><input id="cmpe-contacts-${c.id}" value="${g(c.contacts)}"></div></div>
+      <div class="btn-group" style="margin-top:10px"><button class="btn btn-violet btn-sm" onclick="saveCompanyDetails('${c.id}')">💾 Save</button><button class="btn btn-ghost btn-sm" onclick="toggleCompanyEdit('${c.id}')">Cancel</button><button class="btn btn-ghost btn-sm" style="color:var(--red);margin-left:auto" onclick="deleteCompany('${c.id}')">🗑 Remove</button></div></div>`:''}
+    <div class="cx-btns"><button class="cx-b" onclick="cxDetailId=cxDetailId==='${c.id}'?null:'${c.id}';renderCompanyManager()">View Details</button>
+      <button class="cx-b v" onclick="nav('quicklog')">View Work Log</button><button class="cx-b p" onclick="nav('vault')">View Knowledge</button>
+      ${c.id!==activeCompanyId?`<button class="cx-b" onclick="switchCompany('${c.id}')" title="Make this the company new work is logged under">⇄ Make Active</button>`:''}
+      <button class="cx-b r" onclick="toggleCompanyEdit('${c.id}')">✏️ ${editing?'Close':'Edit'}</button></div></div>`;
+}
+function cxTrack(a, click) {
+  const prog = a.progress || {}, rej = a.status === 'rejected';
+  const firstOpen = CX_STAGES.findIndex(([k]) => !prog[k]);
+  return `<div class="cx-pg ${click?'click':''}">${CX_STAGES.map(([k,l],i) => {
+    const done = !!prog[k], x = rej && i === firstOpen;
+    return `<div class="cx-ps ${done?'done':''} ${x?'rej':''} ${a.status===k?'cur':''}"><button class="cx-dot" ${click?`onclick="cxSetStatus('${a.id}','${k}')"`:'tabindex="-1"'} title="${l}">${x?'✕':done?'✓':''}</button>${l}${typeof prog[k]==='string'&&prog[k]!=='true'?`<small>${cxFmt(prog[k]).slice(0,6)}</small>`:''}</div>`; }).join('')}</div>`;
+}
+function cxAppCard(a) {
+  return `<div class="cx-card"><div class="cx-row"><div class="cx-av kx-tag ${cxHue(a.company)}" style="border-radius:14px;font-size:20px;justify-content:center">${esc((a.company||'?')[0].toUpperCase())}</div>
+    <div style="flex:1;min-width:0"><div class="cx-nm">${esc(a.company)}<span class="cx-pill cx-st-${a.status}">${CX_STATUS[a.status]||a.status}</span></div>
+      <div class="cx-sub2">${esc(a.position)||'—'}</div><div class="cx-meta"><span>🗓 Applied ${cxFmt(a.applied_date)}</span>${a.location?`<span>📍 ${esc(a.location)}</span>`:''}</div></div></div>
+    ${cxTrack(a)}
+    ${a.resume?`<div class="cx-chip2">📄 <span>${esc(a.resume.name)}</span><small style="margin-left:auto;color:var(--text4)">${cxFmt(a.resume.date)}</small></div>`:''}
+    <div class="cx-foot"><span>${a.interview_date?'🎤 Interview: '+cxFmt(a.interview_date):'No interview scheduled'}</span><button class="cx-b v" onclick="cxOpenApp('${a.id}')">View Details</button></div></div>`;
+}
 function renderCompanyManager() {
-  const list = document.getElementById('company-list');
-  if (!list) return;
+  const list = document.getElementById('company-list'); if (!list) return;
+  const q = cxQs(document.getElementById('cx-search')?.value).trim();
+  ['work','applied'].forEach(t => { document.getElementById('cx-t-'+t).classList.toggle('on', cxTabNow === t); document.getElementById('cx-'+t).style.display = cxTabNow === t ? '' : 'none'; });
+  // My Work
+  const cs = companies.filter(c => !q || cxQs(`${c.name} ${c.role} ${c.department} ${c.location} ${c.projects}`).includes(q));
+  const cur = cs.filter(c => !c.date_left).sort((a,b) => (b.date_of_joining||'').localeCompare(a.date_of_joining||''));
+  const past = cs.filter(c => c.date_left).sort((a,b) => b.date_left.localeCompare(a.date_left));
+  const sec = (t, n, s) => `<div class="cx-sec"><h3>${t} (${n})</h3><p>${s}</p></div>`;
+  list.innerHTML = !companies.length ? `<div class="kx-empty">🏢 No companies added yet.<div style="margin-top:12px"><button class="kx-primary" onclick="cxOpenAdd('company')">+ Add Company</button></div></div>`
+    : !cs.length ? `<div class="kx-empty">No companies match your search.</div>`
+    : (cur.length ? sec('Current Companies', cur.length, 'Where you work now.') + `<div class="cx-grid">${cur.map(cxWorkCard).join('')}</div>` : '')
+    + (past.length ? sec('Past Companies', past.length, 'Companies you have previously worked at.') + `<div class="cx-grid">${past.map(cxWorkCard).join('')}</div>` : '');
+  // Applications
+  const apps = (D.applications||[]).filter(a => !q || cxQs(`${a.company} ${a.position} ${a.location} ${a.tags}`).includes(q))
+    .sort((a,b) => (b.applied_date||'').localeCompare(a.applied_date||''));
+  const inF = (a, f) => !f[2] || f[2].includes(a.status);
+  document.getElementById('cx-chips').innerHTML = CX_FILTERS.map(f => `<button class="${cxFilterNow===f[0]?'on':''}" onclick="cxFilterSet('${f[0]}')">${f[1]} (${apps.filter(a => inF(a,f)).length})</button>`).join('');
+  const f = CX_FILTERS.find(x => x[0] === cxFilterNow), shown = apps.filter(a => inF(a,f));
+  document.getElementById('cx-apps').innerHTML = shown.length ? shown.map(cxAppCard).join('')
+    : `<div class="kx-empty" style="grid-column:1/-1">${(D.applications||[]).length ? 'No applications in this view.' : '📩 Track your job applications, interviews and offers here.<div style="margin-top:12px"><button class="kx-primary" onclick="cxOpenAdd(\'app\')">+ Add Application</button></div>'}</div>`;
+}
 
-  if (!companies.length) {
-    list.innerHTML = `<div class="empty-td">🏢 No companies added yet.<br><span style="font-size:11px">Add your current employer above to start tracking work history.</span></div>`;
-    return;
-  }
-  list.innerHTML = companies.map(c => {
-    const work = companyWorkLogEntries(c.id);
-    const knowledge = companyKnowledgeCards(c.id);
-    const projects = (c.projects||'').split(',').map(p=>p.trim()).filter(Boolean);
-    const editing = companyEditingId === c.id;
-    return `
-      <div class="company-card ${c.id===activeCompanyId?'active':''}">
-        <div class="company-card-main" onclick="switchCompany('${c.id}')">
-          <div class="company-card-icon">${c.is_current?'🏢':'📁'}</div>
-          <div class="company-card-info">
-            <div class="company-card-name">${esc(c.name)} ${c.id===activeCompanyId?'<span class="badge bv">Active</span>':''} ${c.date_left?'<span class="badge bn">Past</span>':''}</div>
-            <div class="company-card-meta">${esc(c.role)||'No role set'}${c.department?' · '+esc(c.department):''}</div>
-            <div class="company-card-meta">${c.date_of_joining?'Joined '+c.date_of_joining:''}${c.date_left?' · Left '+c.date_left:''}</div>
-          </div>
-          <div style="display:flex;gap:14px;font-size:10.5px;color:var(--text3);flex-shrink:0;padding-right:6px">
-            <span>📓 ${work.length}</span>
-            <span>🧠 ${knowledge.length}</span>
-          </div>
-        </div>
-        ${projects.length ? `<div class="company-card-projects">${projects.map(p=>`<span class="kv-badge folder">${esc(p)}</span>`).join('')}</div>` : ''}
-        ${c.contacts ? `<div class="company-card-meta" style="padding:0 14px 6px">👤 ${esc(c.contacts)}</div>` : ''}
-
-        ${work.length || knowledge.length ? `
-        <div class="company-rollup">
-          ${work.length ? `<div class="company-rollup-col">
-            <div class="company-rollup-hd">📓 Recent Work</div>
-            ${work.slice(0,4).map(r => `<div class="company-rollup-item" onclick="event.stopPropagation();nav('quicklog');openDailyEditor('${r.id}')">${esc(r.task)}</div>`).join('')}
-          </div>` : ''}
-          ${knowledge.length ? `<div class="company-rollup-col">
-            <div class="company-rollup-hd">🧠 Related Knowledge</div>
-            ${knowledge.slice(0,4).map(v => `<div class="company-rollup-item" onclick="event.stopPropagation();openKnowledgeCard('${v.id}')">${esc(v.title)}</div>`).join('')}
-          </div>` : ''}
-        </div>` : ''}
-
-        ${editing ? `
-        <div class="form-section open" style="background:var(--s2);border-radius:var(--r2);padding:14px;margin:0 14px 14px">
-          <div class="fgrid">
-            <div class="ff"><label>Job Title / Role</label><input id="cmpe-role-${c.id}" value="${esc(c.role)}"></div>
-            <div class="ff"><label>Department</label><input id="cmpe-dept-${c.id}" value="${esc(c.department)}"></div>
-            <div class="ff"><label>Manager Name</label><input id="cmpe-manager-${c.id}" value="${esc(c.manager_name)}"></div>
-            <div class="ff"><label>Date of Joining</label><input type="date" id="cmpe-doj-${c.id}" value="${c.date_of_joining||''}"></div>
-            <div class="ff"><label>Date Left <span style="font-weight:400;color:var(--text4)">— leave blank if still working here</span></label><input type="date" id="cmpe-dateleft-${c.id}" value="${c.date_left||''}"></div>
-            <div class="ff full"><label>Projects</label><input id="cmpe-projects-${c.id}" value="${esc(c.projects)}" placeholder="Comma separated"></div>
-            <div class="ff full"><label>Key Contacts</label><input id="cmpe-contacts-${c.id}" value="${esc(c.contacts)}"></div>
-          </div>
-          <div class="btn-group" style="margin-top:10px">
-            <button class="btn btn-violet btn-sm" onclick="saveCompanyDetails('${c.id}')">💾 Save</button>
-            <button class="btn btn-ghost btn-sm" onclick="toggleCompanyEdit('${c.id}')">Cancel</button>
-          </div>
-        </div>` : ''}
-
-        <div class="company-card-actions">
-          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();toggleCompanyEdit('${c.id}')">✏️ ${editing?'Close':'Edit Details'}</button>
-          <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="event.stopPropagation();deleteCompany('${c.id}')">🗑 Remove</button>
-        </div>
-      </div>
-    `;
-  }).join('');
+// ── Drawer ──
+function cxShow() { const o = document.getElementById('cx-ov'); o.style.display = 'flex'; requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add('open'))); }
+function cxClose() { const o = document.getElementById('cx-ov'); o.classList.remove('open'); setTimeout(() => { if (!o.classList.contains('open')) o.style.display = 'none'; }, 200); cxApp = null; cxNewResume = null; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.getElementById('cx-ov')?.classList.contains('open')) cxClose(); });
+function cxResumes() { const seen = new Map(); (D.applications||[]).forEach(a => { if (a.resume && !seen.has(a.resume.name)) seen.set(a.resume.name, a.resume); }); return [...seen.values()]; }
+function cxResumeSel(onch) { const r = cxResumes(); return r.length ? `<select class="kx-in" onchange="${onch}"><option value="">Choose a previous resume…</option>${r.map((x,i) => `<option value="${i}">${esc(x.name)} (${cxSize(x.size)})</option>`).join('')}</select>` : ''; }
+function cxOpenAdd(mode) {
+  cxAddMode = mode || (cxTabNow === 'applied' ? 'app' : 'company'); cxNewResume = null; cxApp = null; cxRenderAdd(); cxShow();
+}
+function cxRenderAdd() {
+  const dr = document.getElementById('cx-dr'), f = (id, l, inner) => `<div class="kx-f"><label class="kx-l s" for="${id}">${l}</label>${inner}</div>`;
+  const inp = (id, ph, t) => `<input id="${id}" class="kx-in" ${t?`type="${t}"`:''} placeholder="${ph||''}">`;
+  dr.innerHTML = `<div class="kx-dr-hd"><div>Add Entry</div><button class="kx-x" onclick="cxClose()">✕</button></div>
+    <div class="kx-modes"><button class="${cxAddMode==='app'?'on':''}" onclick="cxAddMode='app';cxRenderAdd()">📩 Job Application</button><button class="${cxAddMode==='company'?'on':''}" onclick="cxAddMode='company';cxRenderAdd()">💼 My Work Company</button></div>
+    <div class="kx-dr-body">${cxAddMode === 'app' ? `
+      <div class="kx-g2">${f('cxa-company','Company *',inp('cxa-company','e.g. Qmax Systems'))}${f('cxa-position','Position',inp('cxa-position','e.g. Embedded Engineer'))}
+        ${f('cxa-location','Location',inp('cxa-location','Chennai'))}${f('cxa-date','Applied Date',inp('cxa-date','','date'))}
+        ${f('cxa-type','Job Type',`<select id="cxa-type" class="kx-in"><option>Full Time</option><option>Part Time</option><option>Contract</option><option>Internship</option><option>Remote</option></select>`)}
+        ${f('cxa-status','Status',`<select id="cxa-status" class="kx-in">${Object.entries(CX_STATUS).map(([k,v]) => `<option value="${k}">${v}</option>`).join('')}</select>`)}</div>
+      ${f('cxa-int','Interview Date',inp('cxa-int','','date'))}
+      <div class="kx-f"><div class="kx-l s">Resume Used</div>${cxResumeSel('cxPickResume(null,this.value)')}<input type="file" accept=".pdf,.doc,.docx" onchange="cxFile(this)" style="margin-top:6px"><div class="kx-stats" id="cxa-rinfo"></div></div>
+      ${f('cxa-tags','Tags',inp('cxa-tags','embedded, iot (comma separated)'))}
+      ${f('cxa-notes','Job Description / Notes',`<textarea id="cxa-notes" class="kx-in kx-ta" style="min-height:90px" placeholder="Paste the JD or add notes..."></textarea>`)}`
+    : `<div class="fgrid" style="grid-template-columns:1fr 1fr">
+        <div class="ff"><label>Company Name *</label><input id="cmp-name" placeholder="e.g. Wiman Company"></div><div class="ff"><label>Job Title / Role</label><input id="cmp-role" placeholder="Embedded Systems Engineer"></div>
+        <div class="ff"><label>Department</label><input id="cmp-dept"></div><div class="ff"><label>Employee ID</label><input id="cmp-empid"></div>
+        <div class="ff"><label>Manager Name</label><input id="cmp-manager"></div><div class="ff"><label>Location</label><input id="cmp-loc" placeholder="Chennai"></div>
+        <div class="ff"><label>Date of Joining</label><input type="date" id="cmp-doj"></div><div class="ff"><label>Short Description</label><input id="cmp-desc"></div>
+        <div class="ff" style="grid-column:1/-1"><label>Projects</label><input id="cmp-projects" placeholder="Gateway, MQTT (comma separated)"></div>
+        <div class="ff" style="grid-column:1/-1"><label>Key Contacts</label><input id="cmp-contacts"></div></div>
+      <div class="kx-tip" style="display:block">Saving switches your active company to this one — new work logs will be tagged to it.</div>`}</div>
+    <div class="kx-dr-ft"><span class="cx-note"></span><button class="btn btn-ghost" onclick="cxClose()">Cancel</button><button class="kx-primary" onclick="${cxAddMode==='app'?'cxSaveNew()':'cxAddCompany()'}">Save</button></div>`;
+  if (cxAddMode === 'app') document.getElementById('cxa-date').value = today();
+}
+async function cxAddCompany() {
+  const n = document.getElementById('cmp-name').value.trim(); if (!n) { toast('⚠️ Company name required', 'error'); return; }
+  const loc = document.getElementById('cmp-loc').value.trim(), desc = document.getElementById('cmp-desc').value.trim();
+  await addCompany();
+  const c = companies.find(x => x.name === n && x.id === activeCompanyId);
+  if (c) { const u = {}; if (loc) u.location = loc; if (desc) u.description = desc; if (Object.keys(u).length) { Object.assign(c, u); try { await dbUpdate('companies', c.id, u); } catch(e) {} } cxClose(); renderCompanyManager(); }
+}
+function cxStageProg(prog, s) { // mark stages up to s as reached; clear later ones
+  const i = CX_STAGES.findIndex(x => x[0] === s); if (i < 0) return prog;
+  CX_STAGES.forEach(([k], j) => { if (j < i) prog[k] = prog[k] || true; else if (j === i) prog[k] = (typeof prog[k] === 'string') ? prog[k] : today(); else delete prog[k]; });
+  return prog;
+}
+async function cxSaveNew() {
+  const v = id => document.getElementById(id).value.trim(), company = v('cxa-company');
+  if (!company) { toast('⚠️ Company name required', 'error'); return; }
+  const status = v('cxa-status'), prog = status === 'rejected' ? { applied: v('cxa-date') || today() } : cxStageProg({}, status);
+  if (prog.applied === true || !prog.applied) prog.applied = v('cxa-date') || today();
+  const obj = { id:'', company, position:v('cxa-position'), location:v('cxa-location'), applied_date:v('cxa-date')||today(), job_type:v('cxa-type'), status,
+    interview_date:v('cxa-int')||null, result_date:(status==='offer'||status==='rejected')?today():null, rating:0, tags:v('cxa-tags'), notes:v('cxa-notes'),
+    progress:prog, resume:cxNewResume, interview:{}, created_at:new Date().toISOString() };
+  await addItem('applications', obj, renderCompanyManager);
+  if (obj.id) { cxTabNow = 'applied'; cxFilterNow = 'all'; cxClose(); renderCompanyManager(); }
+}
+function cxFile(input, id) {
+  const file = input.files[0]; if (!file) return;
+  if (file.size > 2*1024*1024) { toast('⚠️ Max file size is 2 MB', 'error'); input.value = ''; return; }
+  const rd = new FileReader();
+  rd.onload = () => {
+    const res = { name:file.name, size:file.size, date:today(), dataUrl:rd.result };
+    if (id) { updateItem('applications', id, { resume:res }, renderCompanyManager).then(() => cxDrawerRender()); }
+    else { cxNewResume = res; document.getElementById('cxa-rinfo').textContent = `📄 ${res.name} · ${cxSize(res.size)}`; }
+  };
+  rd.readAsDataURL(file);
+}
+function cxPickResume(id, i) {
+  if (i === '') return; const r = cxResumes()[+i]; if (!r) return;
+  if (id) updateItem('applications', id, { resume:r }, renderCompanyManager).then(() => cxDrawerRender());
+  else { cxNewResume = r; document.getElementById('cxa-rinfo').textContent = `📄 ${r.name} · ${cxSize(r.size)}`; }
+}
+// ── Application detail ──
+const cxGet = () => (D.applications||[]).find(a => a.id === cxApp);
+function cxOpenApp(id) { cxApp = id; cxDTab = 'overview'; cxDrawerRender(); cxShow(); }
+function cxSetTab(t) { cxDTab = t; cxDrawerRender(); }
+function cxSet(id, f, val) { if (/_date$/.test(f) && !val) val = null; return updateItem('applications', id, { [f]:val }, renderCompanyManager); }
+function cxSetIv(id, k, val) { const a = cxGet(); return updateItem('applications', id, { interview:{ ...(a.interview||{}), [k]:val } }, null); }
+async function cxSetStatus(id, s) {
+  const a = cxGet(); if (!a) return;
+  const prog = s === 'rejected' ? { ...(a.progress||{}) } : cxStageProg({ ...(a.progress||{}) }, s);
+  const up = { status:s, progress:prog };
+  if ((s === 'offer' || s === 'rejected') && !a.result_date) up.result_date = today();
+  await updateItem('applications', id, up, renderCompanyManager); cxDrawerRender();
+}
+function cxSetRating(id, n) { const a = cxGet(); cxSet(id, 'rating', a.rating === n ? 0 : n).then(() => cxDrawerRender()); }
+async function cxDelete(id) { const a = cxGet(); if (!a || !confirm(`Delete the application to "${a.company}"? This can't be undone.`)) return; cxClose(); await delItem('applications', id, renderCompanyManager); }
+function cxStars(a) { return `<div class="cx-stars">${[1,2,3,4,5].map(n => `<button class="${(a.rating||0)>=n?'on':''}" onclick="cxSetRating('${a.id}',${n})">★</button>`).join('')}</div>`; }
+function cxDrawerRender() {
+  const a = cxGet(), dr = document.getElementById('cx-dr'); if (!a) return;
+  const fld = (l, inner) => `<div class="kx-f"><label class="kx-l s">${l}</label>${inner}</div>`;
+  const txt = (f, t, ph) => `<input class="kx-in s" ${t?`type="${t}"`:''} value="${cxA(a[f])}" placeholder="${ph||''}" onchange="cxSet('${a.id}','${f}',this.value)">`;
+  const ta = (k, l, ph) => fld(l, `<textarea class="kx-in kx-ta" placeholder="${ph}" onchange="cxSetIv('${a.id}','${k}',this.value)">${esc((a.interview||{})[k])}</textarea>`);
+  let body = '';
+  if (cxDTab === 'overview') body = `<div><div class="kx-sec">Application Progress</div><div style="margin-top:10px">${cxTrack(a, true)}</div></div>
+    <div class="kx-g2">${fld('Company', txt('company'))}${fld('Position', txt('position'))}${fld('Location', txt('location'))}
+      ${fld('Job Type', `<select class="kx-in s" onchange="cxSet('${a.id}','job_type',this.value)">${['Full Time','Part Time','Contract','Internship','Remote'].map(o => `<option ${a.job_type===o?'selected':''}>${o}</option>`).join('')}</select>`)}
+      ${fld('Applied Date', txt('applied_date','date'))}${fld('Interview Date', txt('interview_date','date'))}${fld('Result Date', txt('result_date','date'))}
+      ${fld('Current Status', `<select class="kx-in s" onchange="cxSetStatus('${a.id}',this.value)">${Object.entries(CX_STATUS).map(([k,v]) => `<option value="${k}" ${a.status===k?'selected':''}>${v}</option>`).join('')}</select>`)}</div>
+    ${fld('Rating', cxStars(a))}${fld('Resume Used', `<div class="cx-chip2">📄 <span>${a.resume?esc(a.resume.name):'No resume attached'}</span><button class="cx-b" style="margin-left:auto;height:28px" onclick="cxSetTab('docs')">${a.resume?'Change':'Add'}</button></div>`)}
+    ${fld('Tags', txt('tags', '', 'comma separated'))}${fld('Job Description / Notes', `<textarea class="kx-in kx-ta" style="min-height:90px" onchange="cxSet('${a.id}','notes',this.value)">${esc(a.notes)}</textarea>`)}`;
+  else if (cxDTab === 'notes') body = ta('asked','What they asked','Technical and HR questions…') + ta('performed','How I performed','Overall, how did it go?') + ta('well','What went well','') + ta('struggled','What I struggled with','') + ta('learn','What I should learn','Topics to revise…') + ta('remarks','My remarks','Anything else worth remembering…') + fld('Rating', cxStars(a));
+  else body = `<div class="kx-sec">Resume used for this application</div>${a.resume ? `<div class="cx-doc"><span style="font-size:24px">📄</span><div style="flex:1;min-width:0"><b>${esc(a.resume.name)}</b><small>${cxFmt(a.resume.date)} · ${cxSize(a.resume.size)}</small></div>${a.resume.dataUrl?`<a class="cx-b" style="display:inline-flex;align-items:center;text-decoration:none" href="${a.resume.dataUrl}" download="${cxA(a.resume.name)}">⬇ Download</a>`:''}<button class="cx-b" style="color:var(--red)" onclick="updateItem('applications','${a.id}',{resume:null},renderCompanyManager).then(cxDrawerRender)">Remove</button></div>` : `<div class="kx-empty">No resume attached yet.</div>`}
+    ${fld('Upload a resume (PDF / DOC, max 2 MB)', `<input type="file" accept=".pdf,.doc,.docx" onchange="cxFile(this,'${a.id}')">`)}${cxResumes().length ? fld('Or reuse one from another application', cxResumeSel(`cxPickResume('${a.id}',this.value)`)) : ''}`;
+  dr.innerHTML = `<div class="cx-dh"><div class="cx-av kx-tag ${cxHue(a.company)}" style="border-radius:14px;justify-content:center">${esc((a.company||'?')[0].toUpperCase())}</div><div style="flex:1;min-width:0"><div class="cx-nm">${esc(a.company)}<span class="cx-pill cx-st-${a.status}">${CX_STATUS[a.status]||a.status}</span></div><div class="cx-sub2">${esc(a.position)}</div><div class="cx-meta"><span>Applied ${cxFmt(a.applied_date)}</span>${a.location?`<span>📍 ${esc(a.location)}</span>`:''}</div></div><button class="kx-x" onclick="cxClose()">✕</button></div>
+    <div class="kx-modes" style="margin-top:8px">${[['overview','Overview'],['notes','Interview Notes'],['docs','Documents']].map(([k,l]) => `<button class="${cxDTab===k?'on':''}" onclick="cxSetTab('${k}')">${l}</button>`).join('')}</div>
+    <div class="kx-dr-body">${body}</div>
+    <div class="kx-dr-ft"><button class="btn btn-danger btn-sm" onclick="cxDelete('${a.id}')">🗑 Delete</button><span class="cx-note" style="text-align:right">Changes save automatically</span><button class="kx-primary" onclick="cxClose()">Done</button></div>`;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -6293,8 +6583,10 @@ const KV_QUICK_TAGS = ['STM32','ESP32','CAN','UART','SPI','I2C','Git','Linux','F
 const KV_SECTION_META = {
   troubleshooting: { label:'Troubleshooting', icon:'🔧', cls:'section-troubleshooting' },
   tech:       { label:'Tech Note',    icon:'📘', cls:'section-tech' },
-  snippet:    { label:'Code Snippet', icon:'💻', cls:'section-snippet' },
+  snippet:    { label:'Code',         icon:'💻', cls:'section-snippet' },
   cheatsheet: { label:'Cheat Sheet',  icon:'🔖', cls:'section-cheatsheet' },
+  note:       { label:'Note',         icon:'✏️', cls:'section-note' },
+  reference:  { label:'Reference',    icon:'🔗', cls:'section-reference' },
 };
 const KV_STATUS_META = {
   solved:        { label:'Solved',        icon:'🟢' },
@@ -6302,26 +6594,45 @@ const KV_STATUS_META = {
   unresolved:    { label:'Unresolved',    icon:'🔴' },
   known_issue:   { label:'Known Issue',   icon:'🔵' },
 };
+const KX_CHIPS = [['all','✦ All'],['troubleshooting','🔧 Troubleshooting'],['tech','📘 Tech Notes'],['cheatsheet','🔖 Cheat Sheets'],['snippet','💻 Code'],['notes','✏️ Notes'],['favorites','⭐ Favorites']];
+const KX_TILES = ['tech','troubleshooting','cheatsheet','snippet','note','reference'];
 let vaultFilter = 'all'; // all | troubleshooting | favorites | recurring | recent | archived
-let vaultFolderFilter = null; // e.g. 'Industrial IoT' or 'Industrial IoT/Modbus' — null = no folder filter
+let vaultFolderFilter = null; // e.g. 'Wiman' or 'Industrial IoT/Modbus'
 let vaultEditingId = null;
 let vaultEditorFlags = { favorite:false, pinned:false, archived:false };
 let vaultAutosaveTimer = null;
+let kxChip = 'all', kxView = 'cards', kxMode = 'quick', kxCloseT = null;
+try { kxView = localStorage.getItem('kx_view') || 'cards'; } catch(e) {}
 
-function setVaultFilter(f, btn) {
-  vaultFilter = f;
-  vaultFolderFilter = null; // smart views and folders are mutually exclusive lenses
-  document.querySelectorAll('.kt-sidebar-item').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.kt-folder-item').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+const kxAttr = s => esc(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const kxQ = s => String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+const kxHue = t => [...t].reduce((a,c) => a + c.charCodeAt(0), 0) % 5;
+function kxAgo(iso) {
+  const t = new Date(iso).getTime(); if (!iso || isNaN(t)) return String(iso||'').split('T')[0];
+  const m = Math.max(0, (Date.now()-t)/60000), h = m/60, d = h/24;
+  if (m < 1) return 'just now'; if (m < 60) return Math.floor(m)+' min ago'; if (h < 24) return Math.floor(h)+'h ago';
+  if (d < 2) return 'yesterday'; if (d < 7) return Math.floor(d)+' days ago';
+  if (d < 30) { const w = Math.floor(d/7); return w+(w===1?' week':' weeks')+' ago'; }
+  if (d < 365) { const n = Math.floor(d/30); return n+(n===1?' month':' months')+' ago'; }
+  return Math.floor(d/365)+'y ago';
+}
+
+// ── Filters ──
+function setVaultFilter(f) {
+  vaultFilter = f; vaultFolderFilter = null;
+  kxChip = (f === 'troubleshooting' || f === 'favorites') ? f : 'all';
   renderVault();
 }
-function setVaultFolderFilter(path) {
-  vaultFolderFilter = path;
-  vaultFilter = 'all';
-  document.querySelectorAll('.kt-sidebar-item').forEach(b => b.classList.remove('active'));
+function setVaultFolderFilter(path) { vaultFolderFilter = path || null; vaultFilter = 'all'; renderVault(); }
+function kxPickFolder(p) { setVaultFolderFilter(p); }
+function kxChipSet(c) {
+  kxChip = c;
+  if (c === 'troubleshooting' || c === 'favorites') vaultFilter = c;
+  else if (vaultFilter === 'troubleshooting' || vaultFilter === 'favorites') vaultFilter = 'all';
   renderVault();
 }
+function kxSetView(m) { kxView = m; try { localStorage.setItem('kx_view', m); } catch(e) {} renderVault(); }
+function kxClearScope() { vaultFilter = 'all'; vaultFolderFilter = null; renderVault(); }
 function promptNewFolder() {
   const name = prompt('New folder name (use "Parent/Child" to nest it):', '');
   if (!name || !name.trim()) return;
@@ -6330,31 +6641,32 @@ function promptNewFolder() {
   document.getElementById('kv-e-folder').value = name.trim();
   toast('📁 Folder set — save this card to create it');
 }
-
+function kxNewInFolder() { const f = vaultFolderFilter; openVaultEditor(); if (f) document.getElementById('kv-e-folder').value = f; }
 function kvWordStats(content) {
   const plain = isHtmlContent(content) ? htmlToPlainText(content) : (content||'');
   const words = plain.trim().split(/\s+/).filter(Boolean).length;
-  const mins = Math.max(1, Math.round(words / 200));
-  return { words, mins };
+  return { words, mins: Math.max(1, Math.round(words / 200)) };
 }
-
+function kxChipOk(v) {
+  if (kxChip === 'all') return true;
+  if (kxChip === 'notes') return v.section === 'note' || v.section === 'reference';
+  if (kxChip === 'favorites') return !!v.favorite;
+  return v.section === kxChip;
+}
 function vaultFilteredList() {
   const q = (document.getElementById('kv-search')?.value || '').toLowerCase().trim();
-  const type = document.getElementById('kv-type-select')?.value || 'all';
   const sort = document.getElementById('kv-sort-select')?.value || 'updated';
-  let list = (D.vault || []).filter(v => {
-    if (vaultFilter === 'archived') { if (!v.archived) return false }
-    else if (v.archived) return false;
+  const tagSel = (document.getElementById('kv-tag-select')?.value || '').toLowerCase();
+  const list = (D.vault || []).filter(v => {
+    if (vaultFilter === 'archived') { if (!v.archived) return false } else if (v.archived) return false;
     if (vaultFilter === 'troubleshooting' && v.section !== 'troubleshooting') return false;
     if (vaultFilter === 'favorites' && !v.favorite) return false;
     if (vaultFilter === 'recurring' && !(v.times_used > 0)) return false;
-    if (vaultFolderFilter) {
-      const f = v.folder || '';
-      if (f !== vaultFolderFilter && !f.startsWith(vaultFolderFilter + '/')) return false;
-    }
-    if (type !== 'all' && v.section !== type) return false;
+    if (vaultFolderFilter) { const f = v.folder || ''; if (f !== vaultFolderFilter && !f.startsWith(vaultFolderFilter + '/')) return false; }
+    if (!kxChipOk(v)) return false;
+    if (tagSel && !(v.tags||'').split(',').map(t => t.trim().toLowerCase()).includes(tagSel)) return false;
     if (q) {
-      const hay = `${v.title} ${v.content} ${v.tags} ${v.folder} ${v.category} ${v.problem} ${v.symptoms} ${v.root_cause} ${v.solution} ${v.memory_shortcut} ${v.device_model} ${v.protocol} ${v.client_project}`.toLowerCase();
+      const hay = `${v.title} ${v.content} ${v.tags} ${v.folder} ${v.category} ${v.problem} ${v.symptoms} ${v.root_cause} ${v.solution} ${v.memory_shortcut} ${v.verification} ${v.important_checks} ${v.why_happens} ${v.what_learned} ${v.device_model} ${v.protocol} ${v.client_project}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -6365,204 +6677,235 @@ function vaultFilteredList() {
     used:    (a,b) => (b.times_used||0) - (a.times_used||0),
     alpha:   (a,b) => (a.title||'').localeCompare(b.title||''),
   };
-  const sortFn = vaultFilter === 'recent' ? sorters.added : (sorters[sort] || sorters.updated);
-  return [...list].sort(sortFn);
+  return [...list].sort(vaultFilter === 'recent' ? sorters.added : (sorters[sort] || sorters.updated));
 }
 
-// Builds the nested folder tree in the sidebar from whatever "Folder" values
-// already exist on vault entries — folders are just a "/"-separated string on
-// each card, not a separate table, so this always reflects real data exactly.
-function renderFolderTree() {
-  const el = document.getElementById('kt-folder-tree'); if (!el) return;
+// ── Sidebar / selects / crumb ──
+function kxFolderCounts() {
   const counts = {};
   (D.vault||[]).filter(v => !v.archived && v.folder).forEach(v => {
-    const parts = v.folder.split('/').map(p=>p.trim()).filter(Boolean);
     let path = '';
-    parts.forEach(part => { path = path ? path+'/'+part : part; counts[path] = (counts[path]||0) + 1; });
+    v.folder.split('/').map(p => p.trim()).filter(Boolean).forEach(part => { path = path ? path+'/'+part : part; counts[path] = (counts[path]||0) + 1; });
   });
-  const paths = Object.keys(counts).sort();
-  if (!paths.length) { el.innerHTML = `<div style="font-size:10.5px;color:var(--text4);padding:4px 8px">No folders yet</div>`; return; }
-  el.innerHTML = paths.map(path => {
+  return counts;
+}
+function renderFolderTree() {
+  const el = document.getElementById('kt-folder-tree'); if (!el) return;
+  const counts = kxFolderCounts(), paths = Object.keys(counts).sort();
+  el.innerHTML = paths.length ? paths.map(path => {
     const depth = path.split('/').length - 1;
-    const name = path.split('/').pop();
-    return `<button class="kt-folder-item ${vaultFolderFilter===path?'active':''}" style="padding-left:${8+depth*14}px" onclick="setVaultFolderFilter('${path.replace(/'/g,"\\'")}')">
-      <span>📁 ${esc(name)}</span><span class="kt-folder-count">${counts[path]}</span>
-    </button>`;
-  }).join('');
+    return `<button class="kx-si kx-fo-i ${vaultFolderFilter===path?'active':''}" style="padding-left:${10+depth*14}px" onclick="setVaultFolderFilter('${kxQ(path)}')"><i>📁</i><span>${esc(path.split('/').pop())}</span><b>${counts[path]}</b></button>`;
+  }).join('') : `<div class="kx-none">No folders yet</div>`;
+  const fs = document.getElementById('kv-folder-select');
+  if (fs) {
+    const cur = vaultFolderFilter || '', all = paths.includes(cur) || !cur ? paths : [...paths, cur];
+    fs.innerHTML = `<option value="">All Folders</option>` + all.map(p => `<option value="${kxAttr(p)}">${'\u00A0\u00A0'.repeat(p.split('/').length-1)}${esc(p.split('/').pop())}</option>`).join('');
+    fs.value = cur;
+  }
+}
+function kxRenderChrome() {
+  const live = (D.vault||[]).filter(v => !v.archived);
+  const set = (id, n) => { const e = document.getElementById('kx-c-'+id); if (e) e.textContent = n; };
+  set('all', live.length); set('troubleshooting', live.filter(v => v.section==='troubleshooting').length);
+  set('favorites', live.filter(v => v.favorite).length); set('recurring', live.filter(v => v.times_used>0).length);
+  set('archived', (D.vault||[]).filter(v => v.archived).length);
+  document.querySelectorAll('.kx-si[data-f]').forEach(b => b.classList.toggle('active', !vaultFolderFilter && b.dataset.f === vaultFilter));
+  document.getElementById('kx-chips').innerHTML = KX_CHIPS.map(([k,l]) => `<button class="${kxChip===k?'on':''}" onclick="kxChipSet('${k}')">${l}</button>`).join('');
+  const ts = document.getElementById('kv-tag-select');
+  if (ts) {
+    const cur = ts.value, cnt = {};
+    live.forEach(v => (v.tags||'').split(',').forEach(t => { t = t.trim(); if (t) cnt[t] = (cnt[t]||0)+1; }));
+    const tags = Object.keys(cnt).sort((a,b) => cnt[b]-cnt[a] || a.localeCompare(b));
+    ts.innerHTML = `<option value="">All Tags</option>` + tags.map(t => `<option value="${kxAttr(t)}">${esc(t)} (${cnt[t]})</option>`).join('');
+    ts.value = tags.includes(cur) ? cur : '';
+  }
+  ['cards','list'].forEach(m => document.getElementById('kx-v-'+m)?.classList.toggle('on', kxView === m));
+  const crumb = document.getElementById('kt-breadcrumb'), labels = { recurring:'Recurring Issues', recent:'Recently Added', archived:'Archived' };
+  if (vaultFolderFilter || labels[vaultFilter]) {
+    let path = '';
+    const segs = vaultFolderFilter ? vaultFolderFilter.split('/').map(p => { path = path ? path+'/'+p : p; return `<span onclick="setVaultFolderFilter('${kxQ(path)}')">${esc(p)}</span>`; }) : [];
+    crumb.innerHTML = [`<span onclick="kxClearScope()">All Knowledge</span>`, labels[vaultFilter] ? `<em>${labels[vaultFilter]}</em>` : '', ...segs].filter(Boolean).join(' › ') + ` <button onclick="kxClearScope()">✕ Clear</button>`;
+    crumb.style.display = '';
+  } else crumb.style.display = 'none';
 }
 
+// ── Cards ──
+function kxCode(v) {
+  const c = v.content || ''; let code = '';
+  const m = c.match(/<pre[^>]*>([\s\S]*?)<\/pre>/i);
+  if (m) { const d = document.createElement('div'); d.innerHTML = m[1]; code = d.textContent; }
+  else if (!isHtmlContent(c)) { const f = c.match(/```\w*\n?([\s\S]*?)```/); code = f ? f[1] : c; }
+  return code.trim().split('\n').slice(0,2).join('\n');
+}
+function kxCard(v) {
+  const sec = KV_SECTION_META[v.section] ? v.section : 'tech', M = KV_SECTION_META[sec], isTS = sec === 'troubleshooting';
+  const tags = (v.tags||'').split(',').map(t => t.trim()).filter(Boolean);
+  if (v.category && !tags.some(t => t.toLowerCase() === v.category.toLowerCase())) tags.unshift(v.category);
+  const plain = isHtmlContent(v.content) ? htmlToPlainText(v.content) : (v.content||'').replace(/```[\s\S]*?```/g,' ').replace(/[#*`>]/g,'');
+  let desc = ((isTS ? (v.problem || v.symptoms) : '') || (sec === 'snippet' && kxCode(v) ? '' : plain) || '').replace(/\s+/g,' ').trim();
+  if (desc.length > 170) desc = desc.slice(0,167) + '…';
+  let note = '';
+  if (isTS && v.memory_shortcut) note = `<div class="kx-call"><b>🧠 Memory Shortcut</b>${esc(v.memory_shortcut)}</div>`;
+  else if (isTS && v.root_cause) note = `<div class="kx-call"><b>Root Cause</b>${esc(v.root_cause)}</div>`;
+  else if (sec === 'snippet' && kxCode(v)) note = `<pre class="kx-code">${esc(kxCode(v))}</pre>`;
+  const st = isTS && v.kv_status && v.kv_status !== 'solved' ? `<span class="kx-mini">${(KV_STATUS_META[v.kv_status]||{}).icon||''} ${(KV_STATUS_META[v.kv_status]||{}).label||''}</span>` : '';
+  const id = v.id;
+  return `<div class="kx-card kxt-${sec}${v.archived?' arch':''}" tabindex="0" onclick="kxOpen('${id}')" onkeydown="if(event.key==='Enter'&&event.target===this)kxOpen('${id}')">
+    <div class="kx-hd"><span class="kx-ty">${M.icon} ${M.label}</span>${v.archived?'<span class="kx-mini">🗄 Archived</span>':''}${st}${v.times_used>0?`<span class="kx-mini" title="Faced ${v.times_used}x">🔁 ${v.times_used}</span>`:''}${v.pinned?'<span class="kx-mini">📌</span>':''}
+      <button class="kx-star${v.favorite?' on':''}" onclick="event.stopPropagation();toggleVaultFlag('${id}','favorite')" title="Favorite">${v.favorite?'★':'☆'}</button></div>
+    <div class="kx-bd"><div class="kx-t">${esc(v.title||'Untitled')}</div>${desc?`<div class="kx-d">${esc(desc)}</div>`:''}${note}
+      ${tags.length?`<div class="kx-tags">${tags.slice(0,3).map(t => `<span class="kx-tag g${kxHue(t)}">${esc(t)}</span>`).join('')}${tags.length>3?`<span class="kx-tag g0">+${tags.length-3}</span>`:''}</div>`:''}</div>
+    <div class="kx-ft"><span>🕘 Updated ${kxAgo(v.updated_at||v.created_at)}</span>${v.folder?`<span class="kx-fo" title="${kxAttr(v.folder)}">📁 ${esc(v.folder.split('/').pop())}</span>`:''}
+      <button class="kx-more" onclick="kxMenu(event,'${id}')" aria-label="More actions">⋯</button></div></div>`;
+}
+function kxOpen(id) { const v = D.vault.find(x => x.id === id); if (v) (v.section === 'troubleshooting' ? openRecallView : openKnowledgeView)(id); }
 function renderVault() {
   const grid = document.getElementById('kv-grid'); if (!grid) return;
-  renderFolderTree();
+  renderFolderTree(); kxRenderChrome();
   const list = vaultFilteredList();
-
-  // Compact one-line summary bar instead of 4 separate KPI cards
-  const statsBar = document.getElementById('kv-stats-bar');
-  if (statsBar) {
-    const all = (D.vault||[]).filter(v=>!v.archived);
-    const ts = all.filter(v=>v.section==='troubleshooting').length;
-    const code = all.filter(v=>v.section==='snippet').length;
-    const notes = all.filter(v=>v.section==='tech'||v.section==='cheatsheet').length;
-    statsBar.innerHTML = `<span><b>${all.length}</b> Knowledge Items</span><span>🛠 <b>${ts}</b> Troubleshooting</span><span>💻 <b>${code}</b> Code</span><span>📘 <b>${notes}</b> Notes</span><span>🔁 <b>${all.filter(v=>v.times_used>0).length}</b> Recurring</span><span>⭐ <b>${all.filter(v=>v.favorite).length}</b> Favorites</span>`;
-  }
-
-  // Folder breadcrumb, shown only when a folder is selected
-  const crumb = document.getElementById('kt-breadcrumb');
-  if (crumb) {
-    if (vaultFolderFilter) {
-      const parts = vaultFolderFilter.split('/');
-      let path = '';
-      const links = parts.map((p,i) => { path = path ? path+'/'+p : p; return `<span onclick="setVaultFolderFilter('${path.replace(/'/g,"\\'")}')">${esc(p)}</span>`; });
-      crumb.innerHTML = `<span onclick="setVaultFilter('all')" style="cursor:pointer">Knowledge Vault</span> → ${links.join(' → ')}`;
-      crumb.style.display = '';
-    } else {
-      crumb.style.display = 'none';
-    }
-  }
-
+  grid.className = 'kx-grid' + (kxView === 'list' ? ' list' : '');
   if (!list.length) {
     const empty = (D.vault||[]).length === 0;
-    grid.innerHTML = `<div class="empty-td" style="grid-column:1/-1">
-      ${empty ? `🧠 Your engineering brain is empty... for now.<br>Start recording the problems you solve.<br><div class="btn-group" style="justify-content:center;margin-top:10px"><button class="btn btn-violet btn-sm" onclick="openVaultEditor()">+ Add Your First Troubleshooting Card</button><button class="btn btn-ghost btn-sm" onclick="seedSampleKnowledgeCards()">✦ Load 5 Example Cards</button></div>`
-              : vaultFolderFilter ? `📁 No knowledge here yet.<br><button class="btn btn-violet btn-sm" style="margin-top:8px" onclick="promptNewFolder()">+ Add Knowledge to this Folder</button>`
-              : `No cards match this filter.`}
-    </div>`;
+    grid.innerHTML = `<div class="kx-empty">${empty ? `🧠 Your engineering brain is empty... for now.<br>Start recording the problems you solve.<div class="btn-group" style="justify-content:center;margin-top:12px"><button class="kx-primary" onclick="openVaultEditor()">+ New Knowledge</button><button class="btn btn-ghost" onclick="seedSampleKnowledgeCards()">✦ Load 5 Example Cards</button></div>`
+      : vaultFolderFilter ? `📁 No knowledge here yet.<div style="margin-top:10px"><button class="kx-primary" onclick="kxNewInFolder()">+ Add Knowledge to this Folder</button></div>` : `No knowledge matches these filters.`}</div>`;
     return;
   }
-  grid.innerHTML = list.map(v => {
-    const meta = KV_SECTION_META[v.section] || KV_SECTION_META.tech;
-    const isTS = v.section === 'troubleshooting';
-    const tags = (v.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
-    const dateLabel = (v.updated_at || v.created_at || '').split('T')[0];
-    const previewText = isTS
-      ? (v.memory_shortcut || v.problem || '—')
-      : (isHtmlContent(v.content) ? htmlToPlainText(v.content) : (v.content||'').replace(/```[\s\S]*?```/g,'[code]').replace(/[#*`>-]/g,'')).slice(0,200);
-    return `<div class="kv-card ${v.pinned?'pinned':''} ${v.archived?'archived':''}" onclick="${isTS ? `openRecallView('${v.id}')` : `openKnowledgeView('${v.id}')`}">
-      <div class="kv-card-top">
-        <div class="kv-card-title">${esc(v.title)}</div>
-        <div class="kv-card-icons">
-          ${v.times_used>0 ? `<span class="kv-badge" style="background:var(--peach-xl);color:var(--peach)" title="Faced ${v.times_used}x">🔁 ${v.times_used}</span>` : ''}
-          <button class="kv-card-icon-btn ${v.favorite?'on':''}" onclick="event.stopPropagation();toggleVaultFlag('${v.id}','favorite')" title="Favorite">⭐</button>
-        </div>
-      </div>
-      ${v.folder ? `<div class="kt-card-folder">📁 ${esc(v.folder.split('/').join(' / '))}</div>` : ''}
-      <div class="kv-card-badges">
-        <span class="kv-badge ${meta.cls}">${meta.icon} ${meta.label}</span>
-        ${v.category ? `<span class="kv-badge folder">${esc(v.category)}</span>` : ''}
-        ${isTS && v.kv_status ? `<span class="kv-badge folder">${(KV_STATUS_META[v.kv_status]||{}).icon||''} ${(KV_STATUS_META[v.kv_status]||{}).label||''}</span>` : ''}
-      </div>
-      <div class="kv-card-preview ${isTS?'shortcut':''}">${esc(previewText)||'—'}</div>
-      ${tags.length ? `<div class="kv-card-tags">${tags.slice(0,5).map(t=>`<span class="kv-tag-chip">#${esc(t)}</span>`).join('')}</div>` : ''}
-      <div class="kv-card-foot">
-        <span>${isTS ? '🧠 Click to recall' : `${kvWordStats(v.content).words} words`}</span>
-        <span>${v.archived ? '🗄 archived · ' : ''}${dateLabel}</span>
-      </div>
-    </div>`;
-  }).join('');
+  grid.innerHTML = list.map(kxCard).join('');
 }
-
 async function toggleVaultFlag(id, flag) {
   const item = D.vault.find(x => x.id === id); if (!item) return;
   await updateItem('vault', id, { [flag]: !item[flag], updated_at: new Date().toISOString() }, renderVault);
 }
+function kxMenuClose() { document.getElementById('kx-menu')?.remove(); }
+function kxMenu(e, id) {
+  e.stopPropagation();
+  const was = document.getElementById('kx-menu')?.dataset.id; kxMenuClose(); if (was === id) return;
+  const v = D.vault.find(x => x.id === id); if (!v) return;
+  const m = document.createElement('div'); m.id = 'kx-menu'; m.className = 'kx-menu'; m.dataset.id = id;
+  m.innerHTML = [['✏️ Edit',`openVaultEditor('${id}')`],[v.favorite?'☆ Remove favorite':'★ Favorite',`toggleVaultFlag('${id}','favorite')`],[v.pinned?'📌 Unpin':'📌 Pin to top',`toggleVaultFlag('${id}','pinned')`],[v.archived?'🗄 Unarchive':'🗄 Archive',`toggleVaultFlag('${id}','archived')`],['⧉ Duplicate',`kxDup('${id}')`],['🗑 Delete',`kxDel('${id}')`,'danger']]
+    .map(([l,a,c]) => `<button class="${c||''}" onclick="kxMenuClose();${a}">${l}</button>`).join('');
+  document.body.appendChild(m);
+  const r = e.currentTarget.getBoundingClientRect(), h = m.offsetHeight;
+  m.style.left = Math.max(8, r.right - m.offsetWidth) + 'px';
+  m.style.top = (r.bottom + h + 12 > innerHeight ? r.top - h - 6 : r.bottom + 6) + 'px';
+}
+function kxDup(id) { vaultEditingId = id; duplicateCurrentVaultEntry(); }
+function kxDel(id) { const v = D.vault.find(x => x.id === id); if (v && confirm(`Delete "${v.title||'Untitled'}"? This can't be undone.`)) del('vault', id, 'renderVault'); }
+document.addEventListener('click', kxMenuClose);
+window.addEventListener('scroll', kxMenuClose, true);
+document.addEventListener('keydown', e => {
+  const ov = document.getElementById('kv-editor-overlay');
+  if (!ov || ov.style.display === 'none' || document.querySelector('.rt-wrap.fullscreen')) return;
+  if (e.key === 'Escape') { e.preventDefault(); closeVaultEditor(); }
+  else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); saveVaultEntry(); }
+});
 
-function renderQuickTags(currentTags) {
+// ── Drawer: tags ──
+const kxTags = () => document.getElementById('kv-e-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+function kxTagsSet(a) {
+  const s = new Set(), o = [];
+  a.forEach(t => { const k = t.toLowerCase(); if (!s.has(k)) { s.add(k); o.push(t); } });
+  document.getElementById('kv-e-tags').value = o.join(', ');
+  kxTagUI();
+}
+function kxTagUI() {
+  document.getElementById('kx-tag-chips').innerHTML = kxTags().map(t => `<span class="kx-tag g${kxHue(t)}">${esc(t)}<button type="button" onclick="event.stopPropagation();kxTagsSet(kxTags().filter(x=>x!=='${kxQ(t)}'))">×</button></span>`).join('');
+  renderQuickTags();
+}
+function kxTagCommit() {
+  const i = document.getElementById('kv-tag-input'); if (!i) return;
+  const v = i.value.trim().replace(/,$/, ''); i.value = '';
+  if (v) kxTagsSet([...kxTags(), v]);
+}
+function kxTagKey(e) {
+  if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); kxTagCommit(); }
+  else if (e.key === 'Backspace' && !e.target.value) { const a = kxTags(); a.pop(); kxTagsSet(a); }
+}
+function renderQuickTags() {
   const el = document.getElementById('kv-quick-tags'); if (!el) return;
-  const have = new Set((currentTags||'').split(',').map(t=>t.trim().toLowerCase()).filter(Boolean));
-  el.innerHTML = KV_QUICK_TAGS.map(t => `<button type="button" class="kv-quick-tag-btn" onclick="addQuickTag('${t.replace(/'/g,"\\'")}')" ${have.has(t.toLowerCase())?'style="opacity:.35;pointer-events:none"':''}>+ ${t}</button>`).join('');
+  const have = new Set(kxTags().map(t => t.toLowerCase())), cnt = {}, seen = new Set();
+  (D.vault||[]).forEach(v => (v.tags||'').split(',').forEach(t => { t = t.trim(); if (t) cnt[t] = (cnt[t]||0)+1; }));
+  el.innerHTML = [...Object.keys(cnt).sort((a,b) => cnt[b]-cnt[a]), ...KV_QUICK_TAGS]
+    .filter(t => { const k = t.toLowerCase(); if (have.has(k) || seen.has(k)) return false; seen.add(k); return true; }).slice(0,8)
+    .map(t => `<button type="button" onclick="addQuickTag('${kxQ(t)}')">+ ${esc(t)}</button>`).join('');
 }
-function addQuickTag(tag) {
-  const input = document.getElementById('kv-e-tags');
-  const existing = input.value.split(',').map(t=>t.trim()).filter(Boolean);
-  if (!existing.some(t => t.toLowerCase() === tag.toLowerCase())) existing.push(tag);
-  input.value = existing.join(', ');
-  renderQuickTags(input.value);
-}
+function addQuickTag(tag) { kxTagsSet([...kxTags(), tag]); }
 
+// ── Drawer: editor ──
 function kvOnRichInput(ed) {
   const words = (ed.innerText||'').trim() ? (ed.innerText||'').trim().split(/\s+/).length : 0;
-  const mins = Math.max(1, Math.round(words / 200));
   const stats = document.getElementById('kv-e-stats');
-  if (stats) stats.textContent = `${words} words · ${mins} min read`;
+  if (stats) stats.textContent = `${words} words · ${Math.max(1, Math.round(words/200))} min read`;
   vaultAutosaveKick();
 }
-
+function kxSetMode(m) {
+  kxMode = m;
+  document.getElementById('kx-m-quick').classList.toggle('on', m === 'quick');
+  document.getElementById('kx-m-detailed').classList.toggle('on', m === 'detailed');
+  onVaultSectionChange();
+}
+function kxPickType(s) { document.getElementById('kv-e-section').value = s; onVaultSectionChange(); }
 function onVaultSectionChange() {
-  const sec = document.getElementById('kv-e-section').value;
-  document.getElementById('kv-e-language').style.display = (sec === 'snippet' || sec === 'cheatsheet') ? '' : 'none';
-  const isTS = sec === 'troubleshooting';
-  document.getElementById('kv-troubleshoot-fields').style.display = isTS ? '' : 'none';
-  document.getElementById('kv-e-notes-label').textContent = isTS ? 'Additional Notes (optional)' : 'Content';
-  document.getElementById('kv-e-title').placeholder = isTS ? 'Issue title...' : 'Untitled note...';
+  const sec = document.getElementById('kv-e-section').value, isTS = sec === 'troubleshooting';
+  const dr = document.getElementById('kx-dr'); dr.dataset.type = sec; dr.dataset.mode = kxMode;
+  document.getElementById('kv-e-notes-label').textContent = kxMode === 'detailed' && isTS ? 'Additional Notes (optional)' : 'Write your knowledge...';
+  document.getElementById('kx-tiles').innerHTML = KX_TILES.map(s => `<button type="button" class="kx-tile kxt-${s}${s===sec?' on':''}" onclick="kxPickType('${s}')"><span>${KV_SECTION_META[s].icon}</span>${s==='tech'?'Tech Note':KV_SECTION_META[s].label}</button>`).join('');
 }
-
-function toggleEditorFlag(flag) {
-  vaultEditorFlags[flag] = !vaultEditorFlags[flag];
-  document.getElementById(flag === 'favorite' ? 'kv-e-fav-btn' : flag === 'pinned' ? 'kv-e-pin-btn' : 'kv-e-arc-btn').classList.toggle('on', vaultEditorFlags[flag]);
+function kxFlag(flag, on) {
+  vaultEditorFlags[flag] = !!on;
+  const ids = { favorite:'kv-e-fav-cb', pinned:'kv-e-pin-cb', archived:'kv-e-arc-cb' };
+  Object.keys(ids).forEach(f => { document.getElementById(ids[f]).checked = !!vaultEditorFlags[f]; });
 }
+function toggleEditorFlag(flag) { kxFlag(flag, !vaultEditorFlags[flag]); }
 
 function openVaultEditor(id) {
   vaultEditingId = id || null;
   pendingKnowledgeLinkWorkLogId = null; // reset unless explicitly set right after this call (see saveWorkLogAsKnowledge)
-  clearTimeout(vaultAutosaveTimer);
+  clearTimeout(vaultAutosaveTimer); clearTimeout(kxCloseT);
   const overlay = document.getElementById('kv-editor-overlay');
-  const isNew = !id;
-  const entry = isNew ? null : D.vault.find(x => x.id === id);
-  vaultEditorFlags = entry ? { favorite:!!entry.favorite, pinned:!!entry.pinned, archived:!!entry.archived } : { favorite:false, pinned:false, archived:false };
-  document.getElementById('kv-e-title').value = entry ? entry.title : '';
-  document.getElementById('kv-e-section').value = entry ? entry.section : 'troubleshooting';
-  document.getElementById('kv-e-folder').value = entry ? entry.folder : '';
-  document.getElementById('kv-e-category').value = entry ? entry.category : '';
-  document.getElementById('kv-e-language').value = entry ? entry.language : '';
-  document.getElementById('kv-e-tags').value = entry ? entry.tags : '';
-  document.getElementById('kv-e-client').value = entry ? entry.client_project||'' : '';
-  document.getElementById('kv-e-device').value = entry ? entry.device_model||'' : '';
-  document.getElementById('kv-e-firmware').value = entry ? entry.firmware_version||'' : '';
-  document.getElementById('kv-e-protocol').value = entry ? entry.protocol||'' : '';
-  document.getElementById('kv-e-status').value = entry ? entry.kv_status||'solved' : 'solved';
-  document.getElementById('kv-e-priority').value = entry ? entry.kv_priority||'Medium' : 'Medium';
-  document.getElementById('kv-e-datesolved').value = entry ? entry.date_solved||'' : today();
-  document.getElementById('kv-e-problem').value = entry ? entry.problem||'' : '';
-  document.getElementById('kv-e-symptoms').value = entry ? entry.symptoms||'' : '';
-  document.getElementById('kv-e-shortcut').value = entry ? entry.memory_shortcut||'' : '';
-  document.getElementById('kv-e-rootcause').value = entry ? entry.root_cause||'' : '';
-  document.getElementById('kv-e-solution').value = entry ? entry.solution||'' : '';
-  document.getElementById('kv-e-verification').value = entry ? entry.verification||'' : '';
-  document.getElementById('kv-e-checks').value = entry ? entry.important_checks||'' : '';
-  document.getElementById('kv-e-why').value = entry ? entry.why_happens||'' : '';
-  document.getElementById('kv-e-learned').value = entry ? entry.what_learned||'' : '';
-  const kvEd = document.getElementById('kv-rich');
+  const isNew = !id, entry = isNew ? null : D.vault.find(x => x.id === id);
+  const $ = s => document.getElementById(s), set = (s, val) => { $(s).value = val; };
+  const chipType = { troubleshooting:'troubleshooting', tech:'tech', cheatsheet:'cheatsheet', snippet:'snippet', notes:'note' }[kxChip];
+  set('kv-e-title', entry ? entry.title : '');
+  set('kv-e-section', entry ? (KV_SECTION_META[entry.section] ? entry.section : 'tech') : (chipType || 'troubleshooting'));
+  set('kv-e-folder', entry ? entry.folder : ''); set('kv-e-category', entry ? entry.category : ''); set('kv-e-language', entry ? entry.language : '');
+  set('kv-e-tags', entry ? entry.tags : '');
+  set('kv-e-client', entry ? entry.client_project||'' : ''); set('kv-e-device', entry ? entry.device_model||'' : '');
+  set('kv-e-firmware', entry ? entry.firmware_version||'' : ''); set('kv-e-protocol', entry ? entry.protocol||'' : '');
+  set('kv-e-status', entry ? entry.kv_status||'solved' : 'solved'); set('kv-e-priority', entry ? entry.kv_priority||'Medium' : 'Medium');
+  set('kv-e-datesolved', entry ? entry.date_solved||'' : today());
+  set('kv-e-problem', entry ? entry.problem||'' : ''); set('kv-e-symptoms', entry ? entry.symptoms||'' : '');
+  set('kv-e-shortcut', entry ? entry.memory_shortcut||'' : ''); set('kv-e-rootcause', entry ? entry.root_cause||'' : '');
+  set('kv-e-solution', entry ? entry.solution||'' : ''); set('kv-e-verification', entry ? entry.verification||'' : '');
+  set('kv-e-checks', entry ? entry.important_checks||'' : ''); set('kv-e-why', entry ? entry.why_happens||'' : '');
+  set('kv-e-learned', entry ? entry.what_learned||'' : ''); set('kv-tag-input', '');
+  const kvEd = $('kv-rich');
   if (kvEd) {
     kvEd.innerHTML = entry ? (isHtmlContent(entry.content) ? entry.content : renderVaultBody(entry.content, entry.section, entry.language)) : '';
     kvEd.querySelectorAll('pre code').forEach(c => { try { hljs.highlightElement(c) } catch(e){} });
-    rtUpdateStats(kvEd);
+    rtUpdateStats(kvEd); kvOnRichInput(kvEd); clearTimeout(vaultAutosaveTimer);
   }
-  onVaultSectionChange();
-  renderQuickTags(document.getElementById('kv-e-tags').value);
-  ['favorite','pinned','archived'].forEach(f => {
-    const btnId = f === 'favorite' ? 'kv-e-fav-btn' : f === 'pinned' ? 'kv-e-pin-btn' : 'kv-e-arc-btn';
-    document.getElementById(btnId).classList.toggle('on', vaultEditorFlags[f]);
-  });
-  document.getElementById('kv-e-dup-btn').style.display = isNew ? 'none' : '';
-  document.getElementById('kv-e-del-btn').style.display = isNew ? 'none' : '';
-  refreshFolderDatalist();
+  kxFlag('favorite', entry ? !!entry.favorite : false); kxFlag('pinned', entry ? !!entry.pinned : false); kxFlag('archived', entry ? !!entry.archived : false);
+  $('kx-dr-title').textContent = isNew ? 'New Knowledge' : 'Edit Knowledge';
+  kxSetMode(isNew ? 'quick' : 'detailed');
+  $('kv-e-dup-btn').style.display = isNew ? 'none' : ''; $('kv-e-del-btn').style.display = isNew ? 'none' : '';
+  refreshFolderDatalist(); kxTagUI();
+  $('kx-dr-body').scrollTop = 0;
   overlay.style.display = 'flex';
-  setTimeout(() => document.getElementById('kv-e-title').focus(), 50);
+  requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('open')));
+  // runs after callers (e.g. Work Log → Knowledge) pre-fill title/tags, so chips stay in sync
+  setTimeout(() => { $('kv-e-title').focus(); kxTagUI(); }, 50);
 }
-
 function refreshFolderDatalist() {
   const dl = document.getElementById('kv-folder-datalist'); if (!dl) return;
-  const folders = [...new Set((D.vault||[]).map(v => v.folder).filter(Boolean))].sort();
-  dl.innerHTML = folders.map(f => `<option value="${esc(f)}">`).join('');
+  dl.innerHTML = [...new Set((D.vault||[]).map(v => v.folder).filter(Boolean))].sort().map(f => `<option value="${kxAttr(f)}">`).join('');
 }
-
 function closeVaultEditor() {
   clearTimeout(vaultAutosaveTimer);
-  document.getElementById('kv-editor-overlay').style.display = 'none';
-  vaultEditingId = null;
-  pendingKnowledgeLinkWorkLogId = null;
+  const ov = document.getElementById('kv-editor-overlay'); ov.classList.remove('open');
+  clearTimeout(kxCloseT); kxCloseT = setTimeout(() => { ov.style.display = 'none'; }, 200);
+  vaultEditingId = null; pendingKnowledgeLinkWorkLogId = null;
 }
-
 function vaultAutosaveKick() {
   if (!vaultEditingId) return;
   clearTimeout(vaultAutosaveTimer);
@@ -6570,6 +6913,7 @@ function vaultAutosaveKick() {
 }
 
 async function saveVaultEntry(silent) {
+  if (typeof kxTagCommit === 'function') kxTagCommit();
   const title = document.getElementById('kv-e-title').value.trim() || 'Untitled';
   const kvEd = document.getElementById('kv-rich');
   const payload = {
@@ -7614,7 +7958,7 @@ async function boot() {
   rtMount('dl-rich-host', 'dl-rich', 'What did you work on today? Problems faced, solutions found, ideas...');
   rtMount('mt-rich-host', 'mt-rich', 'Key points discussed...');
   rtMount('ac-rich-host', 'ac-rich', 'Full story, context, quotes from feedback...');
-  rtMount('kv-rich-host', 'kv-rich', 'Write your note...', { compact:false, noFoot:true, onInput: kvOnRichInput });
+  rtMount('kv-rich-host', 'kv-rich', 'Write your notes, steps, explanations, code, etc...', { compact:false, noFoot:true, onInput: kvOnRichInput });
   buildDocumentationSections();
   document.getElementById('page-sub').textContent =
     new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
