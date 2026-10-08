@@ -1070,6 +1070,46 @@ button.cx-dot{cursor:default}.cx-pg.click button.cx-dot{cursor:pointer}
 .cx-doc small{display:block;color:var(--text3);font-size:11px}
 .cx-note{font-size:12px;color:var(--text3);margin-right:auto}
 @media(max-width:560px){.cx-grid{grid-template-columns:1fr}.cx-stats{grid-template-columns:repeat(2,1fr)}}
+/* ══ ATTENDANCE & PAYROLL — 3-block redesign (pl-*) ══ */
+.pl-month{display:flex;align-items:center;gap:6px;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:4px;box-shadow:var(--shadow-soft)}
+.pl-month span{min-width:150px;text-align:center;font-weight:600;font-size:13.5px}
+.pl-month button{width:34px;height:34px;border:none;background:none;border-radius:10px;font-size:18px;cursor:pointer;color:var(--text2)}.pl-month button:hover{background:var(--violet-xl);color:var(--violet-l)}
+.pl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:20px;align-items:start}
+.pl-card{background:var(--s1);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-soft);padding:20px;display:flex;flex-direction:column;gap:14px}
+.pl-hd{display:flex;align-items:center;gap:12px}.pl-hd h3{font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:19px;font-weight:700;line-height:1.1}.pl-hd small{display:block;font-size:11.5px;color:var(--text3);margin-top:3px}
+.pl-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;background:var(--violet-xl);flex-shrink:0}
+.pl-chip{margin-left:auto;font-size:11px;font-weight:600;padding:3px 11px;border-radius:999px;border:none;background:var(--s3);color:var(--text2);appearance:none;-webkit-appearance:none;cursor:pointer;text-align:center}
+.pl-st-present{background:#e5f6ea;color:#2f8a4a}.pl-st-absent{background:#fde7e7;color:#c23b3b}.pl-st-paid{background:#e4f0fc;color:#2a6fb0}.pl-st-lop{background:#fff0dc;color:#c26a12}.pl-st-half{background:#fff6d9;color:#a77a0a}.pl-st-holiday{background:#f1e9ff;color:#6d3fd0}.pl-st-weekoff{background:var(--s3);color:var(--text3)}
+.pl-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pl-tile{background:var(--s2);border-radius:14px;padding:10px 12px;min-width:0}.pl-tile label{display:block;font-size:11px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--text3);margin-bottom:4px}
+.pl-tile input[type=time]{width:100%;border:none;background:none;font:600 17px 'Inter',sans-serif;padding:0;color:var(--text);box-shadow:none;height:auto}
+.pl-wh{text-align:center;font-size:12px;color:var(--text3)}.pl-wh b{display:block;font-size:19px;color:var(--text);margin-top:2px}
+.pl-btn2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pl-go,.pl-out{height:46px;border-radius:12px;font:600 13.5px 'Inter',sans-serif;cursor:pointer;border:1px solid transparent}
+.pl-go{background:#2f9e56;color:#fff}.pl-go:disabled{background:#cfe9d8;cursor:default}.pl-out{background:#fdecec;color:#c23b3b;border-color:#f7caca}.pl-out:disabled{opacity:.5;cursor:default}
+.pl-note label{font-size:12px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--text2);display:block;margin-bottom:6px}.pl-note textarea{min-height:70px;border-radius:12px;resize:vertical;font-size:12.5px}
+.pl-stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.pl-stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pl-s{border-radius:14px;padding:10px 6px;text-align:center;font-size:10.5px;color:var(--text2);line-height:1.25}.pl-s b{display:block;font-size:19px;color:var(--text);font-weight:700}
+.pl-g{background:#e9f6ed}.pl-b{background:#e8f1fb}.pl-r{background:#fdecec}.pl-o{background:#fff1de}.pl-v{background:#f3ecff}.pl-a{background:#fff7dc}
+.pl-est{background:linear-gradient(135deg,#f6f0ff,#fbf8ff);border:1px solid var(--border3);border-radius:14px;padding:12px 14px}.pl-est small{display:block;font-size:11.5px;color:var(--text3)}.pl-est b{display:block;font-size:24px;color:var(--violet-l);margin:2px 0}
+.pl-acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto}
+.pl-b2{height:40px;border-radius:11px;border:1px solid var(--border3);background:var(--violet-xl);color:var(--violet-l);font:600 12.5px 'Inter',sans-serif;cursor:pointer}.pl-b2:hover{background:#ece3ff}.pl-b2.plain{background:var(--s1);color:var(--text2);border-color:var(--border2)}
+.pl-sec{font-size:11px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.07em}
+.pl-sal{cursor:pointer}
+.pl-slip{border:1px solid var(--border);border-radius:14px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:10px}.pl-slip:hover{border-color:var(--border3)}
+.pl-line{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--text2)}
+.pl-file{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--text3);background:var(--s2);border-radius:10px;padding:6px 10px}.pl-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-calnav{display:flex;align-items:center;gap:10px;margin-bottom:8px}.pl-calnav b{font-size:15px;min-width:130px;text-align:center}
+.pl-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11px;color:var(--text3)}.pl-legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.pl-pills{display:flex;flex-wrap:wrap;gap:8px}.pl-pills button{padding:7px 13px;border-radius:10px;border:1.5px solid transparent;font:600 12px 'Inter',sans-serif;cursor:pointer;background:var(--s2);color:var(--text2)}.pl-pills button.on{border-color:var(--violet);box-shadow:0 0 0 3px #8b5cf61f}
+.pl-box{border-radius:14px;overflow:hidden;border:1px solid var(--border)}.pl-box h4{font-size:11.5px;font-weight:700;padding:9px 12px}.pl-box .pl-line{padding:7px 12px;border-top:1px solid var(--border)}.pl-box .tot{font-weight:700;color:var(--text)}
+.pl-e h4{background:#f3ecff;color:#6d3fd0}.pl-e .tot{background:#f8f4ff}.pl-d h4{background:#fdecec;color:#c23b3b}.pl-d .tot{background:#fff4f4;color:#c23b3b}
+.pl-net{display:flex;justify-content:space-between;align-items:center;background:#e6f6eb;border-radius:14px;padding:14px 16px;font-weight:700;color:#2f8a4a}.pl-net b{font-size:21px}
+.pl-rev{border:1px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center}.pl-rev b{font-size:17px}.pl-rev small{display:block;font-size:11.5px;color:var(--text3);margin-top:2px}
+.pl-slr{display:grid;grid-template-columns:70px 1fr auto;gap:10px;align-items:center;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:12px}.pl-slr small{display:block;color:var(--text3);font-size:11px}
+.pl-fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pl-fg .kx-f{min-width:0}
+details.pl-det{border:1px solid var(--border);border-radius:14px;padding:4px 14px}details.pl-det summary{cursor:pointer;font-weight:600;font-size:13px;padding:10px 0}
+@media(max-width:560px){.pl-stats4{grid-template-columns:repeat(2,1fr)}.pl-fg{grid-template-columns:1fr}}
 /* ── GOALS ── */
 .goal-item{
   display:flex;align-items:flex-start;gap:10px;
@@ -2015,72 +2055,22 @@ button.cx-dot{cursor:default}.cx-pg.click button.cx-dot{cursor:pointer}
 
 <!-- ═══ PLANNER (Attendance & Payroll) ═══ -->
 <div id="page-planner" class="page">
-
   <div id="planner-attendance" class="planner-subpage active">
-
-    <div class="att-overview-cards" id="att-overview-cards"></div>
-
-    <div class="card mb16">
-      <div class="card-hd">
-        <div style="display:flex;align-items:center;gap:14px">
-          <button class="btn btn-ghost btn-sm" onclick="attPrevMonth()">‹ Previous Month</button>
-          <div class="card-title" id="att-month-label" style="margin:0">Month</div>
-          <button class="btn btn-ghost btn-sm" onclick="attNextMonth()">Next Month ›</button>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost btn-sm" onclick="attGoToday()">Today</button>
-          <button class="btn btn-violet btn-sm" onclick="openNewMonthModal()">+ New Month</button>
-        </div>
-      </div>
-      <div class="card-body">
-        <div id="att-month-empty-state" style="display:none"></div>
-        <div class="att-click-hint">💡 Click any date to mark attendance. Click a completed day to view, edit, or delete it. Right-click for quick actions.</div>
-        <div class="cal-grid mb12" id="att-cal-headers"></div>
-        <div class="att-day-grid" id="att-cal-grid"></div>
-        <div class="att-legend">
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--green)"></div>✓ Present</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--red)"></div>✕ Absent</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--blue)"></div>🏖 Paid Leave</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--red)"></div>⚠ LOP</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--amber)"></div>◷ Half Day</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--violet)"></div>★ Holiday</div>
-          <div class="att-legend-item"><div class="att-legend-box" style="background:var(--s3)"></div>○ Week Off</div>
-        </div>
-      </div>
+    <div class="kx-head">
+      <div class="kx-ttl"><span class="kx-brain">🗓</span><div><div class="kx-h1">Attendance &amp; Payroll</div><div class="kx-sub">Track your work hours, manage attendance and view your salary</div></div></div>
+      <div class="pl-month"><button onclick="attPrevMonth()" aria-label="Previous month">‹</button><span id="pl-month-label"></span><button onclick="attNextMonth()" aria-label="Next month">›</button></div>
     </div>
-
-    <div class="card mb16">
-      <div class="card-hd"><div class="card-title">📈 Attendance Analytics</div></div>
-      <div class="card-body"><div class="gauto" id="att-analytics-kpis"></div></div>
+    <div class="pl-grid">
+      <section class="pl-card" id="pl-today"></section>
+      <section class="pl-card" id="pl-month-card"></section>
+      <section class="pl-card" id="pl-pay"></section>
     </div>
+  </div>
+</div>
 
-    <div class="card mb16">
-      <div class="card-hd"><div class="card-title">🧮 Payroll Calculation</div><button class="btn btn-ghost btn-sm" onclick="openCalcModal(activePayPeriodId)" id="pp-viewcalc-btn" style="display:none">🔍 Full Audit</button></div>
-      <div class="card-body" id="pp-calc-flow"></div>
-    </div>
-
-    <div class="card mb16">
-      <div class="card-hd"><div class="card-title">💰 Salary Breakdown</div></div>
-      <div class="card-body" id="pp-breakdown"></div>
-    </div>
-
-    <div class="card mb16">
-      <div class="card-hd">
-        <div class="card-title">💵 Pay Period</div>
-        <button class="btn btn-ghost btn-sm" onclick="openNewMonthModal()">+ New Month</button>
-      </div>
-      <div class="card-body">
-        <p style="font-size:11.5px;color:var(--text3);margin-bottom:12px;line-height:1.6">Calculated automatically from real attendance data + Salary History + this month's own Payroll Settings. Finalize a month to lock it permanently; finalized/paid months are never recalculated, even if attendance or salary revisions change later.</p>
-        <div id="pp-form-wrap"></div>
-      </div>
-    </div>
-
-    <div class="card mb16">
-      <div class="card-hd"><div class="card-title">📊 Salary History</div><button class="btn btn-violet btn-sm" onclick="openSalaryRevisionModal()">+ Salary Revision</button></div>
-      <div class="card-body" id="salary-history-list"></div>
-    </div>
-
-    <div class="card mb16" id="att-settings-card">
+<!-- Holder: existing monthly settings + pay-period editor live here until a drawer borrows them -->
+<div id="pl-holder" style="display:none">
+  <div class="card mb16" id="att-settings-card">
       <div class="card-hd"><div class="card-title">⚙️ Monthly Attendance Settings</div></div>
       <div class="card-body">
         <p style="font-size:11px;color:var(--text3);margin-bottom:12px">These settings apply <b>only to <span id="att-settings-month-label">this month</span></b> — other months keep their own values unless you explicitly copy them. Basic Salary is not set here — it's controlled by <b>Salary History</b> above.</p>
@@ -2098,8 +2088,7 @@ button.cx-dot{cursor:default}.cx-pg.click button.cx-dot{cursor:pointer}
         </div>
       </div>
     </div>
-
-    <div class="card mb16" id="payroll-settings-card">
+<div class="card mb16" id="payroll-settings-card">
       <div class="card-hd">
         <div class="card-title">🧮 Payroll &amp; Statutory Settings</div>
         <span style="font-size:10.5px;color:var(--text4)">Applies only to this month</span>
@@ -2146,8 +2135,34 @@ button.cx-dot{cursor:default}.cx-pg.click button.cx-dot{cursor:pointer}
         <div style="font-size:10.5px;color:var(--text4);margin-top:10px">These settings feed <b>calculatePayroll()</b> directly. Changing any value here recalculates the current (non-finalized/paid) pay period automatically.</div>
       </div>
     </div>
-  </div>
+  <div id="pp-form-wrap"></div>
 </div>
+
+<!-- Attendance Calendar drawer -->
+<div id="pl-cal-ov" class="kv-modal-overlay kx-ov" style="display:none" onclick="if(event.target===this) plHide('pl-cal-ov')">
+  <aside class="kx-dr">
+    <div class="kx-dr-hd"><div>Attendance Calendar</div><button class="kx-x" onclick="plHide('pl-cal-ov')" aria-label="Close">✕</button></div>
+    <div class="kx-dr-body">
+      <div class="pl-calnav"><button class="btn btn-ghost btn-sm" onclick="attPrevMonth()">‹</button><b id="att-month-label"></b><button class="btn btn-ghost btn-sm" onclick="attNextMonth()">›</button><button class="btn btn-ghost btn-sm" onclick="attGoToday()" style="margin-left:auto">Today</button></div>
+      <div id="att-month-empty-state" style="display:none"></div>
+      <div class="cal-grid" id="att-cal-headers"></div>
+      <div class="att-day-grid" id="att-cal-grid"></div>
+      <div class="pl-legend"><span><i style="background:var(--green)"></i>Present</span><span><i style="background:var(--red)"></i>Absent</span><span><i style="background:var(--blue)"></i>Paid Leave</span><span><i style="background:var(--amber)"></i>Half Day / LOP</span><span><i style="background:var(--violet)"></i>Holiday</span><span><i style="background:var(--s3)"></i>Week Off</span></div>
+      <div class="kx-tip" style="display:block">💡 Click any date to edit its status, login, logout, break, overtime and remarks.</div>
+    </div>
+  </aside>
+</div>
+
+<!-- Day editor (stacks above the calendar) -->
+<div id="pl-day-ov" class="kv-modal-overlay kx-ov" style="display:none;z-index:260" onclick="if(event.target===this) plHide('pl-day-ov')">
+  <aside class="kx-dr" id="pl-day" style="width:min(440px,100vw)"></aside>
+</div>
+
+<!-- Generic drawer: Edit Month / Salary / Payslips / Payroll detail -->
+<div id="pl-ov" class="kv-modal-overlay kx-ov" style="display:none" onclick="if(event.target===this) plCloseDr()">
+  <aside class="kx-dr" id="pl-dr"></aside>
+</div>
+
 
 <!-- ═══ SALARY REVISION MODAL ═══ -->
 <div id="sr-modal-overlay" class="jv-overlay att-bottom-sheet" onclick="if(event.target===this) closeSalaryRevisionModal()">
@@ -2452,7 +2467,7 @@ const _supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 let D = {
   daily: [], achievements: [], evidence: [],
   star: [], plans: [], goals: [], mood: [],
-  tasks: [], meetings: [], stickies: [], vault: [], payPeriods: [], salaryRevisions: [], applications: [],
+  tasks: [], meetings: [], stickies: [], vault: [], payPeriods: [], salaryRevisions: [], payslips: [], applications: [],
   profile: { name:'', email:'', links:'' }
 };
 
@@ -2610,7 +2625,7 @@ function resetAppState() {
   D = {
     daily:[], achievements:[], evidence:[],
     star:[], plans:[], goals:[], mood:[],
-    tasks:[], meetings:[], stickies:[], vault:[], payPeriods:[], salaryRevisions:[], applications:[],
+    tasks:[], meetings:[], stickies:[], vault:[], payPeriods:[], salaryRevisions:[], payslips:[], applications:[],
     profile:{ name:'',email:'',links:'' }
   };
 }
@@ -2746,12 +2761,13 @@ const TABLE_MAP = {
   vault:        'knowledge_vault',
   payPeriods:   'pay_periods',
   salaryRevisions: 'salary_revisions',
+  payslips:     'payslip_files',   // Attendance & Payroll → one payslip file per month
   applications: 'job_applications', // Companies → Applied Companies tracker (see migration SQL below)
 };
 
 // Tables whose records belong to a specific employer. Personal tables
 // (plans, goals, mood, vault) follow the user across every company.
-const COMPANY_SCOPED = new Set(['achievements','evidence','star','tasks','meetings','payPeriods','salaryRevisions']);
+const COMPANY_SCOPED = new Set(['achievements','evidence','star','tasks','meetings','payPeriods','salaryRevisions','payslips']);
 
 // ── COMPANY STATE ──
 let companies = [];          // all companies this user has ever logged
@@ -2825,7 +2841,9 @@ const ROW_TO_D = {
     settings: r.settings_snapshot || null,
     notes:r.notes||'', created_at:r.created_at, updated_at:r.updated_at||r.created_at
   }),
-  salaryRevisions: r => ({ id:r.id, effectiveFrom:r.effective_from||'', basicSalary:r.basic_salary||0, reason:r.reason||'', created_at:r.created_at }),
+  salaryRevisions: r => ({ id:r.id, effectiveFrom:r.effective_from||'', basicSalary:r.basic_salary||0, reason:r.reason||'', created_at:r.created_at,
+    gross:r.gross_salary ?? null, hra:r.hra_amount ?? null, conveyance:r.conveyance_amount ?? null, otherAllowance:r.other_allowance_amount ?? null, epf:r.epf_amount ?? null, esi:r.esi_amount ?? null, profTax:r.prof_tax ?? null, tds:r.tds_amount ?? null, otherDed:r.other_deductions ?? null }),
+  payslips: r => ({ id:r.id, month:r.month||'', fileName:r.file_name||'', fileSize:r.file_size||0, mime:r.mime||'', dataUrl:r.data_url||'', uploadedAt:r.uploaded_at||r.created_at||'' }),
 };
 
 // Map: local D object → Supabase insert payload
@@ -2870,7 +2888,10 @@ const D_TO_ROW = {
     payroll_snapshot: r.snapshot || null,
     settings_snapshot: r.settings || null
   }),
-  salaryRevisions: r => ({ effective_from:r.effectiveFrom, basic_salary:r.basicSalary, reason:r.reason||'' }),
+  salaryRevisions: r => ({ effective_from:r.effectiveFrom, basic_salary:r.basicSalary, reason:r.reason||'',
+    ...(r.gross != null ? { gross_salary:r.gross } : {}), ...(r.hra != null ? { hra_amount:r.hra } : {}), ...(r.conveyance != null ? { conveyance_amount:r.conveyance } : {}), ...(r.otherAllowance != null ? { other_allowance_amount:r.otherAllowance } : {}),
+    ...(r.epf != null ? { epf_amount:r.epf } : {}), ...(r.esi != null ? { esi_amount:r.esi } : {}), ...(r.profTax != null ? { prof_tax:r.profTax } : {}), ...(r.tds != null ? { tds_amount:r.tds } : {}), ...(r.otherDed != null ? { other_deductions:r.otherDed } : {}) }),
+  payslips: r => ({ month:r.month, file_name:r.fileName, file_size:r.fileSize, mime:r.mime, data_url:r.dataUrl, uploaded_at:r.uploadedAt || new Date().toISOString() }),
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -3681,6 +3702,7 @@ function syncMonthContext() {
   // in which case its frozen historical value is preserved forever.
   if (!period || !isPeriodLocked(period)) {
     attSettings.salary = getSalaryForMonth(y, m);
+    plApplyRevision(attSettings, plRevisionFor(y, m)); // salary-revision components (HRA, conveyance, fixed EPF/ESI, …)
   }
   reflectAttSettingsIntoInputs();
 }
@@ -3758,18 +3780,6 @@ function openSalaryRevisionModal() {
   document.getElementById('sr-modal-overlay').classList.add('show');
 }
 function closeSalaryRevisionModal() { document.getElementById('sr-modal-overlay').classList.remove('show'); }
-
-function renderSalaryHistory() {
-  const el = document.getElementById('salary-history-list'); if (!el) return;
-  const ranges = getSalaryHistoryRanges();
-  if (!ranges.length) { el.innerHTML = `<div class="empty-td">No salary revisions yet. The salary configured in Attendance Settings applies to every month until you add one.</div>`; return; }
-  el.innerHTML = ranges.map((r,i) => `
-    <div class="sr-row">
-      <div class="sr-amount">${ppMoney(r.basicSalary)}</div>
-      <div class="sr-range">${monthLabel(r.rangeFrom)} → ${r.rangeTo ? monthLabel(r.rangeTo) : 'Present'}${r.reason ? ` · ${esc(r.reason)}` : ''}</div>
-      <button class="kv-card-icon-btn" onclick="deleteSalaryRevision('${r.id}')" title="Delete this revision">🗑</button>
-    </div>`).join('');
-}
 
 // ══════════════════════════════════════════════════════════════════════════
 // ── REAL PAYROLL CALCULATION ENGINE ──
@@ -3932,10 +3942,12 @@ function calculatePayroll(year, month, overrides = {}, settingsOverride) {
 
   const pf = calculatePF(proratedBasic, settings);
   const esi = calculateESI(grossSalary, settings);
+  if (settings.epfFixed != null) pf.employeePF = Number(settings.epfFixed);   // fixed EPF/ESI from a salary revision
+  if (settings.esiFixed != null) esi.employeeESI = Number(settings.esiFixed);
   const profTax = grossSalary > 0 ? (settings.profTax || 0) : 0;
   const tds = settings.tds || 0;
   const loan = overrides.loan != null ? Number(overrides.loan) || 0 : 0;
-  const otherDeductions = overrides.otherDeductions != null ? Number(overrides.otherDeductions) || 0 : 0;
+  const otherDeductions = overrides.otherDeductions != null ? Number(overrides.otherDeductions) || 0 : (settings.otherDeductionsDefault || 0);
 
   const deductions = calculateDeductions({
     employeePF: pf.employeePF, employeeESI: esi.employeeESI, profTax, tds, loan, otherDeductions
@@ -3990,15 +4002,6 @@ async function loadPayPeriods() {
 // OWN settings (never whatever month happens to be on screen) and its own
 // bonus/loan/otherDeductions overrides. Basic Salary always comes from Salary
 // History for that specific month UNLESS the period is locked (finalized/paid).
-function computeSnapshotForPeriod(p) {
-  if (!p.periodStart) return null;
-  const [y, m] = p.periodStart.split('-').map(Number);
-  if (!y || !m) return null;
-  const settings = { ...DEFAULT_ATTENDANCE_SETTINGS, ...(p.settings || {}) };
-  if (!isPeriodLocked(p)) settings.salary = getSalaryForMonth(y, m - 1);
-  return calculatePayroll(y, m - 1, { bonus: p.bonus, loan: p.loan, otherDeductions: p.otherDeductions }, settings);
-}
-
 function ppNetPay(p) {
   if (p.snapshot) return p.snapshot.netSalary;
   // Legacy fallback for periods saved before the calculation engine existed
@@ -4304,7 +4307,7 @@ async function createNewMonth() {
   let settings;
   if (mode === 'copy') {
     const sorted = [...D.payPeriods].filter(p => (p.periodStart||'') < monthVal+'-01').sort((a,b) => (b.periodStart||'').localeCompare(a.periodStart||''));
-    settings = sorted.length && sorted[0].settings ? { ...sorted[0].settings } : { ...DEFAULT_ATTENDANCE_SETTINGS };
+    settings = sorted.length && sorted[0].settings ? (() => { const c = { ...sorted[0].settings }; delete c.manual; return c; })() : { ...DEFAULT_ATTENDANCE_SETTINGS };
   } else {
     settings = legacyAttSettings ? { ...DEFAULT_ATTENDANCE_SETTINGS, ...legacyAttSettings } : { ...DEFAULT_ATTENDANCE_SETTINGS };
   }
@@ -4507,7 +4510,7 @@ async function loadAttendanceData() {
     if (logErr) throw logErr;
 
     attLogs = {};
-    (logs || []).forEach(l => { attLogs[l.date] = { status: l.status, login: l.login_time || null, logout: l.logout_time || null, notes: l.notes || '' }; });
+    (logs || []).forEach(l => { attLogs[l.date] = { status: l.status, login: l.login_time || null, logout: l.logout_time || null, notes: l.notes || '', breakMins: l.break_minutes || 0, otMins: l.ot_minutes != null ? l.ot_minutes : null }; });
 
     // Legacy (pre-month-scoping) global settings row — read once as a fallback
     // seed for the very first new-format month. Never written to again.
@@ -4655,19 +4658,6 @@ const ATT_STATUS_META = {
 let attModalDate = null;
 let attModalPendingStatus = null;
 
-function openAttModal(dateStr) {
-  if (!currentUser) { toast('Not signed in', 'error'); return; }
-  attModalDate = dateStr;
-  const entry = attLogs[dateStr];
-  if (!entry) {
-    renderAttModalStatusPicker();
-  } else if ((entry.status === 'present' || entry.status === 'half') && entry.login && !entry.logout) {
-    renderAttModalCheckout();
-  } else {
-    renderAttModalDetails();
-  }
-  document.getElementById('att-modal-overlay').classList.add('show');
-}
 function closeAttModal() {
   document.getElementById('att-modal-overlay').classList.remove('show');
   attModalDate = null; attModalPendingStatus = null;
@@ -4777,22 +4767,6 @@ async function attModalDelete() {
   toast('Cleared');
 }
 // Core save — used by every screen above
-async function saveAttStatus(dateStr, status, login, logout) {
-  if (!currentUser) { toast('Not signed in', 'error'); return; }
-  const existingNotes = attLogs[dateStr]?.notes || '';
-  attLogs[dateStr] = { status, login: login || null, logout: logout || null, notes: existingNotes };
-  renderAttendance();
-  try {
-    const payload = { user_id: currentUser.id, company_id: activeCompanyId || null, date: dateStr, status, login_time: login || null, logout_time: logout || null };
-    const { error } = await withTimeout(_supa.from('attendance_logs').upsert(payload, { onConflict: 'user_id,date,company_id' }), 8000, 'saveAttStatus');
-    if (error) throw error;
-    setSyncStatus('synced', '☁ Saved');
-  } catch (err) {
-    console.error('✗ Save attendance day failed:', err.message);
-    setSyncStatus('error', '⚠ Sync failed');
-    toast('Saved locally — cloud sync failed', 'error');
-  }
-}
 // Right-click (desktop) — quick actions without opening the full modal
 function openAttContextMenu(e, dateStr) {
   e.preventDefault();
@@ -4959,10 +4933,11 @@ function calcDayPay(dateStr, settings) {
 
   let workedMins = logoutMins - loginMins;
   if (workedMins < 0) workedMins += 1440; // crossed midnight guard
+  workedMins = Math.max(0, workedMins - (entry.breakMins || 0));
 
   const lateMins = Math.max(0, loginMins - (shiftStartMins + grace));
   const earlyMins = Math.max(0, shiftEndMins - logoutMins);
-  const otMins = Math.max(0, workedMins - expectedMins);
+  const otMins = entry.otMins != null ? entry.otMins : Math.max(0, workedMins - expectedMins); // manual override wins
 
   const dailySalary = settings.workdays > 0 ? settings.salary / settings.workdays : 0;
   const minuteSalary = expectedMins > 0 ? dailySalary / expectedMins : 0;
@@ -5118,6 +5093,346 @@ function initAttendanceInputs() {
   });
 }
 
+
+
+// ══════════════════════════════════════════════════════════════════
+// ── ATTENDANCE & PAYROLL — 3-block page (Today · This Month · Payroll) ──
+// Sits on top of the existing engine: calculateAttendance / calculatePayroll /
+// pay periods / salary revisions are unchanged apart from the small hooks noted inline.
+//
+// MIGRATION (run once; the app degrades gracefully without it, but these fields won't persist):
+//   alter table attendance_logs  add column if not exists break_minutes int default 0, add column if not exists ot_minutes int, add column if not exists notes text;
+//   alter table salary_revisions add column if not exists gross_salary numeric, add column if not exists hra_amount numeric, add column if not exists conveyance_amount numeric,
+//     add column if not exists other_allowance_amount numeric, add column if not exists epf_amount numeric, add column if not exists esi_amount numeric,
+//     add column if not exists prof_tax numeric, add column if not exists tds_amount numeric, add column if not exists other_deductions numeric;
+//   create table if not exists payslip_files (
+//     id uuid primary key default gen_random_uuid(), user_id uuid not null references auth.users(id) on delete cascade,
+//     company_id uuid references companies(id) on delete set null, month text not null, file_name text, file_size int, mime text,
+//     data_url text, uploaded_at timestamptz default now(), created_at timestamptz default now());
+//   alter table payslip_files enable row level security;
+//   create policy "own payslips" on payslip_files for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+// ══════════════════════════════════════════════════════════════════
+const plA = s => esc(s).replace(/"/g,'&quot;');
+const plMon = (y, m) => new Date(y, m, 1).toLocaleDateString('en', { month:'long', year:'numeric' });
+const plKey = () => `${attDate.getFullYear()}-${String(attDate.getMonth()+1).padStart(2,'0')}`;
+const plKeyLabel = k => { const [y,m] = k.split('-').map(Number); return plMon(y, m-1); };
+const plLocalDate = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const plHrs = mins => (Math.round(mins/6)/10) + ' hrs';
+const plDur = mins => `${Math.floor(mins/60)}h ${String(Math.round(mins%60)).padStart(2,'0')}m`;
+const plTimed = s => s === 'present' || s === 'half';
+const plPeriod = () => D.payPeriods.find(p => p.id === activePayPeriodId) || null;
+let plPendingNote = '', plDrName = null, plSalTab = 'history', plDayDate = null, plDayStatus = 'present';
+
+function plShow(id) { const o = document.getElementById(id); o.style.display = 'flex'; requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add('open'))); }
+function plHide(id) { const o = document.getElementById(id); o.classList.remove('open'); setTimeout(() => { if (!o.classList.contains('open')) o.style.display = 'none'; }, 200); }
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  for (const id of ['pl-day-ov','pl-ov','pl-cal-ov']) { if (document.getElementById(id)?.classList.contains('open')) { if (id === 'pl-ov') plCloseDr(); else plHide(id); return; } }
+});
+
+// ── Engine hooks (salary components, manual monthly overrides) ──
+function plRevisionFor(y, m0) {
+  const k = `${y}-${String(m0+1).padStart(2,'0')}`;
+  return (D.salaryRevisions||[]).filter(r => (r.effectiveFrom||'').slice(0,7) <= k).sort((a,b) => (b.effectiveFrom||'').localeCompare(a.effectiveFrom||''))[0] || null;
+}
+// A revision that carries component amounts feeds them into the month's settings (percent-of-basic is how the engine models allowances).
+function plApplyRevision(s, rev) {
+  if (!rev || !(rev.basicSalary > 0)) return s;
+  const b = rev.basicSalary, pct = v => v == null ? null : Math.round(v / b * 10000) / 100;
+  if (rev.hra != null) s.hraPct = pct(rev.hra); if (rev.conveyance != null) s.conveyancePct = pct(rev.conveyance); if (rev.otherAllowance != null) s.otherAllowancePct = pct(rev.otherAllowance);
+  if (rev.profTax != null) s.profTax = rev.profTax; if (rev.tds != null) s.tds = rev.tds;
+  s.epfFixed = rev.epf != null ? rev.epf : null; s.esiFixed = rev.esi != null ? rev.esi : null; s.otherDeductionsDefault = rev.otherDed || 0;
+  return s;
+}
+const PL_MANUAL = { totalDays:'workingDays', paidDays:'payableDays', lopDays:'lopDays', basic:'proratedBasic', hra:'proratedHRA', conveyance:'proratedConveyance', otherAllowance:'proratedOtherAllowance',
+  ot:'otAmount', bonus:'bonus', epf:'employeePF', esi:'employeeESI', profTax:'profTax', loan:'loan', tds:'tds', otherDeductions:'otherDeductions' };
+function plApplyManual(s, man) {
+  if (!s || !man || !Object.keys(man).length) return s;
+  const o = { ...s }, has = k => man[k] != null && man[k] !== '';
+  Object.entries(PL_MANUAL).forEach(([k, f]) => { if (has(k)) o[f] = Number(man[k]); });
+  o.totalDays = o.workingDays;
+  o.grossSalary = has('gross') ? Number(man.gross) : round2(o.proratedBasic + o.proratedHRA + o.proratedConveyance + o.proratedOtherAllowance + o.otAmount + o.bonus);
+  o.totalDeductions = has('totalDeductions') ? Number(man.totalDeductions) : round2(o.employeePF + o.employeeESI + o.profTax + o.tds + o.loan + o.otherDeductions);
+  o.netSalary = has('net') ? Number(man.net) : round2(o.grossSalary - o.totalDeductions);
+  o.manualOverride = true;
+  return o;
+}
+function plBaseSnapshot(p) {
+  if (!p.periodStart) return null;
+  const [y, m] = p.periodStart.split('-').map(Number); if (!y || !m) return null;
+  const settings = { ...DEFAULT_ATTENDANCE_SETTINGS, ...(p.settings || {}) };
+  if (!isPeriodLocked(p)) { settings.salary = getSalaryForMonth(y, m - 1); plApplyRevision(settings, plRevisionFor(y, m - 1)); }
+  return calculatePayroll(y, m - 1, { bonus: p.bonus, loan: p.loan, otherDeductions: p.otherDeductions }, settings);
+}
+function computeSnapshotForPeriod(p) { return plApplyManual(plBaseSnapshot(p), p.settings && p.settings.manual); }
+// Snapshot to display for the selected month: frozen if locked, live otherwise, estimate if no record yet.
+function plSnap() {
+  const p = plPeriod(), y = attDate.getFullYear(), m = attDate.getMonth();
+  if (p) return isPeriodLocked(p) && p.snapshot ? p.snapshot : (computeSnapshotForPeriod(p) || p.snapshot);
+  return calculatePayroll(y, m, {}, { ...attSettings });
+}
+
+// ── Attendance persistence (adds break / overtime / remarks; keeps old behaviour) ──
+let _plMissing = new Set();
+async function plPersistDay(dateStr) {
+  const e = attLogs[dateStr]; if (!e || !currentUser) return;
+  const payload = { user_id: currentUser.id, company_id: activeCompanyId || null, date: dateStr, status: e.status, login_time: e.login || null, logout_time: e.logout || null,
+    break_minutes: e.breakMins || 0, ot_minutes: e.otMins != null ? e.otMins : null, notes: e.notes || '' };
+  _plMissing.forEach(c => delete payload[c]);
+  try {
+    const { error } = await withTimeout(_supa.from('attendance_logs').upsert(payload, { onConflict: 'user_id,date,company_id' }), 8000, 'saveAttStatus');
+    if (error) throw error;
+    setSyncStatus('synced', '☁ Saved');
+  } catch (err) {
+    const bad = extractMissingColumn(err.message);
+    if (bad && bad in payload) { _plMissing.add(bad); return plPersistDay(dateStr); }
+    console.error('✗ Save attendance day failed:', err.message); setSyncStatus('error', '⚠ Sync failed'); toast('Saved locally — cloud sync failed', 'error');
+  }
+}
+async function saveAttStatus(dateStr, status, login, logout, extra) {
+  if (!currentUser) { toast('Not signed in', 'error'); return; }
+  attLogs[dateStr] = { ...(attLogs[dateStr] || {}), status, login: login || null, logout: logout || null, ...(extra || {}) };
+  renderAttendance();
+  await plPersistDay(dateStr);
+}
+function openAttModal(dateStr) { plOpenDay(dateStr); } // every calendar click / context-menu "Open" lands in the day editor
+
+// ── Render ──
+function plRender() {
+  if (!document.getElementById('pl-today')) return;
+  const y = attDate.getFullYear(), m = attDate.getMonth();
+  document.getElementById('pl-month-label').textContent = plMon(y, m);
+  plRenderToday(); plRenderMonth(); plRenderPay();
+  if (plDrName && document.getElementById('pl-ov').classList.contains('open')) plRenderDr(true);
+}
+{ const _ra = renderAttendance; renderAttendance = function() { _ra.apply(this, arguments); plRender(); }; }
+{ const _rp = renderPayPeriods; renderPayPeriods = function() { _rp.apply(this, arguments); plRender(); }; }
+
+function plWorkedNow(e) {
+  if (!e || !e.login) return null;
+  const a = timeToMinutes(e.login); let b = e.logout ? timeToMinutes(e.logout) : timeToMinutes(nowHHMM());
+  let w = b - a; if (w < 0) w += 1440; return Math.max(0, w - (e.breakMins || 0));
+}
+function plRenderToday() {
+  const td = plLocalDate(), e = attLogs[td] || null, st = e ? e.status : '', w = plWorkedNow(e);
+  const dt = new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('pl-today').innerHTML = `
+    <div class="pl-hd"><div class="pl-ico" style="background:#e5f6ea">🟢</div><div><h3>Today</h3><small>${dt}</small></div>
+      <select class="pl-chip ${st?'pl-st-'+st:''}" onchange="plSetStatus(this.value)" title="Change today's status">
+        ${st ? '' : '<option value="" selected>Not marked</option>'}${Object.entries(ATT_STATUS_META).map(([k, mt]) => `<option value="${k}" ${k===st?'selected':''}>${mt.label}</option>`).join('')}</select></div>
+    <div class="pl-two">
+      <div class="pl-tile"><label>Login Time</label><input type="time" value="${e?.login||''}" onchange="plSetTime('login',this.value)"></div>
+      <div class="pl-tile"><label>Logout Time</label><input type="time" value="${e?.logout||''}" onchange="plSetTime('logout',this.value)"></div></div>
+    <div class="pl-wh">Working Hours<b id="pl-wh">${w == null ? '—' : plDur(w)}</b></div>
+    <div class="pl-btn2"><button class="pl-go" ${e?.login?'disabled':''} onclick="plClockIn()">▶ Clock In</button><button class="pl-out" ${e?.login && !e?.logout ? '' : 'disabled'} onclick="plClockOut()">■ Clock Out</button></div>
+    <div class="pl-note"><label>Today's Note (optional)</label><textarea placeholder="Add notes about your work today..." onchange="plSaveRemark(this.value)">${esc(e ? e.notes : plPendingNote)}</textarea></div>`;
+}
+setInterval(() => { const el = document.getElementById('pl-wh'); const e = attLogs[plLocalDate()]; if (el && e && e.login && !e.logout) el.textContent = plDur(plWorkedNow(e)); }, 30000);
+async function plClockIn() { const td = plLocalDate(), e = attLogs[td]; await saveAttStatus(td, e && e.status === 'half' ? 'half' : 'present', nowHHMM(), null, e ? {} : { notes: plPendingNote }); plPendingNote = ''; }
+async function plClockOut() { const td = plLocalDate(), e = attLogs[td]; if (e && e.login) await saveAttStatus(td, e.status, e.login, nowHHMM()); }
+async function plSetTime(kind, val) {
+  const td = plLocalDate(), e = attLogs[td] || {}, st = plTimed(e.status) ? e.status : 'present';
+  await saveAttStatus(td, st, kind === 'login' ? (val || null) : e.login, kind === 'logout' ? (val || null) : e.logout);
+}
+async function plSetStatus(val) { if (!val) return; const td = plLocalDate(), e = attLogs[td] || {}; await saveAttStatus(td, val, plTimed(val) ? e.login : null, plTimed(val) ? e.logout : null); }
+async function plSaveRemark(v) {
+  const td = plLocalDate(), e = attLogs[td];
+  if (!e) { plPendingNote = v; toast('📝 Note will be saved when you clock in or pick a status'); return; }
+  e.notes = v; await plPersistDay(td);
+}
+
+function plRenderMonth() {
+  const y = attDate.getFullYear(), m = attDate.getMonth(), a = calculateAttendance(y, m, attSettings), prefix = monthPrefix(y, m);
+  const worked = Object.keys(attLogs).filter(d => d.startsWith(prefix)).reduce((s, d) => { const p = calcDayPay(d); return s + (p ? p.workedMins : 0); }, 0);
+  const s = plSnap(), p = plPeriod(), t = (cls, n, l) => `<div class="pl-s ${cls}"><b>${n}</b>${l}</div>`;
+  document.getElementById('pl-month-card').innerHTML = `
+    <div class="pl-hd"><div class="pl-ico" style="background:#e8f1fb">📊</div><div><h3>This Month</h3><small>${plMon(y, m)}</small></div>${p ? `<span class="pl-chip">${PP_STATUS_META[p.status]?.label||p.status}</span>` : ''}</div>
+    <div class="pl-stats4">${t('pl-g', a.presentDays, 'Present Days')}${t('pl-b', a.paidLeaveDays, 'Paid Leave')}${t('pl-r', a.absentDays, 'Absent')}${t('pl-o', a.lopDays, 'LOP')}</div>
+    <div class="pl-stats3">${t('pl-v', plHrs(worked), 'Working Hours')}${t('pl-o', plHrs(a.otMinutes), 'Overtime')}${t('pl-a', a.lateCount, 'Late Days')}</div>
+    <div class="pl-est"><small>Estimated Net Salary</small><b>${ppMoney(s.netSalary)}</b><small>${p && isPeriodLocked(p) ? 'Final — month is locked' : 'Based on current salary and attendance'}</small></div>
+    <div class="pl-acts"><button class="pl-b2" onclick="plShow('pl-cal-ov')">🗓 View Attendance</button><button class="pl-b2 plain" onclick="plOpenDr('month')">✏️ Edit Month</button></div>`;
+}
+function plGross(s) { return round2((s.salary||0) * (1 + ((s.hraPct||0) + (s.conveyancePct||0) + (s.otherAllowancePct ?? 0)) / 100)); }
+function plRenderPay() {
+  const y = attDate.getFullYear(), m = attDate.getMonth(), p = plPeriod(), rev = plRevisionFor(y, m), s = plSnap(), key = plKey();
+  const slip = (D.payslips||[]).find(x => x.month === key), st = (k, v, cls) => `<div class="pl-s ${cls||'pl-v'}" style="padding:8px 6px"><b style="font-size:15px">${v}</b>${k}</div>`;
+  document.getElementById('pl-pay').innerHTML = `
+    <div class="pl-hd"><div class="pl-ico" style="background:#fff3dc">💰</div><div><h3>Payroll</h3><small>Current Salary &amp; Latest Payslip</small></div></div>
+    <div class="pl-est pl-sal" onclick="plOpenDr('salary','history')"><small>Current Gross Salary</small><b>${ppMoney(plGross(attSettings))}</b><small>Effective from ${rev ? monthLabel(rev.effectiveFrom) : 'month settings'} ›</small></div>
+    <div class="pl-slip" onclick="plOpenDr('detail')">
+      <div class="pl-line"><b style="color:var(--text);font-size:13.5px">Latest Payslip · ${plMon(y, m)}</b><span class="pl-chip" style="margin:0;cursor:inherit">${p ? (PP_STATUS_META[p.status]?.label||p.status) : 'Estimate'}</span></div>
+      <div class="pl-stats3">${st('Total Days', s.totalDays)}${st('Paid Days', s.payableDays)}${st('LOP', s.lopDays, 'pl-o')}</div>
+      <div class="pl-stats3">${st('Total Earnings', ppMoney(s.grossSalary), 'pl-g')}${st('Deductions', ppMoney(s.totalDeductions), 'pl-r')}${st('Net Salary', ppMoney(s.netSalary), 'pl-g')}</div>
+      ${slip ? `<div class="pl-file">📎 <span>${esc(slip.fileName)}</span></div>` : ''}</div>
+    <div class="pl-acts"><button class="pl-b2 plain" onclick="plOpenDr('salary','history')">📈 Salary History</button><button class="pl-b2 plain" onclick="plOpenDr('slips')">🧾 Payslips</button>
+      <button class="pl-b2" onclick="plOpenDr('salary','edit')">✏️ Edit Salary</button><button class="pl-b2" onclick="plOpenDr('slips')">⬆ Upload Payslip</button></div>`;
+}
+
+// ── Generic drawer ──
+function plStash() { const h = document.getElementById('pl-holder'); ['att-settings-card', 'payroll-settings-card', 'pp-form-wrap'].forEach(id => { const n = document.getElementById(id); if (n && !h.contains(n)) h.appendChild(n); }); }
+function plBorrow(slot, id) { const s = document.getElementById(slot), n = document.getElementById(id); if (s && n) s.appendChild(n); }
+function plOpenDr(name, tab) { plDrName = name; if (tab) plSalTab = tab; plRenderDr(); plShow('pl-ov'); }
+function plCloseDr() { plHide('pl-ov'); plStash(); plDrName = null; }
+function plRenderDr(keepScroll) {
+  plStash();
+  const dr = document.getElementById('pl-dr'), sc = dr.querySelector('.kx-dr-body')?.scrollTop || 0;
+  const hd = (t, sub) => `<div class="kx-dr-hd"><div>${t}${sub ? `<div style="font:400 12px 'Inter';color:var(--text3);margin-top:3px">${sub}</div>` : ''}</div><button class="kx-x" onclick="plCloseDr()" aria-label="Close">✕</button></div>`;
+  const y = attDate.getFullYear(), m = attDate.getMonth();
+  if (plDrName === 'month') {
+    dr.innerHTML = hd('Edit Month', plMon(y, m)) + `<div class="kx-dr-body">${plPeriod() ? '' : `<div class="kx-empty" style="padding:22px">No payroll record exists for this month yet.<div style="margin-top:10px"><button class="kx-primary" onclick="openNewMonthModal()">+ Create ${plMon(y, m)}</button></div></div>`}<div id="pl-slot-set"></div><div id="pl-slot-pc"></div></div>`;
+    plBorrow('pl-slot-set', 'att-settings-card'); plBorrow('pl-slot-pc', 'payroll-settings-card');
+  } else if (plDrName === 'salary') dr.innerHTML = plSalaryHTML(hd);
+  else if (plDrName === 'slips') dr.innerHTML = plSlipsHTML(hd);
+  else if (plDrName === 'detail') { dr.innerHTML = plDetailHTML(hd); plBorrow('pl-slot-pp', 'pp-form-wrap'); }
+  const b = dr.querySelector('.kx-dr-body'); if (b && keepScroll) b.scrollTop = sc;
+}
+
+// ── Salary history + revisions (append-only) ──
+function plSalaryHTML(hd) {
+  const ranges = getSalaryHistoryRanges(), money = v => ppMoney(v || 0);
+  const tabs = `<div class="kx-modes"><button class="${plSalTab==='history'?'on':''}" onclick="plSalTab='history';plRenderDr()">Salary History</button><button class="${plSalTab==='edit'?'on':''}" onclick="plSalTab='edit';plRenderDr()">Edit Salary</button></div>`;
+  if (plSalTab === 'history') return hd('Salary History', 'Every revision is kept — new ones never overwrite old months') + tabs + `<div class="kx-dr-body">${ranges.length ? ranges.map(r => {
+    const g = r.gross != null ? r.gross : (r.basicSalary || 0) + (r.hra||0) + (r.conveyance||0) + (r.otherAllowance||0);
+    return `<div class="pl-rev"><div style="flex:1"><b>${money(g)}</b><small>${monthLabel(r.rangeFrom)} → ${r.rangeTo ? monthLabel(r.rangeTo) : 'Present'}${r.reason ? ' · ' + esc(r.reason) : ''}</small>
+      <small>Basic ${money(r.basicSalary)}${r.hra != null ? ' · HRA ' + money(r.hra) : ''}${r.conveyance != null ? ' · Conv. ' + money(r.conveyance) : ''}${r.otherAllowance != null ? ' · Other ' + money(r.otherAllowance) : ''}</small></div>
+      <button class="kx-x" title="Delete this revision" onclick="plDelRevision('${r.id}')">🗑</button></div>`; }).join('') : `<div class="kx-empty">No salary revisions yet. The salary in this month's settings applies until you add one.</div>`}
+    <button class="kx-primary" onclick="plSalTab='edit';plRenderDr()">+ New Revision</button></div>`;
+  const s = attSettings, base = s.salary || 0, v = (x) => x ? Math.round(x) : '';
+  const f = (id, l, val, ph) => `<div class="kx-f"><label class="kx-l s">${l}</label><input id="${id}" type="number" min="0" class="kx-in s" value="${val === '' || val == null ? '' : val}" placeholder="${ph||'0'}" oninput="plSumRev()"></div>`;
+  return hd('Edit Salary', 'Creates a new revision from the month you choose') + tabs + `<div class="kx-dr-body">
+    <div class="kx-tip" style="display:block">Example: July 2026 → ₹24,000, November 2026 → ₹28,000. November onward uses the new revision; earlier and finalized months keep their numbers.</div>
+    <div class="pl-fg"><div class="kx-f"><label class="kx-l s">Effective From</label><input id="plr-eff" type="month" class="kx-in s" value="${plKey()}"></div><div class="kx-f"><label class="kx-l s">Reason</label><input id="plr-reason" class="kx-in s" placeholder="e.g. Annual increment"></div></div>
+    <div class="pl-sec">Earnings (monthly)</div>
+    <div class="pl-fg">${f('plr-gross','Gross Salary (auto-sums; or enter alone to use as Basic)','',  'Total')}${f('plr-basic','Basic', v(base))}${f('plr-hra','HRA', v(base*(s.hraPct||0)/100))}${f('plr-conv','Conveyance', v(base*(s.conveyancePct||0)/100))}${f('plr-other','Other Allowances', v(base*(s.otherAllowancePct||0)/100))}</div>
+    <div class="pl-sec">Deductions (monthly · leave blank to keep automatic EPF/ESI calculation)</div>
+    <div class="pl-fg">${f('plr-epf','EPF','', 'Auto')}${f('plr-esi','ESI / Health Insurance','', 'Auto')}${f('plr-pt','Professional Tax', s.profTax || '')}${f('plr-tds','TDS', s.tds || '')}${f('plr-od','Other Deductions','')}</div>
+    <button class="kx-primary" onclick="plSaveRevision()">Save Revision</button></div>`;
+}
+function plSumRev() {
+  const g = id => parseFloat(document.getElementById(id)?.value) || 0, sum = g('plr-basic') + g('plr-hra') + g('plr-conv') + g('plr-other');
+  const gi = document.getElementById('plr-gross'); if (gi && document.activeElement !== gi) gi.value = sum || '';
+}
+async function plSaveRevision() {
+  const n = id => { const v = document.getElementById(id).value; return v === '' ? null : parseFloat(v); };
+  const eff = document.getElementById('plr-eff').value; if (!eff) { toast('⚠️ Pick an effective month', 'error'); return; }
+  let basic = n('plr-basic') || 0, hra = n('plr-hra'), conv = n('plr-conv'), other = n('plr-other'), gross = n('plr-gross');
+  if (!basic && !(hra || conv || other) && gross) basic = gross;
+  if (!(basic > 0)) { toast('⚠️ Enter a Basic or Gross salary', 'error'); return; }
+  const obj = { id:'', effectiveFrom: eff + '-01', basicSalary: basic, reason: document.getElementById('plr-reason').value.trim(), created_at: new Date().toISOString(),
+    hra, conveyance: conv, otherAllowance: other, epf: n('plr-epf'), esi: n('plr-esi'), profTax: n('plr-pt'), tds: n('plr-tds'), otherDed: n('plr-od'),
+    gross: round2(basic + (hra||0) + (conv||0) + (other||0)) };
+  await addItem('salaryRevisions', obj, null);
+  if (!obj.id) return;
+  D.payPeriods.forEach(p => { if (!isPeriodLocked(p)) { p.snapshot = computeSnapshotForPeriod(p); savePayPeriod(p.id); } });
+  syncMonthContext(); renderAttendance(); renderPayPeriods(); plSalTab = 'history'; plRenderDr();
+  toast('✦ Salary revision saved');
+}
+async function plDelRevision(id) { await deleteSalaryRevision(id); plRenderDr(); }
+function renderSalaryHistory() { if (plDrName === 'salary') plRenderDr(true); } // legacy hook
+
+// ── Payslip wallet (one primary file per month, separate from calculated payroll) ──
+function plSlipsHTML(hd) {
+  const list = [...(D.payslips||[])].sort((a, b) => b.month.localeCompare(a.month));
+  return hd('Payslips', 'One payslip per month — kept separate from calculated payroll') + `<div class="kx-dr-body">
+    <div class="pl-box pl-e"><h4>⬆ Upload a payslip</h4><div style="padding:12px;display:flex;flex-direction:column;gap:10px">
+      <div class="pl-fg"><div class="kx-f"><label class="kx-l s">Month</label><input id="pls-month" type="month" class="kx-in s" value="${plKey()}"></div>
+      <div class="kx-f"><label class="kx-l s">File (PDF / image, max 3 MB)</label><input id="pls-file" type="file" accept=".pdf,image/*" onchange="plUpload()"></div></div>
+      <div style="font-size:11px;color:var(--text3)">Uploading for a month that already has a payslip replaces it.</div></div></div>
+    <div class="pl-sec">Uploaded payslips</div>
+    ${list.length ? list.map(x => `<div class="pl-slr"><b>${plKeyLabel(x.month).replace(' ', '<br>')}</b>
+      <div style="min-width:0"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600">${esc(x.fileName)}</div><small>Uploaded ${cxFmt(String(x.uploadedAt||'').slice(0,10))} · ${cxSize(x.fileSize||0)}</small></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn btn-ghost btn-sm" onclick="plViewSlip('${x.id}')">View</button>
+        <button class="btn btn-ghost btn-sm" onclick="plPickReplace('${x.month}')">Replace</button><button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="plDelSlip('${x.id}')">Delete</button></div></div>`).join('')
+      : `<div class="kx-empty">No payslips uploaded yet.</div>`}
+    <input type="file" id="pls-replace" accept=".pdf,image/*" style="display:none" onchange="plUpload(this.dataset.month)"></div>`;
+}
+function plPickReplace(month) { const i = document.getElementById('pls-replace'); i.dataset.month = month; i.value = ''; i.click(); }
+function plUpload(forMonth) {
+  const input = forMonth ? document.getElementById('pls-replace') : document.getElementById('pls-file'), file = input.files[0]; if (!file) return;
+  const month = forMonth || document.getElementById('pls-month').value;
+  if (!month) { toast('⚠️ Pick a month first', 'error'); input.value = ''; return; }
+  if (file.size > 3 * 1024 * 1024) { toast('⚠️ Max file size is 3 MB', 'error'); input.value = ''; return; }
+  const rd = new FileReader();
+  rd.onload = async () => {
+    const ex = (D.payslips||[]).find(x => x.month === month), now = new Date().toISOString();
+    if (ex && !forMonth && !confirm(`${plKeyLabel(month)} already has "${ex.fileName}". Replace it?`)) { input.value = ''; return; }
+    const f = { fileName:file.name, fileSize:file.size, mime:file.type, dataUrl:rd.result, uploadedAt:now };
+    if (ex) { try { await dbUpdate('payslip_files', ex.id, { file_name:f.fileName, file_size:f.fileSize, mime:f.mime, data_url:f.dataUrl, uploaded_at:now }); Object.assign(ex, f); toast('✦ Payslip replaced'); } catch (e) { toast('Replace failed', 'error'); } }
+    else await addItem('payslips', { id:'', month, ...f }, null);
+    plRender(); plRenderDr(true);
+  };
+  rd.readAsDataURL(file);
+}
+function plViewSlip(id) {
+  const x = (D.payslips||[]).find(s => s.id === id); if (!x || !x.dataUrl) return;
+  try { const [h, b] = x.dataUrl.split(','), bin = atob(b), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); window.open(URL.createObjectURL(new Blob([u], { type: x.mime || h.slice(5, h.indexOf(';')) })), '_blank'); }
+  catch (e) { window.open(x.dataUrl, '_blank'); }
+}
+async function plDelSlip(id) { const x = (D.payslips||[]).find(s => s.id === id); if (!x || !confirm(`Delete the ${plKeyLabel(x.month)} payslip file?`)) return; await delItem('payslips', id, null); plRender(); plRenderDr(true); }
+
+// ── Payroll detail for the selected month ──
+function plDetailHTML(hd) {
+  const y = attDate.getFullYear(), m = attDate.getMonth(), p = plPeriod(), key = plKey(), slip = (D.payslips||[]).find(x => x.month === key);
+  if (!p) return hd(`${plMon(y, m)} Payroll`) + `<div class="kx-dr-body"><div class="kx-empty">No payroll record for this month yet — showing nothing is saved.<div style="margin-top:10px"><button class="kx-primary" onclick="openNewMonthModal()">+ Create ${plMon(y, m)}</button></div></div></div>`;
+  const s = plSnap(), L = isPeriodLocked(p), line = (l, v, cls) => `<div class="pl-line ${cls||''}"><span>${l}</span><span>${ppMoney(v)}</span></div>`;
+  const base = plBaseSnapshot(p) || s, man = (p.settings && p.settings.manual) || {};
+  const mf = (k, l) => `<div class="kx-f"><label class="kx-l s">${l}</label><input id="plm-${k}" type="number" class="kx-in s" ${L?'disabled':''} value="${man[k] != null ? man[k] : ''}" placeholder="${plBaseVal(base, k)}"></div>`;
+  return hd(`${plMon(y, m)} Payroll`, `<span class="cx-pill ${PP_STATUS_META[p.status]?.cls||''}">${PP_STATUS_META[p.status]?.label||p.status}</span>${s.manualOverride ? ' · edited manually' : ''}`) + `<div class="kx-dr-body">
+    <div class="pl-stats3"><div class="pl-s pl-v"><b>${s.totalDays}</b>Total Days</div><div class="pl-s pl-g"><b>${s.payableDays}</b>Paid Days</div><div class="pl-s pl-o"><b>${s.lopDays}</b>LOP</div></div>
+    <div class="pl-box pl-e"><h4>EARNINGS</h4>${line('Basic Wage', s.proratedBasic)}${line('HRA', s.proratedHRA)}${line('Conveyance Allowances', s.proratedConveyance)}${line('Other Allowances', s.proratedOtherAllowance)}${s.otAmount ? line('Overtime', s.otAmount) : ''}${s.bonus ? line('Bonus', s.bonus) : ''}${line('Total Earnings', s.grossSalary, 'tot')}</div>
+    <div class="pl-box pl-d"><h4>DEDUCTIONS</h4>${line('EPF', s.employeePF)}${line('ESI / Health Insurance', s.employeeESI)}${line('Professional Tax', s.profTax)}${line('Loan Recovery', s.loan)}${line('TDS', s.tds)}${s.otherDeductions ? line('Other Deductions', s.otherDeductions) : ''}${line('Total Deductions', s.totalDeductions, 'tot')}</div>
+    <div class="pl-net"><span>Net Salary</span><b>${ppMoney(s.netSalary)}</b></div>
+    <div class="pl-file" style="justify-content:space-between">${slip ? `<span>📎 Uploaded payslip: ${esc(slip.fileName)}</span><button class="btn btn-ghost btn-sm" onclick="plViewSlip('${slip.id}')">View</button>` : `<span>No payslip file uploaded for this month</span><button class="btn btn-ghost btn-sm" onclick="plOpenDr('slips')">Upload</button>`}</div>
+    <details class="pl-det"><summary>✏️ Edit this month's payroll</summary>
+      <div style="font-size:11.5px;color:var(--text3);margin-bottom:10px">${L ? 'This month is finalized — reopen it below to edit.' : 'Leave a field blank to keep the calculated value (shown as placeholder). Totals recalculate from the lines unless you type them.'}</div>
+      <div class="pl-fg">${mf('totalDays','Total Days')}${mf('paidDays','Paid Days')}${mf('lopDays','LOP Days')}${mf('basic','Basic')}${mf('hra','HRA')}${mf('conveyance','Conveyance')}${mf('otherAllowance','Other Allowances')}${mf('bonus','Bonus')}${mf('ot','Overtime')}
+        ${mf('epf','EPF')}${mf('esi','ESI')}${mf('profTax','Professional Tax')}${mf('loan','Loan Recovery')}${mf('tds','TDS')}${mf('otherDeductions','Other Adjustments / Deductions')}${mf('gross','Total Earnings')}${mf('totalDeductions','Total Deductions')}${mf('net','Net Salary')}</div>
+      <div class="btn-group" style="margin:12px 0"><button class="btn btn-violet btn-sm" ${L?'disabled':''} onclick="plSaveManual()">💾 Save</button><button class="btn btn-ghost btn-sm" ${L?'disabled':''} onclick="plSaveManual(true)">↺ Reset to calculated</button></div></details>
+    <details class="pl-det"><summary>⚙️ Month status &amp; adjustments (bonus, loan, finalize)</summary><div id="pl-slot-pp"></div></details>
+    <button class="btn btn-ghost" onclick="openCalcModal(activePayPeriodId)">🔍 Full calculation breakdown</button></div>`;
+}
+const plBaseVal = (b, k) => { const f = PL_MANUAL[k] || ({ gross:'grossSalary', totalDeductions:'totalDeductions', net:'netSalary' })[k]; const v = b && b[f]; return v == null ? '' : v; };
+async function plSaveManual(reset) {
+  const p = plPeriod(); if (!p || isPeriodLocked(p)) return;
+  const man = {};
+  if (!reset) [...Object.keys(PL_MANUAL), 'gross', 'totalDeductions', 'net'].forEach(k => { const v = document.getElementById('plm-' + k)?.value; if (v !== '' && v != null) man[k] = Number(v); });
+  p.settings = { ...(p.settings || attSettings), manual: man }; attSettings.manual = man;
+  if (p.status === 'draft') p.status = 'open';
+  p.snapshot = computeSnapshotForPeriod(p);
+  await savePayPeriod(p.id); renderAttendance(); renderPayPeriods(); toast(reset ? '↺ Back to calculated values' : '✓ Payroll saved'); plRenderDr(true);
+}
+
+// ── Day editor (calendar click) ──
+function plOpenDay(dateStr) {
+  if (!currentUser) { toast('Not signed in', 'error'); return; }
+  plDayDate = dateStr; plDayStatus = attLogs[dateStr]?.status || 'present'; plRenderDay(); plShow('pl-day-ov');
+}
+function plRenderDay() {
+  const e = attLogs[plDayDate] || {}, ds = new Date(plDayDate + 'T00:00:00').toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('pl-day').innerHTML = `<div class="kx-dr-hd"><div>Edit Attendance<div style="font:400 12px 'Inter';color:var(--text3);margin-top:3px">${ds}</div></div><button class="kx-x" onclick="plHide('pl-day-ov')" aria-label="Close">✕</button></div>
+    <div class="kx-dr-body"><div class="kx-f"><div class="kx-l s">Status</div><div class="pl-pills">${Object.entries(ATT_STATUS_META).map(([k, mt]) => `<button class="pl-st-${k} ${k===plDayStatus?'on':''}" onclick="plDayStatus='${k}';plDayToggle()">${mt.label}</button>`).join('')}</div></div>
+      <div class="pl-fg" id="pl-day-times" style="${plTimed(plDayStatus)?'':'display:none'}"><div class="kx-f"><label class="kx-l s">Login Time</label><input id="pld-login" type="time" class="kx-in s" value="${e.login||''}" oninput="plDayCalc()"></div><div class="kx-f"><label class="kx-l s">Logout Time</label><input id="pld-logout" type="time" class="kx-in s" value="${e.logout||''}" oninput="plDayCalc()"></div>
+        <div class="kx-f"><label class="kx-l s">Break (minutes)</label><input id="pld-break" type="number" min="0" class="kx-in s" value="${e.breakMins||''}" placeholder="0" oninput="plDayCalc()"></div><div class="kx-f"><label class="kx-l s">Overtime (minutes)</label><input id="pld-ot" type="number" min="0" class="kx-in s" value="${e.otMins != null ? e.otMins : ''}" placeholder="Auto" oninput="plDayCalc()"></div>
+        <div class="kx-f" style="grid-column:1/-1"><label class="kx-l s">Working Hours</label><div class="kx-in s" id="pld-wh" style="display:flex;align-items:center;background:var(--s2)">—</div></div></div>
+      <div class="kx-f"><label class="kx-l s">Remarks (optional)</label><textarea id="pld-notes" class="kx-in kx-ta" placeholder="e.g. Client call, testing work, work from office...">${esc(e.notes)}</textarea></div></div>
+    <div class="kx-dr-ft">${attLogs[plDayDate] ? `<button class="btn btn-danger btn-sm" onclick="plDayClear()">🗑 Clear</button>` : ''}<span style="flex:1"></span><button class="btn btn-ghost" onclick="plHide('pl-day-ov')">Cancel</button><button class="kx-primary" onclick="plDaySave()">Save Changes</button></div>`;
+  plDayCalc();
+}
+function plDayToggle() { const keep = { login:'pld-login', logout:'pld-logout', br:'pld-break', ot:'pld-ot', notes:'pld-notes' }, v = {}; Object.entries(keep).forEach(([k, id]) => v[k] = document.getElementById(id)?.value);
+  plRenderDay(); Object.entries(keep).forEach(([k, id]) => { const el = document.getElementById(id); if (el && v[k] != null) el.value = v[k]; }); plDayCalc(); }
+function plDayCalc() {
+  const el = document.getElementById('pld-wh'); if (!el) return;
+  const a = document.getElementById('pld-login').value, b = document.getElementById('pld-logout').value, br = parseInt(document.getElementById('pld-break').value) || 0;
+  if (!a || !b) { el.textContent = '—'; return; } let w = timeToMinutes(b) - timeToMinutes(a); if (w < 0) w += 1440; el.textContent = plDur(Math.max(0, w - br));
+}
+async function plDaySave() {
+  const g = id => document.getElementById(id)?.value, timed = plTimed(plDayStatus), ot = g('pld-ot');
+  const extra = { notes: g('pld-notes') || '' };
+  if (timed) { extra.breakMins = parseInt(g('pld-break')) || 0; extra.otMins = ot === '' || ot == null ? null : parseInt(ot); }
+  await saveAttStatus(plDayDate, plDayStatus, timed ? (g('pld-login') || null) : null, timed ? (g('pld-logout') || null) : null, extra);
+  plHide('pl-day-ov'); toast('✓ Attendance saved');
+}
+async function plDayClear() { if (!confirm('Clear this day\'s attendance?')) return; await toggleAttendanceDay_forceClear(plDayDate); renderAttendance(); plHide('pl-day-ov'); toast('Cleared'); }
 
 
 async function migrateLocalData() {
