@@ -1110,6 +1110,58 @@ button.cx-dot{cursor:default}.cx-pg.click button.cx-dot{cursor:pointer}
 .pl-fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pl-fg .kx-f{min-width:0}
 details.pl-det{border:1px solid var(--border);border-radius:14px;padding:4px 14px}details.pl-det summary{cursor:pointer;font-weight:600;font-size:13px;padding:10px 0}
 @media(max-width:560px){.pl-stats4{grid-template-columns:repeat(2,1fr)}.pl-fg{grid-template-columns:1fr}}
+/* ══ BRAIN OS (bn-*) — reuses kx-/cx- components; only Brain-specific bits live here ══ */
+.bn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;align-items:start;margin-bottom:20px}
+.bn-two{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
+.bn-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px}
+.bn-card{background:var(--s1);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-soft);padding:16px;display:flex;flex-direction:column;gap:8px;margin-bottom:0}
+.bn-grid .bn-card.dim{opacity:.6}
+.bn-h{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text4)}
+.bn-t{font-size:14.5px;font-weight:600;line-height:1.35}
+.bn-m{font-size:11.5px;color:var(--text3)}
+.bn-lbl{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text4);margin-top:6px}
+.bn-txt{font-size:12.5px;color:var(--text2);line-height:1.5;white-space:pre-wrap}
+.bn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+.bn-quest{border-radius:22px;padding:22px;background:linear-gradient(160deg,#fff8ea,#f6f0ff);border:1px solid #f1d9a4;display:flex;flex-direction:column;gap:6px}
+.bn-quest small{color:#b9740a;font-weight:700;font-size:11px;letter-spacing:.07em}
+.bn-quest .big{font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:27px;font-weight:700;line-height:1.15;margin:4px 0 8px}
+.bn-quest .sub{font:400 17px 'Inter',sans-serif;color:var(--text3)}
+.bn-stat{border:1px solid var(--border);background:var(--s1);border-radius:16px;padding:14px;text-align:left;cursor:pointer;box-shadow:var(--shadow-soft);font:inherit;transition:border-color .15s,transform .15s}
+.bn-stat:hover{border-color:var(--border3);transform:translateY(-1px)}
+.bn-stat b{display:block;font-size:26px;font-weight:700;color:var(--text)}.bn-stat span{font-size:12px;color:var(--text3)}
+.bn-lane{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;border:none;background:var(--s2);border-radius:12px;padding:11px 13px;cursor:pointer;font:inherit;color:var(--text)}
+.bn-lane:hover{background:var(--violet-xl)}.bn-lane span{min-width:0}.bn-lane i{display:block;font-style:normal;font-size:12px;color:var(--text3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bn-lane em{font-style:normal;color:var(--text4)}
+.bn-stack{display:flex;flex-direction:column;gap:8px}
+.bn-bar{height:7px;border-radius:99px;background:var(--s3);overflow:hidden}.bn-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--fuchsia))}
+.bn-ind{margin-left:22px;border-left:2px solid var(--s3);padding-left:14px}
+.bn-bar2{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}.bn-bar2 h3{font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:19px;font-weight:700}
+.bn-hint{font-size:12px;color:var(--text3);margin-bottom:12px}
+.bn-banner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--violet-xl);border:1px solid var(--border3);border-radius:14px;padding:12px 16px;margin-bottom:16px;font-size:12.5px;color:var(--violet-l)}.bn-banner b{flex:1;min-width:200px}
+.bn-sql{width:100%;min-height:150px;font:11px/1.5 'SF Mono',Menlo,Consolas,monospace;border-radius:12px;padding:12px;background:#2a2740;color:#d9d4f2;border:none;resize:vertical}
+.bn-line{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:4px 0}
+.cx-b.bn-x{color:var(--red)}.cx-b.bn-x:hover{border-color:var(--red);color:var(--red)}
+.bn-link{border:none;background:var(--s2);border-radius:8px;padding:2px 9px;font:500 11px 'Inter',sans-serif;color:var(--text2);cursor:pointer}.bn-link:hover{background:var(--violet-xl);color:var(--violet-l)}
+.bn-links{display:flex;gap:6px;flex-wrap:wrap}
+.bn-rv{width:min(560px,100%);background:var(--s1);border-radius:20px;padding:22px;box-shadow:var(--shadow-lift);display:flex;flex-direction:column;gap:14px}
+@media(max-width:860px){.bn-two{grid-template-columns:1fr}}
+/* ══ DETAIL VIEWS (shared drawer) + clickable-card affordances ══ */
+.dv-k{font:700 10.5px 'Inter',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--violet-l)}
+.dv-t{font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:21px;font-weight:700;line-height:1.2;margin-top:3px;word-break:break-word}
+.dv-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;background:var(--s2);border-radius:14px;padding:14px}
+.dv-grid>div{min-width:0;font-size:13px;color:var(--text);overflow-wrap:anywhere}
+.dv-grid>div b{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text4);margin-bottom:2px}
+.dv-sec{border-top:1px solid var(--border);padding-top:14px}
+.dv-lbl{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text4);margin-bottom:6px}
+.dv-txt{white-space:pre-wrap;font-size:13px;line-height:1.6;color:var(--text2)}
+.dv-rich{font-size:13px;line-height:1.6;overflow-x:auto}.dv-rich img{max-width:100%;border-radius:10px}
+#dv-ov .kx-dr-ft{flex-wrap:wrap}
+.clk{position:relative;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
+.clk:hover,.clk:focus-visible{border-color:var(--border3);box-shadow:var(--shadow-lift);outline:none}
+.bn-click,.cx-card.clk{position:relative;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}
+.bn-click:hover,.bn-click:focus-visible,.cx-card.clk:hover{border-color:var(--border3);box-shadow:var(--shadow-lift);transform:translateY(-1px);outline:none}
+.bn-click::after,.cx-card.clk::after{content:'View ›';position:absolute;top:12px;right:14px;font:600 10.5px 'Inter',sans-serif;color:var(--violet-l);opacity:0;transition:opacity .15s;pointer-events:none}
+.bn-click:hover::after,.cx-card.clk:hover::after,.bn-click:focus-visible::after{opacity:1}
+.pl-slr.clk{cursor:pointer}
 /* ── GOALS ── */
 .goal-item{
   display:flex;align-items:flex-start;gap:10px;
@@ -1605,6 +1657,7 @@ details.pl-det{border:1px solid var(--border);border-radius:14px;padding:4px 14p
     <div class="sb-section-label">Work</div>
     <button class="sb-item" data-nav="quicklog" onclick="nav('quicklog')" style="padding-left:12px"><span class="si">📓</span>Work Log<span class="sb-badge" id="nb-daily">0</span></button>
     <button class="sb-item" data-nav="vault" onclick="nav('vault')" style="padding-left:12px"><span class="si">🧠</span>Knowledge Track<span class="sb-badge" id="nb-vault">0</span></button>
+    <button class="sb-item" data-nav="brain" onclick="nav('brain')" style="padding-left:12px"><span class="si">🧠</span>Brain OS</button>
     <button class="sb-item" data-nav="companies" onclick="nav('companies')" style="padding-left:12px"><span class="si">🏢</span>Companies<span class="sb-badge" id="nb-companies">0</span></button>
     <button class="sb-item" data-nav="planner" onclick="nav('planner')" style="padding-left:12px"><span class="si">💰</span>Attendance &amp; Payroll</button>
   </div>
@@ -1941,6 +1994,31 @@ details.pl-det{border:1px solid var(--border);border-radius:14px;padding:4px 14p
 </div>
 
 <!-- ═══ COMPANY MANAGER ═══ -->
+<!-- Shared record detail drawer (all tabs) -->
+<div id="dv-ov" class="kv-modal-overlay kx-ov" style="display:none;z-index:280" onclick="if(event.target===this) dvClose()"><aside class="kx-dr" id="dv-dr" role="dialog" aria-label="Record details"></aside></div>
+<input type="file" id="pls-replace" accept=".pdf,image/*" style="display:none" onchange="plUpload(this.dataset.month)">
+
+<!-- ═══ BRAIN OS — ElevaTrack's thinking & learning layer ═══ -->
+<div id="page-brain" class="page">
+  <div class="kx-head">
+    <div class="kx-ttl"><span class="kx-brain">🧠</span><div><div class="kx-h1">Brain OS</div><div class="kx-sub">How I learn, think, build and improve</div></div></div>
+    <div class="kx-actions">
+      <button class="cx-b" onclick="bDataDrawer()" title="Import existing data / setup">⋯ Data</button>
+      <button class="kx-primary" onclick="bCapture()">＋ Capture</button>
+    </div>
+  </div>
+  <div class="kx-chips" id="b-tabs"></div>
+  <div id="b-body"></div>
+</div>
+
+<!-- Brain OS drawer (forms, capture, weekly check, skill detail, data) -->
+<div id="b-ov" class="kv-modal-overlay kx-ov" style="display:none" onclick="if(event.target===this) bHide()">
+  <aside class="kx-dr" id="b-dr" onkeydown="if(event.key==='Enter'&&event.target.tagName==='INPUT')bFormOk()"></aside>
+</div>
+<!-- Brain Card review (flashcards) -->
+<div id="b-rev" class="kv-modal-overlay" style="display:none;z-index:270" onclick="if(event.target===this) bRevClose()"></div>
+
+
 <div id="page-companies" class="page">
   <div class="kx-head">
     <div class="kx-ttl"><span class="kx-brain">🏢</span><div><div class="kx-h1">Companies</div><div class="kx-sub">Manage your career journey — current work, past experience and job applications</div></div></div>
@@ -2365,6 +2443,12 @@ details.pl-det{border:1px solid var(--border);border-radius:14px;padding:4px 14p
     <div class="kv-modal-scroll">
       <div id="kv-recall-body" style="padding:6px 20px 20px"></div>
     </div>
+    <div class="kv-modal-foot"><div class="btn-group" style="flex-wrap:wrap">
+      <button class="btn btn-violet btn-sm" onclick="editFromRecall()">✏️ Edit</button>
+      <button class="btn btn-ghost btn-sm" id="kv-recall-fav2" onclick="toggleRecallFavorite()">⭐ Favorite</button>
+      <button class="btn btn-ghost btn-sm" id="kv-recall-arc2" onclick="recallArchive()">🗄 Archive</button>
+      <button class="btn btn-danger btn-sm" onclick="recallDelete()">🗑 Delete</button></div>
+      <button class="btn btn-ghost btn-sm" onclick="closeRecallView()">Close</button></div>
   </div>
 </div>
 
@@ -2622,6 +2706,7 @@ function showAppScreen() {
 }
 
 function resetAppState() {
+  if (typeof brainReset === 'function') brainReset();
   D = {
     daily:[], achievements:[], evidence:[],
     star:[], plans:[], goals:[], mood:[],
@@ -3447,14 +3532,14 @@ function cxWorkCard(c) {
   const past = !!c.date_left, editing = companyEditingId === c.id, detail = cxDetailId === c.id;
   const stat = (i, n, l) => `<div class="cx-stat cx-s${i}"><b>${n}</b>${l}</div>`;
   const g = (v) => cxA(v||'');
-  return `<div class="cx-card ${c.id===activeCompanyId?'act':''}">
+  return `<div class="cx-card clk ${c.id===activeCompanyId?'act':''}" data-co="${c.id}" tabindex="0">
     <div class="cx-row"><div class="cx-av">🏢</div><div style="flex:1;min-width:0">
       <div class="cx-nm">${esc(c.name)}<span class="cx-pill ${past?'cx-p-past':'cx-p-cur'}">${past?'Past':'Current'}</span>${c.id===activeCompanyId?'<span class="cx-pill" style="background:var(--violet-xl);color:var(--violet-l)">Active</span>':''}</div>
       <div class="cx-sub2">${esc(c.role)||'No role set'}${c.department?' · '+esc(c.department):''}</div>
       <div class="cx-meta"><span>📅 ${cxFmt(c.date_of_joining,1)} – ${past?cxFmt(c.date_left,1):'Present'}</span>${c.location?`<span>📍 ${esc(c.location)}</span>`:''}</div></div></div>
     ${c.description?`<div class="cx-desc">${esc(c.description)}</div>`:''}
     <div class="cx-stats">${stat(0,work.length,'Work Logs')}${stat(1,projects.length,'Projects')}${stat(2,knowledge.length,'Knowledge')}${stat(3,techs.size,'Technologies')}</div>
-    ${work.length?`<div class="cx-rw"><h4>Recent Work</h4>${work.slice(0,3).map(r => `<div onclick="nav('quicklog');openDailyEditor('${r.id}')"><span>${esc(r.task)}</span><span>${cxFmt(r.date)}</span></div>`).join('')}</div>`:''}
+    ${work.length?`<div class="cx-rw"><h4>Recent Work</h4>${work.slice(0,3).map(r => `<div onclick="wlView('${r.id}')"><span>${esc(r.task)}</span><span>${cxFmt(r.date)}</span></div>`).join('')}</div>`:''}
     ${detail?`<div class="cx-dtl"><div><b>Employee ID</b>${esc(c.employee_id)||'—'}</div><div><b>Manager</b>${esc(c.manager_name)||'—'}</div><div><b>Department</b>${esc(c.department)||'—'}</div><div><b>Contacts</b>${esc(c.contacts)||'—'}</div>
       <div style="grid-column:1/-1"><b>Projects</b>${projects.map(p => `<span class="kv-badge folder" style="margin:2px 4px 0 0">${esc(p)}</span>`).join('')||'—'}</div></div>`:''}
     ${editing?`<div class="cx-edit"><div class="fgrid">
@@ -3468,7 +3553,7 @@ function cxWorkCard(c) {
       <div class="ff full"><label>Projects</label><input id="cmpe-projects-${c.id}" value="${g(c.projects)}" placeholder="Comma separated"></div>
       <div class="ff full"><label>Key Contacts</label><input id="cmpe-contacts-${c.id}" value="${g(c.contacts)}"></div></div>
       <div class="btn-group" style="margin-top:10px"><button class="btn btn-violet btn-sm" onclick="saveCompanyDetails('${c.id}')">💾 Save</button><button class="btn btn-ghost btn-sm" onclick="toggleCompanyEdit('${c.id}')">Cancel</button><button class="btn btn-ghost btn-sm" style="color:var(--red);margin-left:auto" onclick="deleteCompany('${c.id}')">🗑 Remove</button></div></div>`:''}
-    <div class="cx-btns"><button class="cx-b" onclick="cxDetailId=cxDetailId==='${c.id}'?null:'${c.id}';renderCompanyManager()">View Details</button>
+    <div class="cx-btns"><button class="cx-b" onclick="cxCompanyView('${c.id}')">View Details</button>
       <button class="cx-b v" onclick="nav('quicklog')">View Work Log</button><button class="cx-b p" onclick="nav('vault')">View Knowledge</button>
       ${c.id!==activeCompanyId?`<button class="cx-b" onclick="switchCompany('${c.id}')" title="Make this the company new work is logged under">⇄ Make Active</button>`:''}
       <button class="cx-b r" onclick="toggleCompanyEdit('${c.id}')">✏️ ${editing?'Close':'Edit'}</button></div></div>`;
@@ -3481,7 +3566,7 @@ function cxTrack(a, click) {
     return `<div class="cx-ps ${done?'done':''} ${x?'rej':''} ${a.status===k?'cur':''}"><button class="cx-dot" ${click?`onclick="cxSetStatus('${a.id}','${k}')"`:'tabindex="-1"'} title="${l}">${x?'✕':done?'✓':''}</button>${l}${typeof prog[k]==='string'&&prog[k]!=='true'?`<small>${cxFmt(prog[k]).slice(0,6)}</small>`:''}</div>`; }).join('')}</div>`;
 }
 function cxAppCard(a) {
-  return `<div class="cx-card"><div class="cx-row"><div class="cx-av kx-tag ${cxHue(a.company)}" style="border-radius:14px;font-size:20px;justify-content:center">${esc((a.company||'?')[0].toUpperCase())}</div>
+  return `<div class="cx-card clk" data-app="${a.id}" tabindex="0"><div class="cx-row"><div class="cx-av kx-tag ${cxHue(a.company)}" style="border-radius:14px;font-size:20px;justify-content:center">${esc((a.company||'?')[0].toUpperCase())}</div>
     <div style="flex:1;min-width:0"><div class="cx-nm">${esc(a.company)}<span class="cx-pill cx-st-${a.status}">${CX_STATUS[a.status]||a.status}</span></div>
       <div class="cx-sub2">${esc(a.position)||'—'}</div><div class="cx-meta"><span>🗓 Applied ${cxFmt(a.applied_date)}</span>${a.location?`<span>📍 ${esc(a.location)}</span>`:''}</div></div></div>
     ${cxTrack(a)}
@@ -3586,7 +3671,7 @@ function cxPickResume(id, i) {
 }
 // ── Application detail ──
 const cxGet = () => (D.applications||[]).find(a => a.id === cxApp);
-function cxOpenApp(id) { cxApp = id; cxDTab = 'overview'; cxDrawerRender(); cxShow(); }
+function cxOpenApp(id) { cxApp = id; cxDTab = 'summary'; cxDrawerRender(); cxShow(); }
 function cxSetTab(t) { cxDTab = t; cxDrawerRender(); }
 function cxSet(id, f, val) { if (/_date$/.test(f) && !val) val = null; return updateItem('applications', id, { [f]:val }, renderCompanyManager); }
 function cxSetIv(id, k, val) { const a = cxGet(); return updateItem('applications', id, { interview:{ ...(a.interview||{}), [k]:val } }, null); }
@@ -3606,20 +3691,21 @@ function cxDrawerRender() {
   const txt = (f, t, ph) => `<input class="kx-in s" ${t?`type="${t}"`:''} value="${cxA(a[f])}" placeholder="${ph||''}" onchange="cxSet('${a.id}','${f}',this.value)">`;
   const ta = (k, l, ph) => fld(l, `<textarea class="kx-in kx-ta" placeholder="${ph}" onchange="cxSetIv('${a.id}','${k}',this.value)">${esc((a.interview||{})[k])}</textarea>`);
   let body = '';
-  if (cxDTab === 'overview') body = `<div><div class="kx-sec">Application Progress</div><div style="margin-top:10px">${cxTrack(a, true)}</div></div>
+  if (cxDTab === 'summary') body = cxSummaryHTML(a);
+  else if (cxDTab === 'overview') body = `<div><div class="kx-sec">Application Progress</div><div style="margin-top:10px">${cxTrack(a, true)}</div></div>
     <div class="kx-g2">${fld('Company', txt('company'))}${fld('Position', txt('position'))}${fld('Location', txt('location'))}
       ${fld('Job Type', `<select class="kx-in s" onchange="cxSet('${a.id}','job_type',this.value)">${['Full Time','Part Time','Contract','Internship','Remote'].map(o => `<option ${a.job_type===o?'selected':''}>${o}</option>`).join('')}</select>`)}
       ${fld('Applied Date', txt('applied_date','date'))}${fld('Interview Date', txt('interview_date','date'))}${fld('Result Date', txt('result_date','date'))}
       ${fld('Current Status', `<select class="kx-in s" onchange="cxSetStatus('${a.id}',this.value)">${Object.entries(CX_STATUS).map(([k,v]) => `<option value="${k}" ${a.status===k?'selected':''}>${v}</option>`).join('')}</select>`)}</div>
     ${fld('Rating', cxStars(a))}${fld('Resume Used', `<div class="cx-chip2">📄 <span>${a.resume?esc(a.resume.name):'No resume attached'}</span><button class="cx-b" style="margin-left:auto;height:28px" onclick="cxSetTab('docs')">${a.resume?'Change':'Add'}</button></div>`)}
     ${fld('Tags', txt('tags', '', 'comma separated'))}${fld('Job Description / Notes', `<textarea class="kx-in kx-ta" style="min-height:90px" onchange="cxSet('${a.id}','notes',this.value)">${esc(a.notes)}</textarea>`)}`;
-  else if (cxDTab === 'notes') body = ta('asked','What they asked','Technical and HR questions…') + ta('performed','How I performed','Overall, how did it go?') + ta('well','What went well','') + ta('struggled','What I struggled with','') + ta('learn','What I should learn','Topics to revise…') + ta('remarks','My remarks','Anything else worth remembering…') + fld('Rating', cxStars(a));
+  else if (cxDTab === 'notes') body = ta('asked','What they asked','Technical and HR questions…') + ta('performed','How I performed','Overall, how did it go?') + ta('well','What went well','') + ta('struggled','What I struggled with','') + ta('learn','What I should learn','Topics to revise…') + ta('remarks','My remarks','Anything else worth remembering…') + ta('followup','Follow-up notes','Thank-you sent? Next steps? Who to chase?') + fld('Rating', cxStars(a));
   else body = `<div class="kx-sec">Resume used for this application</div>${a.resume ? `<div class="cx-doc"><span style="font-size:24px">📄</span><div style="flex:1;min-width:0"><b>${esc(a.resume.name)}</b><small>${cxFmt(a.resume.date)} · ${cxSize(a.resume.size)}</small></div>${a.resume.dataUrl?`<a class="cx-b" style="display:inline-flex;align-items:center;text-decoration:none" href="${a.resume.dataUrl}" download="${cxA(a.resume.name)}">⬇ Download</a>`:''}<button class="cx-b" style="color:var(--red)" onclick="updateItem('applications','${a.id}',{resume:null},renderCompanyManager).then(cxDrawerRender)">Remove</button></div>` : `<div class="kx-empty">No resume attached yet.</div>`}
     ${fld('Upload a resume (PDF / DOC, max 2 MB)', `<input type="file" accept=".pdf,.doc,.docx" onchange="cxFile(this,'${a.id}')">`)}${cxResumes().length ? fld('Or reuse one from another application', cxResumeSel(`cxPickResume('${a.id}',this.value)`)) : ''}`;
   dr.innerHTML = `<div class="cx-dh"><div class="cx-av kx-tag ${cxHue(a.company)}" style="border-radius:14px;justify-content:center">${esc((a.company||'?')[0].toUpperCase())}</div><div style="flex:1;min-width:0"><div class="cx-nm">${esc(a.company)}<span class="cx-pill cx-st-${a.status}">${CX_STATUS[a.status]||a.status}</span></div><div class="cx-sub2">${esc(a.position)}</div><div class="cx-meta"><span>Applied ${cxFmt(a.applied_date)}</span>${a.location?`<span>📍 ${esc(a.location)}</span>`:''}</div></div><button class="kx-x" onclick="cxClose()">✕</button></div>
-    <div class="kx-modes" style="margin-top:8px">${[['overview','Overview'],['notes','Interview Notes'],['docs','Documents']].map(([k,l]) => `<button class="${cxDTab===k?'on':''}" onclick="cxSetTab('${k}')">${l}</button>`).join('')}</div>
+    <div class="kx-modes" style="margin-top:8px">${[['summary','Summary'],['overview','Edit Details'],['notes','Interview Notes'],['docs','Documents']].map(([k,l]) => `<button class="${cxDTab===k?'on':''}" onclick="cxSetTab('${k}')">${l}</button>`).join('')}</div>
     <div class="kx-dr-body">${body}</div>
-    <div class="kx-dr-ft"><button class="btn btn-danger btn-sm" onclick="cxDelete('${a.id}')">🗑 Delete</button><span class="cx-note" style="text-align:right">Changes save automatically</span><button class="kx-primary" onclick="cxClose()">Done</button></div>`;
+    <div class="kx-dr-ft">${cxFoot(a)}</div>`;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -5339,12 +5425,12 @@ function plSlipsHTML(hd) {
       <div class="kx-f"><label class="kx-l s">File (PDF / image, max 3 MB)</label><input id="pls-file" type="file" accept=".pdf,image/*" onchange="plUpload()"></div></div>
       <div style="font-size:11px;color:var(--text3)">Uploading for a month that already has a payslip replaces it.</div></div></div>
     <div class="pl-sec">Uploaded payslips</div>
-    ${list.length ? list.map(x => `<div class="pl-slr"><b>${plKeyLabel(x.month).replace(' ', '<br>')}</b>
+    ${list.length ? list.map(x => `<div class="pl-slr clk" onclick="if(!event.target.closest('button'))plSlipView('${x.id}')"><b>${plKeyLabel(x.month).replace(' ', '<br>')}</b>
       <div style="min-width:0"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600">${esc(x.fileName)}</div><small>Uploaded ${cxFmt(String(x.uploadedAt||'').slice(0,10))} · ${cxSize(x.fileSize||0)}</small></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn btn-ghost btn-sm" onclick="plViewSlip('${x.id}')">View</button>
         <button class="btn btn-ghost btn-sm" onclick="plPickReplace('${x.month}')">Replace</button><button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="plDelSlip('${x.id}')">Delete</button></div></div>`).join('')
       : `<div class="kx-empty">No payslips uploaded yet.</div>`}
-    <input type="file" id="pls-replace" accept=".pdf,image/*" style="display:none" onchange="plUpload(this.dataset.month)"></div>`;
+    ${plMonthsHTML()}</div>`;
 }
 function plPickReplace(month) { const i = document.getElementById('pls-replace'); i.dataset.month = month; i.value = ''; i.click(); }
 function plUpload(forMonth) {
@@ -5378,12 +5464,13 @@ function plDetailHTML(hd) {
   const base = plBaseSnapshot(p) || s, man = (p.settings && p.settings.manual) || {};
   const mf = (k, l) => `<div class="kx-f"><label class="kx-l s">${l}</label><input id="plm-${k}" type="number" class="kx-in s" ${L?'disabled':''} value="${man[k] != null ? man[k] : ''}" placeholder="${plBaseVal(base, k)}"></div>`;
   return hd(`${plMon(y, m)} Payroll`, `<span class="cx-pill ${PP_STATUS_META[p.status]?.cls||''}">${PP_STATUS_META[p.status]?.label||p.status}</span>${s.manualOverride ? ' · edited manually' : ''}`) + `<div class="kx-dr-body">
+    <button class="kx-primary" onclick="plEditVals()">✏️ Edit values</button>
     <div class="pl-stats3"><div class="pl-s pl-v"><b>${s.totalDays}</b>Total Days</div><div class="pl-s pl-g"><b>${s.payableDays}</b>Paid Days</div><div class="pl-s pl-o"><b>${s.lopDays}</b>LOP</div></div>
     <div class="pl-box pl-e"><h4>EARNINGS</h4>${line('Basic Wage', s.proratedBasic)}${line('HRA', s.proratedHRA)}${line('Conveyance Allowances', s.proratedConveyance)}${line('Other Allowances', s.proratedOtherAllowance)}${s.otAmount ? line('Overtime', s.otAmount) : ''}${s.bonus ? line('Bonus', s.bonus) : ''}${line('Total Earnings', s.grossSalary, 'tot')}</div>
     <div class="pl-box pl-d"><h4>DEDUCTIONS</h4>${line('EPF', s.employeePF)}${line('ESI / Health Insurance', s.employeeESI)}${line('Professional Tax', s.profTax)}${line('Loan Recovery', s.loan)}${line('TDS', s.tds)}${s.otherDeductions ? line('Other Deductions', s.otherDeductions) : ''}${line('Total Deductions', s.totalDeductions, 'tot')}</div>
     <div class="pl-net"><span>Net Salary</span><b>${ppMoney(s.netSalary)}</b></div>
     <div class="pl-file" style="justify-content:space-between">${slip ? `<span>📎 Uploaded payslip: ${esc(slip.fileName)}</span><button class="btn btn-ghost btn-sm" onclick="plViewSlip('${slip.id}')">View</button>` : `<span>No payslip file uploaded for this month</span><button class="btn btn-ghost btn-sm" onclick="plOpenDr('slips')">Upload</button>`}</div>
-    <details class="pl-det"><summary>✏️ Edit this month's payroll</summary>
+    <details class="pl-det" id="pl-edit-det"><summary>✏️ Edit this month's payroll</summary>
       <div style="font-size:11.5px;color:var(--text3);margin-bottom:10px">${L ? 'This month is finalized — reopen it below to edit.' : 'Leave a field blank to keep the calculated value (shown as placeholder). Totals recalculate from the lines unless you type them.'}</div>
       <div class="pl-fg">${mf('totalDays','Total Days')}${mf('paidDays','Paid Days')}${mf('lopDays','LOP Days')}${mf('basic','Basic')}${mf('hra','HRA')}${mf('conveyance','Conveyance')}${mf('otherAllowance','Other Allowances')}${mf('bonus','Bonus')}${mf('ot','Overtime')}
         ${mf('epf','EPF')}${mf('esi','ESI')}${mf('profTax','Professional Tax')}${mf('loan','Loan Recovery')}${mf('tds','TDS')}${mf('otherDeductions','Other Adjustments / Deductions')}${mf('gross','Total Earnings')}${mf('totalDeductions','Total Deductions')}${mf('net','Net Salary')}</div>
@@ -5434,6 +5521,648 @@ async function plDaySave() {
 }
 async function plDayClear() { if (!confirm('Clear this day\'s attendance?')) return; await toggleAttendanceDay_forceClear(plDayDate); renderAttendance(); plHide('pl-day-ov'); toast('Cleared'); }
 
+
+// ══════════════════════════════════════════════════════════════════
+// ── BRAIN OS — ElevaTrack's personal intelligence / thinking layer ──
+// Uses the existing Supabase client (_supa) + session (currentUser). Loaded lazily when the tab opens.
+// Local state `BS` keeps the original Brain OS data shape (short keys, ms timestamps); BR maps it to tables.
+// ══════════════════════════════════════════════════════════════════
+const BRAIN_TABLES = ['brain_settings','brain_lanes','brain_ideas','brain_later','brain_projects','brain_skills','brain_concepts','brain_cards','brain_card_reviews','brain_learning','brain_curiosity','brain_experiments','brain_weekly_reviews'];
+const BRAIN_SQL = `-- Brain OS: run once in the Supabase SQL editor (safe to re-run)
+create table if not exists brain_settings (id uuid primary key default gen_random_uuid(), user_id uuid not null unique default auth.uid() references auth.users(id) on delete cascade, quest_title text default '', quest_subtitle text default '', legacy_signature text, created_at timestamptz default now());
+create table if not exists brain_lanes (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, position int default 0, label text default '', focus text default '', created_at timestamptz default now());
+create table if not exists brain_ideas (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, text text default '', status text default 'new', legacy_id text, created_at timestamptz default now());
+create table if not exists brain_later (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, text text default '', touched_at timestamptz default now(), legacy_id text, created_at timestamptz default now());
+create table if not exists brain_projects (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, name text default '', goal text default '', next_action text default '', progress int default 0, done boolean default false, company_id uuid references companies(id) on delete set null, worklog_id uuid references daily_logs(id) on delete set null, legacy_id text, created_at timestamptz default now());
+create table if not exists brain_skills (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, name text default '', parent_id uuid references brain_skills(id) on delete set null, level int default 0, last_practiced timestamptz, next_to_learn text default '', knowledge_id uuid references knowledge_vault(id) on delete set null, legacy_id text, created_at timestamptz default now());
+create table if not exists brain_concepts (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, title text default '', memory text default '', explanation text default '', related text default '', knowledge_id uuid references knowledge_vault(id) on delete set null, legacy_id text, created_at timestamptz default now());
+create table if not exists brain_cards (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, question text default '', answer text default '', category text default '', skill_id uuid references brain_skills(id) on delete set null, knowledge_id uuid references knowledge_vault(id) on delete set null, interval_idx int default 0, due_at timestamptz, last_reviewed_at timestamptz, legacy_id text, created_at timestamptz default now());
+create table if not exists brain_card_reviews (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, card_id uuid references brain_cards(id) on delete set null, rating int default 0, reviewed_at timestamptz default now(), legacy_id text, created_at timestamptz default now());
+create table if not exists brain_learning (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, topic text default '', learned text default '', explanation text default '', unanswered text default '', confidence int default 3, skill_id uuid references brain_skills(id) on delete set null, card_made boolean default false, legacy_id text, created_at timestamptz default now());
+create table if not exists brain_curiosity (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, topic text default '', area text default '', explored text default '', source text default '', minutes int default 0, summary text default '', facts text default '', depth int default 0, legacy_id text, created_at timestamptz default now());
+create table if not exists brain_experiments (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, question text default '', hypothesis text default '', setup text default '', test text default '', result text default '', root_cause text default '', solution text default '', lesson text default '', project_id uuid references brain_projects(id) on delete set null, skill_id uuid references brain_skills(id) on delete set null, concept_id uuid references brain_concepts(id) on delete set null, done boolean default false, completed_at timestamptz, card_made boolean default false, legacy_id text, created_at timestamptz default now());
+create table if not exists brain_weekly_reviews (id uuid primary key default gen_random_uuid(), user_id uuid not null default auth.uid() references auth.users(id) on delete cascade, week_start date not null, snapshot jsonb default '{}', focus text default '', created_at timestamptz default now(), unique (user_id, week_start));
+do $$ declare t text; begin
+  foreach t in array array['brain_settings','brain_lanes','brain_ideas','brain_later','brain_projects','brain_skills','brain_concepts','brain_cards','brain_card_reviews','brain_learning','brain_curiosity','brain_experiments','brain_weekly_reviews'] loop
+    execute format('alter table %I enable row level security', t);
+    execute format('drop policy if exists "own rows" on %I', t);
+    execute format('create policy "own rows" on %I for all using (auth.uid() = user_id) with check (auth.uid() = user_id)', t);
+    if t not in ('brain_settings','brain_lanes','brain_weekly_reviews') then
+      execute format('create unique index if not exists %I on %I (user_id, legacy_id) where legacy_id is not null', t || '_legacy', t);
+    end if;
+  end loop;
+end $$;`;
+// local key → table + field map. Value: column name, or [column, type] (ts = ms⇄timestamptz, int, bool, fk = ''⇄null)
+const BR = {
+  ideas:       { tb:'brain_ideas',       o:['created_at',0], f:{ t:'text', s:'status', d:['created_at','ts'] } },
+  later:       { tb:'brain_later',       o:['touched_at',0], f:{ t:'text', d:['touched_at','ts'] } },
+  projects:    { tb:'brain_projects',    o:['created_at',0], f:{ n:'name', g:'goal', a:'next_action', p:['progress','int'], done:['done','bool'], co:['company_id','fk'], wl:['worklog_id','fk'], d:['created_at','ts'] } },
+  skills:      { tb:'brain_skills',      o:['created_at',1], f:{ n:'name', par:['parent_id','fk'], lv:['level','int'], lp:['last_practiced','ts'], nx:'next_to_learn', kn:['knowledge_id','fk'], d:['created_at','ts'] } },
+  vault:       { tb:'brain_concepts',    o:['created_at',0], f:{ t:'title', m:'memory', e:'explanation', r:'related', kn:['knowledge_id','fk'], d:['created_at','ts'] } },
+  cards:       { tb:'brain_cards',       o:['created_at',0], f:{ q:'question', a:'answer', c:'category', sk:['skill_id','fk'], kn:['knowledge_id','fk'], iv:['interval_idx','int'], due:['due_at','ts'], last:['last_reviewed_at','ts'], d:['created_at','ts'] } },
+  learning:    { tb:'brain_learning',    o:['created_at',0], f:{ t:'topic', l:'learned', x:'explanation', qs:'unanswered', cf:['confidence','int'], sk:['skill_id','fk'], card:['card_made','bool'], d:['created_at','ts'] } },
+  curiosity:   { tb:'brain_curiosity',   o:['created_at',0], f:{ t:'topic', ar:'area', e:'explored', src:'source', min:['minutes','int'], s:'summary', f:'facts', dep:['depth','int'], d:['created_at','ts'] } },
+  experiments: { tb:'brain_experiments', o:['created_at',0], f:{ q:'question', h:'hypothesis', su:'setup', te:'test', re:'result', rc:'root_cause', so:'solution', le:'lesson', p:['project_id','fk'], sk:['skill_id','fk'], k:['concept_id','fk'], done:['done','bool'], dt:['completed_at','ts'], card:['card_made','bool'], d:['created_at','ts'] } },
+  lanes:       { tb:'brain_lanes',       o:['position',1],   f:{ k:'label', t:'focus', pos:['position','int'] } },
+};
+const BR_LV = ['🌱 Beginner','🔧 Practicing','⚡ Competent','🧠 Strong','🏆 Advanced'], BR_DEP = ['👀 Exposure','🧠 Understanding','🔬 Deep Knowledge'], BR_IV = [0,3,7,14,30];
+const BR_AREAS = ['🦖 Dinosaurs','🌌 Astronomy','🪐 Space','🧬 Evolution','🧪 Biology','⚛️ Physics','🏛️ History','🧠 Psychology','🌋 Geology','🐋 Animals','🌍 Geography','🎨 Art','📚 Literature','✨ Other'];
+const BR_EF = [['q','Question'],['h','Hypothesis'],['su','Setup'],['te','Test'],['re','Result'],['rc','Root cause'],['so','Solution'],['le','Lesson for Future Vinu']];
+const BR_TABS = [['now','🎯','Now'],['ideas','💡','Ideas'],['build','🚀','Build'],['learn','📖','Learn'],['lab','🧪','Lab'],['vault','🧠','Vault'],['later','🗺️','Later']];
+const BR_LEGACY_KEYS = ['vinu-os-v2', 'vinu-os-v1'];
+
+let BS = null, bState = 'idle', bErrMsg = '', bTab = 'now', bFilt = 'All', bQ = '', bVt = 'k', bLt = 's', bTimer = 0, bT0 = 0, bCapCls = '', bFormCb = null, bFormFields = [], bSavedWeek = null;
+const bEl = id => document.getElementById(id);
+const bUid = () => crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c === 'x' ? r : (r&3|8)).toString(16); });
+const bAttr = s => esc(s).replace(/"/g, '&quot;');
+const bAgo = d => { if (!d) return 'never'; const n = Math.floor((Date.now()-d)/864e5); return n < 1 ? 'today' : n === 1 ? 'yesterday' : n + ' days ago'; };
+const bWk = () => Date.now() - 7*864e5;
+const bEod = () => { const d = new Date(); d.setHours(23,59,59,999); return +d; };
+const bDue = () => BS.cards.filter(c => (c.due||0) <= bEod());
+const bBy = (k, i) => i ? BS[k].find(y => String(y.id) === String(i)) : null;
+const bOpts = (a, k, none) => [['', none || '— none']].concat(a.map(x => [x.id, x[k]]));
+const bFmt = d => new Date(d).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+
+// ── row ⇄ local conversion ──
+function bRow(k, o) {
+  const r = {};
+  for (const [lk, sp] of Object.entries(BR[k].f)) {
+    const [col, ty] = Array.isArray(sp) ? sp : [sp, '']; let v = o[lk];
+    r[col] = ty === 'ts' ? (v ? new Date(v).toISOString() : null) : ty === 'bool' ? !!v : ty === 'fk' ? (v || null) : ty === 'int' ? (Number(v) || 0) : (v == null ? '' : String(v));
+  }
+  return r;
+}
+function bFrom(k, row) {
+  const o = { id: row.id };
+  for (const [lk, sp] of Object.entries(BR[k].f)) {
+    const [col, ty] = Array.isArray(sp) ? sp : [sp, '']; const v = row[col];
+    o[lk] = ty === 'ts' ? (v ? Date.parse(v) : 0) : ty === 'bool' ? !!v : ty === 'fk' ? (v || '') : ty === 'int' ? (v == null ? 0 : +v) : (v == null ? '' : v);
+  }
+  return o;
+}
+// ── persistence (optimistic; on failure we toast and re-sync that collection) ──
+function bFail(e) { console.error('Brain OS:', e); setSyncStatus('error', '⚠ Sync failed'); toast('⚠️ Brain OS could not save — ' + (e.message || e), 'error'); }
+async function bPut(k, o, isNew) {
+  const row = { ...bRow(k, o), id: o.id, user_id: currentUser.id };
+  try {
+    const q = isNew ? _supa.from(BR[k].tb).insert(row) : _supa.from(BR[k].tb).update(row).eq('id', o.id);
+    const { error } = await withTimeout(q, 10000, 'brain save'); if (error) throw error; setSyncStatus('synced', '☁ Saved');
+  } catch (e) { bFail(e); await bReload(k); }
+}
+async function bRm(k, id) {
+  try { const { error } = await withTimeout(_supa.from(BR[k].tb).delete().eq('id', id), 10000, 'brain delete'); if (error) throw error; setSyncStatus('synced', '☁ Saved'); }
+  catch (e) { bFail(e); await bReload(k); }
+}
+async function bReload(k) {
+  try { const { data, error } = await _supa.from(BR[k].tb).select('*').order(BR[k].o[0], { ascending: !!BR[k].o[1] }); if (!error && data) { BS[k] = data.map(r => bFrom(k, r)); brainRender(); } } catch (e) {}
+}
+function bAdd(k, o, append) { o.id = o.id || bUid(); o.d = o.d || Date.now(); append ? BS[k].push(o) : BS[k].unshift(o); brainRender(); bPut(k, o, true); return o; }
+function bSet(k, o) { brainRender(); bPut(k, o, false); }
+function bDel(k, id) {
+  if (!confirm('Delete this? This can\'t be undone.')) return;
+  const x = bBy(k, id); if (!x) return;
+  if (k === 'skills') BS.skills.forEach(s => { if (String(s.par) === String(id)) { s.par = x.par || ''; bPut('skills', s, false); } });
+  BS[k] = BS[k].filter(y => String(y.id) !== String(id));
+  const nul = { skills: [['cards','sk'],['learning','sk'],['experiments','sk']], projects: [['experiments','p']], vault: [['experiments','k']] }[k] || [];
+  nul.forEach(([a, f]) => BS[a].forEach(y => { if (String(y[f]) === String(id)) y[f] = ''; }));
+  brainRender(); bRm(k, id);
+}
+async function bPutSettings(extra) {
+  try { const { error } = await _supa.from('brain_settings').upsert({ user_id: currentUser.id, quest_title: BS.quest.t || '', quest_subtitle: BS.quest.s || '', ...(extra || {}) }, { onConflict: 'user_id' }); if (error) throw error; setSyncStatus('synced', '☁ Saved'); }
+  catch (e) { bFail(e); }
+}
+
+// ── lifecycle (lazy: nothing is fetched until the tab is opened) ──
+function brainReset() { BS = null; bState = 'idle'; }
+async function brainOpen() { if (!bEl('b-body')) return; if (bState === 'ready') return brainRender(); if (bState !== 'loading') await brainLoad(); }
+async function brainLoad() {
+  if (!currentUser) { bState = 'error'; bErrMsg = 'You are not signed in.'; return brainRender(); }
+  bState = 'loading'; brainRender();
+  try {
+    const keys = Object.keys(BR), T = (q, l) => withTimeout(q, 15000, 'brain ' + l);
+    const res = await Promise.all([...keys.map(k => T(_supa.from(BR[k].tb).select('*').order(BR[k].o[0], { ascending: !!BR[k].o[1] }), k)),
+      T(_supa.from('brain_settings').select('*').maybeSingle(), 'settings'), T(_supa.from('brain_card_reviews').select('*').order('reviewed_at', { ascending: false }).limit(200), 'reviews'),
+      T(_supa.from('brain_weekly_reviews').select('*').order('week_start', { ascending: false }).limit(26), 'weekly')]);
+    const bad = res.find(r => r.error);
+    if (bad) { if (/schema cache|does not exist|42P01|PGRST205/i.test((bad.error.message || '') + (bad.error.code || ''))) { bState = 'setup'; return brainRender(); } throw bad.error; }
+    BS = { quest: { t:'', s:'' }, reviews: { log: [] }, settings: {}, weekly: [] };
+    keys.forEach((k, i) => BS[k] = res[i].data.map(r => bFrom(k, r)));
+    const st = res[keys.length].data; BS.settings = st || {};
+    BS.quest = { t: st?.quest_title || '', s: st?.quest_subtitle || '' };
+    BS.weekly = (res[keys.length + 2].data || []).map(r => ({ id:r.id, ws:r.week_start, snap:r.snapshot || {}, focus:r.focus || '', d:Date.parse(r.created_at) }));
+    BS.reviews.log = res[keys.length + 1].data.map(r => ({ d: Date.parse(r.reviewed_at), r: r.rating, cid: r.card_id })).reverse();
+    if (!st) await bPutSettings();
+    if (!BS.lanes.length) { ['🎓 Academic','💼 Career','🧪 Play'].forEach((k, i) => { const l = { id: bUid(), k, t:'', pos:i }; BS.lanes.push(l); bPut('lanes', l, true); }); }
+    bState = 'ready';
+  } catch (e) { console.error('Brain OS load failed', e); bState = 'error'; bErrMsg = e.message || String(e); }
+  brainRender();
+}
+
+// ── render ──
+function bGo(t) { bTab = t; bQ = ''; brainRender(); }
+function brainRender() {
+  const body = bEl('b-body'); if (!body) return;
+  bEl('b-tabs').innerHTML = BR_TABS.map(t => `<button class="${t[0] === bTab ? 'on' : ''}" onclick="bGo('${t[0]}')">${t[1]} ${t[2]}</button>`).join('');
+  if (bState === 'loading' || bState === 'idle') body.innerHTML = `<div class="kx-empty">🧠 Loading your Brain OS…</div>`;
+  else if (bState === 'setup') body.innerHTML = `<div class="bn-card"><div class="bn-t">One-time setup needed</div><div class="bn-txt">Brain OS stores your data in Supabase, owned by your account. Run this SQL once in the Supabase SQL editor, then reload.</div><textarea class="bn-sql" readonly onclick="this.select()">${esc(BRAIN_SQL)}</textarea><div class="bn-row"><button class="cx-b v" onclick="bCopySql()">Copy SQL</button><button class="cx-b" onclick="brainLoad()">↻ I ran it — retry</button></div></div>`;
+  else if (bState === 'error') body.innerHTML = `<div class="kx-empty">⚠️ Couldn't load Brain OS.<br><small>${esc(bErrMsg)}</small><div style="margin-top:12px"><button class="kx-primary" onclick="brainLoad()">Retry</button></div></div>`;
+  else body.innerHTML = { now:bHome, ideas:bIdeas, build:bBuild, learn:bLearn, lab:bLab, vault:bVault, later:bLater }[bTab]();
+  bTick();
+}
+function bCopySql() { navigator.clipboard?.writeText(BRAIN_SQL).then(() => toast('✦ SQL copied')); }
+function bSearch(v) { bQ = v; const l = bEl('b-list'); if (l) l.innerHTML = bTab === 'ideas' ? bIdeasList() : bVt === 'c' ? bCardsList() : bConceptsList(); }
+const bSearchBox = ph => `<input class="kx-search" style="max-width:300px" placeholder="🔍  ${ph}" value="${bAttr(bQ)}" oninput="bSearch(this.value)">`;
+const bEmpty = t => `<div class="kx-empty" style="grid-column:1/-1">${t}</div>`;
+const bFld = (x, fs) => fs.filter(f => x[f[0]]).map(f => `<div class="bn-lbl">${f[1]}</div><div class="bn-txt">${esc(x[f[0]])}</div>`).join('');
+const bBtn = (fn, i, l, c) => `<button class="cx-b ${c || ''}" onclick="${fn}('${i}')">${l}</button>`;
+
+// ── ElevaTrack links (all optional) ──
+const bCoName = id => ((typeof companies !== 'undefined' ? companies : []).find(c => c.id === id) || {}).name;
+const bKnOpts = cur => { const l = (D.vault || []).map(v => [v.id, v.title]); if (cur && !l.some(x => x[0] === cur)) l.unshift([cur, '(linked card)']); return [['', '— none']].concat(l); };
+const bWlOpts = cur => { const l = [...(D.daily || [])].sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 80).map(r => [r.id, (r.date || '') + ' · ' + String(r.task || '').slice(0, 50)]); if (cur && !l.some(x => x[0] === cur)) l.unshift([cur, '(linked work log)']); return [['', '— none']].concat(l); };
+function bLinks(x) {
+  const out = [], kn = x.kn && (D.vault || []).find(v => v.id === x.kn), wl = x.wl && (D.daily || []).find(v => v.id === x.wl);
+  if (kn) out.push(`<button class="bn-link" onclick="bOpenKn('${kn.id}')">📚 ${esc(kn.title)}</button>`);
+  if (x.co && bCoName(x.co)) out.push(`<button class="bn-link" onclick="nav('companies')">🏢 ${esc(bCoName(x.co))}</button>`);
+  if (wl) out.push(`<button class="bn-link" onclick="wlView('${wl.id}')">📓 ${esc(String(wl.task || 'Work log').slice(0, 40))}</button>`);
+  return out.length ? `<div class="bn-links" style="margin-top:6px">${out.join('')}</div>` : '';
+}
+function bOpenKn(id) { openKnowledgeCard(id); }
+
+// ── NOW ──
+function bHome() {
+  const dl = bDue().length, ue = BS.experiments.filter(x => !x.done).length, rc = BS.curiosity.slice(0, 3).map(c => esc(c.t)).join(', ') || 'Nothing logged yet';
+  const tile = (go, n, l) => `<button class="bn-stat" onclick="bGo('${go}')"><b>${n}</b><span>${l}</span></button>`;
+  const row = (oc, t, s) => `<button class="bn-lane" onclick="${oc}"><span><b>${t}</b><i>${s}</i></span><em>›</em></button>`;
+  const lg = bLegacy();
+  return (lg ? `<div class="bn-banner"><b>📦 Existing Brain OS data was found in this browser.</b><button class="cx-b v" onclick="bDataDrawer()">Import existing Brain OS data</button></div>` : '') + `
+  <div class="bn-two"><div class="bn-quest"><small>⭐ MAIN QUEST</small><div class="big">${esc(BS.quest.t) || 'Set your main quest'}<br><span class="sub">${esc(BS.quest.s)}</span></div>
+      <div class="bn-row"><button class="cx-b v" id="b-st" onclick="bTimerToggle()">${bTimer ? 'Stop' : '▶ Start focus'}</button><button class="cx-b" onclick="bQuestEdit()">Change</button></div></div>
+    <div class="bn-card"><div class="bn-h">Today · 3 lanes max</div><div class="bn-stack">${BS.lanes.map(l => `<button class="bn-lane" onclick="bLaneEdit('${l.id}')"><span><b>${esc(l.k)}</b><i>${esc(l.t) || 'Set a focus'}</i></span><em>✎</em></button>`).join('')}</div></div></div>
+  <div class="bn-stats">${tile('ideas', BS.ideas.length, '💡 Ideas')}${tile('build', BS.projects.filter(p => !p.done).length, '🚀 Builds')}${tile('vault', BS.cards.length, '🧠 Brain Cards')}${tile('later', BS.later.length, '🗺️ Later')}</div>
+  <div class="bn-card"><div class="bn-stack">${row('bRevStart()', '🧠 Due today', dl + ' Brain Cards')}${row("bGo('lab')", '🧪 Experiments', ue + ' unfinished')}${row("bGo('learn');bLt='c';brainRender()", '🌍 Recent curiosity', rc)}</div>
+    <div class="bn-row"><button class="cx-b v" onclick="bWeekly()">🧠 Weekly Brain Check</button></div></div>${bWeeklyList()}`;
+}
+function bTimerToggle() { if (bTimer) { const m = Math.floor((Date.now() - bT0) / 60000); bTimer = 0; toast('Session ended · ' + m + ' min'); } else { bTimer = 1; bT0 = Date.now(); toast('Focus: ' + (BS.quest.t || 'main quest')); } brainRender(); }
+function bTick() { const b = bEl('b-st'); if (b && bTimer) b.textContent = 'Stop · ' + Math.floor((Date.now() - bT0) / 60000) + ' min'; }
+setInterval(bTick, 15000);
+function bQuestEdit() { bForm('Main quest', [{ n:'t', l:'Subject', v:BS.quest.t }, { n:'s', l:'Topic', v:BS.quest.s }], v => { if (v.t) { BS.quest = { t:v.t, s:v.s }; brainRender(); bPutSettings(); } }); }
+function bLaneEdit(id) { const l = bBy('lanes', id); bForm(l.k, [{ n:'t', l:'Current focus', v:l.t, opt:1 }], v => { l.t = v.t; bSet('lanes', l); }); }
+
+// ── IDEAS ──
+function bIdeasList() {
+  const L = BS.ideas.filter(i => (bFilt === 'All' || i.s === bFilt.toLowerCase()) && i.t.toLowerCase().includes(bQ.toLowerCase()));
+  return L.length ? L.map(i => `<div class="bn-card bn-click" data-k="ideas" data-id="${i.id}" tabindex="0"><div class="bn-t">💡 ${esc(i.t)}</div><div class="bn-m">Captured ${bAgo(i.d)}${i.s !== 'new' ? ' · ' + i.s : ''}</div>
+    <div class="bn-row">${bBtn('bIdeaForm', i.id, '✏️ Edit')}${bBtn('bIdeaDo', i.id, '🔥 Do it')}${bBtn('bIdeaBuild', i.id, '🚀 Move to Build', 'v')}${bBtn('bIdeaLater', i.id, '🗺️ Move to Later')}${bBtn('bIdeaDrop', i.id, '🗑 Drop', 'bn-x')}</div></div>`).join('') : bEmpty('Nothing here. Use ＋ Capture to save a thought.');
+}
+function bIdeas() { return `<div class="bn-bar2"><h3>💡 Ideas</h3>${bSearchBox('Search ideas')}</div><div class="kx-chips">${['All','New','Do','Learn'].map(f => `<button class="${f === bFilt ? 'on' : ''}" onclick="bFilt='${f}';brainRender()">${f}</button>`).join('')}</div><div class="bn-grid" id="b-list">${bIdeasList()}</div>`; }
+function bIdeaDo(i) { const x = bBy('ideas', i); x.s = 'do'; bSet('ideas', x); toast('🔥 Marked Do'); }
+function bIdeaBuild(i) { const x = bBy('ideas', i); BS.ideas = BS.ideas.filter(y => y !== x); bRm('ideas', x.id); bAdd('projects', { n:x.t, g:'', a:'Define the first step', p:0, done:false, co:'', wl:'' }); toast('🚀 Moved to Build'); }
+function bIdeaLater(i) { const x = bBy('ideas', i); BS.ideas = BS.ideas.filter(y => y !== x); bRm('ideas', x.id); bAdd('later', { t:x.t }); toast('🗺️ Parked'); }
+function bIdeaDrop(i) { bDel('ideas', i); }
+
+// ── BUILD ──
+function bBuild() {
+  return `<div class="bn-bar2"><h3>🚀 Build</h3><button class="kx-primary" onclick="bProjForm()">+ New project</button></div><div class="bn-grid">${BS.projects.length ? BS.projects.map(p => `
+    <div class="bn-card bn-click ${p.done ? 'dim' : ''}" data-k="projects" data-id="${p.id}" tabindex="0"><div class="bn-t">🚀 ${esc(p.n)} ${p.done ? '✅' : ''}</div>${p.g ? `<div class="bn-lbl">Goal</div><div class="bn-txt">${esc(p.g)}</div>` : ''}
+      <div class="bn-lbl">Next action</div><div class="bn-t" style="color:var(--violet-l)">${esc(p.a) || '—'}</div><div class="bn-bar"><i style="width:${p.p}%"></i></div><div class="bn-m">${p.p}%</div>${bLinks(p)}
+      <div class="bn-row">${bBtn('bProjInc', p.id, '+10%')}${bBtn('bProjForm', p.id, 'Edit')}${bBtn('bProjDone', p.id, p.done ? 'Reopen' : 'Complete', 'v')}${bBtn('bProjDel', p.id, 'Delete', 'bn-x')}</div></div>`).join('') : bEmpty('No projects yet. Add one with a clear next action.')}</div>`;
+}
+function bProjForm(i) {
+  const e = !!i, p = e ? bBy('projects', i) : { n:'', g:'', a:'', p:0, co:'', wl:'' };
+  bForm(e ? 'Edit project' : 'New project', [{ n:'n', l:'Project name', v:p.n }, { n:'g', l:'Goal', v:p.g }, { n:'a', l:'Next action (be specific)', v:p.a }, { n:'p', l:'Progress %', v:p.p, type:'number' },
+    { n:'co', l:'Company (optional)', v:p.co, o:[['', '— none']].concat((typeof companies !== 'undefined' ? companies : []).map(c => [c.id, c.name])) }, { n:'wl', l:'Related work log (optional)', v:p.wl, o:bWlOpts(p.wl) }], v => {
+    if (!v.n) return; const o = { n:v.n, g:v.g, a:v.a, p:Math.max(0, Math.min(100, +v.p || 0)), co:v.co, wl:v.wl };
+    if (e) { Object.assign(p, o); bSet('projects', p); } else bAdd('projects', { done:false, ...o }); });
+}
+function bProjInc(i) { const p = bBy('projects', i); p.p = Math.min(100, p.p + 10); bSet('projects', p); }
+function bProjDone(i) { const p = bBy('projects', i); p.done = !p.done; if (p.done) p.p = 100; bSet('projects', p); }
+function bProjDel(i) { bDel('projects', i); }
+
+// ── LEARN ──
+function bLearn() {
+  const s = bLt === 's';
+  return `<div class="bn-bar2"><h3>📖 Learn</h3><button class="kx-primary" onclick="${s ? 'bLearnForm()' : 'bCurioForm()'}">${s ? '+ New session' : '+ Log curiosity'}</button></div>
+  <div class="kx-chips"><button class="${s ? 'on' : ''}" onclick="bLt='s';brainRender()">📖 Learning Sessions</button><button class="${s ? '' : 'on'}" onclick="bLt='c';brainRender()">🌍 Curiosity</button></div>
+  <div class="bn-hint">${s ? 'Learn → explain in your own words → Brain Card → review.' : 'Exposure counts. Not everything needs to become a project.'}</div>` + (s ? bSessions() : bCurio());
+}
+function bSessions() {
+  return `<div class="bn-grid">${BS.learning.length ? BS.learning.map(x => `<div class="bn-card bn-click" data-k="learning" data-id="${x.id}" tabindex="0"><div class="bn-t">📖 ${esc(x.t)} <span class="bn-m">${'⭐'.repeat(x.cf || 0)}${'☆'.repeat(5 - (x.cf || 0))}</span></div>
+    <div class="bn-m">${bAgo(x.d)}${bBy('skills', x.sk) ? ' · 🧩 ' + esc(bBy('skills', x.sk).n) : ''}</div>${bFld(x, [['l','What I learned'],['x','My explanation'],['qs','Still unsure']])}
+    <div class="bn-row">${x.card ? '<span class="bn-m" style="align-self:center">✓ Brain Card made</span>' : bBtn('bLearnCard', x.id, '→ Brain Card', 'v')}${bBtn('bLearnForm', x.id, 'Edit')}${bBtn('bLearnDel', x.id, 'Delete', 'bn-x')}</div></div>`).join('') : bEmpty('No sessions yet. Start one after you study something.')}</div>`;
+}
+function bCurio() {
+  const tot = BS.curiosity.reduce((a, c) => a + (c.min || 0), 0);
+  return `<div class="bn-hint">${BS.curiosity.length} topics · ${Math.round(tot / 6) / 10} hours explored</div><div class="bn-grid">${BS.curiosity.length ? BS.curiosity.map(x => `<div class="bn-card bn-click" data-k="curiosity" data-id="${x.id}" tabindex="0"><div class="bn-t">${esc(x.ar || '✨')} ${esc(x.t)}</div>
+    <div class="bn-m">${BR_DEP[x.dep || 0]}${x.min ? ' · ' + x.min + ' min' : ''}${x.src ? ' · ' + esc(x.src) : ''} · ${bAgo(x.d)}</div>${bFld(x, [['e','Explored'],['s','Summary'],['f','Interesting facts']])}
+    <div class="bn-row">${bBtn('bCurioForm', x.id, 'Edit')}${bBtn('bCurioDel', x.id, 'Delete', 'bn-x')}</div></div>`).join('') : bEmpty('Nothing yet. Log a documentary, a video or a rabbit hole.')}</div>`;
+}
+function bLearnForm(i) {
+  const e = !!i, x = e ? bBy('learning', i) : { t:'', l:'', x:'', qs:'', cf:3, sk:'' };
+  bForm(e ? 'Edit session' : 'New learning session', [{ n:'t', l:'Topic', v:x.t }, { n:'l', l:'What I learned', v:x.l, area:1 }, { n:'x', l:'My explanation (own words)', v:x.x, area:1 }, { n:'qs', l:'Questions I still have', v:x.qs, area:1 },
+    { n:'cf', l:'Confidence', v:x.cf, o:[1,2,3,4,5].map(n => [n, '⭐'.repeat(n)]) }, { n:'sk', l:'Skill (optional)', v:x.sk, o:bOpts(BS.skills, 'n') }], v => {
+    if (!v.t) return; v.cf = +v.cf; if (e) { Object.assign(x, v); bSet('learning', x); } else bAdd('learning', { card:false, ...v }); });
+}
+function bLearnCard(i) { const x = bBy('learning', i); bCardForm(null, { q:'What is ' + x.t + '?', a:x.x || x.l, sk:x.sk }, () => { x.card = true; bPut('learning', x, false); }); }
+function bLearnDel(i) { bDel('learning', i); }
+function bCurioForm(i) {
+  const e = !!i, x = e ? bBy('curiosity', i) : { t:'', ar:BR_AREAS[0], e:'', src:'', min:'', s:'', f:'', dep:0 };
+  bForm(e ? 'Edit curiosity' : 'Log curiosity', [{ n:'t', l:'Topic', v:x.t }, { n:'ar', l:'Area', v:x.ar, o:BR_AREAS.map(a => [a, a]) }, { n:'e', l:'What I explored', v:x.e, area:1 }, { n:'src', l:'Source / type', v:x.src, ph:'Documentary, book, article...' },
+    { n:'min', l:'Time spent (minutes)', v:x.min, type:'number' }, { n:'s', l:'Short summary', v:x.s, area:1 }, { n:'f', l:'Interesting facts', v:x.f, area:1 }, { n:'dep', l:'Depth', v:x.dep || 0, o:BR_DEP.map((d, n) => [n, d]) }], v => {
+    if (!v.t) return; v.min = +v.min || 0; v.dep = +v.dep; if (e) { Object.assign(x, v); bSet('curiosity', x); } else bAdd('curiosity', v); });
+}
+function bCurioDel(i) { bDel('curiosity', i); }
+
+// ── LAB ──
+function bLab() {
+  return `<div class="bn-bar2"><h3>🧪 Lab</h3><button class="kx-primary" onclick="bExpForm()">+ New experiment</button></div><div class="bn-grid">${BS.experiments.length ? BS.experiments.map(x => {
+    const rel = [['p','projects','n','🚀'], ['sk','skills','n','🧩'], ['k','vault','t','🧠']].map(l => bBy(l[1], x[l[0]]) ? ' · ' + l[3] + ' ' + esc(bBy(l[1], x[l[0]])[l[2]]) : '').join('');
+    return `<div class="bn-card bn-click" data-k="experiments" data-id="${x.id}" tabindex="0"><div class="bn-t">🧪 ${esc(x.q)} ${x.done ? '✅' : '⏳'}</div><div class="bn-m">${bAgo(x.d)}${rel}</div>${bFld(x, BR_EF.slice(1))}
+      <div class="bn-row">${bBtn('bExpDone', x.id, x.done ? 'Reopen' : 'Mark complete', 'v')}${x.le && !x.card ? bBtn('bExpCard', x.id, '→ Brain Card') : ''}${bBtn('bExpForm', x.id, 'Edit')}${bBtn('bExpDel', x.id, 'Delete', 'bn-x')}</div></div>`; }).join('') : bEmpty('No experiments. Ask a question, guess, test, write the lesson.')}</div>`;
+}
+function bExpForm(i) {
+  const e = !!i, x = e ? bBy('experiments', i) : {};
+  bForm(e ? 'Edit experiment' : 'New experiment', BR_EF.map(f => ({ n:f[0], l:f[1], v:x[f[0]] || '', area:1 })).concat([{ n:'p', l:'Project', v:x.p || '', o:bOpts(BS.projects, 'n') }, { n:'sk', l:'Skill', v:x.sk || '', o:bOpts(BS.skills, 'n') }, { n:'k', l:'Concept', v:x.k || '', o:bOpts(BS.vault, 't') }]), v => {
+    if (!v.q) return; if (e) { Object.assign(x, v); bSet('experiments', x); } else bAdd('experiments', { done:false, dt:0, card:false, ...v }); });
+}
+function bExpDone(i) { const x = bBy('experiments', i); x.done = !x.done; x.dt = x.done ? Date.now() : 0; bSet('experiments', x); }
+function bExpCard(i) { const x = bBy('experiments', i); bCardForm(null, { q:x.q, a:x.le, c:'Lab', sk:x.sk }, () => { x.card = true; bPut('experiments', x, false); }); }
+function bExpDel(i) { bDel('experiments', i); }
+
+// ── VAULT: concepts / brain cards / skills ──
+function bVault() {
+  const head = { k:['bConceptForm()', 'New concept'], c:['bCardForm()', 'New card'], s:['bSkillForm()', 'New skill'] }[bVt];
+  const chips = [['k','Concepts'], ['c','Brain Cards'], ['s','Skills']].map(x => `<button class="${bVt === x[0] ? 'on' : ''}" onclick="bVt='${x[0]}';bQ='';brainRender()">${x[1]}</button>`).join('');
+  let inner;
+  if (bVt === 's') inner = `<div class="bn-hint">Skills = what you can do. Levels are a personal progress marker, not a measure of expertise.</div>` + (BS.skills.length ? bTree('', 0) : bEmpty('No skills yet. Add one you can actually do.<div style="margin-top:10px"><button class="cx-b v" onclick="bSkillStarter()">Add starter skills</button></div>'));
+  else if (bVt === 'c') { const dl = bDue(); inner = `<div class="bn-card" style="margin-bottom:16px"><div class="bn-t">🧠 ${dl.length} cards due today</div>${dl.slice(0, 5).map((c, i) => `<div class="bn-m">${i + 1}. ${esc(c.q)}</div>`).join('')}${dl.length ? '<div class="bn-row"><button class="cx-b v" onclick="bRevStart()">Review now</button></div>' : '<div class="bn-m">All caught up.</div>'}</div>${bSearchBox('Search cards')}<div class="bn-grid" id="b-list" style="margin-top:14px">${bCardsList()}</div>`; }
+  else inner = `${bSearchBox('Search concepts')}<div class="bn-grid" id="b-list" style="margin-top:14px">${bConceptsList()}</div>`;
+  return `<div class="bn-bar2"><h3>🧠 Vault</h3><button class="kx-primary" onclick="${head[0]}">+ ${head[1]}</button></div><div class="kx-chips">${chips}</div>${inner}`;
+}
+function bConceptsList() {
+  const L = BS.vault.filter(v => (v.t + v.m + v.r).toLowerCase().includes(bQ.toLowerCase()));
+  return L.length ? L.map(v => `<div class="bn-card bn-click" data-k="vault" data-id="${v.id}" tabindex="0"><div class="bn-t">🧠 ${esc(v.t)}</div>${bFld(v, [['m','Memory'],['e','Explanation'],['r','Related']])}${bLinks(v)}<div class="bn-row">${bBtn('bConceptForm', v.id, 'Edit')}${bBtn('bConceptDel', v.id, 'Delete', 'bn-x')}</div></div>`).join('') : bEmpty('Nothing saved yet. Explain it to Future Vinu in one sentence.');
+}
+function bCardsList() {
+  const L = BS.cards.filter(v => (v.q + v.a + v.c).toLowerCase().includes(bQ.toLowerCase()));
+  return L.length ? L.map(v => { const n = Math.ceil((v.due - Date.now()) / 864e5), due = (v.due || 0) <= bEod();
+    return `<div class="bn-card bn-click" data-k="cards" data-id="${v.id}" tabindex="0"><div class="bn-m">${esc(v.c)}${bBy('skills', v.sk) ? ' · 🧩 ' + esc(bBy('skills', v.sk).n) : ''}</div><div class="bn-t">${esc(v.q)}</div><div class="bn-txt">“${esc(v.a)}”</div>
+      <div class="bn-m">${due ? '🔔 Due today' : '🗓 Next review ' + bFmt(v.due) + ' (in ' + n + ' day' + (n > 1 ? 's' : '') + ')'}${v.last ? ' · last ' + bAgo(v.last) : ''}</div>${bLinks(v)}
+      <div class="bn-row">${bBtn('bCardForm', v.id, 'Edit')}${bBtn('bCardDel', v.id, 'Delete', 'bn-x')}</div></div>`; }).join('') : bEmpty('No cards. Explain something in one sentence.');
+}
+function bConceptForm(i) {
+  const e = !!i, k = e ? bBy('vault', i) : { t:'', m:'', e:'', r:'', kn:'' };
+  bForm(e ? 'Edit concept' : 'New concept', [{ n:'t', l:'Title', v:k.t }, { n:'m', l:'Memory (one sentence for Future Vinu)', v:k.m, area:1 }, { n:'e', l:'Explanation', v:k.e, area:1 }, { n:'r', l:'Related concepts', v:k.r }, { n:'kn', l:'Knowledge Track card (optional)', v:k.kn, o:bKnOpts(k.kn) }], v => {
+    if (!v.t) return; if (e) { Object.assign(k, v); bSet('vault', k); } else bAdd('vault', v); });
+}
+function bConceptDel(i) { bDel('vault', i); }
+function bCardForm(i, pre, cb) {
+  const e = !!i, c = e ? bBy('cards', i) : (pre || {});
+  bForm(e ? 'Edit brain card' : 'New brain card', [{ n:'q', l:'Question', v:c.q || '', ph:'What is an interrupt?', req:1 }, { n:'a', l:'Answer in one sentence', v:c.a || '', area:1, req:1 }, { n:'c', l:'Category', v:c.c || 'Embedded' }, { n:'sk', l:'Skill (optional)', v:c.sk || '', o:bOpts(BS.skills, 'n') }, { n:'kn', l:'Knowledge Track card (optional)', v:c.kn || '', o:bKnOpts(c.kn) }], v => {
+    if (!v.q || !v.a) return; if (e) { Object.assign(c, v); bSet('cards', c); } else { bAdd('cards', { due:0, iv:0, last:0, ...v }); toast('🧠 Brain Card made'); } cb && cb(); });
+}
+function bCardDel(i) { bDel('cards', i); }
+
+// ── Skills (hierarchy) ──
+function bSkillKids(id, acc = new Set()) { BS.skills.forEach(s => { if (String(s.par) === String(id) && !acc.has(s.id)) { acc.add(s.id); bSkillKids(s.id, acc); } }); return acc; }
+function bTree(p, dp) {
+  return BS.skills.filter(s => String(s.par || '') === String(p || '')).map(s => {
+    const n = k => BS[k].filter(x => String(x.sk) === String(s.id)).length, rel = (k, l, c) => `<button class="bn-link" onclick="bSkillOpen('${s.id}')">${l} ${c}</button>`;
+    return `<div class="${dp ? 'bn-ind' : ''}"><div class="bn-card bn-click" style="margin-bottom:10px" data-k="skills" data-id="${s.id}" tabindex="0"><div class="bn-t">${esc(s.n)} <span class="bn-m">${BR_LV[s.lv]}</span></div>
+      <div class="bn-links">${rel('cards', '🧠', n('cards') + ' cards')}${rel('learning', '📖', n('learning') + ' sessions')}${rel('experiments', '🧪', n('experiments') + ' experiments')}<span class="bn-m" style="align-self:center">practiced ${s.lp ? bAgo(s.lp) : 'never'}</span></div>
+      ${s.nx ? `<div class="bn-m" style="color:var(--violet-l)">Next: ${esc(s.nx)}</div>` : ''}${bLinks(s)}<div class="bn-row">${bBtn('bSkillPrac', s.id, 'Practiced')}${bBtn('bSkillForm', s.id, 'Edit')}${bBtn('bSkillDel', s.id, 'Delete', 'bn-x')}</div></div>${bTree(s.id, 1)}</div>`; }).join('');
+}
+function bSkillForm(i) {
+  const e = !!i, x = e ? bBy('skills', i) : { n:'', par:'', lv:0, nx:'', kn:'' }, ban = e ? bSkillKids(x.id).add(x.id) : new Set();
+  bForm(e ? 'Edit skill' : 'New skill', [{ n:'n', l:'Skill', v:x.n }, { n:'par', l:'Under (parent skill)', v:x.par || '', o:bOpts(BS.skills.filter(s => !ban.has(s.id)), 'n', '— top level') }, { n:'lv', l:'Level', v:x.lv, o:BR_LV.map((l, n) => [n, l]) },
+    { n:'nx', l:'Next thing to learn', v:x.nx || '' }, { n:'kn', l:'Knowledge Track card (optional)', v:x.kn || '', o:bKnOpts(x.kn) }], v => {
+    if (!v.n) return; v.lv = +v.lv; if (e) { Object.assign(x, v); bSet('skills', x); } else bAdd('skills', { lp:0, ...v }, true); });
+}
+function bSkillPrac(i) { const s = bBy('skills', i); s.lp = Date.now(); bSet('skills', s); }
+function bSkillDel(i) { bDel('skills', i); }
+function bSkillStarter() { const mk = (n, p, l) => ({ id: bUid(), n, par:p, lv:l, lp:0, nx:'', kn:'', d:Date.now() }); const a = mk('Embedded Systems', '', 1), c = mk('C', a.id, 2), r = mk('RTOS', a.id, 1), s = mk('Scheduling', r.id, 1), i = mk('Industrial IoT', '', 1), m = mk('MQTT', i.id, 1);
+  [a, c, r, s, i, m].forEach(x => { BS.skills.push(x); bPut('skills', x, true); }); brainRender(); }
+function bSkillOpen(id) {
+  const s = bBy('skills', id), list = (k, f) => BS[k].filter(x => String(x.sk) === String(id)).map(x => `<div class="bn-line"><span>${esc(f(x))}</span></div>`).join('') || '<div class="bn-m">None yet</div>';
+  bDrawer(`${esc(s.n)} <span class="bn-m">${BR_LV[s.lv]}</span>`, `<div class="bn-h">Related Brain Cards</div>${list('cards', x => x.q)}<div class="bn-h" style="margin-top:12px">Learning sessions</div>${list('learning', x => x.t)}<div class="bn-h" style="margin-top:12px">Experiments</div>${list('experiments', x => x.q)}`, '');
+}
+
+// ── LATER ──
+function bLater() {
+  return `<div class="bn-bar2"><h3>🗺️ Later</h3></div><div class="bn-hint">Interesting, but not now. Review once a week.</div><div class="bn-grid">${BS.later.length ? BS.later.map(i => `<div class="bn-card bn-click" data-k="later" data-id="${i.id}" tabindex="0"><div class="bn-t">${esc(i.t)}</div><div class="bn-m">Parked ${bAgo(i.d)}</div>
+    <div class="bn-row">${bBtn('bLaterForm', i.id, '✏️ Edit')}${bBtn('bLaterPromote', i.id, 'Promote to Ideas', 'v')}${bBtn('bLaterKeep', i.id, 'Keep')}${bBtn('bLaterDrop', i.id, 'Drop', 'bn-x')}</div></div>`).join('') : bEmpty('Empty. Park distractions here with ＋ Capture.')}</div>`;
+}
+function bLaterPromote(i) { const x = bBy('later', i); BS.later = BS.later.filter(y => y !== x); bRm('later', x.id); bAdd('ideas', { t:x.t, s:'do' }); toast('Promoted to Ideas'); }
+function bLaterKeep(i) { const x = bBy('later', i); x.d = Date.now(); bSet('later', x); toast('Kept for next week'); }
+function bLaterDrop(i) { bDel('later', i); }
+
+// ── Spaced repetition review ──
+let bRevQ = [], bRevI = 0, bRevShow = 0;
+function bRevStart() { bRevQ = bDue().slice(); if (!bRevQ.length) return toast('Nothing due 🎉'); bRevI = 0; bRevShow = 0; bEl('b-rev').style.display = 'flex'; bRevDraw(); }
+function bRevClose() { bEl('b-rev').style.display = 'none'; brainRender(); }
+function bRevDraw() {
+  const c = bRevQ[bRevI]; if (!c) { bRevClose(); return toast('Review done'); }
+  bEl('b-rev').innerHTML = `<div class="bn-rv"><div class="bn-bar2" style="margin:0"><h3>🧠 Card ${bRevI + 1} / ${bRevQ.length}</h3><button class="kx-x" onclick="bRevClose()">✕</button></div>
+    <div class="bn-card"><div class="bn-m">${esc(c.c || '')}</div><div class="bn-t" style="font-size:18px">${esc(c.q)}</div>${bRevShow ? `<div class="bn-txt" style="font-size:14px;margin-top:6px">${esc(c.a)}</div>` : ''}</div>
+    <div class="bn-row" style="margin:0">${bRevShow ? [['❌ Forgot', 0], ['😐 Hard', 1], ['🙂 Good', 2], ['🔥 Easy', 3]].map(r => `<button class="cx-b ${r[1] === 2 ? 'v' : ''}" onclick="bRevGrade(${r[1]})">${r[0]}</button>`).join('') : '<button class="kx-primary" onclick="bRevShow=1;bRevDraw()">Show answer</button>'}</div></div>`;
+}
+function bGrade(c, r) {
+  const s = c.iv || 0; c.iv = r == 0 ? 0 : r == 1 ? s : Math.min(4, s + (r == 3 ? 2 : 1)); c.due = r == 0 ? 0 : Date.now() + (r == 1 ? 1 : BR_IV[c.iv]) * 864e5; c.last = Date.now();
+  BS.reviews.log.push({ d: Date.now(), r, cid: c.id }); BS.reviews.log = BS.reviews.log.slice(-200); bPut('cards', c, false);
+  _supa.from('brain_card_reviews').insert({ id: bUid(), user_id: currentUser.id, card_id: c.id, rating: r, reviewed_at: new Date().toISOString() }).then(({ error }) => { if (error) bFail(error); });
+}
+function bRevGrade(r) { bGrade(bRevQ[bRevI], r); bRevShow = 0; bRevI++; bRevDraw(); }
+
+// ── Weekly Brain Check ──
+function bScores() {
+  const rl = BS.reviews.log.slice(-20), w = [0, .4, .75, 1];
+  return [['Knowledge', Math.min(100, (BS.vault.length + BS.learning.length + BS.curiosity.length) * 5), 'Concepts, learning sessions and curiosity logged (5% each).'],
+    ['Building', BS.projects.length ? Math.round(BS.projects.reduce((a, p) => a + p.p, 0) / BS.projects.length) : 0, 'Average progress across your projects.'],
+    ['Recall', rl.length ? Math.round(rl.reduce((a, x) => a + w[x.r], 0) / rl.length * 100) : 0, 'How your last 20 Brain Card reviews went.'],
+    ['Experiments', Math.min(100, BS.experiments.filter(x => x.done).length * 20), 'Completed experiments (20% each).']];
+}
+function bWeekData() {
+  const wk = bWk(), c = a => a.filter(x => x.d > wk).length, sc = bScores(), low = sc.reduce((a, b) => b[1] < a[1] ? b : a);
+  const areas = [...new Set([...BS.curiosity.filter(x => x.d > wk).map(x => x.ar || x.t), ...BS.learning.filter(x => x.d > wk).map(x => x.t), ...BS.cards.filter(x => x.d > wk).map(x => x.c)].filter(Boolean))].slice(0, 8);
+  const cnt = {}; [...BS.cards, ...BS.learning, ...BS.experiments].filter(x => x.d > wk && x.sk).forEach(x => cnt[x.sk] = (cnt[x.sk] || 0) + 1);
+  const top = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a])[0], tip = { Recall:'Review your due Brain Cards.', Knowledge:'Log one learning session or follow a curiosity.', Building:'Finish the next action on one project.', Experiments:'Run one small experiment and write the lesson.' }[low[0]];
+  const rows = [['Ideas captured', c(BS.ideas) + c(BS.later)], ['Concepts learned', c(BS.vault) + c(BS.learning)], ['Brain Cards reviewed', BS.reviews.log.filter(x => x.d > wk).length], ['Projects in progress', BS.projects.filter(p => !p.done).length],
+    ['Experiments completed', BS.experiments.filter(x => x.dt > wk).length], ['Curiosity explored', c(BS.curiosity)], ['Active skills', Object.keys(cnt).length], ['Interesting things parked', BS.later.length]];
+  return { sc, low, areas, rows, tip, topSkill: top && bBy('skills', top) ? bBy('skills', top).n : '—' };
+}
+async function bWeekly() {
+  const w = bWeekData(); bSavedWeek = null;
+  bDrawer('🧠 Weekly Brain Check', `<div class="bn-card">${w.rows.map(r => `<div class="bn-line"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')}<div class="bn-lbl">Areas touched</div><div class="bn-txt">${w.areas.length ? w.areas.map(esc).join(' · ') : 'Nothing yet'}</div>
+    <div class="bn-m" style="margin-top:6px">Most active skill: ${esc(w.topSkill)}<br>Most neglected: ${w.low[0]}</div></div>
+    ${w.sc.map(s => `<div class="bn-card"><div class="bn-line" style="padding:0"><b>${s[0].toUpperCase()}</b><b>${s[1]}%</b></div><div class="bn-bar"><i style="width:${s[1]}%"></i></div><div class="bn-m">${s[2]}</div></div>`).join('')}
+    <div class="bn-m">Indicators, not scientific measurements.</div><div class="bn-h">What should Future Vinu focus on?</div><div class="bn-card">${w.tip}</div>`,
+    `<button class="cx-b" onclick="bWeeklySave()">💾 Save this week's snapshot</button><button class="kx-primary" onclick="bHide()">Close</button>`);
+}
+async function bWeeklySave() {
+  const w = bWeekData(), d = new Date(); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); const ws = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  try { const { error } = await _supa.from('brain_weekly_reviews').upsert({ user_id: currentUser.id, week_start: ws, focus: w.tip, snapshot: { rows: w.rows, scores: w.sc.map(s => ({ name: s[0], pct: s[1] })), areas: w.areas, topSkill: w.topSkill, neglected: w.low[0] } }, { onConflict: 'user_id,week_start' }); if (error) throw error; toast('✦ Weekly snapshot saved'); bLoadWeekly(); } catch (e) { bFail(e); }
+}
+
+// ── Capture ──
+function bCapture() {
+  if (bState !== 'ready') { toast('Brain OS is still loading', 'error'); return; }
+  bCapCls = ''; bDrawer('＋ Capture', `<textarea id="b-ct" class="kx-in kx-ta" style="font-size:16px;min-height:90px" placeholder="What's on your mind?" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();bCapSave()}"></textarea>
+    <div class="kx-chips" style="margin:0">${[['do','🔥 Do'],['learn','📚 Learn'],['idea','💡 Idea'],['cur','🌍 Curiosity'],['exp','🧪 Experiment'],['later','🗺️ Later']].map(x => `<button data-c="${x[0]}" onclick="bCapCls=bCapCls==='${x[0]}'?'':'${x[0]}';document.querySelectorAll('#b-dr [data-c]').forEach(b=>b.classList.toggle('on',b.dataset.c===bCapCls))">${x[1]}</button>`).join('')}</div>`,
+    `<button class="cx-b" onclick="bHide()">Cancel</button><button class="kx-primary" onclick="bCapSave()">Save</button>`);
+  setTimeout(() => bEl('b-ct')?.focus(), 80);
+}
+function bCapSave() {
+  const t = bEl('b-ct').value.trim(); if (!t) return; const c = bCapCls;
+  if (c === 'later') bAdd('later', { t }); else if (c === 'cur') bAdd('curiosity', { t, ar:'', dep:0, e:'', src:'', min:0, s:'', f:'' }); else if (c === 'exp') bAdd('experiments', { q:t, done:false, dt:0, card:false });
+  else bAdd('ideas', { t, s: c === 'idea' ? 'new' : c || 'new' });
+  bHide(); toast('🧠 Captured.');
+}
+
+// ── Drawer + generic form ──
+function bShowOv() { const o = bEl('b-ov'); o.style.display = 'flex'; requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add('open'))); }
+function bHide() { bRet = null; const o = bEl('b-ov'); o.classList.remove('open'); setTimeout(() => { if (!o.classList.contains('open')) o.style.display = 'none'; }, 200); }
+function bDrawer(title, body, foot) {
+  bEl('b-dr').innerHTML = `<div class="kx-dr-hd"><div>${title}</div><button class="kx-x" onclick="bHide()" aria-label="Close">✕</button></div><div class="kx-dr-body">${body}</div>${foot ? `<div class="kx-dr-ft" style="justify-content:flex-end">${foot}</div>` : ''}`; bShowOv();
+}
+function bForm(title, fields, onSave) {
+  bFormFields = fields; bFormCb = onSave;
+  bDrawer(esc(title), fields.map(f => { const id = 'bf-' + f.n, v = f.v == null ? '' : f.v;
+    const inner = f.o ? `<select id="${id}" class="kx-in">${f.o.map(o => `<option value="${bAttr(o[0])}" ${String(o[0]) === String(v) ? 'selected' : ''}>${esc(o[1])}</option>`).join('')}</select>`
+      : f.area ? `<textarea id="${id}" class="kx-in kx-ta" placeholder="${bAttr(f.ph || '')}">${esc(v)}</textarea>` : `<input id="${id}" class="kx-in" ${f.type ? `type="${f.type}"` : ''} value="${bAttr(v)}" placeholder="${bAttr(f.ph || '')}">`;
+    return `<div class="kx-f"><label class="kx-l s" for="${id}">${esc(f.l)}</label>${inner}</div>`; }).join(''), `<button class="cx-b" onclick="bFormCancel()">Cancel</button><button class="kx-primary" onclick="bFormOk()">Save</button>`);
+  setTimeout(() => bEl('b-dr').querySelector('input,textarea')?.focus(), 80);
+}
+async function bFormOk() {
+  if (!bFormCb) return; const v = {}; bFormFields.forEach(f => v[f.n] = (bEl('bf-' + f.n)?.value || '').trim());
+  const need = bFormFields.some(f => f.req) ? bFormFields.filter(f => f.req) : (bFormFields[0] && !bFormFields[0].opt ? [bFormFields[0]] : []);
+  const miss = need.find(f => !v[f.n]); if (miss) { toast('⚠️ ' + miss.l + ' is required', 'error'); bEl('bf-' + miss.n)?.focus(); return; }   // keep the drawer open — never silently drop what was typed
+  const cb = bFormCb, ret = bRet; bFormCb = null; bHide();
+  try { await cb(v); toast('✓ Saved'); } catch (e) { bFail(e); }
+  if (ret) setTimeout(() => bView(ret[0], ret[1]), 160);   // edit started from a detail view → show the updated record
+}
+document.addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (bEl('b-rev')?.style.display === 'flex') bRevClose(); else if (bEl('b-ov')?.classList.contains('open')) bHide(); });
+
+// ── Migration: existing Brain OS (localStorage "vinu-os-v1/v2") → Supabase. Never deletes local data, never overwrites rows. ──
+const bSig = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return s.length + ':' + h; };
+function bLegacy() {
+  try { for (const k of BR_LEGACY_KEYS) { const raw = localStorage.getItem(k); if (raw) { const o = JSON.parse(raw), sig = bSig(raw); if (o && typeof o === 'object' && sig !== BS?.settings?.legacy_signature) return { raw, o, sig, k }; } } } catch (e) {}
+  return null;
+}
+function bDataDrawer() {
+  const lg = BS ? bLegacy() : null;
+  bDrawer('Brain OS data', `<div class="bn-card"><div class="bn-t">📦 Import existing Brain OS data</div><div class="bn-txt">${lg ? `Found data in this browser (<b>${lg.k}</b>): ${(lg.o.ideas || []).length} ideas, ${(lg.o.projects || []).length} projects, ${(lg.o.cards || []).length} brain cards, ${(lg.o.skills || []).length} skills, ${(lg.o.experiments || []).length} experiments…` : 'Nothing found in this browser. If the old app ran on another address, open it, press F12 → Console and run <b>copy(localStorage["vinu-os-v2"])</b>, then paste the result below.'}</div>
+    ${lg ? `<div class="bn-row"><button class="cx-b v" onclick="bImportLocal()">Import from this browser</button></div>` : ''}
+    <textarea id="b-paste" class="kx-in kx-ta" placeholder="…or paste exported Brain OS JSON here"></textarea><div class="bn-row"><button class="cx-b" onclick="bImportPasted()">Import pasted JSON</button></div>
+    <div class="bn-m">Existing Supabase records are never overwritten, items already imported are skipped, and your local data is left untouched.</div></div>
+    <div class="bn-card"><div class="bn-t">Database setup</div><div class="bn-txt">Brain OS tables live in your Supabase project, private to your account.</div><div class="bn-row"><button class="cx-b" onclick="bCopySql()">Copy setup SQL</button></div></div>`, '');
+}
+function bImportLocal() { const lg = bLegacy(); if (lg) bImport(lg.o, lg.sig); }
+function bImportPasted() { try { const o = JSON.parse(bEl('b-paste').value); bImport(o, bSig(JSON.stringify(o))); } catch (e) { toast('⚠️ That is not valid Brain OS JSON', 'error'); } }
+async function bImport(o, sig) {
+  if (bState !== 'ready') { toast('Brain OS is still loading', 'error'); return; }
+  toast('⏳ Importing…'); let added = 0, skipped = 0; const maps = {}, uid = currentUser.id;
+  try {
+    const order = ['skills', 'vault', 'projects', 'cards', 'learning', 'curiosity', 'experiments', 'ideas', 'later'];
+    for (const k of order) { maps[k] = {}; const { data, error } = await _supa.from(BR[k].tb).select('id,legacy_id').not('legacy_id', 'is', null); if (error) throw error; (data || []).forEach(r => maps[k][r.legacy_id] = r.id); }
+    const rm = (k, v) => (v != null && v !== '' && maps[k][String(v)]) || '';
+    for (const k of order) {
+      const rows = [];
+      for (const x of (o[k] || [])) {
+        const lid = String(x.id); if (maps[k][lid]) { skipped++; continue; }
+        const nid = bUid(); maps[k][lid] = nid;
+        const y = { ...x, id: nid, d: x.d || Date.now() };
+        if (k === 'skills') { y.par = ''; y.kn = ''; } if (k === 'cards') y.sk = ''; if (k === 'learning') y.sk = ''; if (k === 'experiments') { y.p = ''; y.sk = ''; y.k = ''; }
+        if (k === 'ideas' && !['new', 'do', 'learn'].includes(y.s)) y.s = 'new';
+        if (k === 'experiments') { y.done = !!y.done; y.card = !!y.card; } if (k === 'learning') y.card = !!y.card; if (k === 'projects') y.done = !!y.done;
+        rows.push({ ...bRow(k, y), id: nid, user_id: uid, legacy_id: lid });
+      }
+      for (let i = 0; i < rows.length; i += 100) { const { error } = await _supa.from(BR[k].tb).insert(rows.slice(i, i + 100)); if (error) throw error; }
+      added += rows.length;
+    }
+    // second pass: relations (needs every id mapped first); only touches rows imported in this run
+    const rel = [['skills','skills','par','parent_id','skills'], ['cards','cards','sk','skill_id','skills'], ['learning','learning','sk','skill_id','skills'], ['experiments','experiments','p','project_id','projects'], ['experiments','experiments','sk','skill_id','skills'], ['experiments','experiments','k','concept_id','vault']];
+    for (const [k, , lf, col, tk] of rel) for (const x of (o[k] || [])) { const nid = maps[k][String(x.id)], tgt = rm(tk, x[lf]); if (nid && tgt && !BS[k].some(y => y.id === nid && y[lf])) { const { error } = await _supa.from(BR[k].tb).update({ [col]: tgt }).eq('id', nid).is(col, null); if (error) throw error; } }
+    // review history (no card link in the old format)
+    const log = (o.reviews && o.reviews.log) || []; const { data: ex } = await _supa.from('brain_card_reviews').select('legacy_id').not('legacy_id', 'is', null); const have = new Set((ex || []).map(r => r.legacy_id));
+    const rv = log.map(r => ({ id: bUid(), user_id: uid, rating: +r.r || 0, reviewed_at: new Date(r.d).toISOString(), legacy_id: `rv-${r.d}-${r.r}` })).filter(r => !have.has(r.legacy_id));
+    for (let i = 0; i < rv.length; i += 100) { const { error } = await _supa.from('brain_card_reviews').insert(rv.slice(i, i + 100)); if (error) throw error; } added += rv.length;
+    // quest + lanes: only fill what is still empty
+    let st = false; if (!BS.quest.t && o.quest && o.quest.t) { BS.quest = { t: o.quest.t, s: o.quest.s || '' }; st = true; }
+    (o.lanes || []).slice(0, 3).forEach((l, i) => { const t = BS.lanes[i]; if (t && !t.t && l.t) { t.t = l.t; bPut('lanes', t, false); } });
+    await bPutSettings({ legacy_signature: sig }); BS.settings.legacy_signature = sig;
+    bHide(); await brainLoad(); toast(`✦ Imported ${added} item${added === 1 ? '' : 's'}${skipped ? ` · ${skipped} already imported` : ''}`);
+  } catch (e) { console.error('Brain OS import failed', e); toast('⚠️ Import failed — ' + (e.message || e) + ' (safe to retry)', 'error'); }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── DETAIL VIEWS (final QA pass): CARD → VIEW → EDIT → SAVE → UPDATED CARD ──
+// One shared right-side drawer (full-screen on mobile). Each tab supplies a builder that returns the record's
+// full detail; the drawer re-renders itself whenever the tab re-renders, so saved changes show immediately.
+// ══════════════════════════════════════════════════════════════════
+let dvBuild = null;
+const dvEl = id => document.getElementById(id);
+const dvTxt = s => (s == null || String(s).trim() === '') ? '' : `<div class="dv-txt">${esc(s)}</div>`;
+const dvGrid = pairs => { const p = pairs.filter(x => x[1] != null && String(x[1]).trim() !== ''); return p.length ? `<div class="dv-grid">${p.map(x => `<div><b>${x[0]}</b>${x[1]}</div>`).join('')}</div>` : ''; };
+const dvTags = s => { const a = (Array.isArray(s) ? s : String(s || '').split(',')).map(t => String(t).trim().replace(/^#+/, '')).filter(Boolean); return a.length ? `<div class="bn-links">${a.map(t => `<span class="kx-tag ${typeof kxHue === 'function' ? 'g' + kxHue(t) : 'g0'}">${esc(t)}</span>`).join('')}</div>` : ''; };
+const dvBtns = (a, fn, lbl) => a.length ? `<div class="bn-links">${a.map(x => `<button class="bn-link" onclick="${fn(x)}">${lbl(x)}</button>`).join('')}</div>` : '';
+const dvDate = d => { const t = new Date(d); return !d || isNaN(t) ? '' : t.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }); };
+function dvOpen(build) {
+  dvBuild = build; if (!dvRender()) return;
+  const o = dvEl('dv-ov'); o.style.display = 'flex'; requestAnimationFrame(() => requestAnimationFrame(() => o.classList.add('open')));
+}
+function dvRender() {
+  const c = dvBuild && dvBuild(); if (!c) { dvClose(); return false; }
+  const body = dvEl('dv-dr').querySelector('.kx-dr-body'), sc = body ? body.scrollTop : 0;
+  dvEl('dv-dr').innerHTML = `<div class="kx-dr-hd"><div style="min-width:0"><div class="dv-k">${c.k}</div><div class="dv-t">${c.t}</div></div><button class="kx-x" onclick="dvClose()" aria-label="Close">✕</button></div>
+    <div class="kx-dr-body">${c.sub || ''}${(c.sections || []).filter(s => s[1]).map(s => `<div class="dv-sec"><div class="dv-lbl">${s[0]}</div>${s[1]}</div>`).join('')}${c.note ? `<div class="bn-m">${c.note}</div>` : ''}</div>
+    <div class="kx-dr-ft">${(c.foot || []).map(f => `<button class="${f[2] === 'p' ? 'kx-primary' : f[2] === 'd' ? 'btn btn-danger btn-sm' : 'cx-b'}" onclick="${f[1]}">${f[0]}</button>`).join('')}<span style="flex:1"></span><button class="btn btn-ghost" onclick="dvClose()">Close</button></div>`;
+  const nb = dvEl('dv-dr').querySelector('.kx-dr-body'); if (nb) nb.scrollTop = sc; return true;
+}
+function dvRerender() { const o = dvEl('dv-ov'); if (dvBuild && o && o.style.display === 'flex') dvRender(); }
+function dvClose() { const o = dvEl('dv-ov'); if (!o) return; o.classList.remove('open'); dvBuild = null; setTimeout(() => { if (!o.classList.contains('open')) o.style.display = 'none'; }, 200); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && dvBuild) { e.stopImmediatePropagation(); dvClose(); } }, true);
+// every tab re-renders after a save/delete → keep the open detail view in sync (closes itself if the record is gone)
+['renderDaily', 'renderCompanyManager', 'renderVault', 'brainRender', 'renderAttendance', 'plRender', 'renderPayPeriods'].forEach(n => { const f = window[n]; if (typeof f === 'function') window[n] = function () { const r = f.apply(this, arguments); dvRerender(); return r; }; });
+
+// ── WORK LOG ──
+let wlRet = null;
+function wlView(id) {
+  dvOpen(() => {
+    const r = D.daily.find(x => x.id === id); if (!r) return null;
+    const co = companyNameFor(r.companyId), kn = r.linkedKnowledgeId && D.vault.find(v => v.id === r.linkedKnowledgeId), time = wxTime(r);
+    return { k: '📓 Work Log', t: esc(r.task || 'Untitled'),
+      sub: dvGrid([['📅 Date', esc(wxLong(r.date)) + (time ? ' · ' + time : '')], ['🏢 Company', esc(co)], ['📁 Project', esc(r.project)], ['👤 Client', esc(r.client)], ['🏷 Type', esc(r.cat)], ['⚡ Priority', esc(r.prio)], ['Status', r.status ? statusBadge(r.status) : ''], ['⏱ Hours', r.hours ? esc(r.hours) + ' h' : ''], ['🛟 Technical support', r.support === 'Yes' ? 'Yes' : '']]),
+      sections: [['Impact', dvTxt(r.impact)], ['Problem solved', dvTxt(r.problem)], ['Solution', dvTxt(r.solution)], ['Technologies', dvTxt(r.tech)], ['Learning', dvTxt(r.learning)], ['Self remarks', dvTxt(r.self)],
+        ['Notes', r.richNotes && (wxPlain(r.richNotes) || /<img\b/i.test(r.richNotes)) ? `<div class="dv-rich recall-block-body">${r.richNotes}</div>` : ''], ['Tags', dvTags(r.tags)],
+        ['Linked Knowledge', kn ? `<div class="bn-links"><button class="bn-link" onclick="dvClose();openKnowledgeCard('${kn.id}')">📚 ${esc(kn.title)}</button></div>` : '']],
+      note: r.created_at ? 'Logged ' + dvDate(r.created_at) : '',
+      foot: [['✏️ Edit', `wlEdit('${id}')`, 'p']].concat(kn ? [] : [['🧠 Save to Knowledge', `dvClose();saveWorkLogAsKnowledge('${id}')`]], [['🗑 Delete', `wlDelete('${id}')`, 'd']]) };
+  });
+}
+function wlEdit(id) { wlRet = id; dvClose(); openDailyEditor(id); }
+function wlDelete(id) { deleteDailyEntry(id); }
+{ const _c = closeDailyEditor; closeDailyEditor = window.closeDailyEditor = function () { const r = wlRet; wlRet = null; _c.apply(this, arguments); if (r && D.daily.some(x => x.id === r)) setTimeout(() => wlView(r), 120); }; }
+openJournalView = window.openJournalView = function (id) { wlView(id); };   // notes links / dashboard / search all land on the full detail view
+
+// ── KNOWLEDGE TRACK ──
+let kvRetId = null;
+function kvDatesHTML(v) { return `<div class="bn-m" style="margin-top:14px">Created ${dvDate(v.created_at) || '—'} · Updated ${dvDate(v.updated_at || v.created_at) || '—'}${v.last_used ? ' · Last faced ' + dvDate(v.last_used) : ''}</div>`; }
+function kvRelatedHTML(v) {
+  const wl = D.daily.filter(r => r.linkedKnowledgeId === v.id), out = [];
+  if (wl.length) out.push(`📓 Work log: ` + wl.slice(0, 6).map(r => `<button class="bn-link" onclick="closeRecallView();wlView('${r.id}')">${esc(String(r.task || '').slice(0, 45))}</button>`).join(' '));
+  if (typeof BS !== 'undefined' && BS) { // only if Brain OS has already been opened (it loads lazily)
+    [['skills', 'n', '🧩'], ['vault', 't', '🧠'], ['cards', 'q', '🃏']].forEach(([k, f, ic]) => { const l = BS[k].filter(x => x.kn === v.id); if (l.length) out.push(`${ic} Brain OS: ` + l.slice(0, 4).map(x => `<button class="bn-link" onclick="closeRecallView();bView('${k}','${x.id}')">${esc(String(x[f]).slice(0, 40))}</button>`).join(' ')); });
+  }
+  return out.length ? `<div class="recall-block" style="margin-top:14px"><div class="recall-block-hd">🔗 Related</div><div class="recall-block-body" style="display:flex;flex-direction:column;gap:6px">${out.map(x => `<div>${x}</div>`).join('')}</div></div>` : '';
+}
+function kvFootSync() {
+  const v = D.vault.find(x => x.id === recallCardId); if (!v) return;
+  const f = dvEl('kv-recall-fav2'), a = dvEl('kv-recall-arc2');
+  if (f) f.textContent = v.favorite ? '★ Unfavorite' : '⭐ Favorite'; if (a) a.textContent = v.archived ? '🗄 Unarchive' : '🗄 Archive';
+}
+function recallHide() { recallRevealed = false; renderRecallBody(); }
+async function recallArchive() { const id = recallCardId, v = D.vault.find(x => x.id === id); if (!v) return; await toggleVaultFlag(id, 'archived'); toast(v.archived ? '🗄 Archived' : '✓ Restored'); closeRecallView(); }
+async function recallDelete() { const id = recallCardId, v = D.vault.find(x => x.id === id); if (!v || !confirm(`Delete "${v.title || 'this card'}"? This can't be undone.`)) return; closeRecallView(); await del('vault', id, 'renderVault'); }
+editFromRecall = window.editFromRecall = function () { const id = recallCardId; kvRetId = id; closeRecallView(); openVaultEditor(id); };
+{ const _c = closeVaultEditor; closeVaultEditor = window.closeVaultEditor = function () { const r = kvRetId; kvRetId = null; _c.apply(this, arguments); if (r && D.vault.some(x => x.id === r)) setTimeout(() => openKnowledgeCard(r), 260); }; }
+{ const _t = toggleRecallFavorite; toggleRecallFavorite = window.toggleRecallFavorite = function () { _t.apply(this, arguments); setTimeout(kvFootSync, 50); }; }
+
+// ── BRAIN OS: every record opens a full detail drawer; ideas / later items / weekly checks become editable ──
+let bRet = null;
+const bNm = (k, id, f) => { const x = bBy(k, id); return x ? esc(x[f]) : ''; };
+const bRel = (k, id, f, ic) => bBy(k, id) ? `<button class="bn-link" onclick="bView('${k}','${id}')">${ic} ${esc(bBy(k, id)[f])}</button>` : '';
+function bView(k, id) { dvOpen(() => { const x = k === 'weekly' ? (BS.weekly || []).find(y => y.id === id) : bBy(k, id); return x ? bViewCfg(k, x) : null; }); }
+function bEditView(k, id) {
+  const fn = { ideas:'bIdeaForm', projects:'bProjForm', learning:'bLearnForm', curiosity:'bCurioForm', experiments:'bExpForm', vault:'bConceptForm', cards:'bCardForm', skills:'bSkillForm', later:'bLaterForm', weekly:'bWeeklyForm' }[k];
+  bRet = [k, id]; dvClose(); window[fn](id);
+}
+function bViewCfg(k, x) {
+  const id = x.id, E = ['✏️ Edit', `bEditView('${k}','${id}')`, 'p'], DEL = ['🗑 Delete', `bDel('${k}','${id}')`, 'd'], created = 'Created ' + dvDate(x.d) + ' · ' + bAgo(x.d);
+  if (k === 'ideas') return { k:'💡 Idea', t:esc(x.t), sub:dvGrid([['Status', ({ new:'New', do:'Do', learn:'Learn' })[x.s] || esc(x.s)], ['Captured', dvDate(x.d) + ' · ' + bAgo(x.d)]]), sections:[],
+    foot:[E, ['🔥 Do it', `bIdeaDo('${id}')`], ['🚀 Build', `bIdeaBuild('${id}')`], ['🗺️ Later', `bIdeaLater('${id}')`], DEL] };
+  if (k === 'later') return { k:'🗺️ Later', t:esc(x.t), sub:dvGrid([['Parked', dvDate(x.d) + ' · ' + bAgo(x.d)]]), sections:[], foot:[E, ['⬆ Promote to Ideas', `bLaterPromote('${id}')`], ['Keep', `bLaterKeep('${id}')`], DEL] };
+  if (k === 'projects') return { k:'🚀 Project', t:esc(x.n) + (x.done ? ' ✅' : ''), sub:dvGrid([['Progress', `<div class="bn-bar"><i style="width:${x.p}%"></i></div>${x.p}%`], ['Status', x.done ? 'Completed' : 'In progress'], ['Created', dvDate(x.d)]]),
+    sections:[['Goal', dvTxt(x.g)], ['Next action', dvTxt(x.a)], ['Links', bLinks(x)]], foot:[E, ['+10%', `bProjInc('${id}')`], [x.done ? 'Reopen' : '✓ Complete', `bProjDone('${id}')`], DEL] };
+  if (k === 'learning') return { k:'📖 Learning session', t:esc(x.t), sub:dvGrid([['Confidence', '⭐'.repeat(x.cf || 0) + '☆'.repeat(5 - (x.cf || 0))], ['Skill', bRel('skills', x.sk, 'n', '🧩')], ['Brain Card', x.card ? '✓ Made' : 'Not yet'], ['Date', dvDate(x.d)]]),
+    sections:[['What I learned', dvTxt(x.l)], ['My explanation', dvTxt(x.x)], ['Questions still unanswered', dvTxt(x.qs)]], foot:[E].concat(x.card ? [] : [['→ Brain Card', `bLearnCard('${id}')`]], [DEL]) };
+  if (k === 'curiosity') return { k:'🌍 Curiosity', t:esc(x.t), sub:dvGrid([['Area', esc(x.ar)], ['Depth', BR_DEP[x.dep || 0]], ['Time spent', x.min ? x.min + ' min' : ''], ['Source', esc(x.src)], ['Date', dvDate(x.d)]]),
+    sections:[['What I explored', dvTxt(x.e)], ['Summary', dvTxt(x.s)], ['Interesting facts', dvTxt(x.f)]], foot:[E, DEL] };
+  if (k === 'experiments') return { k:'🧪 Experiment', t:esc(x.q) + (x.done ? ' ✅' : ''), sub:dvGrid([['Status', x.done ? 'Completed ' + dvDate(x.dt) : '⏳ In progress'], ['Project', bRel('projects', x.p, 'n', '🚀')], ['Skill', bRel('skills', x.sk, 'n', '🧩')], ['Concept', bRel('vault', x.k, 't', '🧠')], ['Brain Card', x.card ? '✓ Made' : ''], ['Created', dvDate(x.d)]]),
+    sections:BR_EF.slice(1).map(f => [f[1], dvTxt(x[f[0]])]), foot:[E, [x.done ? 'Reopen' : '✓ Mark complete', `bExpDone('${id}')`]].concat(x.le && !x.card ? [['→ Brain Card', `bExpCard('${id}')`]] : [], [DEL]) };
+  if (k === 'vault') return { k:'🧠 Concept', t:esc(x.t), sub:dvGrid([['Created', dvDate(x.d)]]), sections:[['Memory', dvTxt(x.m)], ['Explanation', dvTxt(x.e)], ['Related concepts', dvTxt(x.r)], ['Links', bLinks(x)]], foot:[E, DEL] };
+  if (k === 'cards') { const rv = BS.reviews.log.filter(r => r.cid === x.id).length, due = (x.due || 0) <= bEod(), n = Math.ceil((x.due - Date.now()) / 864e5);
+    return { k:'🃏 Brain Card', t:esc(x.q), sub:dvGrid([['Category', esc(x.c)], ['Skill', bRel('skills', x.sk, 'n', '🧩')], ['Next review', due ? '🔔 Due today' : dvDate(x.due) + ' (in ' + n + ' day' + (n > 1 ? 's' : '') + ')'], ['Interval', BR_IV[x.iv || 0] + ' days'], ['Last reviewed', x.last ? dvDate(x.last) : 'Never'], ['Reviews', rv]]),
+      sections:[['Answer', dvTxt(x.a)], ['Links', bLinks(x)]], note:created, foot:[E, DEL] }; }
+  if (k === 'skills') { const L = (a, f, kk) => dvBtns(BS[a].filter(y => String(y.sk) === String(id)), y => `bView('${kk}','${y.id}')`, y => esc(String(y[f]).slice(0, 48))), kids = BS.skills.filter(s => String(s.par) === String(id));
+    return { k:'🧩 Skill', t:esc(x.n), sub:dvGrid([['Level', BR_LV[x.lv]], ['Under', bRel('skills', x.par, 'n', '↑')], ['Practiced', x.lp ? bAgo(x.lp) : 'Never'], ['Created', dvDate(x.d)]]),
+      sections:[['Next thing to learn', dvTxt(x.nx)], ['Sub-skills', dvBtns(kids, s => `bView('skills','${s.id}')`, s => esc(s.n))], ['Related Brain Cards', L('cards', 'q', 'cards')], ['Learning sessions', L('learning', 't', 'learning')], ['Experiments', L('experiments', 'q', 'experiments')], ['Links', bLinks(x)]],
+      foot:[E, ['Practiced', `bSkillPrac('${id}')`], DEL] }; }
+  if (k === 'weekly') { const s = x.snap || {}; return { k:'📅 Weekly Brain Check', t:'Week of ' + dvDate(x.ws), sub:dvGrid((s.rows || []).map(r => [esc(r[0]), r[1]])),
+    sections:[['Scores', (s.scores || []).map(c => `<div class="bn-line"><span>${esc(c.name)}</span><b>${c.pct}%</b></div><div class="bn-bar"><i style="width:${c.pct}%"></i></div>`).join('')], ['Areas touched', dvTxt((s.areas || []).join(' · '))], ['Most active skill', dvTxt(s.topSkill)], ['Neglected', dvTxt(s.neglected)], ['Focus for Future Vinu', dvTxt(x.focus)]],
+    foot:[['✏️ Edit focus', `bEditView('weekly','${id}')`, 'p'], ['🗑 Delete', `bWeeklyDel('${id}')`, 'd']] }; }
+  return null;
+}
+function bIdeaForm(i) { const x = bBy('ideas', i); if (!x) return; bForm('Edit idea', [{ n:'t', l:'Idea', v:x.t, area:1 }, { n:'s', l:'Status', v:x.s, o:[['new', 'New'], ['do', 'Do'], ['learn', 'Learn']] }], v => { x.t = v.t; x.s = v.s; bSet('ideas', x); }); }
+function bLaterForm(i) { const x = bBy('later', i); if (!x) return; bForm('Edit parked item', [{ n:'t', l:'What is it?', v:x.t, area:1 }], v => { x.t = v.t; bSet('later', x); }); }
+function bWeeklyForm(i) { const x = (BS.weekly || []).find(y => y.id === i); if (!x) return; bForm('Edit weekly check', [{ n:'f', l:'Focus / notes for Future Vinu', v:x.focus, area:1, req:1 }], async v => {
+  x.focus = v.f; brainRender(); const { error } = await _supa.from('brain_weekly_reviews').update({ focus: v.f }).eq('id', x.id); if (error) bFail(error); }); }
+async function bWeeklyDel(i) { if (!confirm('Delete this weekly check?')) return; BS.weekly = BS.weekly.filter(y => y.id !== i); brainRender(); const { error } = await _supa.from('brain_weekly_reviews').delete().eq('id', i); if (error) { bFail(error); bLoadWeekly(); } }
+async function bLoadWeekly() { try { const { data, error } = await _supa.from('brain_weekly_reviews').select('*').order('week_start', { ascending: false }).limit(26); if (error) throw error; BS.weekly = (data || []).map(r => ({ id:r.id, ws:r.week_start, snap:r.snapshot || {}, focus:r.focus || '', d:Date.parse(r.created_at) })); brainRender(); } catch (e) { console.error(e); } }
+function bWeeklyList() { return (BS.weekly || []).length ? `<div class="bn-card" style="margin-top:16px"><div class="bn-h">📅 Past weekly checks</div><div class="bn-stack">${BS.weekly.slice(0, 6).map(w => `<button class="bn-lane" onclick="bView('weekly','${w.id}')"><span><b>Week of ${dvDate(w.ws)}</b><i>${esc(w.focus) || 'No focus noted'}</i></span><em>›</em></button>`).join('')}</div></div>` : ''; }
+function bFormCancel() { const r = bRet; bHide(); if (r) setTimeout(() => bView(r[0], r[1]), 160); }
+document.addEventListener('click', e => { const c = e.target.closest('#b-body .bn-click'); if (!c || e.target.closest('button,a,input,select,textarea,.bn-link')) return; bView(c.dataset.k, c.dataset.id); });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('bn-click')) bView(e.target.dataset.k, e.target.dataset.id); });
+
+// ── COMPANIES ──
+function cxCompanyView(id) {
+  dvOpen(() => {
+    const c = companies.find(x => x.id === id); if (!c) return null;
+    const past = !!c.date_left, work = companyWorkLogEntries(c.id).slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')), kn = companyKnowledgeCards(c.id),
+      apps = (D.applications || []).filter(a => String(a.company || '').trim().toLowerCase() === String(c.name || '').trim().toLowerCase()), bp = (typeof BS !== 'undefined' && BS) ? BS.projects.filter(p => p.co === c.id) : [];
+    return { k:'🏢 Company', t:esc(c.name) + ` <span class="cx-pill ${past ? 'cx-p-past' : 'cx-p-cur'}">${past ? 'Past' : 'Current'}</span>`,
+      sub:dvGrid([['Role', esc(c.role)], ['Department', esc(c.department)], ['Employee ID', esc(c.employee_id)], ['Manager', esc(c.manager_name)], ['Location', esc(c.location)], ['Started', c.date_of_joining ? dvDate(c.date_of_joining) : ''], [past ? 'Ended' : 'Until', past ? dvDate(c.date_left) : 'Present'], ['Active company', c.id === activeCompanyId ? 'Yes' : 'No']]),
+      sections:[['About', dvTxt(c.description)], ['Projects', dvTags(c.projects)], ['Key contacts', dvTxt(c.contacts)],
+        [`Recent work (${work.length} entries)`, dvBtns(work.slice(0, 8), r => `wlView('${r.id}')`, r => `${esc(r.date || '')} · ${esc(String(r.task || '').slice(0, 44))}`)], ['Related knowledge', dvBtns(kn, v => `dvClose();openKnowledgeCard('${v.id}')`, v => '📚 ' + esc(v.title))],
+        ['Application history', dvBtns(apps, a => `cxOpenApp('${a.id}')`, a => `📩 ${esc(a.position || 'Application')} · ${esc(CX_STATUS[a.status] || a.status)}`)], ['Brain OS projects', dvBtns(bp, p => `bView('projects','${p.id}')`, p => '🚀 ' + esc(p.n))]],
+      foot:[['✏️ Edit', `cxEditCompany('${id}')`, 'p'], ['📓 Work Log', "dvClose();nav('quicklog')"]].concat(c.id !== activeCompanyId ? [['⇄ Make active', `switchCompany('${id}');`]] : [], [['🗑 Delete', `deleteCompany('${id}')`, 'd']]) };
+  });
+}
+function cxEditCompany(id) { dvClose(); cxTabNow = 'work'; companyEditingId = id; renderCompanyManager(); setTimeout(() => document.querySelector(`#company-list [data-co="${id}"]`)?.scrollIntoView({ block:'center', behavior:'smooth' }), 80); }
+document.addEventListener('click', e => { const c = e.target.closest('#page-companies .cx-card[data-co], #page-companies .cx-card[data-app]'); if (!c || e.target.closest('button,a,input,select,textarea,.cx-edit,.cx-rw div')) return; c.dataset.co ? cxCompanyView(c.dataset.co) : cxOpenApp(c.dataset.app); });
+function cxSummaryHTML(a) {
+  const iv = a.interview || {}, st = k => dvTxt(iv[k]), sec = (l, h) => h ? `<div class="dv-sec"><div class="dv-lbl">${l}</div>${h}</div>` : '';
+  const docs = a.resume ? `<div class="cx-doc"><span style="font-size:22px">📄</span><div style="flex:1;min-width:0"><b>${esc(a.resume.name)}</b><small>${cxFmt(a.resume.date)} · ${cxSize(a.resume.size)}</small></div>${a.resume.dataUrl ? `<a class="cx-b" style="display:inline-flex;align-items:center;text-decoration:none" href="${a.resume.dataUrl}" download="${cxA(a.resume.name)}">⬇ Download</a>` : ''}</div>` : '';
+  return `<div><div class="dv-lbl">Application progress</div><div style="margin-top:10px">${cxTrack(a, false)}</div></div>
+    ${dvGrid([['Company', esc(a.company)], ['Position', esc(a.position)], ['Location', esc(a.location)], ['Job type', esc(a.job_type)], ['Status', `<span class="cx-pill cx-st-${a.status}">${esc(CX_STATUS[a.status] || a.status)}</span>`], ['Applied', a.applied_date ? dvDate(a.applied_date) : ''], ['Interview date', a.interview_date ? dvDate(a.interview_date) : ''], ['Result date', a.result_date ? dvDate(a.result_date) : ''], ['Rating', a.rating ? '★'.repeat(a.rating) + '☆'.repeat(5 - a.rating) : '']])}
+    ${sec('Resume used / documents', docs)}${sec('Job description / notes', dvTxt(a.notes))}${sec('Tags', dvTags(a.tags))}
+    ${sec('Questions asked', st('asked'))}${sec('How I performed', st('performed'))}${sec('What went well', st('well'))}${sec('What I struggled with', st('struggled'))}${sec('What I should learn', st('learn'))}${sec('My remarks', st('remarks'))}${sec('Follow-up notes', st('followup'))}
+    ${(iv.asked || iv.performed || iv.well || iv.struggled || iv.learn || iv.remarks || iv.followup) ? '' : '<div class="bn-m">No interview notes yet — use Edit → Interview Notes after your interview.</div>'}`;
+}
+function cxFoot(a) {
+  return cxDTab === 'summary'
+    ? `<button class="kx-primary" onclick="cxSetTab('overview')">✏️ Edit</button><button class="btn btn-danger btn-sm" onclick="cxDelete('${a.id}')">🗑 Delete</button><span style="flex:1"></span><button class="btn btn-ghost" onclick="cxClose()">Close</button>`
+    : `<button class="btn btn-danger btn-sm" onclick="cxDelete('${a.id}')">🗑 Delete</button><span class="cx-note" style="text-align:right">Changes save automatically</span><button class="kx-primary" onclick="cxSetTab('summary')">Done</button>`;
+}
+
+// ── ATTENDANCE & PAYROLL: monthly payroll records + payslip viewer ──
+function plMonthsHTML() {
+  const ps = [...D.payPeriods].sort((a, b) => (b.periodStart || '').localeCompare(a.periodStart || '')); if (!ps.length) return '';
+  return `<div class="pl-sec" style="margin-top:8px">Monthly payroll records</div>` + ps.map(p => { const k = (p.periodStart || '').slice(0, 7), s = p.snapshot || {};
+    return `<div class="pl-slr clk" onclick="plOpenMonth('${k}')"><b>${plKeyLabel(k).replace(' ', '<br>')}</b><div><div style="font-weight:600">${(PP_STATUS_META[p.status] || {}).label || esc(p.status)}</div><small>Net ${ppMoney(s.netSalary || 0)}${(D.payslips || []).some(x => x.month === k) ? ' · 📎 payslip' : ''}</small></div><span style="color:var(--text4)">›</span></div>`; }).join('');
+}
+function plOpenMonth(key) { const [y, m] = key.split('-').map(Number); attDate = new Date(y, m - 1, 1); syncMonthContext(); renderAttendance(); plOpenDr('detail'); }
+function plEditVals() { const d = document.getElementById('pl-edit-det'); if (!d) return; d.open = true; d.scrollIntoView({ behavior:'smooth', block:'center' }); const p = plPeriod(); if (p && isPeriodLocked(p)) toast('🔒 This month is finalized — reopen it under "Month status & adjustments" to edit.'); }
+function plBlob(x) { try { const [h, b] = x.dataUrl.split(','), bin = atob(b), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return URL.createObjectURL(new Blob([u], { type: x.mime || h.slice(5, h.indexOf(';')) })); } catch (e) { return x.dataUrl; } }
+function plSlipView(id) {
+  dvOpen(() => {
+    const x = (D.payslips || []).find(s => s.id === id); if (!x) return null;
+    const p = D.payPeriods.find(q => (q.periodStart || '').slice(0, 7) === x.month), s = p && p.snapshot, line = (l, v, c) => `<div class="pl-line ${c || ''}"><span>${l}</span><span>${ppMoney(v || 0)}</span></div>`;
+    const prev = !x.dataUrl ? '' : /^image\//.test(x.mime) || /^data:image/.test(x.dataUrl) ? `<img src="${x.dataUrl}" alt="" style="max-width:100%;border-radius:12px;border:1px solid var(--border)">` : `<iframe src="${plBlob(x)}" style="width:100%;height:340px;border:1px solid var(--border);border-radius:12px"></iframe>`;
+    return { k:'🧾 Payslip', t:plKeyLabel(x.month), sub:dvGrid([['Month', plKeyLabel(x.month)], ['File', esc(x.fileName)], ['Uploaded', cxFmt(String(x.uploadedAt || '').slice(0, 10))], ['Size', cxSize(x.fileSize || 0)]]),
+      sections:[['Preview', prev], ['Payroll summary (calculated — separate from the uploaded file)', s ? `<div class="pl-box pl-e"><h4>EARNINGS</h4>${line('Total Earnings', s.grossSalary, 'tot')}</div><div class="pl-box pl-d" style="margin-top:8px"><h4>DEDUCTIONS</h4>${line('Total Deductions', s.totalDeductions, 'tot')}</div><div class="pl-net" style="margin-top:8px"><span>Net Salary</span><b>${ppMoney(s.netSalary)}</b></div><div class="bn-m" style="margin-top:6px">${s.payableDays} paid days of ${s.totalDays}${s.lopDays ? ' · ' + s.lopDays + ' LOP' : ''}</div>` : '<div class="bn-m">No payroll record for this month.</div>']],
+      foot:[['👁 Open file', `plViewSlip('${id}')`, 'p'], ['⇄ Replace', `plPickReplace('${x.month}')`], ['📊 Payroll detail', `dvClose();plOpenMonth('${x.month}')`], ['🗑 Delete', `plDelSlip('${id}')`, 'd']] };
+  });
+}
 
 async function migrateLocalData() {
   let legacy = null;
@@ -5522,7 +6251,7 @@ function nav(id) {
   const titles = {
     dashboard:'Dashboard', quicklog:'Work Log', reports:'Export / Import',
     planner:'Attendance & Payroll', profile:'Settings',
-    companies:'Companies', vault:'Knowledge Track'
+    companies:'Companies', vault:'Knowledge Track', brain:'Brain OS'
   };
   document.getElementById('page-title').textContent = titles[id] || id;
   document.getElementById('page-sub').textContent = new Date().toLocaleDateString('en-IN',
@@ -5533,6 +6262,7 @@ function nav(id) {
   if (id==='profile')     loadProfile();
   if (id==='companies')   renderCompanyManager();
   if (id==='vault')       renderVault();
+  if (id==='brain')       brainOpen();   // lazy: Brain OS data is fetched only when this tab opens
   closeSidebar();
 }
 
@@ -5916,11 +6646,11 @@ function wxListClick(e) {
     e.stopPropagation();
     if (a === 'edit') openDailyEditor(id);
     else if (a === 'del') deleteDailyEntry(id);
-    else if (a === 'notes') openJournalView(id);
+    else if (a === 'notes') wlView(id);
     else if (a === 'kc') openKnowledgeCard(act.dataset.kc);
     return;
   }
-  openDailyEditor(id);
+  wlView(id);   // anywhere else on the card → full detail view
 }
 
 function renderDaily() {
@@ -5930,7 +6660,7 @@ function renderDaily() {
     list.dataset.wx = '1';
     list.addEventListener('click', wxListClick);
     list.addEventListener('change', e => { const s = e.target.closest('select[data-act="type"]'); if (s) wxChangeType(s.closest('.wx-card').dataset.id, s.value); });
-    list.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('wx-card')) openDailyEditor(e.target.dataset.id); });
+    list.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('wx-card')) wlView(e.target.dataset.id); });
   }
   const total = D.daily.length;
   const rng = wxRange(wxFilter);
@@ -7073,7 +7803,7 @@ function kxCard(v) {
     <div class="kx-ft"><span>🕘 Updated ${kxAgo(v.updated_at||v.created_at)}</span>${v.folder?`<span class="kx-fo" title="${kxAttr(v.folder)}">📁 ${esc(v.folder.split('/').pop())}</span>`:''}
       <button class="kx-more" onclick="kxMenu(event,'${id}')" aria-label="More actions">⋯</button></div></div>`;
 }
-function kxOpen(id) { const v = D.vault.find(x => x.id === id); if (v) (v.section === 'troubleshooting' ? openRecallView : openKnowledgeView)(id); }
+function kxOpen(id) { const v = D.vault.find(x => x.id === id); if (v) { if (v.section === 'troubleshooting') openRecallView(id, true); else openKnowledgeView(id); } }
 function renderVault() {
   const grid = document.getElementById('kv-grid'); if (!grid) return;
   renderFolderTree(); kxRenderChrome();
@@ -7321,7 +8051,7 @@ let recallRevealed = false;
 function openKnowledgeCard(id) {
   const v = D.vault.find(x => x.id === id); if (!v) return;
   nav('vault');
-  if (v.section === 'troubleshooting') openRecallView(id); else openKnowledgeView(id);
+  if (v.section === 'troubleshooting') openRecallView(id, true); else openKnowledgeView(id);
 }
 
 // Read-only view for non-troubleshooting cards (Tech Note / Snippet / Cheat Sheet) —
@@ -7343,20 +8073,22 @@ function openKnowledgeView(id) {
     </div>
     <div class="recall-block-body">${isHtmlContent(v.content) ? v.content : esc(v.content||'').replace(/\n/g,'<br>') || '<i style="color:var(--text4)">No content yet.</i>'}</div>
     ${tags.length ? `<div style="margin-top:16px;display:flex;gap:5px;flex-wrap:wrap">${tags.map(t=>`<span class="kv-tag-chip">#${esc(t)}</span>`).join('')}</div>` : ''}
-    <div style="font-size:10.5px;color:var(--text4);margin-top:16px">Last updated ${(v.updated_at||v.created_at||'').split('T')[0]}</div>
+    ${kvRelatedHTML(v)}${kvDatesHTML(v)}
     <div id="kv-similar-wrap" style="margin-top:16px"></div>
   `;
   document.getElementById('kv-recall-overlay').style.display = 'flex';
+  kvFootSync();
 }
 
-function openRecallView(id) {
+function openRecallView(id, reveal) {
   const v = D.vault.find(x => x.id === id); if (!v) return;
   recallCardId = id;
-  recallRevealed = false;
+  recallRevealed = !!reveal;   // cards open with every field visible; "Test myself" hides the solution again
   document.getElementById('kv-recall-title').textContent = v.title || 'Issue';
   document.getElementById('kv-recall-fav-btn').classList.toggle('on', !!v.favorite);
   renderRecallBody();
   document.getElementById('kv-recall-overlay').style.display = 'flex';
+  kvFootSync();
 }
 function closeRecallView() { document.getElementById('kv-recall-overlay').style.display = 'none'; recallCardId = null; }
 
@@ -7370,6 +8102,9 @@ function renderRecallBody() {
       ${v.kv_status ? `<span class="kv-badge folder">${meta.icon||''} ${meta.label||''}</span>` : ''}
       ${v.kv_priority ? `<span class="kv-badge folder">⚡ ${esc(v.kv_priority)}</span>` : ''}
       ${v.protocol ? `<span class="kv-badge folder">📡 ${esc(v.protocol)}</span>` : ''}
+      ${v.firmware_version ? `<span class="kv-badge folder">💾 ${esc(v.firmware_version)}</span>` : ''}
+      ${v.date_solved ? `<span class="kv-badge folder">✅ Solved ${esc(v.date_solved)}</span>` : ''}
+      ${v.folder ? `<span class="kv-badge folder">📁 ${esc(v.folder.split('/').join(' / '))}</span>` : ''}
       ${v.device_model ? `<span class="kv-badge folder">🔌 ${esc(v.device_model)}</span>` : ''}
       ${v.client_project ? `<span class="kv-badge folder">🏢 ${esc(v.client_project)}</span>` : ''}
       ${v.times_used>0 ? `<span class="kv-badge folder">🔁 Faced ${v.times_used}x</span>` : ''}
@@ -7397,8 +8132,8 @@ function renderRecallBody() {
   body.innerHTML = badges + front + revealParts.join('') + `
     <div class="btn-group" style="margin-top:16px">
       <button class="btn btn-violet btn-sm" onclick="facedAgain('${v.id}')">🔁 Faced Again</button>
-      <button class="btn btn-ghost btn-sm" onclick="editFromRecall()">✏️ Edit</button>
-    </div>
+      <button class="btn btn-ghost btn-sm" onclick="recallHide()">🙈 Test myself</button>
+    </div>${kvRelatedHTML(v)}${kvDatesHTML(v)}
     <div id="kv-similar-wrap" style="margin-top:16px"></div>`;
   renderSimilarIssues(v);
 }
